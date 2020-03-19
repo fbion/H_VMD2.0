@@ -182,7 +182,7 @@
 		"calculable": true
 	},
 	"series": [
-        {
+		{
 			"type": "faultLine",
 			"name": "断层",
 			"show":true,

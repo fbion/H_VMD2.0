@@ -111,141 +111,82 @@
 		}
 	},
 	"seriesMapping":[
-		{	"seriseName": "砂体范围",
+		{	"seriesName": "砂体范围",
 			"source":"ds10",
 			"fields":["id","name","x","y"]
 		},
-		{	"seriseName": "断层",
+		{	"seriesName": "断层",
 			"source":"ds5",
 			"fields":["id","", "type","wallid","walltype","x","y"]
 		},
 		{
 			"source":"ds1",
-			"seriseName": "油井井位",
+			"seriesName": "油井井位",
 			"fields":["jh","jm","jb","x","y"]
 		},
 		{
 			"source":"ds12",
-			"seriseName": "油井井轨迹",
+			"seriesName": "油井井轨迹",
 			"fields":["jh","jk_x","jk_y","jd_x","jd_y","a_x","a_y","b_x","b_y"]
 		},
 		{
 			"source":"ds9",
-			"seriseName": "柱形开采指标",
+			"seriesName": "柱形开采指标",
 			"fields":[],
 			"fieldsUrl":"../templates/defaults/columnIndexJson.json"
 		},
 		{
 			"source":"ds6",
-			"seriseName": "等高线",
+			"seriesName": "等高线",
 			"fields":["id","value","x","y","maxx","minx","maxy","miny"]
 		},
 		{
 			"source":"ds2",
-			"seriseName": "尖灭线",
+			"seriesName": "尖灭线",
 			"fields":["id","x","y","maxx","minx","maxy","miny"]
 		},
 		{
 			"source":"ds3",
-			"seriseName": "探明开发储量区边界",
+			"seriesName": "探明开发储量区边界",
 			"fields":["id","x","y","maxx","minx","maxy","miny"]
 		},
 		{
 			"source":"ds4",
-			"seriseName": "滚动储量区边界",
+			"seriesName": "滚动储量区边界",
 			"fields":["id","x","y","maxx","minx","maxy","miny"]
 		},
 		{
 			"source":"ds11",
-			"seriseName": "油压",
+			"seriesName": "油压",
 			"fields":["jh","value"]
 		},
 		{
 			"source":"ds13",
-			"seriseName": "井口温度",
+			"seriesName": "井口温度",
 			"fields":["jh","value"]
 		},
 		{
 			"source":"ds14",
-			"seriseName": "等压线"
+			"seriesName": "等压线"
 		},
 		{
 			"source":"ds14",
-			"seriseName": "等温线"
+			"seriesName": "等温线"
 		},
 		{
 			"source":"ds15",
-			"seriseName": "等压区"
+			"seriesName": "等压区"
 		},
 		{
 			"source":"ds15",
-			"seriseName": "等温区"
+			"seriesName": "等温区"
 		}
 	],
-	"toolbox": {
-		"items": {
-			"define": {
-				"tabs": [
-					{ "seriesName": "baseProperty", "text": "基本属性", "active": true },
-					{ "seriesName": "wellSymbol", "text": "井位", "active": false },
-					{ "seriesName": "miningIndex", "text": "开采指标", "active": false }
-				]
-			}
-		}
-	},
 	"title": {
 		"text": "井位3971",
 
 		"textStyle": {
 			"fontSize": 18
-		}
-	},
-	"frame": {
-		"id":"2",
-		"style":
-		{
-			"show": true,
-			"font": "3"
-		}
-	},
-	"frameNew": {
-		"id":"11",
-		"text": "新图框",
-		"style":
-		{
-			"show": true,
-			"font": "3"
-		}
-	},
-	"scale": {
-		"id":"4",
-		"text": "比例尺",
-		"textStyle": {
-			"fontSize": 24
-		}
-	},
-	"compass": {
-		"id":"5",
-		"text": "指北针",
-		"textStyle": {
-			"fontSize": 24
-		}
-	},
-	"mapInfo": {
-		"text": "编图单位：东营汉威    绘制人：XXX    编制人：XXX    录入人：XXX    审核人：XXX    日期：2019-11-30",
-		"values": {
-			"btdw":"东营汉威",
-			"hzr":"XXX",
-			"bzr":"XXX",
-			"lrr":"XXX",
-			"shr":"XXX",
-			"rq":"2019-11-30"
-		},
-
-		"textStyle": {
-			"fontSize": 12,
-			"fontWeight": "normal",
-			"fontFamily": "Simsun"
 		}
 	},
 	"geo": [{
@@ -280,6 +221,7 @@
 					"position": "right"
 				}
 			},
+			"progressive": 100,
 			"data": [],
 			"symbolSize": 15
 		}

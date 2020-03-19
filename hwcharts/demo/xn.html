@@ -1,30 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>开采现状图示例</title>
+    <meta charset="utf-8">
     <!--<script src="../js/core/base.js"></script>-->
-    <!--base-->
     <script src="../js/core/base.min.js"></script>
+
     <script src="../js/core/base-ext.js"></script>
     <!--zrender-->
-    <script src="../lib/zrender/dist/zrender.js"></script>
+    <script src="../../lib/zrender/zrender.js"></script>
+    <script src="../../lib/jquery/jquery.min.js"></script>
     <!--hwchart-->
     <script src="../js/hwcharts.js"></script>
-    <script src="../lib/jquery.min.js"></script>
     <!--hwdas-->
     <script src="../js/hwDas.js"></script>
-    <!-- dhtmlx -->
-    <script src="../lib/dhtmlx/codebase/dhtmlx.js"></script>
-    <link rel="stylesheet" href="../lib/dhtmlx/codebase/dhtmlx.css">
-   
-    <link rel="stylesheet" href="../lib/dhtmlx/skins/material/dhtmlx.css">
-    <link href="../css/hwcharts.css" rel="stylesheet" />
-	<script type="text/javascript" src="../lib/chroma/chroma.js"></script>
     <style>
-        #main {
+        html, body, #main
+        {
+            margin: 0px;
+            padding: 0px;
             width: 100%;
-            height: 99%;
+            height: 100%;
         }
     </style>
 </head>
@@ -35,8 +30,6 @@
 
            Vmd.require([
                 'hwchart.component.Geo',
-                //'hwchart.component.Frame',
-                'hwchart.component.FrameNew',
                 'hwchart.chart.WellGroup',
                 'hwchart.chart.Area',
                 'hwchart.component.Legend',
@@ -47,15 +40,9 @@
                 'hwchart.chart.SymbolLine',
                 'hwchart.chart.FaultLine',
                 'hwchart.component.Title',
-                'hwchart.component.Scale',
-                'hwchart.component.Compass',
-                'hwchart.component.MapInfo',
                 'hwchart.chart.MiningIndex',
                 'hwchart.chart.IsoArea',
-                'hwchart.component.VisualMap',
-                'hwchart.component.Brush',
-                'hwchart.component.Toolbox',
-				'hwchart.component.Tooltip'
+                'hwchart.component.VisualMap'
 
 
            ], function () {

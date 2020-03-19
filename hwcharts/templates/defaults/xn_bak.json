@@ -1,293 +1,228 @@
 {
-	"vers": "1.0", 
+	"vers": "1.0",
 	"coorSys": "Beijing_1954_GK_Zone_21",
-	"dataset":{ 
-		"ds1": { 
-				"type":0,  
-				"priority":1, 
-				"url":"txwebh/txweb/xnyjjw",
-				"params":{
-					"dydm": "",
-					"wellid":""
-				}
-            },
-            "ds5":{ 
-                "type":0, 
-                "url":"txwebh/txweb/xndcsj",
-                "params":{
-                    
-                }
-            },
-			"ds9":{ 
-				"type":0, 
-				"priority":0,
-				"url":"txwebh/txweb/xnkczb", 
-				"params":{
-					"dydm": "",
-					"jb":""
-				}
-			},
-			"ds6":{ 
-				"type":0, 
-				"priority":0,
-				"url":"txwebh/txweb/xndgx", 
-				"params":{
-					"dydm": "",
-					"jb":""
-				}
-			},
-			"ds2":{ 
-				"type":0, 
-				"priority":0,
-				"url":"txwebh/txweb/xnjmx", 
-				"params":{
-					"dydm": "",
-					"jb":""
-				}
-			},
-			"ds3":{ 
-				"type":0, 
-				"priority":0,
-				"url":"txwebh/txweb/tmkfbj", 
-				"params":{
-					"dydm": "",
-					"jb":""
-				}
-			},
-			"ds4":{ 
-				"type":0, 
-				"priority":0,
-				"url":"txwebh/txweb/gdclqbj", 
-				"params":{
-					"dydm": "",
-					"jb":""
-				}
-			},
-			"ds10":{ 
-				"type":0, 
-				"url":"txwebh/txweb/mjsj",
-				"params":{
-					"type": "0"
-				}
-			},
-			"ds11":{ 
-				"type":0, 
-				"url":"txwebh/txweb/djyyrsj",
-				"params":{
-					"type": "0"
-				}
-			},
-			"ds12":{ 
-				"type":0, 
-				"url":"txwebh/txweb/xnjgjsj",
-				"params":{
-					"type": "0"
-				}
-			},
-			"ds13":{ 
-				"type":0, 
-				"url":"txwebh/txweb/djjwrsj",
-				"params":{
-					"type": "0"
-				}
-			},
-			"ds14":{ 
-				"type":1, 
-				"priority":0,
-				"url":"ISOAlgorithm/isoline",
-				"params":{
-					"dydm": "",
-					"wellid":""
-				}
-			},
-			"ds15":{ 
-				"type":1, 
-				"priority":0,
-				"url":"ISOAlgorithm/isoarea", 
-				"params":{
-					"dydm": "",
-					"wellid":""
-				}
+	"dataset":{
+		"ds1": {
+			"type":0,
+			"priority":1,
+			"url":"txwebh/txweb/xnyjjw",
+			"params":{
+				"dydm": "",
+				"wellid":""
 			}
-	},	
+		},
+		"ds5":{
+			"type":0,
+			"url":"txwebh/txweb/xndcsj",
+			"params":{
+
+			}
+		},
+		"ds9":{
+			"type":0,
+			"priority":0,
+			"url":"txwebh/txweb/xnkczb",
+			"params":{
+				"dydm": "",
+				"jb":""
+			}
+		},
+		"ds6":{
+			"type":0,
+			"priority":0,
+			"url":"txwebh/txweb/xndgx",
+			"params":{
+				"dydm": "",
+				"jb":""
+			}
+		},
+		"ds2":{
+			"type":0,
+			"priority":0,
+			"url":"txwebh/txweb/xnjmx",
+			"params":{
+				"dydm": "",
+				"jb":""
+			}
+		},
+		"ds3":{
+			"type":0,
+			"priority":0,
+			"url":"txwebh/txweb/tmkfbj",
+			"params":{
+				"dydm": "",
+				"jb":""
+			}
+		},
+		"ds4":{
+			"type":0,
+			"priority":0,
+			"url":"txwebh/txweb/gdclqbj",
+			"params":{
+				"dydm": "",
+				"jb":""
+			}
+		},
+		"ds10":{
+			"type":0,
+			"url":"txwebh/txweb/mjsj",
+			"params":{
+				"type": "0"
+			}
+		},
+		"ds11":{
+			"type":0,
+			"url":"txwebh/txweb/djyyrsj",
+			"params":{
+				"type": "0"
+			}
+		},
+		"ds12":{
+			"type":0,
+			"url":"txwebh/txweb/xnjgjsj",
+			"params":{
+				"type": "0"
+			}
+		},
+		"ds13":{
+			"type":0,
+			"url":"txwebh/txweb/djjwrsj",
+			"params":{
+				"type": "0"
+			}
+		},
+		"ds14":{
+			"type":1,
+			"priority":0,
+			"url":"ISOAlgorithm/isoline",
+			"params":{
+				"dydm": "",
+				"wellid":""
+			}
+		},
+		"ds15":{
+			"type":1,
+			"priority":0,
+			"url":"ISOAlgorithm/isoarea",
+			"params":{
+				"dydm": "",
+				"wellid":""
+			}
+		}
+	},
 	"seriesMapping":[
-		{	"seriseName": "砂体范围",
+		{	"seriesName": "砂体范围",
 			"source":"ds10",
 			"fields":["id","name","x","y"]
 		},
-        {	"seriseName": "断层",
+		{	"seriesName": "断层",
 			"source":"ds5",
 			"fields":["id","", "type","wallid","walltype","x","y"]
 		},
 		{
 			"source":"ds1",
-			"seriseName": "油井井位",
+			"seriesName": "油井井位",
 			"fields":["jh","jm","jb","x","y"]
 		},
 		{
 			"source":"ds12",
-			"seriseName": "油井井轨迹",
+			"seriesName": "油井井轨迹",
 			"fields":["jh","jk_x","jk_y","jd_x","jd_y","a_x","a_y","b_x","b_y"]
 		},
 		{
 			"source":"ds9",
-			"seriseName": "柱形开采指标",
+			"seriesName": "柱形开采指标",
 			"fields":[],
 			"fieldsUrl":"../templates/defaults/columnIndexJson.json"
 		},
 		{
 			"source":"ds6",
-			"seriseName": "等高线",
+			"seriesName": "等高线",
 			"fields":["id","value","x","y","maxx","minx","maxy","miny"]
 		},
 		{
 			"source":"ds2",
-			"seriseName": "尖灭线",
+			"seriesName": "尖灭线",
 			"fields":["id","x","y","maxx","minx","maxy","miny"]
 		},
 		{
 			"source":"ds3",
-			"seriseName": "探明开发储量区边界",
+			"seriesName": "探明开发储量区边界",
 			"fields":["id","x","y","maxx","minx","maxy","miny"]
 		},
 		{
 			"source":"ds4",
-			"seriseName": "滚动储量区边界",
+			"seriesName": "滚动储量区边界",
 			"fields":["id","x","y","maxx","minx","maxy","miny"]
 		},
 		{
 			"source":"ds11",
-			"seriseName": "油压",
+			"seriesName": "油压",
 			"fields":["jh","value"]
 		},
 		{
 			"source":"ds13",
-			"seriseName": "井口温度",
+			"seriesName": "井口温度",
 			"fields":["jh","value"]
 		},
 		{
 			"source":"ds14",
-			"seriseName": "等压线"
+			"seriesName": "等压线"
 		},
 		{
 			"source":"ds14",
-			"seriseName": "等温线"
+			"seriesName": "等温线"
 		},
 		{
 			"source":"ds15",
-			"seriseName": "等压区"
+			"seriesName": "等压区"
 		},
 		{
 			"source":"ds15",
-			"seriseName": "等温区"
+			"seriesName": "等温区"
 		}
 	],
-	"toolbox": {
-		"items": {
-		"define": {
-			"tabs": [ ]
-			},
-			"manage": {
-				"tabs": [
-					{"id": "LayerManage", "text": "图层","active": "true"},
-					{"id": "wellManage", "text": "井位"}
-				]
-			}
-		}
-	},
-	"title": { 
+	"title": {
 		"text": "新场js21开发现状图",
-		
+
 		"textAlign": "center",
 		"textStyle": {
 			"fontSize": 28,
 			"fontWeight": "bold"
 		}
-	}, 
-	"frame": {  
-		"id":"2", 
-		"style":  
-		{
-			"show": true, 
-			"font": "3"
-		}
-	}, 
-	"frameNew": {  
-		"id":"11", 
-		"text": "新图框",
-		"style":  
-		{
-			"show": true, 
-			"font": "3"
-		}
-	}, 
-	"legend": { 
-		"id":"3",  
-		"text": "图例",
-		"z": 100,
-        "orient": "vertical",
-        "borderColor": "#000",
-        "backgroundColor": "#FFF",
-        "borderWidth": 2,
-        "top": 26,
-        "width": 160,
-        "height": 80,
-        "padding": [5, 15, 5, 15],
-        "itemGap": 8,
-        "itemWidth": 30,
-        "itemHeight": 24,
-		"textStyle":  
-		{
-			"fontSize": 14, 
-			"fontFamily": "Simsun"
-		},
-        "data": ["油井井位", "尖灭线", "评价滚动储量区", "探明开发储量区"],
-		"relateSeries": [{
-			"name": "尖灭线",
-			"relates": ["砂体范围"]
-		},{
-			"name": "评价滚动储量区",
-			"relates": ["滚动储量区边界"]
-		},{
-			"name": "探明开发储量区",
-			"relates": ["探明开发储量区边界"]
-		}]
 	},
-	"scale": { 
-		"id":"4",  
-		"text": "比例尺",
-		"textStyle": {
-			"fontSize": 24
-		}
-	}, 
-	"compass": { 
-		"id":"5",  
-		"text": "指北针",
-		"textStyle": {
-			"fontSize": 24
-		}
-	},
-	"mapInfo": { 
-		"text": "编图单位：东营汉威  绘制人：XXX  编制人：XXX  审核人：XXX  日期：2019-11-30",
-		"values": {
-			"btdw":"东营汉威",
-			"hzr":"XXX",
-			"bzr":"XXX",
-			"lrr":"XXX",
-			"shr":"XXX",
-			"rq":"2019-11-30"
+	"visualMap":[{
+		"min": 0,
+		"max": 10,
+		"left": "20",
+		"top": "bottom",
+		"text": ["高", "低"],
+		"seriesName": "等压区",
+		"show":true,
+		"inRange": {
+			"color": ["RGB(0,0,255)","RGB(0,255,0)","RGB(255,0,0)"]
 		},
-	
-		"textStyle": {
-			"fontSize": 14,
-			"fontWeight": "normal",
-			"fontFamily": "Simsun"
-		}
-	}, 	
+		"hoverLink":true,
+		"calculable": true
+	},
+		{
+			"min": 0,
+			"max": 100,
+			"left": "20",
+			"top": "bottom",
+			"text": ["高", "低"],
+			"seriesName": "等温区",
+			"show":true,
+			"inRange": {
+				"color": ["RGB(0,0,255)","RGB(0,255,0)","RGB(255,0,0)"]
+			},
+			"hoverLink":true,
+			"calculable": true
+		}],
 	"geo": [{
 		"map": "testMap",
-    "roam": true,
-    "zoom":1,
+		"roam": true,
+		"zoom":1,
 		"width": 480,
 		"itemStyle": {
 			"normal": {
@@ -304,42 +239,7 @@
 			}
 		}
 	}],
-	"visualMap":[{
-		"min": 0,
-		"max": 10,
-		"left": "20",
-		"top": "bottom",
-		"text": ["高", "低"],
-		"seriesName": "等压区",
-		"show":true,
-		"inRange": {
-			"color": ["RGB(0,0,255)","RGB(0,255,0)","RGB(255,0,0)"]
-		},
-		"hoverLink":true,
-		"calculable": true
-	},
-	{
-		"min": 0,
-		"max": 100,
-		"left": "20",
-		"top": "bottom",
-		"text": ["高", "低"],
-		"seriesName": "等温区",
-		"show":true,
-		"inRange": {
-			"color": ["RGB(0,0,255)","RGB(0,255,0)","RGB(255,0,0)"]
-		},
-		"hoverLink":true,
-		"calculable": true
-	}],
-  "series": [
-    {
-			"type": "isoArea",
-			"name": "等压区",
-			"dependentSeries": ["油井井位","油压"],
-			"data": [],
-			"dense": 5
-		},
+	"series": [
 		{
 			"type": "isoArea",
 			"name": "等温区",
@@ -347,7 +247,7 @@
 			"data": [],
 			"dense": 5
 		},
-			{
+		{
 			"type": "area",
 			"name": "砂体范围",
 			"data": [],
@@ -391,93 +291,81 @@
 				}
 			}
 		},
-	
-    {
-      "type": "faultLine",
-      "name": "断层",
-      "lineStyle": {
-        "normal": {
-          "type": "faultLine",
-          "color": "red"
-        }
-      },
-      "data": [ ]
-    },
-    {
-		"type": "isoLine",
-		"name": "等高线",
-		"data": [],
-		"polyline": true,
-		"lineStyle": {
-			"normal":{
-				"color": "#000000",
-				"width": 1,
-				"opacity": 0.3
-			}
-		}
-	},
-    {
-      "type": "symbolLine",
-      "name": "尖灭线",
-      "data": [ ],
-      "lineStyle": {
-        "normal": {
-          "type": "pinchLine",
-          "color": "black",
-          "width": 1
-        }
-      }
-    },
-    {
-      "type": "symbolLine",
-      "name": "探明开发储量区边界",
-      "applyDataTo": ["探明开发储量区"],
-      "data": [ ],
-      "lineStyle": {
-        "normal": {
-          "color": "#3b14ff",
-          "width": 2
-        }
-      }
-    },
-    {
-      "type": "symbolLine",
-      "name": "滚动储量区边界",
-      "applyDataTo": ["评价滚动储量区"],
-      "data": [ ],
-      "lineStyle": {
-        "normal": {
-          "color": "#7b0094",
-          "width": 2
-        }
-      }
-    },
-    {
-      "type": "wellSymbol",
-      "name": "油井井位",
-      "scale": 0.2,
-      "label": {
-        "normal": {
-          "color": "black",
-          "show": true,
-          "formatter": "{b}",
-          "position": "right"
-        }
-      },
-      "data": [ ],
-      "symbolSize": 15
-    },
+
 		{
-			"type": "wellLabel",
-			"name": "油压",
-			"itemStyle": {
+			"type": "faultLine",
+			"name": "断层",
+			"lineStyle": {
 				"normal": {
-					"color": "#cc004e",
-					"show": true,
-					"formatter": "{b}"
+					"type": "faultLine",
+					"color": "red"
 				}
 			},
-			"data": []
+			"data": [ ]
+		},
+		{
+			"type": "isoLine",
+			"name": "等高线",
+			"data": [],
+			"polyline": true,
+			"lineStyle": {
+				"normal":{
+					"color": "#000000",
+					"width": 1,
+					"opacity": 0.3
+				}
+			}
+		},
+		{
+			"type": "symbolLine",
+			"name": "尖灭线",
+			"data": [ ],
+			"lineStyle": {
+				"normal": {
+					"type": "pinchLine",
+					"color": "black",
+					"width": 1
+				}
+			}
+		},
+		{
+			"type": "symbolLine",
+			"name": "探明开发储量区边界",
+			"applyDataTo": ["探明开发储量区"],
+			"data": [ ],
+			"lineStyle": {
+				"normal": {
+					"color": "#3b14ff",
+					"width": 2
+				}
+			}
+		},
+		{
+			"type": "symbolLine",
+			"name": "滚动储量区边界",
+			"applyDataTo": ["评价滚动储量区"],
+			"data": [ ],
+			"lineStyle": {
+				"normal": {
+					"color": "#7b0094",
+					"width": 2
+				}
+			}
+		},
+		{
+			"type": "wellSymbol",
+			"name": "油井井位",
+			"scale": 0.2,
+			"label": {
+				"normal": {
+					"color": "black",
+					"show": true,
+					"formatter": "{b}",
+					"position": "right"
+				}
+			},
+			"data": [ ],
+			"symbolSize": 15
 		},
 		{
 			"type": "wellLabel",
@@ -490,168 +378,6 @@
 				}
 			},
 			"data": []
-		},
-    {
-	  "type": "miningIndex",
-	  "name": "柱形开采指标",
-	  "wellType":"21",
-	  "data": [],
-	  "label": {
-		  "normal":{
-			  "color": "black",
-			  "show": false
-		  }
-	  },
-	  "nameLabel": {
-		  "normal":{
-			  "color": "black",
-			  "show": false
-		  }
-	  },
-	  "toopTip":{
-		  "show":true
-	  }
-    },
-	{
-	  "type": "wellTrace",
-	  "name": "油井井轨迹",
-	  "traceType":"1",
-	  "lineStyle": {
-		  "normal":{
-			"type": "solid",
-			"color": "#000",
-			"width": 1
-		  }
-		},
-		"AsymbolStyle": {
-			"normal":{
-			  "color": "#FE0100",
-			  "symbolSize": 15
-			}
-		  },
-		  "BsymbolStyle": {
-			"normal":{
-			  "color": "#000ed6",
-			  "symbolSize": 15
-			}
-		  },
-	  "data": []
-	  }
-
-
-  ],
-	"layers": [
-		{
-			"id":"7",  
-			"name":"开采指标", 
-			"z":8,  
-			"show":true,  
-			"editable":true,  
-			"objs":["柱形开采指标"]
-		},
-		{
-			"id":"6",  
-			"name":"井位图层", 
-			"z":6,  
-			"show":true,  
-			"editable":true,  
-			"objs":["油井井位"]
-		},
-		{
-			"id":"10",  
-			"name":"油井井轨迹", 
-			"z":6,  
-			"show":true,  
-			"editable":true,  
-			"objs":["油井井轨迹"]
-		},
-		{
-			"id":"5",  
-			"name":"断层", 
-			"z":5,  
-			"show":true,  
-			"editable":true,  
-			"objs":["断层"]
-		},
-		{
-			"id":"4",  
-			"name":"等值图", 
-			"z":4,  
-			"show":true,  
-			"editable":true,  
-			"objs":[],
-			"childType":"radio",
-			"children":[{
-				"name":"等高线",
-				"show":true,
-				"objs":["等高线"]
-			},
-			{
-				"name":"等压线",
-				"show":false,
-				"objs":["等压线","等压区","油压"]
-			},{
-				"name":"等温线",
-				"show":false,
-				"objs":["等温线","等温区","井口温度"]
-			}]
-		},
-		{
-			"id":"3",  
-			"name":"探明开发储量", 
-			"z":3,  
-			"show":true,  
-			"editable":true,  
-			"objs":["探明开发储量区","探明开发储量区边界"]
-		},
-		{
-			"id":"2",  
-			"name":"评价滚动储量区", 
-			"z":2,  
-			"show":true,  
-			"editable":true,  
-			"objs":["评价滚动储量区","滚动储量区边界"]
-		},
-		{
-			"id":"1",  
-			"name":"尖灭线", 
-			"z":1,  
-			"show":true,  
-			"editable":true,  
-			"objs":["砂体范围","尖灭线"]
 		}
-	],
-	"fonts":{
-		"1": {
-			"fontFamily": "Arial", 
-			"fontStyle": "normal", 
-			"fontSize": "40px",  
-			"fontColor": "#000000", 
-			"fontWeight": "bold", 
-			"textAlign": "left", 
-			"textVerticalAlign": "middle", 
-			"textRotation": "0"
-		}, 
-		"2": {	
-			"fontFamily": "Georgia", 
-			"fontStyle": "normal", 
-			"fontSize": "12px",  
-			"fontColor": "#000000", 
-			"fontWeight": "normal", 
-			"textAlign": "left", 
-			"textVerticalAlign": "middle", 
-			"textRotation": "0"
-		}, 
-		"3": {
-			"fontFamily": "serif", 
-			"fontStyle": "normal", 
-			"fontSize": "9px",  
-			"fontColor": "#000000", 
-			"fontWeight": "normal", 
-			"textAlign": "left", 
-			"textVerticalAlign": "middle", 
-			"textRotation": "0" 
-		}
-	}
-	
+	]
 }
