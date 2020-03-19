@@ -1,0 +1,13 @@
+{
+	options: [
+		{value: "1", img: "index_1.png", img_dis: "index_2.png",selected: "1", text: ""},
+		{value: "2", img: "index_1.png",img_dis: "index_2.png",  text: ""},
+		{value: "3", img: "index_1.png",img_dis: "index_2.png",  text: ""},
+		{value: "4", img: "index_1.png", img_dis: "index_2.png",text: ""},
+		{value: "5", img: "index_1.png", img_dis: "index_2.png", text: ""},
+		{value: "6", img: "index_1.png",img_dis: "index_2.png",  text: ""},
+		{value: "7", img: "index_1.png", img_dis: "index_2.png", text: ""},
+		{value: "8", img: "index_1.png",img_dis: "index_2.png", text: ""},
+		{value: "9", img: "index_1.png",img_dis: "index_2.png", text: ""}
+	]
+}

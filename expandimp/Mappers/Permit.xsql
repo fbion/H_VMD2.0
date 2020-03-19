@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<mapper>
+  <select id="CheckPermit">
+    select  count(*) from ds_premit where warrantid = @warrantid and methodid=@methodid
+  </select>
+  <select id="SelectPermit">
+    select  b.code from ds_permit a,ds_warrant b where  a.warrantid=b.id and a.methodid=@methodid
+  </select>
+</mapper>

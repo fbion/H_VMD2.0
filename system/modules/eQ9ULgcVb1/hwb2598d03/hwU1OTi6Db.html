@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>IDE版本发布</title>
+	<!--基本样式-->
+    <link href="/css/common.css?ver=2.0.3" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.3" rel="stylesheet" />
+   
+    <link href="/design/css/icons.css?ver=2.0.3" rel="stylesheet" />
+
+	<link href="/lib/dhtmlx/dhtmlx.css?ver=2.0.3" rel="stylesheet" />
+	  <!--样式快捷索引表-->
+    <link href="/css/shortcut.css?ver=2.0.3" rel="stylesheet" />
+    
+    <script src="/lib/labjs/LAB.min.js?ver=2.0.3"></script>
+    <script src="/config.js?ver=2.0.3"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.3"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.3"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.3"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=2.0.3"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.3"></script>
+    <script src="/js/util.js?ver=2.0.3"></script>
+    <script src="/lib/dhtmlx/dhtmlx.js?ver=2.0.3"></script>
+	<script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.3"></script>
+	<script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.3"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.3"></script>
+	<script src="/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.3"></script>
+    <script src="/js/hwdas.js?ver=2.0.3"></script>
+    <script src="/js/vmdcore.js?ver=2.0.3"></script>
+    <script src="/js/vmdcomps.js?ver=2.0.3"></script>
+    <script src="/js/publicMethods.js?ver=2.0.3"></script>
+    <script src="/js/vmdreport.js?ver=2.0.3"></script>
+    
+
+    <script src="/lib/ace/ace.js"></script>
+    <script src="/lib/ace/mode-base.js" type="text/javascript"></script>
+    <script src="/lib/ace/theme-xcode.js" type="text/javascript" ></script>
+    <script src="/lib/ace/ext-language_tools.js"></script>
+    
+
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        
+    </style>
+    <script>
+        vmd.virtualPath = '';
+        vmd.workspace={"workspaceid":"3b677fb9-f276-4d89-b127-0b8a349ad43a","projectid":"eQ9ULgcVb1","workflowIp":"","dataServiceIp":""}
+        Ext.define("vmd.module.MyViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps([]),
+	xtype:"vmd.module.MyViewport",
+	layout:"absolute",
+	afterrender:"MyViewport_afterrender",
+	listeners:{
+		vmdafterrender:function(){
+	this.MyViewport_afterrender(this)
+}
+	},
+	initComponent: function(){
+		var verReplaceFn = function(str) {
+    // var linkReg = /(<link.*\s+href=(?:"[^"]*"|'[^']*')[^<]*>)/g;
+    // var scriptReg = /<script.*?><\/script>/g;
+    str = str.replace(/(<script.*?><\/script>)|(<link.*\s+href=(?:"[^"]*"|'[^']*')[^<]*>)/g,
+        function(codestr) {
+
+            var pref = '';
+            if(codestr.indexOf('.js') != -1) pref = '.js';
+            if(codestr.indexOf('.css') != -1) pref = '.css';
+
+            codestr = codestr.replace(/((\.js)|(\.css))(\?ver=[\d\.]+)*/g,
+                pref + '?ver=' + hwText.getValue());
+            return codestr;
+        })
+
+    return str;
+}
+
+var Version = {
+    updateVerPath: 'system/updateVer.txt',
+    designPath: 'design/default.html',
+    modulePreviewPath: 'run/default.html',
+    reportPreviewPath: 'run/report.html',
+    report2_2PreviewPath: 'run/report2_2.html',
+    chartPreviewPath: 'run/chart.html',
+    verInfo: {},
+    previewState: {
+        module: false,
+        report: false,
+        report2_2: false,
+        chart: false
+    },
+    updateVer: function() {
+        this.verInfo.ideVersion = hwText.getValue();
+        var str = Ext.encode(this.verInfo);
+        vmd.saveVmd(Version.updateVerPath, str)
+    },
+    updatePreviewVer: function(path, callback) {
+        vmd.getFileStr(path, function(data) {
+
+            var str;
+            str = verReplaceFn(data);
+            vmd.saveVmd(path, str, function() {
+
+                callback && callback();
+            })
+
+
+        })
+    }
+
+
+}
+
+function button_click(sender, e) {
+
+    var path = Version.designPath;
+    var verpath = Version.updateVerPath;
+    vmd.getFileStr(path, function(data) {
+
+        var str;
+        str = verReplaceFn(data);
+        vmd.saveVmd(path, str, function() {
+
+            vmd.tip('发布成功')
+        })
+
+        Version.updateVer();
+
+    })
+
+}
+
+
+function button1_click(sender, e) {
+    for(var key in Version.previewState) {
+
+        Version.previewState[key] = false;
+    }
+
+    Version.updatePreviewVer(Version.modulePreviewPath, function() {
+
+        Version.previewState.module = true;
+    })
+    Version.updatePreviewVer(Version.reportPreviewPath, function() {
+
+        Version.previewState.report = true;
+    })
+    Version.updatePreviewVer(Version.report2_2PreviewPath, function() {
+
+        Version.previewState.report2_2 = true;
+    })
+    Version.updatePreviewVer(Version.chartPreviewPath, function() {
+
+        Version.previewState.chart = true;
+    })
+    vmd.taskRunner(function() {
+        var state = true;
+        for(var key in Version.previewState) {
+
+            state *= Version.previewState[key];
+        }
+        return state;
+
+    }, function() {
+        vmd.tip('发布成功')
+        Version.updateVer();
+
+    })
+
+
+}
+
+function MyViewport_afterrender(sender) {
+
+    vmd.getFileStr(Version.updateVerPath, function(data) {
+
+        var info = Ext.decode(data)
+        if(info) {
+
+            Version.verInfo = info;
+            hwText.setValue(Version.verInfo.ideVersion || '2.0.3')
+        }
+
+    })
+
+
+}
+			this.MyViewport_afterrender=MyViewport_afterrender;
+
+
+
+		this.items=[
+			{
+				xtype:"vmd.button",
+				id:"button",
+				text:"IDE设计主界面版本发布",
+				type:"primary",
+				size:"large",
+				x:80,
+				y:90,
+				click:"button_click",
+				listeners:{
+					click:button_click
+				}
+			},
+			{
+				xtype:"textfield",
+				id:"hwText",
+				allowBlank:true,
+				x:160,
+				y:40,
+				width:140,
+				cls:"font-15"
+			},
+			{
+				xtype:"label",
+				id:"label",
+				text:"当前版本号：",
+				x:80,
+				y:40,
+				cls:"font-15"
+			},
+			{
+				xtype:"vmd.button",
+				id:"button1",
+				text:"IDE预览界面版本发布",
+				type:"info",
+				size:"large",
+				x:80,
+				y:160,
+				click:"button1_click",
+				listeners:{
+					click:button1_click
+				}
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+	}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MyViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

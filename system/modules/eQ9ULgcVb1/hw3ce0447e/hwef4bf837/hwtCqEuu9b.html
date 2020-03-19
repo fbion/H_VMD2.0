@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>组件资源代码编辑器</title>
+    <!--基本样式-->
+    <link href="/css/common.css?ver=2.0.4.190627" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.4.190627" rel="stylesheet" />
+    <link href="/design/css/icons.css?ver=2.0.4.190627" rel="stylesheet" />
+    <link href="/lib/dhtmlx/dhtmlx.css?ver=2.0.4.190627" rel="stylesheet" />
+    <!--样式快捷索引表-->
+    <link href="/css/shortcut.css?ver=2.0.4.190627" rel="stylesheet" />
+    <script src="/lib/labjs/LAB.min.js?ver=2.0.4.190627"></script>
+    <script src="/config.js?ver=2.0.4.190627"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.4.190627"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.4.190627"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.4.190627"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=2.0.4.190627"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.4.190627"></script>
+    <script src="/js/util.js?ver=2.0.4.190627"></script>
+    <script src="/lib/dhtmlx/dhtmlx.js?ver=2.0.4.190627"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.4.190627"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.4.190627"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.4.190627"></script>
+    <script src="/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.4.190627"></script>
+    <script src="/js/hwdas.js?ver=2.0.4.190627"></script>
+    <script src="/js/vmdcore.js?ver=2.0.4.190627"></script>
+    <script src="/js/vmdcomps.js?ver=2.0.4.190627"></script>
+    <script src="/js/publicMethods.js?ver=2.0.4.190627"></script>
+    <script src="/js/vmdreport.js?ver=2.0.4.190627"></script>
+    <script src="/system/modules/eQ9ULgcVb1/project.config.js"></script>
+    <script src="/lib/ace/ace.js?ver=2.0.4.190627"></script>
+    <script src="/lib/ace/mode-base.js?ver=2.0.4.190627"></script>
+    <script src="/lib/ace/theme-xcode.js?ver=2.0.4.190627"></script>
+    <script src="/lib/ace/ext-language_tools.js?ver=2.0.4.190627"></script>
+    <style> </style>
+    <style type="text/css" id="vmdcss">
+        .x-combo-list-item {
+            margin: 5px 0
+        }
+    </style>
+    <script>
+        vmd.previewMode = true;
+        vmd.virtualPath = '';
+        vmd.workspace = {
+            "workspaceid": "b87fb04c-8f21-47a8-8e7d-852e0a9d2089",
+            "workflowIp": "",
+            "dataServiceIp": "",
+            "msgIp": "",
+            "projectid": "eQ9ULgcVb1"
+        }
+        vmd.resourceSettings = {
+            "test&&资源中心服务器": "http://www.hanweikeji.com:8050/resource",
+            "test&&服务器2": "http://192.168.1.202:8050/resource",
+            "test&&555": "http://www.hanweikeji.com:8050/resource"
+        }
+        vmd.projectInfo = {
+            "projectId": "eQ9ULgcVb1",
+            "workflowIp": "",
+            "dataServiceIp": "",
+            "msgIp": "",
+            "todoIp": "",
+            "authIp": "",
+            "docIp": "",
+            "reoprtIp": "",
+            "logIp": ""
+        }
+        Ext.define("vmd.module.MyViewport", {
+            extend: "vmd.comp.viewport",
+            requires: vmd.getCmpDeps([]),
+            xtype: "vmd.module.MyViewport",
+            layout: "border",
+            afterrender: "MyViewport_afterrender",
+            beforerender: "MyViewport_beforerender",
+            initComponent: function() {
+                var path = getUrlParam('path');
+                var wopener = opener || parent
+                var readonly = getUrlParam('readonly');
+                var editServer
+                if (wopener.hwdasFileServer)
+                    editServer = wopener.hwdasFileServer;
+                else {
+                    editServer = {
+                        host: vmdSettings.dataServiceIp,
+                        mark: 'vmd'
+                    }
+                }
+                var comData = []; // 定义公共方法搜索列表数据
+                if (wopener.def_platformControl) {
+                    def_platformControl = wopener.def_platformControl;
+                }
+                var isController = vmd.getUrlParam('isController');
+                if (wopener.publicMethodsType)
+                    window.publicMethodsType = wopener.publicMethodsType;
+                else
+                    window.publicMethodsType = {
+                        fun: "fun",
+                        Category: "Category",
+                        pro: "pro",
+                        pbVar: "pbvar"
+                    };
+                //---------------
+                if (wopener.allPublicMethods) {
+                    window.allPublicMethods = wopener.allPublicMethods;
+                } else
+                    window.allPublicMethods = {
+                        text: "vmd2.0",
+                        value: {},
+                        name: "vmd",
+                        Class: "vmd",
+                        type: publicMethodsType.Category,
+                        items: {}
+                    };
+                //---------------------------------
+                // if (wopener.allHwDasMethods) {
+                //     window.allHwDasMethods = wopener.allHwDasMethods;
+                // } else
+                //     window.allHwDasMethods = {
+                //         text: "数据服务",
+                //         value: {},
+                //         name: "hwDas",
+                //         Class: "hwDas",
+                //         type: publicMethodsType.Category,
+                //         items: {}
+                //     };
+                // //---------------------------------
+                // if (wopener.allWorkFlowMethods) {
+                //     window.allWorkFlowMethods = wopener.allWorkFlowMethods;
+                // } else
+                //     window.allWorkFlowMethods = {
+                //         text: "工作流",
+                //         value: {},
+                //         name: "workFlow",
+                //         Class: "workFlow",
+                //         type: publicMethodsType.Category,
+                //         items: {}
+                //     };
+                // //---------------------------------
+                // if (wopener.allMessageCenterMethods) {
+                //     window.allMessageCenterMethods = wopener.allMessageCenterMethods;
+                // } else
+                //     window.allMessageCenterMethods = {
+                //         text: "消息中心",
+                //         value: {},
+                //         name: "hwMSC",
+                //         Class: "hwMSC",
+                //         type: publicMethodsType.Category,
+                //         items: {}
+                //     };
+                // //--------------------------------- 
+                // if (wopener.allAuthMethods) {
+                //     window.allAuthMethods = wopener.allAuthMethods;
+                // } else
+                //     window.allAuthMethods = {
+                //         text: "认证中心",
+                //         value: {},
+                //         name: "hwAuth",
+                //         Class: "hwAuth",
+                //         type: publicMethodsType.Category,
+                //         items: {}
+                //     };
+                if (parent.allMicService) {
+                    window.allMicService = parent.allMicService;
+                } else
+                    window.allMicService = {
+                        text: "微服务",
+                        value: {},
+                        name: "micService",
+                        Class: "",
+                        type: publicMethodsType.Category,
+                        items: {}
+                    };
+                //---------------------------------
+                if (wopener.init_def_platformFun) {
+                    wopener.init_def_platformFun({
+                        vmd: allPublicMethods,
+                        micService: allMicService
+                        // hwDas: allHwDasMethods,
+                        // workFlow: allWorkFlowMethods,
+                        // hwMSC: allMessageCenterMethods,
+                        // hwAuth: allAuthMethods
+                    });
+                    wopener.init_def_platformVmd();
+                    def_platformWidget = wopener.def_platformWidget;
+                }
+                //ext框架类自动识别
+                def_platformExtjs = wopener.def_platformExtjs;
+                var components = wopener.comTree || wopener.xds && wopener.xds.inspector.root.childNodes;
+                // aceEditCt = new vmd.comp.AceEx({
+                //     language: 'javascript',
+                //     id: "ace_code"
+                // })
+                //aceEdit = MyAce
+                // if (vmd.getUrlParam('enableright')) {
+                //     aceEditCt = new vmd.comp.Ace({
+                //         language: 'javascript',
+                //         id: "ace_code"
+                //     })
+                //     aceEdit = aceEditCt
+                // }
+                // if (wopener.Ext.getCmp("aceWin")) {
+                //     p_aceEdit = wopener.Ext.getCmp("aceWin")
+                //     aceEdit.value = p_aceEdit.val;
+                //     wopener.Ext.getCmp("aceWin").on('close', closeAce)
+                // }
+                var uxaceWin = parent.Ext && parent.Ext.getCmp("uxaceWin");
+                var page = this;
+
+                function closeAce() {
+                    if (uxaceWin && isController) {
+                        uxaceWin.val = MyAce.getValue();
+                        uxaceWin.un('close', closeAce)
+                        uxaceWin.closeFn();
+                    }
+                }
+
+                function hwTree3_afterrender(sender) {
+                    // bindtree()
+                }
+
+                function bindtree() {
+                    var mytree = compsTree;
+                    mytree.iconURL = "";
+                    mytree.deleteChildItems(0);
+                    mytree.loadJSONObject({
+                        id: 0,
+                        text: "我的组件",
+                        item: []
+                    });
+                    mytree.itemObj = {};
+                    Ext.each(components, function(comp) {
+                        mytree.insertNewChild(0, comp.id, comp.text);
+                        var treenode = mytree.item(comp.id);
+                        treenode.cid = comp.component.cid;
+                        treenode.iconCls = comp.attributes.iconCls;
+                        mytree.itemObj[comp.id] = treenode;
+                        var iconImg = Ext.get(comp.ui.iconNode).getStyle('background-image').replace('url("', '').replace('")', '')
+                        mytree.setItemImage2(comp.id, iconImg, iconImg, iconImg)
+                        if (comp.childNodes.length > 0) {
+                            Ext.each(comp.childNodes, function(childComp) {
+                                addComTree(childComp, comp.id);
+                            })
+                        }
+                    })
+                }
+
+                function addComTree(comp, parentId) {
+                    var mytree = compsTree;
+                    mytree.insertNewChild(parentId, comp.id, comp.text);
+                    var treenode = mytree.item(comp.id);
+                    treenode.cid = comp.component.cid;
+                    treenode.iconCls = comp.attributes.iconCls;
+                    mytree.itemObj[comp.id] = treenode;
+                    var iconImg = Ext.get(comp.ui.iconNode).getStyle('background-image');
+                    var iconImg = Ext.get(comp.ui.iconNode).getStyle('background-image').replace('url("', '').replace('")', '')
+                    mytree.setItemImage2(comp.id, iconImg, iconImg, iconImg)
+                    if (comp.childNodes.length > 0) {
+                        Ext.each(comp.childNodes, function(childComp) {
+                            addComTree(childComp, comp.id);
+                        })
+                    }
+                    mytree.closeItem(comp.id)
+                }
+
+                function compsTree_nodeClick(sender, id) {
+                    var mytree = compsTree;
+                    var m_mytree = compMethods;
+                    var p_mytree = compPropertys;
+                    var e_mytree = compEvent;
+                    clearcompMethods();
+                    clearcompPropertys();
+                    clearcompEvent();
+                    var selNode = mytree.getSelectedItemId();
+                    if (!selNode)
+                        return;
+                    if (def_platformControl[selNode]) {
+                        var methods = def_platformControl[def_platformControl[selNode]["!type"].replace("+", "")]
+                        console.log(methods)
+                        if (methods) {
+                            for (var method in methods.prototype) {
+                                if (methods.prototype[method]["type"] == 'fn()') {
+                                    if (m_mytree.rendered) {
+                                        if (methods.prototype[method]["name"] != '') {
+                                            m_mytree.insertNewChild(0, method, method + "(" + methods.prototype[method]["name"] + ")");
+                                        } else {
+                                            m_mytree.insertNewChild(0, method, method);
+                                        }
+                                        m_mytree.setItemImage2(method, "tree/fun.png", "tree/fun.png", "tree/fun.png")
+                                        var treenode = m_mytree.item(method);
+                                        treenode.content = methods.prototype[method]["!doc"];
+                                        treenode.pro = methods.prototype[method]["pro"];
+                                        m_mytree.itemObj[method] = treenode;
+                                    }
+                                } else if (methods.prototype[method]["type"] == 'event') {
+                                    if (e_mytree.rendered) {
+                                        if (methods.prototype[method]["name"] != '') {
+                                            e_mytree.insertNewChild(0, method, method + "(" + methods.prototype[method]["name"] + ")");
+                                        } else {
+                                            e_mytree.insertNewChild(0, method, method);
+                                        }
+                                        e_mytree.setItemImage2(method, "tree/event.png", "tree/event.png", "tree/event.png")
+                                        var treenode = e_mytree.item(method);
+                                        treenode.content = methods.prototype[method]["!doc"];
+                                        treenode.pro = methods.prototype[method]["pro"];
+                                        e_mytree.itemObj[method] = treenode;
+                                    }
+                                } else {
+                                    if (p_mytree.rendered) {
+                                        if (methods.prototype[method]["name"] != '') {
+                                            p_mytree.insertNewChild(0, method, method + "(" + methods.prototype[method]["name"] + ")");
+                                        } else {
+                                            p_mytree.insertNewChild(0, method, method);
+                                        }
+                                        p_mytree.setItemImage2(method, "tree/pro.png", "tree/pro.png", "tree/pro.png")
+                                        var treenode = p_mytree.item(method);
+                                        treenode.content = methods.prototype[method]["!doc"];
+                                        p_mytree.itemObj[method] = treenode;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                function addComMethods(methods) {
+                    var mytree = compsTree;
+                    var m_mytree = compMethods;
+                    var selNode = mytree.getSelectedItemId()
+                    if (!selNode)
+                        return;
+                    if (def_platformControl[selNode]) {
+                        var methods = def_platformControl[def_platformControl[selNode]["!type"].replace("+", "")]
+                        if (methods) {
+                            for (var method in methods.prototype) {
+                                if (methods.prototype[method]["type"] == 'fn()') {
+                                    if (methods.prototype[method]["name"] != '') {
+                                        m_mytree.insertNewChild(0, method, method + "(" + methods.prototype[method]["name"] + ")");
+                                    } else {
+                                        m_mytree.insertNewChild(0, method, method);
+                                    }
+                                    m_mytree.setItemImage2(method, "tree/fun.png", "tree/fun.png", "tree/fun.png")
+                                    var treenode = m_mytree.item(method);
+                                    treenode.content = methods.prototype[method]["!doc"];
+                                    treenode.pro = methods.prototype[method]["pro"];
+                                    m_mytree.itemObj[method] = treenode;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                function addComEvent(methods) {
+                    var mytree = compsTree;
+                    var e_mytree = compEvent;
+                    var selNode = mytree.getSelectedItemId()
+                    if (!selNode)
+                        return;
+                    if (def_platformControl[selNode]) {
+                        var methods = def_platformControl[def_platformControl[selNode]["!type"].replace("+", "")]
+                        if (methods) {
+                            for (var method in methods.prototype) {
+                                if (methods.prototype[method]["type"] == 'event') {
+                                    if (methods.prototype[method]["name"] != '') {
+                                        e_mytree.insertNewChild(0, method, method + "(" + methods.prototype[method]["name"] + ")");
+                                    } else {
+                                        e_mytree.insertNewChild(0, method, method);
+                                    }
+                                    e_mytree.setItemImage2(method, "tree/event.png", "tree/event.png", "tree/event.png")
+                                    var treenode = e_mytree.item(method);
+                                    treenode.content = methods.prototype[method]["!doc"];
+                                    treenode.pro = methods.prototype[method]["pro"];
+                                    e_mytree.itemObj[method] = treenode;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                function addComPropertys(methods) {
+                    var mytree = compsTree;
+                    var p_mytree = compPropertys;
+                    var selNode = mytree.getSelectedItemId()
+                    if (!selNode)
+                        return
+                    if (def_platformControl[selNode]) {
+                        var methods = def_platformControl[def_platformControl[selNode]["!type"].replace("+", "")]
+                        if (methods) {
+                            for (var method in methods.prototype) {
+                                if (methods.prototype[method]["!type"] == '') {
+                                    p_mytree.insertNewChild(0, method, method);
+                                    p_mytree.setItemImage2(method, "tree/pro.png", "tree/pro.png", "tree/pro.png")
+                                    var treenode = p_mytree.item(method);
+                                    treenode.content = methods.prototype[method]["!doc"];
+                                    p_mytree.itemObj[method] = treenode;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                function clearcompPropertys() {
+                    var mytree = compPropertys;
+                    if (mytree.rendered) {
+                        mytree.deleteChildItems(0);
+                        mytree.loadJSONObject({
+                            id: 0,
+                            text: "我的属性",
+                            item: []
+                        });
+                        mytree.itemObj = {};
+                    }
+                }
+
+                function clearcompMethods() {
+                    var mytree = compMethods;
+                    if (mytree.rendered) {
+                        mytree.deleteChildItems(0);
+                        mytree.loadJSONObject({
+                            id: 0,
+                            text: "我的方法",
+                            item: []
+                        });
+                        mytree.itemObj = {};
+                    }
+                }
+
+                function clearcompEvent() {
+                    var mytree = compEvent;
+                    if (mytree.rendered) {
+                        mytree.deleteChildItems(0);
+                        mytree.loadJSONObject({
+                            id: 0,
+                            text: "我的事件",
+                            item: []
+                        });
+                        mytree.itemObj = {};
+                    }
+                }
+
+                function compPropertys_afterrender(sender) {
+                    clearcompPropertys();
+                    // addComPropertys();
+                }
+
+                function compMethods_afterrender(sender) {
+                    clearcompMethods();
+                    addComMethods();
+                }
+
+                function compEvent_afterrender(sender) {
+                    clearcompEvent();
+                    addComEvent();
+                }
+
+                function compPropertys_nodeClick(sender, id) {
+                    hwEditor.setValue(compPropertys.itemObj[id].content);
+                    hwEditor.readOnly = true;
+                }
+
+                function hwEditor_afterrender(sender) {
+                    hwEditor.readOnly = true;
+                }
+
+                function compMethods_nodeClick(sender, id) {
+                    hwEditor.setValue(compMethods.itemObj[id].content);
+                    hwEditor.readOnly = true;
+                }
+
+                function compEvent_nodeClick(sender, id) {
+                    hwEditor.setValue(compEvent.itemObj[id].content);
+                    hwEditor.readOnly = true;
+                }
+
+                function compPropertys_doubleClick(sender, id) {
+                    MyAce.insert("\n" + compsTree.getSelectedItemId() + "." + id + ";");
+                    MyAce.focus()
+                }
+
+                function compMethods_doubleClick(sender, id) {
+                    // console.log( compMethods.itemObj[id].pro)
+                    MyAce.insert("\n" + compsTree.getSelectedItemId() + "." + compMethods.itemObj[id].pro);
+                    MyAce.focus()
+                }
+
+                function compEvent_doubleClick(sender, id) {
+                    MyAce.insert("\n function " + compsTree.getSelectedItemId() + "_" + compEvent.itemObj[id].pro + "{}");
+                    MyAce.focus()
+                }
+
+                function publicMethodsTree_afterrender(sender) {
+                    var mytree = publicMethodsTree;
+                    mytree.deleteChildItems(0);
+                    mytree.loadJSONObject({
+                        id: 0,
+                        text: "我的组件",
+                        item: []
+                    });
+                    mytree.itemObj = {};
+                    //添加分类
+                    for (var Mymethods in allPublicMethods.items) {
+                        var id = vmd.util.guid();
+                        var methods = allPublicMethods.items[Mymethods];
+                        if (methods.name) {
+                            mytree.insertNewChild(0, id, methods.name + "(" + methods.text + ")");
+                        } else {
+                            mytree.insertNewChild(0, id, methods.text);
+                        }
+                        var treenode = mytree.item(id);
+                        treenode.insert = methods.insert;
+                        treenode.name = methods.name;
+                        treenode.comment = methods.comment;
+                        if (methods.name) {
+                            treenode.text = methods.name + "(" + methods.text + ")"
+                        } else {
+                            treenode.text = methods.text
+                        }
+                        mytree.itemObj[id] = treenode;
+                        // if(!!treenode.insert) {
+                        comData.push({
+                            id: id,
+                            name: treenode.text
+                        })
+                        // }
+                        if (methods.type == publicMethodsType.Category)
+                            mytree.setItemImage2(id, "folderClosed.gif", "folderOpen.gif", "folderClosed.gif")
+                        if (methods.type == publicMethodsType.fun)
+                            mytree.setItemImage2(id, "tree/fun.png", "tree/fun.png", "tree/fun.png")
+                        if (methods.type == publicMethodsType.pro)
+                            mytree.setItemImage2(id, "tree/pro.png", "tree/pro.png", "tree/pro.png")
+                        if (methods.items) {
+                            for (var method in methods.items) {
+                                addMethodsTree(methods.items[method], id);
+                            }
+                        }
+                        mytree.closeItem(id)
+                    }
+                    var addAllMethodsApi = function(allMethods, isMicSer) {
+                        var hwid = vmd.util.guid();
+                        var hwmethods = allMethods;
+                        if (hwmethods.name) {
+                            mytree.insertNewChild(0, hwid, hwmethods.name + "(" + hwmethods.text + ")");
+                        } else {
+                            mytree.insertNewChild(0, hwid, hwmethods.text);
+                        }
+                        var treenode = mytree.item(hwid);
+                        treenode.insert = hwmethods.insert;
+                        treenode.name = hwmethods.name;
+                        treenode.comment = hwmethods.comment;
+                        mytree.itemObj[hwid] = treenode;
+                        if (hwmethods.type == publicMethodsType.Category) {
+                            if (isMicSer) {
+                                mytree.setItemImage2(hwid, "tree/micservice.png", "tree/micservice.png", "tree/micservice.png")
+                            } else {
+                                mytree.setItemImage2(hwid, "folderClosed.gif", "folderOpen.gif", "folderClosed.gif")
+                            }
+                        }
+                        if (hwmethods.items) {
+                            for (var method in hwmethods.items) {
+                                addMethodsTree(hwmethods.items[method], hwid, isMicSer);
+                            }
+                        }
+                        mytree.closeItem(hwid)
+                    }
+                    if (allMicService) {
+                        addAllMethodsApi(allMicService, true)
+                    }
+                    // //添加hwdas的节点信息
+                    // if (allHwDasMethods) {
+                    //     addAllMethodsApi(allHwDasMethods)
+                    // }
+                    // // 工作流
+                    // if (allWorkFlowMethods) {
+                    //     addAllMethodsApi(allWorkFlowMethods)
+                    // }
+                    // // 消息中心
+                    // if (allMessageCenterMethods) {
+                    //     addAllMethodsApi(allMessageCenterMethods)
+                    // }
+                    // // 认证中心
+                    // if (allAuthMethods) {
+                    //     addAllMethodsApi(allAuthMethods)
+                    // }
+                }
+
+                function addMethodsTree(method, parentId, isMicSer) {
+                    var mytree = publicMethodsTree;
+                    var id = vmd.util.guid();
+                    if (method.name && !isMicSer) {
+                        mytree.insertNewChild(parentId, id, method.name + "(" + method.text + ")");
+                    } else {
+                        mytree.insertNewChild(parentId, id, method.text);
+                    }
+                    //mytree.insertNewChild(parentId, id, method.text);
+                    var treenode = mytree.item(method.name);
+                    treenode.insert = method.insert;
+                    treenode.name = method.name;
+                    treenode.comment = method.comment;
+                    if (method.name) {
+                        treenode.text = method.name + "(" + method.text + ")"
+                    } else {
+                        treenode.text = method.text
+                    }
+                    mytree.itemObj[id] = treenode;
+                    // if(!!treenode.insert) {
+                    comData.push({
+                        id: id,
+                        name: treenode.text
+                    })
+                    // }
+                    if (method.type == publicMethodsType.Category) {
+                        if (isMicSer && method.name) {
+                            mytree.setItemImage2(id, "tree/micser/" + method.name.toLowerCase() + ".png", "tree/micser/" + method.name.toLowerCase() + ".png", "tree/micser/" + method.name.toLowerCase() + ".png")
+                        } else if (isMicSer) {
+                            mytree.setItemImage2(id, "tree/micservice.png", "tree/micservice.png", "tree/micservice.png")
+                        } else {
+                            mytree.setItemImage2(id, "folderClosed.gif", "folderOpen.gif", "folderClosed.gif")
+                        }
+                    }
+                    if (method.type == publicMethodsType.fun)
+                        mytree.setItemImage2(id, "tree/fun.png", "tree/fun.png", "tree/fun.png")
+                    if (method.type == publicMethodsType.pro)
+                        mytree.setItemImage2(id, "tree/pro.png", "tree/pro.png", "tree/pro.png")
+                    if (method.items) {
+                        for (var c_method in method.items) {
+                            addMethodsTree(method.items[c_method], id);
+                        }
+                    }
+                    mytree.closeItem(id)
+                }
+
+                function publicMethodsTree_nodeClick(sender, id) {
+                    var hwD = document.getElementById("hwEditor1");
+                    var contentHtml = '';
+                    if (!!publicMethodsTree.itemObj[id].comment) {
+                        contentHtml = publicMethodsTree.itemObj[id].comment;
+                    }
+                    hwD.innerHTML = contentHtml;
+                    // hwEditor1.setValue(publicMethodsTree.itemObj[id].comment);
+                    // hwEditor1.readOnly = true;
+                }
+
+                function publicMethodsTree_doubleClick(sender, id) {
+                    MyAce.insert(publicMethodsTree.itemObj[id].insert);
+                    MyAce.focus()
+                }
+
+                function MyViewport_afterrender(sender) {
+                    wopener.Ext.getCmp("aceWin") && wopener.Ext.getCmp("aceWin").loading.hide();
+                    setTimeout(function() {
+                        bindtree()
+                    }, 200)
+                    if (vmd.getUrlParam('enableright')) {
+                        panel1.hide()
+                        this.doLayout()
+                    }
+                    if (readonly) {
+                        div.hide();
+                        this.doLayout();
+                    }
+                    if (!path) {
+                        Tips.tips('路径不能为空！', 'warning')
+                        return;
+                    }
+                    var filename = path.substring(path.lastIndexOf('/') + 1)
+                    var filenameArr = filename.split('.');
+                    var ext = filenameArr[filenameArr.length - 1];
+                    var isloadjs = false;
+                    switch (ext) {
+                        case 'js':
+                            ext = 'javascript';
+                            break;
+                        case 'html':
+                        case 'htm':
+                            ext = 'html';
+                            break;
+                        case 'json':
+                            ext = 'json';
+                            break;
+                        case 'xml':
+                            ext = 'xml';
+                            break;
+                        case 'md':
+                            ext = 'markdown';
+                            break;
+                        case 'css':
+                            ext = 'css';
+                            break;
+                        default:
+                            ext = 'text';
+                            break;
+                    }
+                    //读取文件
+                    !isController && hwDas.read(editServer, path, function(result) {
+                        MyAce.language = ext;
+                        MyAce.getSession().setMode("ace/mode/" + ext);
+                        MyAce.setValue(result.data);
+                    }, function(err) {
+                        Tips.tips(err, 'error')
+                    })
+                    if (ext != "javascript") {
+                        panel1.hide()
+                        this.doLayout()
+                    }
+                }
+
+                function p_ace_afterrender(sender) {
+                    // p_ace.add(aceEditCt);
+                    // p_ace.doLayout();
+                    // if (typeof(p_aceEdit) != 'undefined' && p_aceEdit) {
+                    window.setTimeout(function() {
+                        //aceEdit.gotoLine(p_aceEdit.aceline)
+                        MyAce.focus()
+                        if (vmd.getUrlParam('readonly') === "true")
+                            MyAce.setReadOnly(true)
+                    }, 150)
+                    //}
+                }
+
+                function comlist_afterrender(sender) {
+                    var store = new vmd.data.Store({
+                        data: comData,
+                        fields: ['id', 'name']
+                    })
+                    comlist.store = store;
+                    comlist.valueField = 'id';
+                    comlist.displayField = 'name';
+                    comlist.dropDownFields = 'name';
+                    comlist.queryField = 'id';
+                }
+
+                function comlist_selectChanged(sender, combo, record, index) {
+                    var nodeId = comlist.getValue();
+                    var searchStr = comlist.getText();
+                    // 查找树中被搜索的项
+                    publicMethodsTree.findItem(searchStr, false, true);
+                    var seNode = publicMethodsTree.itemObj[nodeId];
+                    if (!seNode.comment) {
+                        publicMethodsTree.openItem(nodeId)
+                    }
+                }
+
+                function MyViewport_beforerender(sender) {
+                    if (uxaceWin && isController) {
+                        MyAce.value = uxaceWin.val;
+                        uxaceWin.on('close', closeAce);
+                        div.hide();
+                        page.doLayout();
+                    }
+                }
+
+                function button_click(sender, e) {
+                    var context = MyAce.getValue() || " ";
+                    if (!path) {
+                        Tips.tips('路径不能为空！', 'warning')
+                        return;
+                    }
+                    hwDas.write(editServer, path, context, function(result) {
+                        Tips.tips("保存文件成功")
+                        if (parent && wopener.saveAceFileEditinfo) {
+                            wopener.saveAceFileEditinfo();
+                        }
+                    }, function(err) {
+                        Tips.tips(err, 'error')
+                    })
+                }
+                this.MyViewport_afterrender = MyViewport_afterrender;
+                this.MyViewport_beforerender = MyViewport_beforerender;
+                this.items = [{
+                        xtype: "panel",
+                        id: "p_ace",
+                        title: "Panel",
+                        header: false,
+                        border: true,
+                        x: 0,
+                        y: 70,
+                        layout: "fit",
+                        region: "center",
+                        autoScroll: false,
+                        afterrender: "p_ace_afterrender",
+                        listeners: {
+                            vmdafterrender: p_ace_afterrender
+                        },
+                        items: [{
+                            xtype: "vmd.ace",
+                            id: "MyAce",
+                            height: 300,
+                            width: 600,
+                            language: "javascript",
+                            region: "west",
+                            hidden: false,
+                            disabled: false
+                        }]
+                    },
+                    {
+                        xtype: "panel",
+                        id: "panel1",
+                        title: "Panel",
+                        header: false,
+                        border: true,
+                        height: 50,
+                        region: "west",
+                        layout: "border",
+                        width: 230,
+                        split: true,
+                        collapseMode: "mini",
+                        bodyStyle: "background-color: #fff",
+                        items: [{
+                            xtype: "tabpanel",
+                            id: "MyTabs",
+                            activeTab: 0,
+                            height: 150,
+                            width: 500,
+                            region: "center",
+                            split: true,
+                            collapseMode: "mini",
+                            unstyled: true,
+                            maskDisabled: true,
+                            activeItem: "panel2",
+                            items: [{
+                                    xtype: "panel",
+                                    id: "panel2",
+                                    title: "组件",
+                                    header: false,
+                                    border: false,
+                                    height: 362,
+                                    width: 249,
+                                    layout: "border",
+                                    bodyStyle: "background-color: #fff",
+                                    items: [{
+                                            xtype: "vmd.tree",
+                                            id: "compsTree",
+                                            skin: "material",
+                                            height: 213,
+                                            isdesign: false,
+                                            region: "north",
+                                            split: true,
+                                            afterrender: "hwTree3_afterrender",
+                                            nodeClick: "compsTree_nodeClick",
+                                            anchor: "100% 40%",
+                                            style: "height: 100px",
+                                            minHeight: 150,
+                                            listeners: {
+                                                vmdafterrender: hwTree3_afterrender,
+                                                nodeClick: compsTree_nodeClick
+                                            }
+                                        },
+                                        {
+                                            xtype: "tabpanel",
+                                            id: "MyTabs1",
+                                            activeTab: 0,
+                                            height: 150,
+                                            width: 500,
+                                            region: "center",
+                                            bodyStyle: "background-color: #fff;    border: 0px solid;",
+                                            hideBorders: false,
+                                            autoDestroy: false,
+                                            unstyled: true,
+                                            anchor: "100% 30%",
+                                            minHeight: 150,
+                                            items: [{
+                                                    xtype: "panel",
+                                                    id: "panel3",
+                                                    title: "属性",
+                                                    header: false,
+                                                    border: false,
+                                                    height: 100,
+                                                    layout: "fit",
+                                                    items: [{
+                                                        xtype: "vmd.tree",
+                                                        id: "compPropertys",
+                                                        skin: "material",
+                                                        width: 300,
+                                                        height: 200,
+                                                        isdesign: false,
+                                                        afterrender: "compPropertys_afterrender",
+                                                        nodeClick: "compPropertys_nodeClick",
+                                                        doubleClick: "compPropertys_doubleClick",
+                                                        listeners: {
+                                                            vmdafterrender: compPropertys_afterrender,
+                                                            nodeClick: compPropertys_nodeClick,
+                                                            doubleClick: compPropertys_doubleClick
+                                                        }
+                                                    }]
+                                                },
+                                                {
+                                                    xtype: "panel",
+                                                    id: "panel4",
+                                                    title: "方法",
+                                                    header: false,
+                                                    border: false,
+                                                    height: 100,
+                                                    layout: "fit",
+                                                    items: [{
+                                                        xtype: "vmd.tree",
+                                                        id: "compMethods",
+                                                        skin: "material",
+                                                        width: 300,
+                                                        height: 200,
+                                                        isdesign: false,
+                                                        afterrender: "compMethods_afterrender",
+                                                        nodeClick: "compMethods_nodeClick",
+                                                        doubleClick: "compMethods_doubleClick",
+                                                        listeners: {
+                                                            vmdafterrender: compMethods_afterrender,
+                                                            nodeClick: compMethods_nodeClick,
+                                                            doubleClick: compMethods_doubleClick
+                                                        }
+                                                    }]
+                                                },
+                                                {
+                                                    xtype: "panel",
+                                                    id: "panel5",
+                                                    title: "事件",
+                                                    header: false,
+                                                    border: false,
+                                                    height: 100,
+                                                    layout: "fit",
+                                                    items: [{
+                                                        xtype: "vmd.tree",
+                                                        id: "compEvent",
+                                                        skin: "material",
+                                                        width: 300,
+                                                        height: 200,
+                                                        isdesign: false,
+                                                        afterrender: "compEvent_afterrender",
+                                                        nodeClick: "compEvent_nodeClick",
+                                                        doubleClick: "compEvent_doubleClick",
+                                                        listeners: {
+                                                            vmdafterrender: compEvent_afterrender,
+                                                            nodeClick: compEvent_nodeClick,
+                                                            doubleClick: compEvent_doubleClick
+                                                        }
+                                                    }]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            xtype: "panel",
+                                            id: "panel7",
+                                            title: "说明",
+                                            header: false,
+                                            border: false,
+                                            height: 150,
+                                            region: "south",
+                                            layout: "border",
+                                            split: true,
+                                            collapseMode: "standard",
+                                            autoScroll: false,
+                                            anchor: "100% 30%",
+                                            minHeight: 150,
+                                            items: [{
+                                                xtype: "htmleditor",
+                                                id: "hwEditor",
+                                                fieldLabel: "Html Editor",
+                                                height: 150,
+                                                width: 300,
+                                                enableAlignments: false,
+                                                enableColors: false,
+                                                enableFont: false,
+                                                enableFontSize: false,
+                                                enableFormat: false,
+                                                enableLinks: false,
+                                                enableLists: false,
+                                                enableSourceEdit: false,
+                                                region: "center",
+                                                afterrender: "hwEditor_afterrender",
+                                                style: "background-color: #fff;    border-left: 0px;    border-right: 0px;    margin-top: -5",
+                                                floatable: false,
+                                                margins: "-3",
+                                                split: false,
+                                                autoHide: false,
+                                                animFloat: false,
+                                                hidden: false,
+                                                listeners: {
+                                                    vmdafterrender: hwEditor_afterrender
+                                                }
+                                            }]
+                                        }
+                                    ]
+                                },
+                                {
+                                    xtype: "panel",
+                                    id: "panel6",
+                                    title: "公共方法",
+                                    header: false,
+                                    border: false,
+                                    height: 100,
+                                    layout: "border",
+                                    bodyStyle: "background-color: #fff",
+                                    items: [{
+                                            xtype: "panel",
+                                            id: "panel8",
+                                            title: "Panel",
+                                            header: false,
+                                            border: false,
+                                            height: 30,
+                                            width: 236,
+                                            region: "north",
+                                            layout: "fit",
+                                            items: [{
+                                                xtype: "vmd.comlist",
+                                                id: "comlist",
+                                                width: 388,
+                                                height: 270,
+                                                style: "border: 1px solid #dfdfdf;    border-right: 0;    font-size: 13px;",
+                                                region: "center",
+                                                editable: true,
+                                                query: false,
+                                                afterrender: "comlist_afterrender",
+                                                collapseMode: "mini",
+                                                split: false,
+                                                minWidth: "",
+                                                selectChanged: "comlist_selectChanged",
+                                                listeners: {
+                                                    vmdafterrender: comlist_afterrender,
+                                                    selectChanged: comlist_selectChanged
+                                                }
+                                            }]
+                                        },
+                                        {
+                                            xtype: "vmd.tree",
+                                            id: "publicMethodsTree",
+                                            skin: "material",
+                                            width: 300,
+                                            height: 200,
+                                            isdesign: false,
+                                            afterrender: "publicMethodsTree_afterrender",
+                                            nodeClick: "publicMethodsTree_nodeClick",
+                                            doubleClick: "publicMethodsTree_doubleClick",
+                                            anchor: "100% 70%",
+                                            region: "center",
+                                            minHeight: 150,
+                                            listeners: {
+                                                vmdafterrender: publicMethodsTree_afterrender,
+                                                nodeClick: publicMethodsTree_nodeClick,
+                                                doubleClick: publicMethodsTree_doubleClick
+                                            }
+                                        },
+                                        {
+                                            xtype: "panel",
+                                            id: "panel",
+                                            title: "说明",
+                                            header: false,
+                                            border: false,
+                                            height: 250,
+                                            region: "south",
+                                            layout: "border",
+                                            split: true,
+                                            collapseMode: "standard",
+                                            autoScroll: false,
+                                            anchor: "100% 30%",
+                                            minHeight: 150,
+                                            items: [{
+                                                xtype: "vmd.div",
+                                                id: "hwEditor1",
+                                                autoEl: "div",
+                                                border: true,
+                                                backgroundRepeat: "no-repeat",
+                                                backgroundPosition: "top left",
+                                                width: 400,
+                                                height: 50,
+                                                region: "center",
+                                                autoScroll: true
+                                            }]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }]
+                    },
+                    {
+                        xtype: "vmd.div",
+                        id: "div",
+                        autoEl: "div",
+                        border: true,
+                        backgroundRepeat: "no-repeat",
+                        backgroundPosition: "top left",
+                        width: 400,
+                        height: 43,
+                        region: "north",
+                        style: "padding: 5px",
+                        layout: "auto",
+                        items: [{
+                                xtype: "vmd.button",
+                                id: "button",
+                                text: "保存",
+                                type: "primary",
+                                size: "small",
+                                icon: "icon-save font",
+                                click: "button_click",
+                                listeners: {
+                                    click: button_click
+                                }
+                            },
+                            {
+                                xtype: "label",
+                                id: "label",
+                                text: "（温馨提示：编辑后请点击保存）",
+                                style: "padding-left: 10px;    font-family: Microsoft YaHei;    font-size: 14px;    color: #f7ba2a;    color: #ff4949;"
+                            }
+                        ]
+                    }
+                ]
+                this.callParent();
+                var me = this;
+                vmd.core.moduleInit(this.items, this);
+                me.on('beforerender', function() {
+                    MyViewport_beforerender.call(me, me)
+                })
+                me.on('afterrender', function() {
+                    MyViewport_afterrender.call(me, me)
+                })
+            }
+        })
+        Ext.onReady(function() {
+            Ext.create('vmd.module.MyViewport', {
+                renderTo: document.body
+            })
+        })
+    </script>
+</head>
+
+<body> </body>
+
+</html>

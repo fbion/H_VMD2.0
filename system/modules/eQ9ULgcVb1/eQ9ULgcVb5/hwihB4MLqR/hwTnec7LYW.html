@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>打印1</title>
+    <!--基本样式-->
+    <link href="/css/common.css?ver=2.0.4.190514" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.4.190514" rel="stylesheet" />
+    <link href="/design/css/icons.css?ver=2.0.4.190514" rel="stylesheet" />
+    <link href="/lib/dhtmlx/dhtmlx.css?ver=2.0.4.190514" rel="stylesheet" />
+    <!--样式快捷索引表-->
+    <link href="/css/shortcut.css?ver=2.0.4.190514" rel="stylesheet" />
+    <script src="/lib/labjs/LAB.min.js?ver=2.0.4.190514"></script>
+    <script src="/config.js?ver=2.0.4.190514"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.4.190514"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.4.190514"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.4.190514"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=2.0.4.190514"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.4.190514"></script>
+    <script src="/js/util.js?ver=2.0.4.190514"></script>
+    <script src="/lib/dhtmlx/dhtmlx.js?ver=2.0.4.190514"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.4.190514"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.4.190514"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.4.190514"></script>
+    <script src="/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.4.190514"></script>
+    <script src="/js/hwdas.js?ver=2.0.4.190514"></script>
+    <script src="/js/vmdcore.js?ver=2.0.4.190514"></script>
+    <script src="/js/vmdcomps.js?ver=2.0.4.190514"></script>
+    <script src="/js/publicMethods.js?ver=2.0.4.190514"></script>
+    <script src="/js/vmdreport.js?ver=2.0.4.190514"></script>
+    <style> </style>
+    <style type="text/css" id="vmdcss"> </style>
+    <script>
+        vmd.previewMode = true;
+        vmd.virtualPath = '';
+        vmd.workspace = {
+            "workspaceid": "b87fb04c-8f21-47a8-8e7d-852e0a9d2089",
+            "workflowIp": "",
+            "dataServiceIp": "",
+            "msgIp": "",
+            "projectid": "eQ9ULgcVb1"
+        }
+        vmd.resourceSettings = {
+            "资源中心&&资源中心服务器": "http://www.hanweikeji.com:10050/resource"
+        }
+        vmd.projectInfo = {
+            "projectId": "eQ9ULgcVb1",
+            "workflowIp": "",
+            "dataServiceIp": "",
+            "msgIp": "",
+            "todoIp": "",
+            "authIp": "",
+            "docIp": "",
+            "reoprtIp": "",
+            "logIp": ""
+        }
+        Ext.define("vmd.module.MainViewport", {
+            extend: "vmd.comp.viewport",
+            requires: vmd.getCmpDeps([]),
+            xtype: "vmd.module.MainViewport",
+            layout: "absolute",
+            afterrender: "MainViewport_afterrender",
+            initComponent: function() {
+                var page = this;
+                var rpt;
+                var options = {
+                    repeatHeader: true,
+                    header: "",
+                    footer: "",
+                    dpihStandard: 90,
+                    pageDirection: 1,
+                    pageSize: "A4",
+                    position: "",
+                    pageMargins: {
+                        top: 3,
+                        left: 1,
+                        right: 1,
+                        bottom: 3,
+                        header: 1,
+                        footer: 3
+                    }
+                }
+                var store = new Ext.data.JsonStore({
+                    proxy: new Ext.data.MemoryProxy(),
+                    fields: ['name', 'value']
+                });
+                var data = [{
+                    name: 'A1',
+                    value: 'A1'
+                }, {
+                    name: 'A2',
+                    value: 'A2'
+                }, {
+                    name: 'A3',
+                    value: 'A3'
+                }, {
+                    name: 'A4',
+                    value: 'A4'
+                }, {
+                    name: 'A5',
+                    value: 'A5'
+                }, {
+                    name: 'B3',
+                    value: 'B3'
+                }, {
+                    name: 'B4',
+                    value: 'B4'
+                }, {
+                    name: 'B5',
+                    value: 'B5'
+                }];
+                store.loadData(data);
+                var store1 = new Ext.data.JsonStore({
+                    proxy: new Ext.data.MemoryProxy(),
+                    fields: ['name', 'value']
+                });
+                var data1 = [{
+                    name: '横向',
+                    value: '横向'
+                }, {
+                    name: '纵向',
+                    value: '纵向'
+                }];
+                store1.loadData(data1);
+
+                function combo_beforerender(sender) {
+                    sender.store = store;
+                    sender.displayField = 'name'
+                    sender.valueField = 'value'
+                }
+
+                function cmb_drecition_beforerender(sender) {
+                    sender.store = store1;
+                    sender.displayField = 'name'
+                    sender.valueField = 'value'
+                }
+
+                function MainViewport_afterrender(sender) {
+                    rpt = parent.selectRptPrint;
+                }
+
+                function cmb_size_afterrender(sender) {
+                    cmb_size.setValue("A4");
+                }
+
+                function cmb_drecition_afterrender(sender) {
+                    cmb_drecition.setValue("横向");
+                }
+
+                function btn_ok_click(sender, e) {
+                    parent.closePrintWindow();
+                    rpt.print(options);
+                }
+
+                function btn_cansel_click(sender, e) {
+                    parent.closePrintWindow();
+                }
+
+                function cmb_size_change(sender, value, text) {
+                    if (options)
+                        options.pageSize = value;
+                }
+
+                function cmb_drecition_change(sender, value, text) {
+                    if (options) {
+                        if (value == "横向") {
+                            options.pageDirection = 0;
+                        } else {
+                            options.pageDirection = 1;
+                        }
+                    }
+                }
+
+                function hnb_mass_beforerender(sender) {
+                    hnb_mass.on("change", function() {
+                        if (options)
+                            options.dpihStandard = arguments[1];
+                    })
+                }
+
+                function hnb_tpadding_beforerender(sender) {
+                    hnb_tpadding.on("change", function() {
+                        if (options.pageMargins)
+                            options.pageMargins.top = arguments[1];
+                    })
+                }
+
+                function hnb_bpadding_beforerender(sender) {
+                    hnb_bpadding.on("change", function() {
+                        if (options.pageMargins)
+                            options.pageMargins.bottom = arguments[1];
+                    })
+                }
+
+                function hnb_lpadding_beforerender(sender) {
+                    hnb_lpadding.on("change", function() {
+                        if (options.pageMargins)
+                            options.pageMargins.left = arguments[1];
+                    })
+                }
+
+                function hnb_rpadding_beforerender(sender) {
+                    hnb_rpadding.on("change", function() {
+                        if (options.pageMargins)
+                            options.pageMargins.right = arguments[1];
+                    })
+                }
+
+                function hnb_hpadding_beforerender(sender) {
+                    hnb_hpadding.on("change", function() {
+                        if (options.pageMargins)
+                            options.pageMargins.header = arguments[1];
+                    })
+                }
+
+                function hnb_fpadding_beforerender(sender) {
+                    hnb_fpadding.on("change", function() {
+                        if (options.pageMargins)
+                            options.pageMargins.footer = arguments[1];
+                    })
+                }
+
+                function hwCheckbox_check(sender, checked) {
+                    if (options)
+                        options.repeatHeader = checked;
+                }
+                this.MainViewport_afterrender = MainViewport_afterrender;
+                this.items = [{
+                        xtype: "label",
+                        id: "label",
+                        text: "纸张大小:",
+                        x: 40,
+                        y: 36
+                    },
+                    {
+                        xtype: "vmd.combo",
+                        id: "cmb_size",
+                        width: 68,
+                        x: 100,
+                        y: 30,
+                        beforerender: "combo_beforerender",
+                        afterrender: "cmb_size_afterrender",
+                        change: "cmb_size_change",
+                        listeners: {
+                            beforerender: combo_beforerender,
+                            vmdafterrender: cmb_size_afterrender,
+                            change: cmb_size_change
+                        }
+                    },
+                    {
+                        xtype: "label",
+                        id: "label1",
+                        text: "纸张方向:",
+                        x: 40,
+                        y: 68,
+                        height: 20
+                    },
+                    {
+                        xtype: "vmd.combo",
+                        id: "cmb_drecition",
+                        width: 68,
+                        x: 100,
+                        y: 60,
+                        beforerender: "cmb_drecition_beforerender",
+                        afterrender: "cmb_drecition_afterrender",
+                        change: "cmb_drecition_change",
+                        listeners: {
+                            beforerender: cmb_drecition_beforerender,
+                            vmdafterrender: cmb_drecition_afterrender,
+                            change: cmb_drecition_change
+                        }
+                    },
+                    {
+                        xtype: "label",
+                        id: "label2",
+                        text: "点/英寸",
+                        x: 320,
+                        y: 36,
+                        height: 20
+                    },
+                    {
+                        xtype: "label",
+                        id: "label3",
+                        text: "打印机分辨率:",
+                        x: 180,
+                        y: 36,
+                        height: 20
+                    },
+                    {
+                        xtype: "label",
+                        id: "label4",
+                        text: "上:",
+                        x: 60,
+                        y: 126
+                    },
+                    {
+                        xtype: "numberfield",
+                        id: "hnb_tpadding",
+                        allowDecimals: true,
+                        allowNegative: true,
+                        decimalPrecision: 2,
+                        allowBlank: true,
+                        x: 90,
+                        y: 120,
+                        width: 50,
+                        emptyText: "3",
+                        beforerender: "hnb_tpadding_beforerender",
+                        listeners: {
+                            beforerender: hnb_tpadding_beforerender
+                        }
+                    },
+                    {
+                        xtype: "label",
+                        id: "label5",
+                        text: "毫米",
+                        x: 150,
+                        y: 120,
+                        height: 20
+                    },
+                    {
+                        xtype: "label",
+                        id: "label6",
+                        text: "下:",
+                        x: 190,
+                        y: 120,
+                        height: 20
+                    },
+                    {
+                        xtype: "numberfield",
+                        id: "hnb_bpadding",
+                        allowDecimals: true,
+                        allowNegative: true,
+                        decimalPrecision: 2,
+                        allowBlank: true,
+                        x: 220,
+                        y: 120,
+                        width: 50,
+                        emptyText: "3",
+                        beforerender: "hnb_bpadding_beforerender",
+                        listeners: {
+                            beforerender: hnb_bpadding_beforerender
+                        }
+                    },
+                    {
+                        xtype: "label",
+                        id: "label7",
+                        text: "毫米",
+                        x: 280,
+                        y: 120
+                    },
+                    {
+                        xtype: "label",
+                        id: "label8",
+                        text: "左:",
+                        x: 60,
+                        y: 156
+                    },
+                    {
+                        xtype: "numberfield",
+                        id: "hnb_lpadding",
+                        allowDecimals: true,
+                        allowNegative: true,
+                        decimalPrecision: 2,
+                        allowBlank: true,
+                        x: 90,
+                        y: 150,
+                        width: 50,
+                        emptyText: "1",
+                        beforerender: "hnb_lpadding_beforerender",
+                        listeners: {
+                            beforerender: hnb_lpadding_beforerender
+                        }
+                    },
+                    {
+                        xtype: "label",
+                        id: "label9",
+                        text: "毫米",
+                        x: 150,
+                        y: 150
+                    },
+                    {
+                        xtype: "label",
+                        id: "label10",
+                        text: "右:",
+                        x: 190,
+                        y: 150,
+                        height: 20
+                    },
+                    {
+                        xtype: "numberfield",
+                        id: "hnb_rpadding",
+                        allowDecimals: true,
+                        allowNegative: true,
+                        decimalPrecision: 2,
+                        allowBlank: true,
+                        x: 220,
+                        y: 150,
+                        width: 50,
+                        emptyText: "1",
+                        beforerender: "hnb_rpadding_beforerender",
+                        listeners: {
+                            beforerender: hnb_rpadding_beforerender
+                        }
+                    },
+                    {
+                        xtype: "label",
+                        id: "label11",
+                        text: "毫米",
+                        x: 280,
+                        y: 150
+                    },
+                    {
+                        xtype: "label",
+                        id: "label12",
+                        text: "页眉:",
+                        x: 50,
+                        y: 184
+                    },
+                    {
+                        xtype: "numberfield",
+                        id: "hnb_hpadding",
+                        allowDecimals: true,
+                        allowNegative: true,
+                        decimalPrecision: 2,
+                        allowBlank: true,
+                        x: 90,
+                        y: 180,
+                        width: 50,
+                        emptyText: "1",
+                        beforerender: "hnb_hpadding_beforerender",
+                        listeners: {
+                            beforerender: hnb_hpadding_beforerender
+                        }
+                    },
+                    {
+                        xtype: "label",
+                        id: "label13",
+                        text: "毫米",
+                        x: 150,
+                        y: 184
+                    },
+                    {
+                        xtype: "label",
+                        id: "label14",
+                        text: "页脚:",
+                        x: 180,
+                        y: 184
+                    },
+                    {
+                        xtype: "numberfield",
+                        id: "hnb_fpadding",
+                        allowDecimals: true,
+                        allowNegative: true,
+                        decimalPrecision: 2,
+                        allowBlank: true,
+                        x: 220,
+                        y: 180,
+                        width: 50,
+                        emptyText: "3",
+                        beforerender: "hnb_fpadding_beforerender",
+                        listeners: {
+                            beforerender: hnb_fpadding_beforerender
+                        }
+                    },
+                    {
+                        xtype: "label",
+                        id: "label15",
+                        text: "毫米",
+                        x: 280,
+                        y: 184
+                    },
+                    {
+                        xtype: "vmd.button",
+                        id: "btn_ok",
+                        text: "确定",
+                        type: "primary",
+                        size: "small",
+                        x: 200,
+                        y: 230,
+                        width: 60,
+                        click: "btn_ok_click",
+                        listeners: {
+                            click: btn_ok_click
+                        }
+                    },
+                    {
+                        xtype: "vmd.button",
+                        id: "btn_cansel",
+                        text: "取消",
+                        type: "(none)",
+                        size: "small",
+                        x: 280,
+                        y: 230,
+                        width: 60,
+                        click: "btn_cansel_click",
+                        listeners: {
+                            click: btn_cansel_click
+                        }
+                    },
+                    {
+                        xtype: "numberfield",
+                        id: "hnb_mass",
+                        allowDecimals: true,
+                        allowNegative: true,
+                        decimalPrecision: 2,
+                        allowBlank: true,
+                        x: 260,
+                        y: 30,
+                        width: 50,
+                        emptyText: "90",
+                        beforerender: "hnb_mass_beforerender",
+                        listeners: {
+                            beforerender: hnb_mass_beforerender
+                        }
+                    },
+                    {
+                        xtype: "checkbox",
+                        id: "hwCheckbox",
+                        fieldLabel: "Checkbox",
+                        boxLabel: "重复表头",
+                        x: 180,
+                        y: 68,
+                        checked: true,
+                        check: "hwCheckbox_check",
+                        listeners: {
+                            check: hwCheckbox_check
+                        }
+                    },
+                    {
+                        xtype: "label",
+                        id: "label16",
+                        text: "边距",
+                        x: 30,
+                        y: 100
+                    },
+                    {
+                        xtype: "label",
+                        id: "label17",
+                        text: "页面",
+                        x: 30,
+                        y: 10
+                    }
+                ]
+                this.callParent();
+                var me = this;
+                vmd.core.moduleInit(this.items, this);
+                me.on('afterrender', function() {
+                    MainViewport_afterrender.call(me, me)
+                })
+            }
+        })
+        Ext.onReady(function() {
+            Ext.create('vmd.module.MainViewport', {
+                renderTo: document.body
+            })
+        })
+    </script>
+</head>
+
+<body> </body>
+
+</html>

@@ -1,0 +1,171 @@
+{
+	"vers": "1.0", 
+	"coorSys": "Beijing_1954_GK_Zone_21",
+	"dataset":{ 
+		"ds1": { 
+				"type":0,  
+				"priority":1, 
+				"url":"txwebh/txweb/jksjcx",
+				"params":{
+					"dydm": "",
+					"wellid":""
+				}
+			},
+		"ds2": { 
+				"type":0, 
+				"priority":0,
+				"url":"txwebh/txweb/jdsj",
+				"params":{
+					"dydm": "",
+					"wellid":""
+				}
+			},			
+		"ds3":{ 
+				"type":1, 
+				"priority":0,
+				"url":"txwebh/txweb/jgjsj",
+				"params":{
+					"dydm": "",
+					"wellid":""
+				}
+		    }	
+	},	
+	"seriesMapping":[
+		{
+			"source":"ds2",
+			"seriseName": "油井井底",
+			"fields":["jh","","","x","y"]
+		},
+		{
+			"source":"ds1",
+			"seriseName": "油井井口",
+			"fields":["jh","jn","jb","x","y"]
+		}
+	
+],
+	"title": { 
+		"id":"1",  
+		"style":  
+		{
+			"show": true, 
+			"font": "1"
+		}
+	}, 
+	"frame": {  
+		"id":"2", 
+		"style":  
+		{
+			"show": true, 
+			"font": "3"
+		}
+	}, 
+	"legend": { 
+		"id":"3",  
+		"style":  
+		{
+			"show": true, 
+			"font": "2"
+		}
+	},
+	"scale": { 
+		"id":"4",  
+		"style":  
+		{
+			"show": true, 
+			"font": "3"
+		}
+	},
+	"compass": { 
+		"id":"5",  
+		"style":  
+		{
+			"show": true, 
+			"font": "3"
+		}
+	},
+	"mapInfo": { 
+		"id":"6",  
+		"style":  
+		{
+			"show": true, 
+			"font": "2"
+		}
+	},
+	"geo": [{
+		"map": "testMap",
+		"roam": true,
+		"left": 400,
+		"width": 600,
+		"itemStyle": {
+			"normal": {
+				"borderColor": "rgba(26,82,231, 1)",
+				"borderWidth": 1,
+				"areaColor": "#FFFFFF",
+				"shadowColor": "rgba(255, 255, 255, 0)",
+				"shadowOffsetX": -2,
+				"shadowOffsetY": 2,
+				"shadowBlur": 10
+			},
+			"emphasis": {
+				"areaColor": "#FFFFFF"
+			}
+		}
+	}],
+	"series": [
+		{ 
+			"type": "wellSymbol",
+			"name": "油井井低",
+			"symbol":"well_bottom",
+			"data": [],
+			"symbolSize": 8
+		},
+	{ 
+	      "type": "wellSymbol",
+	      "name": "油井井口",
+	      "data": [],
+	      "symbolSize": 15
+	  }],
+	"layers": [
+		{
+			"id":"1",  
+			"name":"井位图层", 
+			"zIndex":"1",  
+			"show":true,  
+			"editable":true,  
+			"objs":["oilwell"]
+		}
+	],
+	"fonts":{
+		"1": {
+			"fontFamily": "Arial", 
+			"fontStyle": "normal", 
+			"fontSize": "40px",  
+			"fontColor": "#000000", 
+			"fontWeight": "bold", 
+			"textAlign": "left", 
+			"textVerticalAlign": "middle", 
+			"textRotation": "0"
+		}, 
+		"2": {	
+			"fontFamily": "Georgia", 
+			"fontStyle": "normal", 
+			"fontSize": "12px",  
+			"fontColor": "#000000", 
+			"fontWeight": "normal", 
+			"textAlign": "left", 
+			"textVerticalAlign": "middle", 
+			"textRotation": "0"
+		}, 
+		"3": {
+			"fontFamily": "serif", 
+			"fontStyle": "normal", 
+			"fontSize": "9px",  
+			"fontColor": "#000000", 
+			"fontWeight": "normal", 
+			"textAlign": "left", 
+			"textVerticalAlign": "middle", 
+			"textRotation": "0" 
+		}
+	}
+	
+}

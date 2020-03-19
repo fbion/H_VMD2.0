@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<mapper>
+  <select id="SelectLog">
+    select  * from ds_accesslog
+    <where>
+      <if type="isNotEmpty"  property="id" >
+        id = @id
+      </if>
+      <if type="isNotEmpty"  property="code" >
+      and  code = @code
+      </if>
+    </where>
+  </select>
+  <insert id="Insertlog">
+    insert into   ds_accesslog (id,userid,login,logtime,loginfo,methodid,methodurl,systemid,moduleid,callcode,runresult,deviceinfo,devicetype,logfilename,runtimespan,dbtimespan,reconnbout,conntimespan)
+    values(@id,@userid,@login,@logtime,@loginfo,@methodid,@methodurl,@systemid,@moduleid,@callcode,@runresult,@deviceinfo,@devicetype,@logfilename,@runtimespan,@dbtimespan,@reconnbout,@conntimespan)
+  </insert>
+  <delete id="Removelog">
+    delete from ds_accesslog where logtime &lt;=@logtime
+    </delete>
+</mapper>

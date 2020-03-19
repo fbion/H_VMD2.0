@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>右键菜单节点重命名</title>
+	<!--基本样式-->
+    <link href="{vmdvirtualPath}/css/common.css?ver=2.0.4.20190331" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="{vmdvirtualPath}/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.4.20190331" rel="stylesheet" />
+   
+    <link href="{vmdvirtualPath}/design/css/icons.css?ver=2.0.4.20190331" rel="stylesheet" />
+
+	<link href="{vmdvirtualPath}/lib/dhtmlx/dhtmlx.css?ver=2.0.4.20190331" rel="stylesheet" />
+	  <!--样式快捷索引表-->
+    <link href="{vmdvirtualPath}/css/shortcut.css?ver=2.0.4.20190331" rel="stylesheet" />
+    
+	{vmdprojectcssfiles}
+    
+    <script src="{vmdvirtualPath}/lib/labjs/LAB.min.js?ver=2.0.4.20190331"></script>
+    <script src="{vmdvirtualPath}/config.js?ver=2.0.4.20190331"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.4.20190331"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.4.20190331"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.4.20190331"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/ext-all-debug.js?ver=2.0.4.20190331"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.4.20190331"></script>
+    <script src="{vmdvirtualPath}/js/util.js?ver=2.0.4.20190331"></script>
+    <script src="{vmdvirtualPath}/lib/dhtmlx/dhtmlx.js?ver=2.0.4.20190331"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.4.20190331"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.4.20190331"></script>
+    <script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.4.20190331"></script>
+	<script src="{vmdvirtualPath}/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.4.20190331"></script>
+    <script src="{vmdvirtualPath}/js/hwdas.js?ver=2.0.4.20190331"></script>
+    <script src="{vmdvirtualPath}/js/vmdcore.js?ver=2.0.4.20190331"></script>
+    <script src="{vmdvirtualPath}/js/vmdcomps.js?ver=2.0.4.20190331"></script>
+    <script src="{vmdvirtualPath}/js/publicMethods.js?ver=2.0.4.20190331"></script>
+    <script src="{vmdvirtualPath}/js/vmdreport.js?ver=2.0.4.20190331"></script>
+    
+	{vmdprojectjsfiles}
+    
+    {vmdworkspacePath}
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        
+    </style>
+    <script>
+	    
+        vmd.virtualPath = '{vmdvirtualPath}';
+        
+        Ext.define("vmd.module.MainViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps([]),
+	xtype:"vmd.module.MainViewport",
+	layout:"absolute",
+	initComponent: function(){
+		var nodename;
+function txtNodeName_beforerender(sender){
+ txtNodeName.on("change", function() {
+        nodename = arguments[1];
+    })
+}
+
+function txtNodeName_afterrender(sender){
+txtNodeName.setValue(getUrlParam("nodename"));
+}
+
+function btnOK_click(sender,e){
+parent.okMenuNodeNameWindow(nodename);
+}
+
+function btnCansel_click(sender,e){
+parent.closeMenuNodeNameWindow();
+}
+	
+
+
+		this.items=[
+			{
+				xtype:"label",
+				id:"label",
+				text:"节点名称：",
+				x:20,
+				y:20
+			},
+			{
+				xtype:"textfield",
+				id:"txtNodeName",
+				allowBlank:true,
+				enableKeyEvents:true,
+				x:80,
+				y:20,
+				width:150,
+				style:"border: 1px solid lightgray;",
+				beforerender:"txtNodeName_beforerender",
+				afterrender:"txtNodeName_afterrender",
+				listeners:{
+					beforerender:txtNodeName_beforerender,
+					vmdafterrender:txtNodeName_afterrender
+				}
+			},
+			{
+				xtype:"vmd.button",
+				id:"btnOK",
+				text:"确定",
+				type:"primary",
+				size:"small",
+				x:130,
+				y:60,
+				click:"btnOK_click",
+				listeners:{
+					click:btnOK_click
+				}
+			},
+			{
+				xtype:"vmd.button",
+				id:"btnCansel",
+				text:"取消",
+				type:"(none)",
+				size:"small",
+				x:186,
+				y:60,
+				click:"btnCansel_click",
+				listeners:{
+					click:btnCansel_click
+				}
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+	}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MainViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

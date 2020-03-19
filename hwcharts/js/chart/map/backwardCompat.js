@@ -1,0 +1,18 @@
+﻿Vmd.define('hwchart.chart.map.backwardCompat', {
+    
+}, function () {
+    var zrUtil = zrender.util;
+
+    hwchart.chart.map.backwardCompat = function (option) {
+        // Save geoCoord
+        var mapSeries = [];
+        zrUtil.each(option.series, function (seriesOpt) {
+            if (seriesOpt && seriesOpt.type === 'map') {
+                mapSeries.push(seriesOpt);
+                seriesOpt.map = seriesOpt.map || seriesOpt.mapType; // Put x, y, width, height, x2, y2 in the top level
+
+                zrUtil.defaults(seriesOpt, seriesOpt.mapLocation);
+            }
+        });
+    };
+})

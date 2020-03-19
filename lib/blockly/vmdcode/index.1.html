@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Blockly Demo:</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="../../blockly_compressed.js"></script>
+  <script src="../../blocks_compressed.js"></script>
+  <script src="../../javascript_compressed.js"></script>
+
+  <script src="code.js"></script>
+  <script>
+    //屏蔽掉所有blockly块的右键菜单
+    Blockly.ContextMenu.blockHelpOption = function () {
+
+    }
+
+    // add 生成img标签解析器
+    goog.ui.tree.BaseNode.prototype.getLabelSafeself = function () {
+      var a = goog.html.SafeHtml.create("image", { "class": this.config_.cssItemLabel, title: this.getToolTip(), "src": this.getCategoryImg().trueUrl || null, "backgroundData": JSON.stringify(this.getCategoryImg()) });
+      return goog.html.SafeHtml.concat(a, '')
+
+    }
+    // 获取图片类别
+    goog.ui.tree.BaseNode.prototype.getCategoryImg = function () {
+      let style_pt = this.html_.privateDoNotAccessOrElseSafeHtmlWrappedValue_,
+        trueUrl = '', clickUrl = '';
+      if (style_pt) {
+        switch (style_pt) {
+          case "逻辑":
+            trueUrl = "img/if.png";
+            clickUrl = "img/if_click.png";
+            break;
+          case "If":
+            trueUrl = "img/variable.png";
+            clickUrl = "img/variable_click.png";
+            break;
+       
+          // pt case start
+          case "变量":
+            trueUrl = "block/img/variable.png";
+            clickUrl = "block/img/variable_click.png";
+            break;
+
+          case "文本":
+            trueUrl = "block/img/annotations.png";
+            clickUrl = "block/img/annotations_click.png";
+            break;
+
+          case "函数":
+            trueUrl = "block/img/function.png";
+            clickUrl = "block/img/function_click.png";
+            break;
+
+          case "数学":
+            trueUrl = "block/img/variable.png";
+            clickUrl = "block/img/variable_click.png";
+            break;
+
+        }
+      }
+      return {
+        clickUrl: clickUrl,
+        trueUrl: trueUrl
+      };
+    }
+
+    // 获取行内html样式
+    goog.ui.tree.BaseNode.prototype.getRowSafeHtml = function () {
+      var a = {};
+      a["padding-" + (this.isRightToLeft() ? "right" : "left")] = this.getPixelIndent_() + "px";
+      a = { "class": this.getRowClassName(), style: a };
+      //判断如果不为空  再生成img
+      var b = [this.getExpandIconSafeHtml(), this.getIconSafeHtml(), this.getLabelSafeHtml(), this.html_.privateDoNotAccessOrElseSafeHtmlWrappedValue_ ? this.getLabelSafeself() : ''];
+      return goog.html.SafeHtml.create("div", a, b)
+    }
+  </script>
+  <style>
+    .blocklyTreeRow img{
+     height: 30px;
+     width: 30px;
+     padding-top: 5px;
+
+  }
+  .blocklyTreeRow{
+    height: 60px;
+    position: relative;
+    border-left: 0 !important;
+    padding-right: 16px;
+  }
+  .blocklyTreeRow  span.blocklyTreeLabel{
+    position:absolute;
+    top:35px;
+  }
+  .blocklyToolboxDiv{
+    background-color:#eee;
+  }
+  .blocklyTreeRow.blocklyTreeSelected{
+    background-color: rgb(91, 128, 165) !important;
+  }
+  .blocklyFlyoutBackground{
+    fill:#eee;
+    fill-opacity:.7
+  }
+  </style>
+</head>
+
+<body>
+  <table width="100%" height="100%">
+    <tr>
+
+      <td class="farSide">
+        <select id="languageMenu"></select>
+      </td>
+    </tr>
+    <tr>
+      <td colspan=2>
+        <table width="100%">
+          <tr id="tabRow" height="1em">
+            <td id="tab_blocks" class="tabon">...</td>
+            <td class="tabmin">&nbsp;</td>
+            <td id="tab_javascript" class="taboff">JavaScript</td>
+
+            <td class="tabmin">&nbsp;</td>
+            <td id="tab_xml" class="taboff">XML</td>
+            <td class="tabmax">
+              <button id="trashButton" class="notext" title="...">
+                <img src='../../media/1x1.gif' class="trash icon21">
+              </button>
+              <button id="linkButton" class="notext" title="...">
+                <img src='../../media/1x1.gif' class="link icon21">
+              </button>
+              <button id="runButton" class="notext primary" title="...">
+                <img src='../../media/1x1.gif' class="run icon21">
+              </button>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td height="99%" colspan=2 id="content_area">
+      </td>
+    </tr>
+  </table>
+  <div id="content_blocks" class="content"></div>
+  <pre id="content_javascript" class="content prettyprint lang-js"></pre>
+  <!-- <pre id="content_python" class="content prettyprint lang-py"></pre>
+  <pre id="content_php" class="content prettyprint lang-php"></pre>
+  <pre id="content_lua" class="content prettyprint lang-lua"></pre>
+  <pre id="content_dart" class="content prettyprint lang-dart"></pre> -->
+  <textarea id="content_xml" class="content" wrap="off"></textarea>
+
+  <xml xmlns="https://developers.google.com/blockly/xml" id="toolbox" style="display: none">
+    <category name="%{BKY_CATLOGIC}" colour="%{BKY_LOGIC_HUE}">
+      <block type="controls_if"></block>
+      <block type="logic_compare"></block>
+      <block type="logic_operation"></block>
+      <block type="logic_negate"></block>
+      <block type="logic_boolean"></block>
+      <block type="logic_null"></block>
+      <block type="logic_ternary"></block>
+    </category>
+
+    <category name="%{BKY_CATMATH}" colour="%{BKY_MATH_HUE}">
+      <block type="math_number">
+        <field name="NUM">123</field>
+      </block>
+      <block type="math_arithmetic">
+        <value name="A">
+          <shadow type="math_number">
+            <field name="NUM">1</field>
+          </shadow>
+        </value>
+        <value name="B">
+          <shadow type="math_number">
+            <field name="NUM">1</field>
+          </shadow>
+        </value>
+      </block>
+
+      <block type="math_round">
+        <value name="NUM">
+          <shadow type="math_number">
+            <field name="NUM">3.1</field>
+          </shadow>
+        </value>
+      </block>
+
+      <block type="math_constrain">
+        <value name="VALUE">
+          <shadow type="math_number">
+            <field name="NUM">50</field>
+          </shadow>
+        </value>
+        <value name="LOW">
+          <shadow type="math_number">
+            <field name="NUM">1</field>
+          </shadow>
+        </value>
+        <value name="HIGH">
+          <shadow type="math_number">
+            <field name="NUM">100</field>
+          </shadow>
+        </value>
+      </block>
+
+    </category>
+    <category name="%{BKY_CATTEXT}" colour="%{BKY_TEXTS_HUE}">
+      <block type="text"></block>
+      <block type="text_join"></block>
+      <block type="text_append">
+        <value name="TEXT">
+          <shadow type="text"></shadow>
+        </value>
+      </block>
+      <block type="text_length">
+        <value name="VALUE">
+          <shadow type="text">
+            <field name="TEXT">abc</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="text_isEmpty">
+        <value name="VALUE">
+          <shadow type="text">
+            <field name="TEXT"></field>
+          </shadow>
+        </value>
+      </block>
+      <block type="text_indexOf">
+        <value name="VALUE">
+          <block type="variables_get">
+            <field name="VAR">{textVariable}</field>
+          </block>
+        </value>
+        <value name="FIND">
+          <shadow type="text">
+            <field name="TEXT">abc</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="text_getSubstring">
+        <value name="STRING">
+          <block type="variables_get">
+            <field name="VAR">{textVariable}</field>
+          </block>
+        </value>
+      </block>
+      <block type="text_changeCase">
+        <value name="TEXT">
+          <shadow type="text">
+            <field name="TEXT">abc</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="text_trim">
+        <value name="TEXT">
+          <shadow type="text">
+            <field name="TEXT">abc</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="text_print">
+        <value name="TEXT">
+          <shadow type="text">
+            <field name="TEXT">abc</field>
+          </shadow>
+        </value>
+      </block>
+      <block type="text_prompt_ext">
+        <value name="TEXT">
+          <shadow type="text">
+            <field name="TEXT">abc</field>
+          </shadow>
+        </value>
+      </block>
+    </category>
+
+
+    <sep></sep>
+    <category name="变量" colour="%{BKY_PROCEDURES_HUE}" ></category>
+    <category name="数据集" colour="%{BKY_PROCEDURES_HUE}" ></category>
+    <category name="%{BKY_CATFUNCTIONS}" colour="%{BKY_PROCEDURES_HUE}" custom="PROCEDURE"></category>
+    
+  </xml>
+
+</body>
+
+</html>

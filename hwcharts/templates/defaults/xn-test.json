@@ -1,0 +1,273 @@
+{
+	"vers": "1.0", 
+	"coorSys": "Beijing_1954_GK_Zone_21",
+	"dataset":{ 
+		"ds1": { 
+				"type":0,  
+				"priority":1, 
+				"url":"txwebh/txweb/xnyjjw",
+				"params":{
+					"dydm": "",
+					"wellid":""
+				}
+            },
+			
+			"ds3":{ 
+				"type":0, 
+				"priority":0,
+				"url":"txwebh/txweb/tmkfbj", 
+				"params":{
+					"dydm": "",
+					"jb":""
+				}
+			},
+            "ds5":{ 
+                "type":0, 
+                "url":"txwebh/txweb/xndcsj",
+                "params":{
+                    
+                }
+            },
+		"ds9":{ 
+			"type":0, 
+			"priority":0,
+			"url":"txwebh/txweb/xnkczb", 
+			"params":{
+				"dydm": "",
+				"jb":""
+			}
+		},
+		"ds10":{ 
+			"type":0, 
+			"url":"txwebh/txweb/gdclqmj",
+			"params":{
+				"type": "0"
+			}
+		},
+			"ds4":{ 
+				"type":0, 
+				"priority":0,
+				"url":"txwebh/txweb/tmkfbj", 
+				"params":{
+					"dydm": "",
+					"jb":""
+				}
+			}
+	},	
+	"seriesMapping":[
+        {	"seriseName": "断层",
+			"source":"ds5",
+			"fields":["id","", "type","wallid","walltype","x","y"]
+		},
+		{
+			"source":"ds1",
+			"seriseName": "油井井位",
+			"fields":["jh","jm","jb","x","y"]
+		},
+		{
+			"source":"ds3",
+			"seriseName": "探明开发储量区边界",
+			"fields":["id","x","y","maxx","minx","maxy","miny"]
+		}
+	],
+	"toolbox": {
+		"items": {
+		"define": {
+			"tabs": [  
+			{ "seriesName": "baseProperty", "text": "基本属性", "active": true },
+			{ "seriesName": "wellSymbol", "text": "井位", "active": false },
+			{ "seriesName": "miningIndex", "text": "开采指标", "active": false }
+			]
+		}
+		}
+	},
+	"title": { 
+		"text": "等值图",
+		
+		"textStyle": {
+			"fontSize": 24
+		}
+	}, 
+	"frame": {  
+		"id":"2", 
+		"style":  
+		{
+			"show": true, 
+			"font": "3"
+		}
+	}, 
+	"frameNew": {  
+		"id":"11", 
+		"text": "新图框",
+		"style":  
+		{
+			"show": true, 
+			"font": "3"
+		}
+	}, 
+	"legend": { 
+		"id":"3",  
+		"text": "图例",
+        "orient": "vertical",
+		"style":  
+		{
+			"show": true, 
+			"font": "2"
+		},
+        "data": ["柱形开采指标"]
+	},
+	"scale": { 
+		"id":"4",  
+		"text": "比例尺",
+		
+		"textStyle": {
+			"fontSize": 24
+		}
+	}, 
+	"compass": { 
+		"id":"5",  
+		"text": "指北针",
+		
+		"textStyle": {
+			"fontSize": 24
+		}
+	},
+	"mapInfo": { 
+		"text": "编图单位：东营汉威    绘制人：XXX    编制人：XXX    录入人：XXX    审核人：XXX    日期：2019-11-30",
+		"values": {
+			"btdw":"东营汉威",
+			"hzr":"XXX",
+			"bzr":"XXX",
+			"lrr":"XXX",
+			"shr":"XXX",
+			"rq":"2019-11-30"
+		},
+	
+		"textStyle": {
+			"fontSize": 12,
+			"fontWeight": "normal",
+			"fontFamily": "Simsun"
+		}
+	}, 	
+	"geo": [{
+		"map": "testMap",
+		"roam": true,
+		
+		"width": 480,
+		"itemStyle": {
+			"normal": {
+				"borderColor": "rgba(26,82,231, 1)",
+				"borderWidth": 1,
+				"areaColor": "#FFFFFF",
+				"shadowColor": "rgba(255, 255, 255, 0)",
+				"shadowOffsetX": -2,
+				"shadowOffsetY": 2,
+				"shadowBlur": 10
+			},
+			"emphasis": {
+				"areaColor": "none"
+			}
+		}
+	}],
+	"visualMap": {
+		"min": 19,
+		"max": 100,
+		"left": "left",
+		"top": "bottom",
+		"text": ["高", "低"],
+		"seriesIndex": [0],
+		"inRange": {
+			"color": ["rgb(0, 204, 255)", "rgb(0, 0, 255)"]
+		},
+		"calculable": true
+	},
+	"series": [
+        {
+			"type": "faultLine",
+			"name": "断层",
+			"show":true,
+			"lineStyle": {
+				"normal":{
+					"type": "faultLine",
+					"color": "red"
+				}
+			},
+			"data": []
+		},
+		{ 
+	      "type": "wellSymbol",
+		  "name": "油井井位",
+		  "show":true,
+		  "label": {
+			"normal":{
+				"color": "black",
+				"show": true,
+				"formatter": "{b}",
+				"position": "right"
+				}
+			},
+	      "data": [],
+	      "symbolSize": 15
+	  	},
+		{
+			"type": "area",
+			"name": "面积",
+			"dependentSeries": ["探明开发储量区边界"],
+			"data": [],
+			"areaStyle": {
+				"normal": {
+					"color": "#FFE1B3",
+					"show": true,
+					"formatter": "{b}",
+					"position": "right"
+				}
+			}
+		},
+		  {
+			"type": "symbolLine",
+			"name": "探明开发储量区边界",
+			"data": [],
+			"lineStyle": {
+			  "normal":{
+				"color": "#3b14ff",
+				"width": 2
+			  }
+			}
+		  }
+	],
+	"layers": [
+	],
+	"fonts":{
+		"1": {
+			"fontFamily": "Arial", 
+			"fontStyle": "normal", 
+			"fontSize": "40px",  
+			"fontColor": "#000000", 
+			"fontWeight": "bold", 
+			"textAlign": "left", 
+			"textVerticalAlign": "middle", 
+			"textRotation": "0"
+		}, 
+		"2": {	
+			"fontFamily": "Georgia", 
+			"fontStyle": "normal", 
+			"fontSize": "12px",  
+			"fontColor": "#000000", 
+			"fontWeight": "normal", 
+			"textAlign": "left", 
+			"textVerticalAlign": "middle", 
+			"textRotation": "0"
+		}, 
+		"3": {
+			"fontFamily": "serif", 
+			"fontStyle": "normal", 
+			"fontSize": "9px",  
+			"fontColor": "#000000", 
+			"fontWeight": "normal", 
+			"textAlign": "left", 
+			"textVerticalAlign": "middle", 
+			"textRotation": "0" 
+		}
+	}
+	
+}

@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>tab放大</title>
+    <!--基本样式-->
+    <link href="/css/common.css?ver=vmd2.0.5.191122" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=vmd2.0.5.191122" rel="stylesheet" />
+    <link href="/lib/dhtmlx/skins/material/dhtmlx.css?ver=vmd2.0.5.191122" rel="stylesheet" />
+    <script src="/lib/dhtmlx/codebase/dhtmlx.js?ver=vmd2.0.5.191122"></script>
+    <!--样式快捷索引表-->
+    <link href="/css/shortcut.css?ver=vmd2.0.5.191122" rel="stylesheet" />
+    <script src="/lib/labjs/LAB.min.js?ver=vmd2.0.5.191122"></script>
+    <script src="/config.js?ver=vmd2.0.5.191122"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=vmd2.0.5.191122"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=vmd2.0.5.191122"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=vmd2.0.5.191122"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=vmd2.0.5.191122"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=vmd2.0.5.191122"></script>
+    <script src="/js/util.js?ver=vmd2.0.5.191122"></script>
+    <script src="/report/buttons/vmdimportexcelbutton.js?ver=vmd2.0.5.191122"></script>
+    <script src="/report/buttons/vmdexportexcelbutton.js?ver=vmd2.0.5.191122"></script>
+    <script src="/report/buttons/vmdprintbutton.js??ver=vmd2.0.5.191122"></script>
+    <script src="/report/buttons/vmdheadercustombutton.js??ver=vmd2.0.5.191122"></script>
+    <script src="/js/hwdas.js?ver=vmd2.0.5.191122"></script>
+    <script src="/js/vmdcore.js?ver=vmd2.0.5.191122"></script>
+    <script src="/js/vmdcomps.js?ver=vmd2.0.5.191122"></script>
+    <script src="/js/vmdreport.js?ver=vmd2.0.5.191122"></script>
+    <script src="/js/publicMethods.js?ver=vmd2.0.5.191122"></script>
+    <script src="/lib/express/complete.js?ver=vmd2.0.5.191122"></script>
+    <script src="/report/js/hwreport_core.js?ver=vmd2.0.5.191122"></script>
+    <script src="/system/modules/eQ9ULgcVb1/project.config.js"></script>
+    <style> </style>
+    <style type="text/css" id="vmdcss"> </style>
+    <script>
+        vmd.previewMode = true;
+        vmd.virtualPath = '';
+        vmd.workspace = {
+            "workspaceid": "1174c7d2-f008-4f84-bb61-1845b5d28814",
+            "workflowIp": "",
+            "dataServiceIp": "",
+            "msgIp": "",
+            "projectid": "eQ9ULgcVb1"
+        }
+        vmd.resourceSettings = {
+            "资源中心&&资源中心服务器": "http://www.hanweikeji.com:10050/resource"
+        }
+        vmd.projectInfo = {
+            "projectId": "eQ9ULgcVb1",
+            "workflowIp": "",
+            "dataServiceIp": "",
+            "msgIp": "",
+            "todoIp": "",
+            "authIp": "",
+            "docIp": "",
+            "reoprtIp": "",
+            "logIp": ""
+        }
+        Ext.define("vmd.module.MainViewport", {
+            extend: "vmd.comp.viewport",
+            requires: vmd.getCmpDeps(["vmd.ux.Classification$1.0$Classification"]),
+            xtype: "vmd.module.MainViewport",
+            layout: "absolute",
+            initComponent: function() {
+                function button_click(sender, e) {
+                    debugger
+                    var aa = hwMyTabs.getActiveTab()
+                    if (aa.id == 'panel') {
+                        subView.show()
+                        panel3.update("<iframe  id='iframe_page' src='http://www.baidu.com' width=100% height=100% frameborder=0  ></iframe>");
+                    }
+                    if (aa.id == 'panel1') {
+                        subView.show(600, 500);
+                        panel3.update("<iframe  id='iframe_page' src='http://www.sina.com' width=100% height=100% frameborder=0  ></iframe>");
+                    }
+                }
+
+                function hwreport_afterrender(render) {
+                    hwreport.query();
+                }
+
+                function hwreport1_afterrender(render) {
+                    hwreport1.query();
+                }
+                store = new vmd.store.jsonStore({
+                    "xtype": "vmd.jsonStore",
+                    "id": "store",
+                    "xcls": "vmd.store.jsonStore",
+                    "autoLoad": true,
+                    "cid": "vmdJsonStore",
+                    "storeConfig": "{\"id\":\"eQ9TXjYMJR\",\"callcode\":\"vmdCode\",\"url\":\"CDEServcie/project/info\",\"host\":\"\",\"isHwRest\":true,\"name\":\"项目信息\",\"getMethods\":[],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"id\",\"cname\":\"\",\"type\":\"string\",\"primary\":false,\"nullable\":false,\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"xh\",\"cname\":\"\",\"type\":\"int64\",\"primary\":false,\"nullable\":false,\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"code\",\"cname\":\"\",\"type\":\"string\",\"primary\":false,\"nullable\":false,\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"name\",\"cname\":\"\",\"type\":\"string\",\"primary\":false,\"nullable\":false,\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"row_created_by\",\"cname\":\"\",\"type\":\"string\",\"primary\":false,\"nullable\":false,\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"row_created_date\",\"cname\":\"\",\"type\":\"datetime\",\"primary\":false,\"nullable\":false,\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"row_changed_date\",\"cname\":\"\",\"type\":\"datetime\",\"primary\":false,\"nullable\":false,\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"row_changed_by\",\"cname\":\"\",\"type\":\"string\",\"primary\":false,\"nullable\":false,\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}}]}"
+                });
+                var subView = new vmd.comp.SubView({
+                    view: {
+                        xtype: "vmd.subview",
+                        id: "subView",
+                        width: 600,
+                        height: 400,
+                        layout: "fit",
+                        closable: true,
+                        draggable: false,
+                        maximizable: true,
+                        modal: true,
+                        resizable: true,
+                        autoScroll: true,
+                        closeAction: "close",
+                        header: false,
+                        items: [{
+                            xtype: "panel",
+                            id: "panel3",
+                            title: "Panel",
+                            header: false,
+                            border: false,
+                            height: 100,
+                            x: 0,
+                            y: 0,
+                            layout: "fit",
+                            items: [{
+                                xtype: "vmd.report2_2",
+                                id: "hwreport",
+                                text: "hwreport",
+                                relativepath: "report/system/modules/eQ9ULgcVb1/hwwnhcHiLT/hw2eefbfc7",
+                                align: "center",
+                                fillReport: false,
+                                autoHeight: false,
+                                autoWidth: false,
+                                isTitleFloat: true,
+                                loadMode: "nomal",
+                                nousedataset: false,
+                                isServer: true,
+                                isSelectStates: true,
+                                columnResize: false,
+                                ocx_version: "1,2,2,0",
+                                rptVersion: "2.2",
+                                afterrender: "hwreport_afterrender",
+                                path: "tab放大_hwreport.json",
+                                isWebEdit: true,
+                                dsnames: "store",
+                                listeners: {
+                                    vmdafterrender: hwreport_afterrender
+                                }
+                            }]
+                        }]
+                    },
+                    rootScope: this,
+                    isModule: true
+                })
+                this.items = [{
+                        xtype: "tabpanel",
+                        id: "hwMyTabs",
+                        activeTab: 0,
+                        height: 240,
+                        width: 600,
+                        x: 60,
+                        y: 120,
+                        items: [{
+                                xtype: "panel",
+                                id: "panel",
+                                title: "Tab1",
+                                header: true,
+                                border: true,
+                                height: 100,
+                                layout: "fit",
+                                x: 0,
+                                y: 0,
+                                items: [{
+                                    xtype: "vmd.report2_2",
+                                    id: "hwreport1",
+                                    text: "hwreport",
+                                    relativepath: "report/system/modules/eQ9ULgcVb1/hwwnhcHiLT/hw2eefbfc7",
+                                    align: "center",
+                                    fillReport: false,
+                                    autoHeight: false,
+                                    autoWidth: false,
+                                    isTitleFloat: true,
+                                    loadMode: "nomal",
+                                    nousedataset: false,
+                                    isServer: true,
+                                    isSelectStates: true,
+                                    columnResize: false,
+                                    ocx_version: "1,2,2,0",
+                                    rptVersion: "2.2",
+                                    afterrender: "hwreport1_afterrender",
+                                    path: "tab放大_hwreport1.json",
+                                    isWebEdit: true,
+                                    dsnames: "store",
+                                    listeners: {
+                                        vmdafterrender: hwreport1_afterrender
+                                    }
+                                }]
+                            },
+                            {
+                                xtype: "panel",
+                                id: "panel1",
+                                title: "Tab2",
+                                header: true,
+                                border: true,
+                                height: 100
+                            },
+                            {
+                                xtype: "panel",
+                                id: "panel2",
+                                title: "Tab3",
+                                header: true,
+                                border: true,
+                                height: 100
+                            }
+                        ]
+                    },
+                    {
+                        xtype: "vmd.button",
+                        id: "button",
+                        text: "button",
+                        type: "(none)",
+                        size: "small",
+                        x: 280,
+                        y: 70,
+                        click: "button_click",
+                        listeners: {
+                            click: button_click
+                        }
+                    },
+                    {
+                        xtype: "vmd.ux.Classification",
+                        id: "Classification",
+                        layout: "absolute",
+                        x: 670,
+                        y: 150
+                    },
+                    {
+                        xtype: "radiostoregroup",
+                        id: "hwRadioGroup",
+                        width: 200,
+                        height: 40,
+                        labelField: "label",
+                        valueField: "value",
+                        checkedField: "checked",
+                        boxFieldName: "myRadio",
+                        x: 170,
+                        y: 440,
+                        items: [{
+                                xtype: "radio",
+                                id: "hwRadio",
+                                boxLabel: "数据"
+                            },
+                            {
+                                xtype: "radio",
+                                id: "hwRadio1",
+                                boxLabel: "表达式"
+                            }
+                        ]
+                    }
+                ]
+                this.callParent();
+                var me = this;
+                vmd.core.moduleInit(this.items, this);
+            }
+        })
+        Ext.onReady(function() {
+            Ext.create('vmd.module.MainViewport', {
+                renderTo: document.body
+            })
+        })
+    </script>
+</head>
+
+<body> </body>
+
+</html>

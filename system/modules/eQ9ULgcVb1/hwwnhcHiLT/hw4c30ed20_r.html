@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>aaaaaa</title>
+	<!--基本样式-->
+    <link href="{vmdvirtualPath}/css/common.css?ver=vmd2.0.5.200306" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="{vmdvirtualPath}/lib/ext-3.4/resources/css/ext-all.css?ver=vmd2.0.5.200306" rel="stylesheet" />
+   
+    <link href="{vmdvirtualPath}/design/css/icons.css?ver=vmd2.0.5.200306" rel="stylesheet" />
+
+	<link href="{vmdvirtualPath}/lib/dhtmlx/skins/material/dhtmlx.css?ver=vmd2.0.5.200306" rel="stylesheet" />
+	  <!--样式快捷索引表-->
+    <link href="{vmdvirtualPath}/css/shortcut.css?ver=vmd2.0.5.200306" rel="stylesheet" />
+    <link href="{vmdvirtualPath}/components/ux/vmd_publicresource/datepicker/css/datepicker.css?ver=vmd2.0.5.200306" rel="stylesheet" />
+	{vmdprojectcssfiles}
+    
+    <script src="{vmdvirtualPath}/lib/labjs/LAB.min.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/config.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/ext-all-debug.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/js/util.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/lib/dhtmlx/codebase/dhtmlx.js?ver=vmd2.0.5.200306"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=vmd2.0.5.200306"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=vmd2.0.5.200306"></script>
+	<script src="{vmdvirtualPath}/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/js/hwdas.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/js/vmdcore.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/js/vmdcomps.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/js/publicMethods.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/js/vmdreport.js?ver=vmd2.0.5.200306"></script>
+    
+    {vmdworkspacePath}
+	{vmdprojectconfigjs}
+	
+	{vmdprojectjsfiles}
+    
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        
+    </style>
+    <script>
+	    
+        vmd.virtualPath = '{vmdvirtualPath}';
+        
+        Ext.define("vmd.module.MainViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps(["vmd.ux.Testdemo2$1.0$Testdemo2"]),
+	xtype:"vmd.module.MainViewport",
+	layout:"absolute",
+	initComponent: function(){
+		function button_click(sender,e){hwMenu.showAt(e.xy)
+}
+	
+		store=new vmd.store.jsonStore({fields:['id','xh','code','name','row_created_by','row_created_date','row_changed_date','row_changed_by']});
+
+
+		this.items=[
+			{
+				xtype:"vmd.button",
+				id:"button",
+				text:"button",
+				type:"(none)",
+				size:"small",
+				x:290,
+				y:300,
+				click:"button_click",
+				listeners:{
+					click:button_click
+				}
+			},
+			{
+				xtype:"vmd.menu",
+				id:"hwMenu",
+				width:120,
+				hidden:true,
+				floating:true,
+				x:790,
+				y:210,
+				items:[
+					{
+						xtype:"menuitem",
+						id:"hwMenuItem",
+						width:120,
+						text:"Menu Item",
+						hidden:false
+					},
+					{
+						xtype:"menuitem",
+						id:"hwMenuItem1",
+						width:120,
+						text:"Menu Item",
+						hidden:false
+					},
+					{
+						xtype:"menuitem",
+						id:"hwMenuItem2",
+						width:120,
+						text:"Menu Item",
+						hidden:false,
+						items:[
+							{
+								xtype:"vmd.menu",
+								id:"hwMenu1",
+								width:120,
+								hidden:true,
+								floating:true,
+								items:[
+									{
+										xtype:"menuitem",
+										id:"hwMenuItem3",
+										width:120,
+										text:"Menu Item",
+										hidden:false
+									},
+									{
+										xtype:"menuitem",
+										id:"hwMenuItem4",
+										width:120,
+										text:"Menu Item",
+										hidden:false
+									},
+									{
+										xtype:"menuitem",
+										id:"hwMenuItem5",
+										width:120,
+										text:"Menu Item",
+										hidden:false,
+										items:[
+											{
+												xtype:"vmd.menu",
+												id:"hwMenu2",
+												width:120,
+												hidden:true,
+												floating:true,
+												items:[
+													{
+														xtype:"menuitem",
+														id:"hwMenuItem6",
+														width:120,
+														text:"Menu Item",
+														hidden:false
+													},
+													{
+														xtype:"menuitem",
+														id:"hwMenuItem7",
+														width:120,
+														text:"Menu Item",
+														hidden:false
+													},
+													{
+														xtype:"menuitem",
+														id:"hwMenuItem8",
+														width:120,
+														text:"Menu Item",
+														hidden:false
+													}
+												]
+											}
+										]
+									}
+								]
+							}
+						]
+					}
+				]
+			},
+			{
+				xtype:"vmd.ux.Testdemo2",
+				id:"hwTestdemo2",
+				layout:"fit",
+				x:230,
+				y:120
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+	}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MainViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

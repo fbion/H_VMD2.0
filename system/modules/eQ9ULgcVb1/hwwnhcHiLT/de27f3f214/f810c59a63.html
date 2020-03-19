@@ -1,0 +1,19 @@
+Ext.define("vmd.module.MyViewport" ,{
+	extend:"Ext.Viewport",
+	xtype:"vmd.module.MyViewport",
+	layout:"absolute",
+	initComponent: function(){
+		this.items=[
+			{
+				xtype:"label",
+				id:"MyLabel",
+				text:"lable:",
+				x:150,
+				y:70
+			}
+		]
+		this.callParent();
+		vmd.core.moduleInit(this.items, this);
+			undefined
+	}
+})

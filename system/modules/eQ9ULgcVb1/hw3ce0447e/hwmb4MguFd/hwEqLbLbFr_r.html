@@ -1,0 +1,3146 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>组件资源选择</title>
+	<!--基本样式-->
+    <link href="{vmdvirtualPath}/css/common.css?ver=vmd2.0.5.191228" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="{vmdvirtualPath}/lib/ext-3.4/resources/css/ext-all.css?ver=vmd2.0.5.191228" rel="stylesheet" />
+   
+    <link href="{vmdvirtualPath}/design/css/icons.css?ver=vmd2.0.5.191228" rel="stylesheet" />
+
+	<link href="{vmdvirtualPath}/lib/dhtmlx/skins/material/dhtmlx.css?ver=vmd2.0.5.191228" rel="stylesheet" />
+	  <!--样式快捷索引表-->
+    <link href="{vmdvirtualPath}/css/shortcut.css?ver=vmd2.0.5.191228" rel="stylesheet" />
+    
+	{vmdprojectcssfiles}
+    
+    <script src="{vmdvirtualPath}/lib/labjs/LAB.min.js?ver=vmd2.0.5.191228"></script>
+    <script src="{vmdvirtualPath}/config.js?ver=vmd2.0.5.191228"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=vmd2.0.5.191228"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=vmd2.0.5.191228"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=vmd2.0.5.191228"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/ext-all-debug.js?ver=vmd2.0.5.191228"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=vmd2.0.5.191228"></script>
+    <script src="{vmdvirtualPath}/js/util.js?ver=vmd2.0.5.191228"></script>
+    <script src="{vmdvirtualPath}/lib/dhtmlx/codebase/dhtmlx.js?ver=vmd2.0.5.191228"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=vmd2.0.5.191228"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=vmd2.0.5.191228"></script>
+    <script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=vmd2.0.5.191228"></script>
+	<script src="{vmdvirtualPath}/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=vmd2.0.5.191228"></script>
+    <script src="{vmdvirtualPath}/js/hwdas.js?ver=vmd2.0.5.191228"></script>
+    <script src="{vmdvirtualPath}/js/vmdcore.js?ver=vmd2.0.5.191228"></script>
+    <script src="{vmdvirtualPath}/js/vmdcomps.js?ver=vmd2.0.5.191228"></script>
+    <script src="{vmdvirtualPath}/js/publicMethods.js?ver=vmd2.0.5.191228"></script>
+    <script src="{vmdvirtualPath}/js/vmdreport.js?ver=vmd2.0.5.191228"></script>
+    
+    {vmdworkspacePath}
+	{vmdprojectconfigjs}
+	
+	{vmdprojectjsfiles}
+    
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        .icon-cloud-download {
+    display: inline-block;
+    background-image: url(/modules/eQ9ULgcVb1/img/menu_icon.png);
+    width: 16px !important;
+    background-position: -16px -48px;
+    background-size: auto !important;
+    background-repeat: no-repeat;
+    height: 16px;
+    margin-right: 15px;
+}
+.font-icon {
+    display: inline-block;
+    width: 16px;
+    text-align: center;
+    font-size: 1.2em;
+    color: #aaa;
+    margin-right: 15px;
+    vertical-align: middle;
+    margin-top: -2px;
+    padding: 0;
+}
+.icon-folder-close-alt {
+    display: inline-block;
+    background-image: url(/modules/eQ9ULgcVb1/img/menu_icon.png);
+    width: 16px !important;
+    background-position: 0 -16px;
+    background-size: auto !important;
+    background-repeat: no-repeat;
+    height: 16px;
+    margin-right: 15px;
+}
+.icon-cloud-upload  {
+    display: inline-block;
+    background-image: url(/modules/eQ9ULgcVb1/img/menu_icon.png);
+    width: 16px !important;
+    background-position: 0 -48px;
+    background-size: auto !important;
+    background-repeat: no-repeat;
+    height: 16px;
+    margin-right: 15px;
+}
+.icon-cloud-newfolder {
+    display: inline-block;
+    background-image: url(/modules/eQ9ULgcVb1/img/menu_icon.png);
+    width: 16px !important;
+    background-position: 0 -16px;
+    background-size: auto !important;
+    background-repeat: no-repeat;
+    height: 16px;
+    margin-right: 15px;
+}
+.icon-cloud-search{
+    display: inline-block;
+    background-image: url(/modules/eQ9ULgcVb1/img/menu_icon.png);
+    width: 16px !important;
+    background-position: 0 0px;
+    background-size: auto !important;
+    background-repeat: no-repeat;
+    height: 16px;
+    margin-right: 15px;
+}
+.icon-cloud-remove{
+    display: inline-block;
+    background-image: url(/modules/eQ9ULgcVb1/img/menu_icon.png);
+    width: 16px !important;
+    background-position: 0 -80px;
+    background-size: auto !important;
+    background-repeat: no-repeat;
+    height: 16px;
+    margin-right: 15px;
+}
+.icon-cloud-rname  {
+    display: inline-block;
+    background-image: url(/modules/eQ9ULgcVb1/img/menu_icon.png);
+    width: 16px !important;
+    background-position: 0 -64px;
+    background-size: auto !important;
+    background-repeat: no-repeat;
+    height: 16px;
+    margin-right: 15px;
+}
+.icon-cloud-paste {
+    display: inline-block;
+    background-image: url(/modules/eQ9ULgcVb1/img/menu_icon.png);
+    width: 16px !important;
+    background-position: -16px -64px;
+    background-size: auto !important;
+    background-repeat: no-repeat;
+    height: 16px;
+    margin-right: 15px;
+}
+.icon-cloud-cut{
+    display: inline-block;
+    background-image: url(/modules/eQ9ULgcVb1/img/menu_icon.png);
+    width: 16px !important;
+    background-position: -16px -80px;
+    background-size: auto !important;
+    background-repeat: no-repeat;
+    height: 16px;
+    margin-right: 15px;
+}
+.icon-cloud-copy {
+    display: inline-block;
+    background-image: url(/modules/eQ9ULgcVb1/img/menu_icon.png);
+    width: 16px !important;
+    background-position: 0 -96px;
+    background-size: auto !important;
+    background-repeat: no-repeat;
+    height: 16px;
+    margin-right: 15px;
+}
+
+.icon-cloud-info {
+    color: #fff !important;
+    background: #c4e5ff;
+    text-align: center;
+    width: 15px;
+    border-radius: 50%;
+    height: 15px;
+    line-height: 15px;
+    margin-right: 15px;
+    box-shadow: 0 0 0 1px #6db9f5;
+}
+.icon-cloud-newfile  {
+    display: inline-block;
+    background-image: url(/modules/eQ9ULgcVb1/img/menu_icon.png);
+    width: 16px !important;
+    background-position: 0 -32px;
+    background-size: auto !important;
+    background-repeat: no-repeat;
+    height: 16px;
+    margin-right: 15px;
+}
+.icon-cloud-css  {
+    display: inline-block;
+    background-image: url(/modules/eQ9ULgcVb1/img/icon_file/css.png);
+    width: 16px !important;
+    background-size: cover !important;
+    background-repeat: no-repeat;
+    height: 16px;
+    margin-right: 15px;
+}
+.icon-cloud-js  {
+    display: inline-block;
+    background-image: url(/modules/eQ9ULgcVb1/img/icon_file/js.png);
+    width: 16px !important;
+    background-size: cover !important;
+    background-repeat: no-repeat;
+    height: 16px;
+    margin-right: 15px;
+}
+.icon-cloud-html  {
+    display: inline-block;
+    background-image: url(/modules/eQ9ULgcVb1/img/icon_file/html.png);
+    width: 16px !important;
+    background-size: cover !important;
+    background-repeat: no-repeat;
+    height: 16px;
+    margin-right: 15px;
+}
+
+.list-view{
+    margin-left: 25px;
+    background-image: url("/system/modules/eQ9ULgcVb1/img/list-view.png");
+    background-repeat: no-repeat;
+    background-position: center center;
+    border-radius: 0px;
+}
+.list-view-sel{
+    background-color: lightBlue;
+}
+.list-list{
+    margin-left: 25px;
+    background-image: url("/system/modules/eQ9ULgcVb1/img/list-list.png");
+    background-repeat: no-repeat;
+    background-position: center center;
+    border-radius: 0px;
+}
+.list-list-sel{
+    background-color: lightBlue;
+}
+.server-list{
+    background-image: url("/system/modules/eQ9ULgcVb1/img/servermenu.png");
+    background-repeat: no-repeat;
+    background-position: center center;
+    border-radius: 0px;
+}
+
+
+
+
+.x-grid3-header {
+    background: #f2f2f2
+}
+
+.x-grid3-cell-inner,
+.x-grid3-hd-inner {
+    line-height: 25px;
+    height: 25px
+}
+
+.x-grid3-header .x-grid3-hd-inner {
+    padding: 2px 3px 2px 3px
+}
+
+.x-grid3-row-over {
+    border-color: #ddd;
+    background: #efefef;
+}
+
+.x-grid3-header-pop-inner {
+    border-left-color: #aaccf6;
+    background: #aaccf6;
+}
+
+td.x-grid3-hd-over,
+td.sort-desc,
+td.sort-asc,
+td.x-grid3-hd-menu-open {
+    border-left-color: #eee;
+    border-right-color: #d0d0d0;
+}
+
+td.x-grid3-hd-over .x-grid3-hd-inner,
+td.sort-desc .x-grid3-hd-inner,
+td.sort-asc .x-grid3-hd-inner,
+td.x-grid3-hd-menu-open .x-grid3-hd-inner {
+    background: #ebf3fd;
+}
+
+.file-list-list .filename,
+.file-list-list .filename .children-more,
+.file-list-list .filename .ico {
+    float: left
+}
+
+.file-list-list .filename .children-more {
+    width: 20px;
+    height: 28px;
+    text-align: center;
+    padding-left: 0px;
+}
+
+.file-list-list .filename .ico {
+    height: 20px;
+    width: 20px;
+    padding: 0px;
+    line-height: 20px;
+    margin-right: 4px;
+    margin-top: 4px;
+    text-align: center;
+    vertical-align: bottom;
+    display: table-cell;
+}
+
+.x-item-file.small {
+    width: 20px;
+    height: 20px;
+}
+
+
+/*重置样式*/
+
+body div.file-continer .file.select,
+body div.file-continer .file.file-select-drag-temp {
+    -webkit-transition: transform 0.2s;
+    -moz-transition: transform 0.2s;
+    -o-transition: transform 0.2s;
+    -ms-transition: transform 0.2s;
+    transition: transform 0.2s;
+    background: #cce8ff;
+    border-color: #99d1ff;
+    border-radius: 0px;
+    filter: none;
+    color: #335;
+    padding: 0 5px;
+}
+
+body div.file-continer .file.hover {
+    -webkit-transition: transform 0.2s;
+    -moz-transition: transform 0.2s;
+    -o-transition: transform 0.2s;
+    -ms-transition: transform 0.2s;
+    transition: transform 0.2s;
+    background: #e5f3ff;
+    border-color: transparent;
+    border-radius: 0px;
+    border-radius: 0;
+    filter: none;
+    color: #335;
+}
+
+.file-list-icon div.file,
+.file-list-icon .flex-empty {
+    height: auto;
+    max-height: 120px;
+}
+
+.x-item-small {
+    position: relative;
+    width: 18px;
+    height: 18px;
+    margin-right: 4px;
+    background-size: 100% auto;
+    vertical-align: middle;
+}
+
+.x-item-file {
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/file.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='/modules/eQ9ULgcVb1/img/icon_file/file.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='/modules/eQ9ULgcVb1/img/icon_file/file.png?ver=3.30', sizingMethod='scale');
+    width: 100%;
+    height: 100%;
+    display: inline-block;
+    pointer-events: none;
+}
+
+.file-list-icon {
+    padding: 10px 20px 0 10px;
+    display: flex;
+    /*justify-content: space-between;*/
+    flex-wrap: wrap;
+    align-items: flex-start;
+}
+
+.file-list-icon:after {
+    width: 82px;
+    content: "";
+    display: block;
+}
+
+.file-list-icon .flex-empty {
+    width: 75px;
+    border: 1px solid transparent;
+    margin: 0;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    visibility: hidden;
+    height: 0 !important;
+}
+
+.file-list-icon .meta-info {
+    height: 22.5px;
+    width: 22.5px;
+    margin-right: 6.75px;
+    margin-top: -22.5px;
+    position: absolute;
+    right: 0;
+}
+
+.file-list-icon .meta-info img {
+    width: 100%;
+    height: 100%;
+}
+
+.file-list-icon .file {
+    position: relative;
+    color: #335;
+    border: 1px solid transparent;
+    box-shadow: 0px 0px 2px rgba(255, 255, 255, 0);
+    -webkit-transition: background 0.2s, border 0.2s, color 0.2s;
+    -moz-transition: background 0.2s, border 0.2s, color 0.2s;
+    -o-transition: background 0.2s, border 0.2s, color 0.2s;
+    -ms-transition: background 0.2s, border 0.2s, color 0.2s;
+    transition: background 0.2s, border 0.2s, color 0.2s;
+    width: 60px;
+    height: 75px;
+    text-decoration: none;
+    margin: 0;
+    margin-right: 5px;
+    padding: 0 5px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    float: left;
+}
+
+.file-list-icon .file .ico {
+    -webkit-transition: all 0.168s;
+    -moz-transition: all 0.168s;
+    -o-transition: all 0.168s;
+    -ms-transition: all 0.168s;
+    transition: all 0.168s;
+}
+
+.file-list-icon .file.hover {
+    border: 1px solid #dedede;
+    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#fafafa', endColorstr='#eeeeee');
+    background-image: -webkit-linear-gradient(top, #fafafa, #eeeeee);
+    background-image: -moz-linear-gradient(top, #fafafa, #eeeeee);
+    background-image: -o-linear-gradient(top, #fafafa, #eeeeee);
+    background-image: -ms-linear-gradient(top, #fafafa, #eeeeee);
+    background-image: linear-gradient(top, #fafafa, #eeeeee);
+    -pie-background: linear-gradient(to top, #fafafa, #eeeeee);
+    border-radius: 3px;
+}
+
+.file-list-icon .file .filename {
+    width: 60px;
+    cursor: default;
+    text-align: center;
+    word-break: break-all;
+    font-size: 1.0em;
+    margin: 0 auto;
+    line-height: 1.5em;
+    padding-bottom: 5px;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+}
+
+.file-list-icon .file .filename .textarea {
+    position: absolute;
+    font-size: 1.0em;
+    text-align: center;
+    margin-left: -1px;
+    margin-top: -3px;
+  
+}
+
+.file-list-icon .file .filename #pathRenameTextarea,
+.file-list-icon .file .filename .newfile {
+    width: 60px;
+    padding: 0px 0 4px 0;
+    margin-top: 0px;
+    overflow-y: hidden;
+    border: 1px solid #888;
+    font-size: 1.0em;
+    text-align: center;
+    line-height: 1.5em;
+    position: absolute;
+    z-index: 999;
+    margin-top: 2px;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+
+.file-list-icon .file .filename #pathRenameTextarea:focus,
+.file-list-icon .file .filename .newfile:focus {
+    outline: none;
+}
+
+.file-list-icon .file.select,
+.file-list-icon .file.file-select-drag-temp {
+    border: 1px solid #d2d2d2;
+    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#f3f3f3', endColorstr='#d9d9d9');
+    background-image: -webkit-linear-gradient(top, #f3f3f3, #d9d9d9);
+    background-image: -moz-linear-gradient(top, #f3f3f3, #d9d9d9);
+    background-image: -o-linear-gradient(top, #f3f3f3, #d9d9d9);
+    background-image: -ms-linear-gradient(top, #f3f3f3, #d9d9d9);
+    background-image: linear-gradient(top, #f3f3f3, #d9d9d9);
+    -pie-background: linear-gradient(to top, #f3f3f3, #d9d9d9);
+    border-radius: 3px;
+    padding: 0px;
+}
+
+.file-list-icon .file.file-icon-edit {
+    overflow: visible;
+    
+}
+
+.file-list-icon .file.file-icon-edit .filename {
+    position: absolute;
+    z-index: 99;
+}
+
+.file-list-icon .file .ico {
+    height: 60px;
+    width: 60px;
+    padding-top: 4px;
+    text-align: center;
+    vertical-align: middle;
+    display: table-cell;
+}
+
+.file-list-icon .file .ico img {
+    height: 100% \9;
+    max-height: 100%;
+    max-width: 100%;
+    border-radius: 5px;
+}
+
+.file-list-icon .file .ico.picture {
+    background: none;
+    width: 50px;
+    padding-left: 5px;
+}
+
+.file-list-icon .file .ico.picture img {
+    -webkit-box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
+    width: 100% \9;
+    max-width: 100%;
+    border-radius: 0px;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.file-list-icon .file .ico.picture img.lazyload-ready {
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+}
+
+.x-txt.small,
+.x-textile.small,
+.x-inc.small,
+.x-log.small {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/txt_small.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/txt_small.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/txt_small.png?ver=3.30', sizingMethod='scale');
+    background-size: auto;
+}
+
+.x-php.small {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/php_small.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/php_small.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/php_small.png?ver=3.30', sizingMethod='scale');
+    background-size: auto;
+}
+
+.x-txt,
+.x-textile,
+.x-oexe,
+.x-inc,
+.x-csv,
+.x-log,
+.x-asc,
+.x-tsv,
+.x-lnk,
+.x-url,
+.x-webloc,
+.x-meta,
+.x-localized,
+.x-xib,
+.x-xsd,
+.x-storyboard,
+.x-plist,
+.x-csproj,
+.x-pch,
+.x-pbxproj,
+.x-local,
+.x-xcscheme,
+.x-manifest,
+.x-vbproj,
+.x-strings,
+.x-jshintrc,
+.x-sublime-project,
+.x-readme,
+.x-changes,
+.x-changelog,
+.x-version,
+.x-license,
+.x-changelog,
+.x-abap,
+.x-abc,
+.x-as,
+.x-asp,
+.x-aspx,
+.x-ada,
+.x-adb,
+.x-htaccess,
+.x-htgroups,
+.x-htgroups,
+.x-htpasswd,
+.x-asciidoc,
+.x-adoc,
+.x-asm,
+.x-a,
+.x-ahk,
+.x-bat,
+.x-cmd,
+.x-cpp,
+.x-c,
+.x-cc,
+.x-cxx,
+.x-h,
+.x-hh,
+.x-hpp,
+.x-ino,
+.x-c9search_results,
+.x-cirru,
+.x-cr,
+.x-clj,
+.x-cljs,
+.x-cbl,
+.x-cob,
+.x-coffee,
+.x-cf,
+.x-cson,
+.x-cakefile,
+.x-cfm,
+.x-cs,
+.x-css,
+.x-curly,
+.x-d,
+.x-di,
+.x-dart,
+.x-diff,
+.x-patch,
+.x-dockerfile,
+.x-dot,
+.x-dummy,
+.x-dummy,
+.x-e,
+.x-ge,
+.x-ejs,
+.x-ex,
+.x-exs,
+.x-elm,
+.x-erl,
+.x-hrl,
+.x-frt,
+.x-fs,
+.x-ldr,
+.x-ftl,
+.x-gcode,
+.x-feature,
+.x-.gitignore,
+.x-glsl,
+.x-frag,
+.x-vert,
+.x-gbs,
+.x-go,
+.x-groovy,
+.x-haml,
+.x-hbs,
+.x-handlebars,
+.x-tpl,
+.x-mustache,
+.x-hs,
+.x-hx,
+.x-html,
+.x-hta,
+.x-htm,
+.x-xhtml,
+.x-eex,
+.x-html.eex,
+.x-erb,
+.x-rhtml,
+.x-html.erb,
+.x-ini,
+.x-inf,
+.x-conf,
+.x-cfg,
+.x-prefs,
+.x-io,
+.x-jack,
+.x-jade,
+.x-java,
+.x-ji,
+.x-jl,
+.x-jq,
+.x-js,
+.x-jsm,
+.x-json,
+.x-jsp,
+.x-jsx,
+.x-latex,
+.x-ltx,
+.x-bib,
+.x-lean,
+.x-hlean,
+.x-less,
+.x-liquid,
+.x-lisp,
+.x-ls,
+.x-logic,
+.x-lql,
+.x-lsl,
+.x-lua,
+.x-lp,
+.x-lucene,
+.x-Makefile,
+.x-makemakefile,
+.x-gnumakefile,
+.x-makefile,
+.x-ocamlmakefile,
+.x-make,
+.x-md,
+.x-markdown,
+.x-mask,
+.x-matlab,
+.x-mz,
+.x-mel,
+.x-mc,
+.x-mush,
+.x-mysql,
+.x-nix,
+.x-nsi,
+.x-nsh,
+.x-m,
+.x-mm,
+.x-ml,
+.x-mli,
+.x-pas,
+.x-p,
+.x-pl,
+.x-pm,
+.x-pgsql,
+.x-php,
+.x-phtml,
+.x-shtml,
+.x-php3,
+.x-php4,
+.x-php5,
+.x-phps,
+.x-phpt,
+.x-aw,
+.x-ctp,
+.x-module,
+.x-ps1,
+.x-praat,
+.x-praatscript,
+.x-psc,
+.x-proc,
+.x-plg,
+.x-prolog,
+.x-properties,
+.x-proto,
+.x-py,
+.x-r,
+.x-cshtml,
+.x-rd,
+.x-rhtml,
+.x-rst,
+.x-rb,
+.x-ru,
+.x-gemspec,
+.x-rake,
+.x-guardfile,
+.x-rakefile,
+.x-gemfile,
+.x-rs,
+.x-sass,
+.x-scad,
+.x-scala,
+.x-scm,
+.x-sm,
+.x-rkt,
+.x-oak,
+.x-scheme,
+.x-scss,
+.x-sh,
+.x-bash,
+.x-bashrc,
+.x-sjs,
+.x-smarty,
+.x-tpl,
+.x-snippets,
+.x-soy,
+.x-space,
+.x-sql,
+.x-sqlserver,
+.x-styl,
+.x-stylus,
+.x-svg,
+.x-swift,
+.x-tcl,
+.x-tex,
+.x-toml,
+.x-twig,
+.x-swig,
+.x-ts,
+.x-typescript,
+.x-str,
+.x-vala,
+.x-vbs,
+.x-vb,
+.x-vm,
+.x-v,
+.x-vh,
+.x-sv,
+.x-svh,
+.x-vhd,
+.x-vhdl,
+.x-wlk,
+.x-wpgm,
+.x-wtest,
+.x-xml,
+.x-rdf,
+.x-rss,
+.x-wsdl,
+.x-xslt,
+.x-atom,
+.x-mathml,
+.x-mml,
+.x-xul,
+.x-xbl,
+.x-xaml,
+.x-xq,
+.x-yaml,
+.x-yml,
+.x-cer,
+.x-reg,
+.x-config,
+.x-srt,
+.x-ass,
+.x-lrc {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/txt.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/txt.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/txt.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-pl,
+.x-pm,
+.x-cgi,
+.x-as,
+.x-asm,
+.x-clj,
+.x-cbl,
+.x-cfm,
+.x-d,
+.x-diff,
+.x-dot,
+.x-ejs,
+.x-erl,
+.x-ftl,
+.x-go,
+.x-hs,
+.x-vbs,
+.x-haml,
+.x-erb,
+.x-jade,
+.x-json,
+.x-jq,
+.x-jsx,
+.x-ji,
+.x-tex,
+.x-lisp,
+.x-ls,
+.x-lsl,
+.x-lua,
+.x-lp,
+.x-matlab,
+.x-mel,
+.x-r,
+.x-yaml,
+.x-yml {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/code.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/code.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/code.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-bin,
+.x-hex,
+.x-zip,
+.x-pdf,
+.x-swf,
+.x-gzip,
+.x-rar,
+.x-arj,
+.x-tar,
+.x-gz,
+.x-cab,
+.x-tbz,
+.x-tbz2,
+.x-lzh,
+.x-uue,
+.x-bz2,
+.x-ace,
+.x-exe,
+.x-so,
+.x-dll,
+.x-chm,
+.x-rtf,
+.x-odp,
+.x-odt,
+.x-pages,
+.x-class,
+.x-psd,
+.x-ttf,
+.x-fla,
+.x-dmg,
+.x-dat,
+.x-ipa,
+.x-lib,
+.x-a,
+.x-apk,
+.x-so,
+.x-o {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/bin.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/bin.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/bin.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-music,
+.x-mp3,
+.x-wma,
+.x-mp2,
+.x-mid,
+.x-aac,
+.x-ogg,
+.x-oga,
+.x-webma,
+.x-wav,
+.x-m4a,
+.x-m3u,
+.x-m4a,
+.x-midi,
+.x-mid,
+.x-flac,
+.x-alac,
+.x-ape,
+.x-ac3 {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/music.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/music.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/music.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-html,
+.x-htm,
+.x-url,
+.x-tpl,
+.x-lnk,
+.x-haml,
+.x-shtml,
+.x-webloc,
+.x-hta,
+.x-xhtml {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/html.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/html.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/html.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-css,
+.x-less,
+.x-sass {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/css.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/css.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/css.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-js,
+.x-coffee,
+.x-jsx {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/js.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/js.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/js.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-xml,
+.x-config,
+.x-manifest,
+.x-xaml,
+.x-csproj,
+.x-vbproj {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/xml.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/xml.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/xml.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-cs,
+.x-asp,
+.x-aspx {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/cs.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/cs.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/cs.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-java,
+.x-jsp {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/java.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/java.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/java.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-mm,
+.x-cc,
+.x-cxx,
+.x-cpp,
+.x-c,
+.x-m,
+.x-nc {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/cpp.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/cpp.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/cpp.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-h,
+.x-hpp,
+.x-hh,
+.x-pch {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/h.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/h.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/h.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-png,
+.x-jpg,
+.x-jpeg,
+.x-bmp,
+.x-gif,
+.x-picture,
+.x-ico,
+.x-svg,
+.x-cur,
+.x-webp,
+.x-tif,
+.x-tiff {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/jpg.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/jpg.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/jpg.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-make,
+.x-Makefile,
+.x-makefile,
+.x-GNUmakefile,
+.x-OCamlMakefile,
+.x-makemakefile {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/makefile.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/makefile.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/makefile.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-iso,
+.x-vcd {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/iso.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/iso.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/iso.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-pkg,
+.x-package,
+.x-framework {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/pkg.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/pkg.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/pkg.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-7z,
+.x-apk,
+.x-ace,
+.x-arj,
+.x-bza,
+.x-cab,
+.x-cxr,
+.x-dgc,
+.x-gca,
+.x-gz,
+.x-gza,
+.x-iso,
+.x-jar,
+.x-lzh,
+.x-rar,
+.x-rk,
+.x-tar,
+.x-tbz,
+.x-tgz,
+.x-tlz,
+.x-txz,
+.x-yz1,
+.x-zip {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/zip_all.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/zip_all.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/zip_all.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-exe,
+.x-bin,
+.x-class,
+.x-a,
+.x-so {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/exe.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/exe.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/exe.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-ttf,
+.x-otf,
+.x-eot,
+.x-woff,
+.x-tiff,
+.x-ttc {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/font.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/font.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/font.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-bat,
+.x-cmd,
+.x-sh,
+.x-bash,
+.x-bashrc {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/cmd.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/cmd.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/cmd.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-ini,
+.x-inf,
+.x-conf,
+.x-meta,
+.x-gitignore,
+.x-plist,
+.x-htaccess,
+.x-localized,
+.x-xcscheme,
+.x-storyboard,
+.x-xib,
+.x-strings,
+.x-pbxproj {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/ini.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/ini.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/ini.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-md,
+.x-markdown {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/md.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/md.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/md.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-file {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/file.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/file.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/file.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-accdb {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/accdb.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/accdb.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/accdb.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-7z {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/7z.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/7z.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/7z.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-ai {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/ai.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/ai.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/ai.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-air {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/air.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/air.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/air.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-arj {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/arj.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/arj.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/arj.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-apk {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/apk.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/apk.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/apk.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-as {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/as.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/as.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/as.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-ascx {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/ascx.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/ascx.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/ascx.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-ashx {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/ashx.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/ashx.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/ashx.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-asmx {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/asmx.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/asmx.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/asmx.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-aspx {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/aspx.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/aspx.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/aspx.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-bz2 {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/bz2.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/bz2.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/bz2.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-cdr {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/cdr.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/cdr.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/cdr.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-cer {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/cer.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/cer.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/cer.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-chm {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/chm.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/chm.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/chm.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-cmd {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/cmd.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/cmd.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/cmd.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-c {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/c.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/c.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/c.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-cpp {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/cpp.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/cpp.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/cpp.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-cs {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/cs.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/cs.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/cs.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-cshtml {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/cshtml.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/cshtml.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/cshtml.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-csproj {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/csproj.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/csproj.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/csproj.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-css {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/css.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/css.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/css.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-csv {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/csv.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/csv.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/csv.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-djvu {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/djvu.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/djvu.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/djvu.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-dll {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/dll.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/dll.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/dll.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-dng {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/dng.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/dng.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/dng.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-dmg,
+.x-img {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/dmg.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/dmg.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/dmg.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-doc,
+.x-wps {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/doc.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/doc.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/doc.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-docm {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/docm.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/docm.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/docm.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-docx {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/docx.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/docx.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/docx.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-dot {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/dot.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/dot.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/dot.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-dotm {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/dotm.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/dotm.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/dotm.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-dotx {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/dotx.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/dotx.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/dotx.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-dtd {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/dtd.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/dtd.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/dtd.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-eps {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/eps.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/eps.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/eps.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-epub {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/epub.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/epub.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/epub.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-exe {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/exe.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/exe.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/exe.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-f {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/f.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/f.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/f.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-file {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/file.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/file.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/file.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-fla {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/fla.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/fla.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/fla.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-font {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/font.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/font.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/font.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-gif {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/gif.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/gif.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/gif.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-gz {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/gz.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/gz.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/gz.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-h {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/h.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/h.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/h.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-hdr {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/hdr.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/hdr.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/hdr.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-hlp {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/hlp.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/hlp.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/hlp.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-html {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/html.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/html.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/html.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-indd {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/indd.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/indd.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/indd.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-ini {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/ini.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/ini.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/ini.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-ipa {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/ipa.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/ipa.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/ipa.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-jar {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/jar.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/jar.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/jar.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-java {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/java.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/java.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/java.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-jpg {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/jpg.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/jpg.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/jpg.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-js {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/js.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/js.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/js.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-json {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/json.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/json.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/json.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-key {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/key.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/key.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/key.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-ldf {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/ldf.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/ldf.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/ldf.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-lnk {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/lnk.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/lnk.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/lnk.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-makefile {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/makefile.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/makefile.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/makefile.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-mdb {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/mdb.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/mdb.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/mdb.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-mdf {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/mdf.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/mdf.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/mdf.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-mht {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/mht.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/mht.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/mht.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-midi {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/midi.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/midi.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/midi.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-mpp {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/mpp.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/mpp.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/mpp.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-mpt {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/mpt.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/mpt.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/mpt.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-msg {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/msg.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/msg.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/msg.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-msi {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/msi.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/msi.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/msi.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-numbers {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/numbers.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/numbers.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/numbers.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-odp {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/odp.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/odp.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/odp.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-ods {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/ods.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/ods.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/ods.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-odt {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/odt.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/odt.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/odt.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-oexe {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/oexe.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/oexe.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/oexe.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-oexe2 {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/oexe2.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/oexe2.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/oexe2.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-ogg {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/ogg.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/ogg.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/ogg.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-pages {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/pages.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/pages.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/pages.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-pdb {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/pdb.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/pdb.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/pdb.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-pdf {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/pdf.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/pdf.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/pdf.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-php {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/php.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/php.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/php.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-pkg {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/pkg.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/pkg.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/pkg.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-pl {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/pl.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/pl.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/pl.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-png {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/png.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/png.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/png.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-pps {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/pps.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/pps.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/pps.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-ppsx {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/ppsx.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/ppsx.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/ppsx.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-ppt {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/ppt.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/ppt.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/ppt.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-pptx {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/pptx.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/pptx.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/pptx.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-pot {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/pot.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/pot.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/pot.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-potx,
+.x-ppam {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/potx.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/potx.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/potx.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-prproj {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/prproj.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/prproj.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/prproj.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-ps1 {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/ps1.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/ps1.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/ps1.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-psd {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/psd.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/psd.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/psd.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-pspimage {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/pspimage.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/pspimage.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/pspimage.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-pst {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/pst.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/pst.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/pst.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-pub {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/pub.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/pub.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/pub.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-py {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/py.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/py.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/py.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-rar {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/rar.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/rar.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/rar.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-rb {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/rb.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/rb.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/rb.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-reg {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/reg.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/reg.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/reg.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-resx {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/resx.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/resx.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/resx.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-rtf {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/rtf.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/rtf.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/rtf.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-sitx {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/sitx.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/sitx.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/sitx.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-sln {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/sln.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/sln.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/sln.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-sql {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/sql.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/sql.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/sql.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-suo {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/suo.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/suo.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/suo.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-svg {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/svg.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/svg.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/svg.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-swf {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/swf.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/swf.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/swf.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-tar {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/tar.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/tar.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/tar.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-tga {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/tga.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/tga.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/tga.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-tgz {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/tgz.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/tgz.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/tgz.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-txt {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/txt.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/txt.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/txt.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-vb {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/vb.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/vb.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/vb.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-vbproj {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/vbproj.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/vbproj.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/vbproj.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-vbs {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/vbs.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/vbs.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/vbs.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-vcf {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/vcf.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/vcf.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/vcf.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-vcproj {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/vcproj.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/vcproj.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/vcproj.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-vcxproj {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/vcxproj.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/vcxproj.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/vcxproj.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-vdw {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/vdw.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/vdw.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/vdw.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-vdx {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/vdx.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/vdx.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/vdx.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-vsd {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/vsd.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/vsd.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/vsd.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-vsdx {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/vsdx.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/vsdx.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/vsdx.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-vss {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/vss.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/vss.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/vss.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-vst {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/vst.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/vst.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/vst.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-vsx {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/vsx.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/vsx.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/vsx.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-vtx {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/vtx.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/vtx.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/vtx.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-xaml {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/xaml.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/xaml.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/xaml.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-xap {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/xap.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/xap.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/xap.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-xls {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/xls.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/xls.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/xls.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-xlsb {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/xlsb.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/xlsb.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/xlsb.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-xlsm {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/xlsm.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/xlsm.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/xlsm.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-xlsx {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/xlsx.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/xlsx.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/xlsx.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-xlt {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/xlt.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/xlt.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/xlt.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-xltx {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/xltx.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/xltx.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/xltx.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-xml {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/xml.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/xml.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/xml.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-xps {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/xps.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/xps.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/xps.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-xsd {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/xsd.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/xsd.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/xsd.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-xsl {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/xsl.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/xsl.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/xsl.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-y {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/y.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/y.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/y.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-zip {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/zip.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/zip.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/zip.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-avi,
+.x-rm,
+.x-rmvb,
+.x-mpg,
+.x-mkv,
+.x-wmv,
+.x-mov,
+.x-mp4,
+.x-evo,
+.x-divx,
+.x-3gp,
+.x-3g2,
+.x-asf,
+.x-ogv,
+.x-webmv,
+.x-cue,
+.x-hd,
+.x-hdmov,
+.x-mov,
+.x-mp4v,
+.x-mpeg,
+.x-ogm,
+.x-qt,
+.x-spx,
+.x-vob,
+.x-wmv,
+.x-xvid,
+.x-webm,
+.x-m4v,
+.x-mts,
+.x-mpe,
+.x-m2ts,
+.x-mpv,
+.x-cue {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/movie/movie.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/movie/movie.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/movie/movie.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-flv,
+.x-f4v {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/movie/flv.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/movie/flv.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/movie/flv.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-rmvb {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/movie/rmvb.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/movie/rmvb.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/movie/rmvb.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-mkv {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/movie/mkv.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/movie/mkv.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/movie/mkv.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-mp4,
+.x-m4v {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/movie/mp4.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/movie/mp4.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/movie/mp4.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-mov {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/movie/mov.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/movie/mov.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/movie/mov.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-avi {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/movie/avi.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/movie/avi.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/movie/avi.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-3dm,
+.x-3ds,
+.x-asm,
+.x-cam360,
+.x-catpart,
+.x-catproduct,
+.x-cgr,
+.x-collaboration,
+.x-dae,
+.x-dgn,
+.x-dlv3,
+.x-dwf,
+.x-dwfx,
+.x-dwg,
+.x-dwt,
+.x-dxf,
+.x-exp,
+.x-f3d,
+.x-fbx,
+.x-g,
+.x-gbxml,
+.x-iam,
+.x-idw,
+.x-ifc,
+.x-ige,
+.x-iges,
+.x-igs,
+.x-ipt,
+.x-jt,
+.x-model,
+.x-neu,
+.x-nwc,
+.x-nwd,
+.x-obj,
+.x-prt,
+.x-rvt,
+.x-sab,
+.x-sat,
+.x-session,
+.x-skp,
+.x-sldasm,
+.x-sldprt,
+.x-smb,
+.x-smt,
+.x-ste,
+.x-step,
+.x-stl,
+.x-stla,
+.x-stlb,
+.x-stp,
+.x-wire,
+.x-x_b,
+.x-x_t,
+.x-xas,
+.x-xpr {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/autodesk/autodesk.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/autodesk/autodesk.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/autodesk/autodesk.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-3ds {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/autodesk/3ds.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/autodesk/3ds.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/autodesk/3ds.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-3dm {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/autodesk/3dm.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/autodesk/3dm.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/autodesk/3dm.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-dae {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/autodesk/dae.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/autodesk/dae.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/autodesk/dae.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-stl,
+.x-stla,
+.x-stlb {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/autodesk/stl.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/autodesk/stl.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/autodesk/stl.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-dwg {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/autodesk/dwg.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/autodesk/dwg.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/autodesk/dwg.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-dwf {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/autodesk/dwf.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/autodesk/dwf.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/autodesk/dwf.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-dwfx {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/autodesk/dwf.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/autodesk/dwf.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/autodesk/dwf.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-dxf {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/autodesk/dxf.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/autodesk/dxf.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/autodesk/dxf.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-ifc {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/autodesk/ifc.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/autodesk/ifc.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/autodesk/ifc.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-iam {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/autodesk/iam.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/autodesk/iam.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/autodesk/iam.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-fbx {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/autodesk/fbx.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/autodesk/fbx.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/autodesk/fbx.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-rvt {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/autodesk/rvt.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/autodesk/rvt.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/autodesk/rvt.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-skp {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/autodesk/skp.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/autodesk/skp.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/autodesk/skp.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-vnd,
+.x-dgn {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_file/autodesk/vnd-dgn.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/autodesk/vnd-dgn.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_file/autodesk/vnd-dgn.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-folder {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_others/folder.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/folder.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/folder.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-folder-share {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_others/folder_public.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/folder_public.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/folder_public.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-recycle {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_others/recycle.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/recycle.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/recycle.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-recycle-full {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_others/recycle_full.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/recycle_full.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/recycle_full.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-path-self-share {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_others/path_self_public.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/path_self_public.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/path_self_public.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-app-link {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_others/app_link.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/app_link.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/app_link.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-user {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_others/user.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/user.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/user.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-user-self {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_others/userSelf.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/userSelf.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/userSelf.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-share {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_others/share.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/share.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/share.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-group-self {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_others/groupSelf.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/groupSelf.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/groupSelf.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-group-self-owner {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_others/groupSelfOwner.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/groupSelfOwner.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/groupSelfOwner.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-group-guest {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_others/groupGuest.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/groupGuest.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/groupGuest.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-group-self-root {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_others/groupSelfRoot.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/groupSelfRoot.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/groupSelfRoot.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-group-root {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_others/groupRoot.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/groupRoot.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/groupRoot.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-group-public {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_others/folder_public.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/folder_public.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/folder_public.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-tree-self {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_others/computer.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/computer.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/computer.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-computer {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_others/computer.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/computer.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/computer.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-tree-fav {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_others/treeFav.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/treeFav.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/treeFav.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-edit {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_others/edit.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/edit.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/edit.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-search {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_others/search.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/search.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/search.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-upload {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_others/upload.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/upload.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/upload.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-setting {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_others/setting.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/setting.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/setting.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-logout {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_others/logout.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/logout.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/logout.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-app-store {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_others/appStore.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/appStore.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/appStore.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-error {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_others/error.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/error.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/error.png?ver=3.30', sizingMethod='scale');
+}
+
+.x-info {
+    background-image: url("/system/modules/eQ9ULgcVb1/img/icon_others/info.png");
+    background-image: none \9;
+    filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/info.png?ver=3.30', sizingMethod='scale');
+    -ms-filter: progid: DXImageTransform.Microsoft.AlphaImageLoader(src='static/images/file_icon/icon_others/info.png?ver=3.30', sizingMethod='scale');
+}
+
+.frame-fullscreen {
+    position: fixed;
+    z-index: 99999999;
+    left: 0;
+    top: 0;
+}
+
+.font-icon {
+    font-family: FontAwesome;
+    font-style: normal;
+    color: inherit;
+}
+
+.file-continer .file .filename .title.db-click-rename {
+    cursor: text;
+}
+
+
+/*文件选中样式*/
+
+.file-continer .file .item-select {
+    display: none;
+    position: absolute;
+    right: 4px;
+    top: 4px;
+    width: 14px;
+    height: 14px;
+    box-sizing: content-box;
+    text-align: center;
+    border: 1px solid #ddd;
+    background: #fff;
+    cursor: pointer;
+    z-index: 50;
+    border-radius: 2px;
+    padding: 2px;
+    left: 5px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.05);
+    border: none;
+    color: #fff;
+}
+
+.file-continer .file .item-select .item-check {
+    font-family: FontAwesome;
+    font-weight: normal;
+    font-style: normal;
+    text-decoration: inherit;
+    font-size: 18px;
+    font-size: 12px;
+    text-shadow: none;
+}
+
+.file-continer .file.select .item-select {
+    display: block;
+    color: #fff;
+    background: #3b8cff;
+}
+
+.file-continer .file .item-select .item-check:after {
+    content: '\\f00c';
+    position: relative;
+    top: -1px;
+}
+   
+.file-continer .file.select.isfolder .item-select {
+    display: none;
+    
+}
+
+
+    </style>
+    <script>
+	    
+        vmd.virtualPath = '{vmdvirtualPath}';
+        
+        Ext.define("vmd.module.MainViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps(["vmd.ux.Uploader$1.0$Uploader","vmd.ux.ZyglList$1.0$ZyglList","vmd.ux.ISIP5Navigation$1.0$ISIP5Navigation"]),
+	xtype:"vmd.module.MainViewport",
+	layout:"border",
+	initComponent: function(){
+		 var component = 'Rgtjdfdgbtfgdhhfdghhgf';
+ var version = '1.0';
+ var oriPath = 'components/ux/' + component + '/' + version;
+ var selectId, selectNode;
+
+ var hwFao = new HwFao(vmdSettings.vmdFileServiceIp||vmdSettings.dataServiceIp, "vmd"); //地址:端口和存储标识(服务管理员分配)
+ var store = new Ext.data.JsonStore({
+     proxy: new Ext.data.MemoryProxy(),
+     fields: ["path", "name", "type", "ext", "modifyTime", "size"]
+ });
+
+ var aceExtList = ["html", "js", "css", "text"];
+ //图片类型列表 
+ var imgExtList = ["jpg", "jpeg", "png", "gif", "ico", "bmp"];
+ var hwdasFileServer = {
+     host: vmdSettings.vmdFileServiceIp||vmdSettings.dataServiceIp,
+     mark: 'vmd'
+ }
+
+ // 设置树节点
+ function tree_afterrender(sender) {
+     var rootNode = tree.getRootNode();
+     rootNode.setText(component);
+     refreshData();
+ }
+ // 设置初始路径
+ function ISIP5Navigation_afterrender(sender) {
+     ISIP5Navigation.setPath(component + '/', '0000/')
+ }
+
+ function getComponentData(filePath, pid) {
+     var a_pid = pid;
+     hwFao.getdirs(filePath, 'Dir', function(result) {
+         if(result.data && result.data.length > 0) {
+             for(var i = 0; i < result.data.length; i++) {
+                 if(result.data[i].type = 'Dir') {
+                     tree.addNode(a_pid, result.data[i].name, result.data[i].name);
+                     var thisNode = tree.getNodeById(result.data[i].name);
+                     var path = filePath + '/' + result.data[i].name;
+                     var p = result.data[i].name;
+                     getComponentData(path, p)
+                 }
+             }
+         }
+     }, function(msg) {
+         Tips.tips("获取文件数据失败", "error");
+     });
+ }
+ // 获取节点路径
+ function tree_nodeclick(sender, node, e) {
+     selectId = node.id;
+     selectNode = node;
+     var nodePath = node.getPath();
+     ISIP5Navigation.setPath(getPName(node) + "/", nodePath);
+     var filePath = oriPath + getPName(node).replace(component, '');
+     getNodeData(filePath, node, function(result) {
+         store.loadData(result);
+         ZyglList.hwDataView.bindStore(store);
+     });
+
+ }
+ // 获取文本路径
+ function getPName(pnode) {
+     if(pnode.id == tree.root.id) {
+         return tree.root.text + "/"
+     }
+     if(pnode.parentNode && pnode.parentNode.parentNode) {
+         return getPName(pnode.parentNode) + "/" + pnode.text;
+     } else {
+         return tree.root.text + "/" + pnode.text;
+     }
+ }
+ // 获取id路径
+ function getPid(pnode) {
+     if(pnode.id == tree.root.id) {
+         return ''
+     }
+     if(pnode.parentNode && pnode.parentNode.parentNode) {
+         return getPid(pnode.parentNode) + "/" + pnode.id;
+     } else {
+         return pnode.id;
+     }
+ }
+
+ // 导航栏按钮点击事件
+ function ISIP5Navigation_patnIcoClick(sender, e, id) {
+     var data = [];
+     var node = tree.getNodeById(id);
+     var childNodes = node.childNodes;
+     childNodes.forEach(function(item, index) {
+         data.push({
+             id: item.id,
+             name: item.text,
+             idPath: item.getPath(),
+             textPath: getPName(item)
+         })
+     })
+     ISIP5Navigation.setChildMeun(data)
+ }
+
+ // 刷新树
+ function refreshData() {
+     hwFao.getdirs(oriPath, 'Dir', function(result) {
+         if(result.data && result.data.length > 0) {
+             var str = '';
+             for(var i = 0; i < result.data.length; i++) {
+                 if(result.data[i].type = 'Dir') {
+                     tree.addNode('0000', result.data[i].name, result.data[i].name);
+                     var thisNode = tree.getNodeById(result.data[i].name);
+                     var path = oriPath + '/' + result.data[i].name;
+                     var p = result.data[i].name;
+                     getComponentData(path, p)
+                     str += result.data[i].name + ',';
+                 }
+             }
+             if(str.indexOf('css') == -1) {
+                 tree.addNode('0000', 'css', 'css');
+             }
+             if(str.indexOf('js') == -1) {
+                 tree.addNode('0000', 'js', 'js');
+             }
+             if(str.indexOf('img') == -1) {
+                 tree.addNode('0000', 'img', 'img');
+             }
+             if(str.indexOf('file') == -1) {
+                 tree.addNode('0000', 'file', 'file');
+             }
+         } else {
+             tree.addNode('0000', 'css', 'css');
+             tree.addNode('0000', 'js', 'js');
+             tree.addNode('0000', 'img', 'img');
+             tree.addNode('0000', 'file', 'file');
+         }
+         var sNode = tree.getRootNode();
+         sNode.expand();
+         getNodeData(oriPath, sNode, function(result) {
+             store.loadData(result);
+             ZyglList.hwDataView.bindStore(store);
+         });
+     }, function(msg) {
+         Tips.tips("获取文件数据失败", "error");
+     });
+     ISIP5Navigation.setPath(component + '/', '0000/')
+ }
+
+
+ // 导航栏节点点击事件
+ function ISIP5Navigation_pathClick(sender, textpath, idpath, id) {
+     var sNode = tree.getNodeById(id)
+     sNode.select();
+     var filePath = oriPath + textpath.replace(component, '');
+     getNodeData(filePath, sNode, function(result) {
+         store.loadData(result);
+         ZyglList.hwDataView.bindStore(store);
+     });
+ }
+ // 导航栏节点子菜单点击事件
+ function ISIP5Navigation_menuClick(sender, textPath, idPath, id) {
+     var sNode = tree.getNodeById(id)
+     sNode.select();
+     var filePath = oriPath + textPath.replace(component, '');
+     getNodeData(filePath, sNode, function(result) {
+         store.loadData(result);
+         ZyglList.hwDataView.bindStore(store);
+     });
+ }
+
+
+ //获取节点下一级子节点
+ function getNodeData(filePath, node, callback) {
+     var NodeData = [];
+     if(node.childNodes && node.childNodes.length > 0) {
+         console.log(node.childNodes)
+         node.childNodes.forEach(function(item, index) {
+             NodeData.push({
+                 "id": item.id,
+                 "name": item.text,
+                 "path": oriPath + getPName(item).replace(component, ''),
+                 "type": 'folder',
+                 "ext": 'folder',
+                 "modifyTime": "",
+                 "size": ''
+
+             })
+         })
+     }
+     hwFao.getdirs(filePath, '', function(result) {
+         if(result.data && result.data.length > 0) {
+             for(var i = 0; i < result.data.length; i++) {
+                 if(result.data[i].type != 'Dir') {
+                     result.data[i].ext = (result.data[i].name).split('.')[1];
+                     NodeData.push({
+                         "id": result.data[i].name + '000',
+                         "path": filePath + '/' + result.data[i].name,
+                         "name": result.data[i].name,
+                         "type": result.data[i].type,
+                         "ext": result.data[i].ext,
+                         "modifyTime": "",
+                         "size": ''
+                     })
+                 }
+             }
+         }
+         callback(NodeData)
+     }, function(msg) {
+         Tips.tips("获取文件数据失败", "error");
+     });
+ }
+ //双击列表图标
+ function ZyglList_listDbClick(sender, index, node, e) {
+     var target = e.target;
+     if(e.target.className != 'ico') return;
+
+     listSelData = sender.store.getAt(index);
+     var listSelJson = listSelData.data;
+     if(listSelJson.type == "folder") {
+         // 文件夹进行打开及与树及导航的联动操作
+         var selectPath = ZyglList.hwDataView.store.getAt(index).data.path;
+         selectId = ZyglList.hwDataView.store.getAt(index).id;
+         selectNode = tree.getNodeById(selectId);
+
+         ISIP5Navigation.setPath(getPName(selectNode) + "/", selectNode.getPath());
+         var filePath = oriPath + getPName(selectNode).replace(component, '');
+         getNodeData(filePath, selectNode, function(result) {
+             store.loadData(result);
+             ZyglList.hwDataView.bindStore(store);
+         });
+
+         selectNode.expand();
+         selectNode.select();
+
+     } else if(listSelJson.type == "File") {
+         //如果是文件 ，进行打开处理
+         var selext = listSelJson.ext;
+         if(imgExtList.indexOf(selext) >= 0) {
+             //如果是图片，用图片管理器打开
+             openImgShow(ZyglList.hwDataView.store, listSelJson.name);
+         } else if(aceExtList.indexOf(selext) >= 0) {
+             //打开文件编辑
+             openAceEdit(ZyglList.hwDataView.store, index);
+         }
+     }
+ }
+ //图片查看
+ function openImgShow(store, selName) {
+     var imageList = {};
+     var imageListItems = [];
+     var index = -1;
+     for(var i = 0; i < store.data.items.length; i++) { //遍历当前的资源，将图片列表信息生成特定格式
+         var itemData = store.data.items[i].data;
+         if(imgExtList.indexOf(itemData.ext) >= 0) {
+             var imageListItem = {
+                 msrc: vmd.bootPATH + itemData.path,
+                 src: vmd.bootPATH + itemData.path,
+                 h: 0,
+                 w: 0,
+                 title: itemData.name
+             }
+             imageListItems.push(imageListItem);
+             index++; ////获取当前图片在图片列表中的索引
+         }
+         if(selName == itemData.name) //根据当前点击的项与添加的图片项作对比 记录当前点击图片的index
+             imageList.index = index;
+     }
+     imageList.items = imageListItems;
+     vmd.showImg(imageList)
+ }
+ //打开文本编辑器
+ function openAceEdit(store, index) {
+     //获取当前选中的文件所在的数据集行记录
+     var selFileItemData = store.getAt(index);
+     var path;
+     //打开文本编辑器，
+     if(selFileItemData) {
+         path = selFileItemData.data.path;
+         openAcetoEdit(path)
+     }
+ }
+ // 编辑器
+ function openAcetoEdit(path) {
+     var aceFileEditWin = new vmd.window({
+         title: "编辑",
+         url: vmd.core.getVirtualPath() + "/system/modules/eQ9ULgcVb1/hw3ce0447e/hwef4bf837/hw1c51773c.html",
+         auto: false,
+         height: getHeight(),
+         width: getWidth(),
+         params: {
+             path: path
+         }
+     })
+     window.hwdasFileServer = hwdasFileServer;
+     parent.hwdasFileServer = hwdasFileServer;
+     aceFileEditWin.show();
+ }
+
+ function getHeight() {
+     return (document.documentElement || document.body).clientHeight - 50;
+ }
+
+ function getWidth() {
+     var width = (document.documentElement || document.body).clientWidth;
+     if(width > 400) {
+         return width - 100;
+     }
+     return width - 20;
+ }
+
+
+ function ZyglList_afterrender(sender) {
+     ZyglList.enableView();
+     ZyglList.body.on('click', function() {
+         //发送消息，进行文件过滤
+         send();
+     })
+ }
+ function send() {
+    var validData = [];
+    var data = "";
+    var selectedRecords = getSelResource(); //ZyglList.dataView.getSelectedRecords();
+    selectedRecords.forEach(function(data) {
+        var type = data.data.type;
+        var ext = data.data.ext;
+        var validExt = ['css', 'js', 'jpg', 'gif', 'png'];
+        var path = data.data.path;
+        if(type == 'File' && validExt.indexOf(ext) != -1) {
+            var info = {
+                // ip: 'http://' + data.data.ip + '/resource',
+                path: path,
+                // servName: '',
+                ext: ext
+            }
+            validData.push(info);
+        }
+    })
+    data = Ext.encode(validData);
+    parent.postMessage && parent.postMessage(data, '*'); // 触发父页面的message事件
+}
+//接口，返回当前选择的资源的信息
+function getSelResource() {
+    var selItems = ZyglList.getSelItemsData();
+    return selItems || [];
+}
+	
+
+
+		this.items=[
+			{
+				xtype:"panel",
+				id:"panel2",
+				title:"Panel",
+				header:false,
+				border:true,
+				height:34,
+				region:"north",
+				layout:"fit",
+				style:"border: 1px solid #ddd;",
+				items:[
+					{
+						xtype:"vmd.ux.ISIP5Navigation",
+						id:"ISIP5Navigation",
+						layout:"absolute",
+						height:34,
+						afterrender:"ISIP5Navigation_afterrender",
+						patnIcoClick:"ISIP5Navigation_patnIcoClick",
+						pathClick:"ISIP5Navigation_pathClick",
+						menuClick:"ISIP5Navigation_menuClick",
+						listeners:{
+							vmdafterrender:ISIP5Navigation_afterrender,
+							patnIcoClick:ISIP5Navigation_patnIcoClick,
+							pathClick:ISIP5Navigation_pathClick,
+							menuClick:ISIP5Navigation_menuClick
+						}
+					}
+				]
+			},
+			{
+				xtype:"panel",
+				id:"panel",
+				title:"Panel",
+				header:false,
+				border:false,
+				height:100,
+				x:0,
+				y:0,
+				region:"west",
+				layout:"fit",
+				width:248,
+				collapseMode:"mini",
+				split:true,
+				style:"padding: 10px;",
+				items:[
+					{
+						xtype:"vmd.treeex",
+						id:"tree",
+						width:350,
+						height:270,
+						hideRoot:false,
+						loadType:"全部加载",
+						nodeclick:"tree_nodeclick",
+						afterrender:"tree_afterrender",
+						rootValue:"0000",
+						leafImg:"/system/modules/eQ9ULgcVb1/img/folderClosed.gif",
+						folderImg:"/system/modules/eQ9ULgcVb1/img/folderClosed.gif",
+						contentMenu:"hwMenu",
+						listeners:{
+							nodeclick:tree_nodeclick,
+							vmdafterrender:tree_afterrender
+						}
+					}
+				]
+			},
+			{
+				xtype:"panel",
+				id:"panel1",
+				title:"Panel",
+				header:false,
+				border:false,
+				height:100,
+				x:-6,
+				y:100,
+				region:"center",
+				layout:"border",
+				items:[
+					{
+						xtype:"panel",
+						id:"panel3",
+						title:"Panel",
+						header:false,
+						border:false,
+						height:100,
+						region:"center",
+						layout:"fit",
+						items:[
+							{
+								xtype:"vmd.ux.ZyglList",
+								id:"ZyglList",
+								tpl:"<tpl for=\".\">    <div class=\"file undefined file-box menu-file is{type}\" original-name=\"{name}\" title=\"名称:{name} 修改时间 : {modifyTime}\" >        <div class=\"item-select\">            <div class=\"item-check\">            </div>        </div>        <div class=\"item-menu\">            <div class=\"cert\">            </div>        </div>        <div class=\"ico\" filetype=\"{type}\">            <i class=\"x-item-file x-{ext}\">            </i>        </div>        <div class=\"filename\">            <span class=\"title db-click-rename\" title=\"双击名称重命名\">{name}</span>        </div>    </div></tpl>",
+								data:"var data = [{    \"id\": 0,    \"path\": \"test\",    \"name\": \"desktop\",    \"type\": \"folder\",    \"ext\": \"folder\",    \"modifyTime\": \"2018/03/19 18:21:20\",    \"isParent\": true,    \"size\": ''}, {    \"id\": 11,    \"path\": \"test\",    \"name\": \"Document\",    \"type\": \"folder\",    \"ext\": \"folder\",    \"modifyTime\": \"2018/03/19 18:21:20\",    \"isParent\": true}, {    \"id\": 1,    \"path\": \"test\",    \"name\": \"a.css\",    \"type\": \"file\",    \"ext\": \"css\",    \"modifyTime\": \"2018/03/19 18:21:20\",    \"isParent\": true,    \"size\": 4000}, {    \"id\": 2,    \"path\": \"test\",    \"name\": \"ext-all-debug.js\",    \"type\": \"file\",    \"ext\": \"js\",    \"modifyTime\": \"2018/03/19 18:21:20\",    \"isParent\": false,    \"size\": 52010}, {    \"id\": 3,    \"path\": \"test\",    \"name\": \"test.html\",    \"type\": \"file\",    \"ext\": \"html\",    \"modifyTime\": \"2018/03/19 18:21:20\",    \"isParent\": false,    \"size\": 100}, {    \"id\": 4,    \"path\": \"test\",    \"name\": \"newfile.jpg\",    \"type\": \"file\",    \"ext\": \"jpg\",    \"modifyTime\": \"2018/03/19 18:21:20\",    \"isParent\": false,    \"size\": 25410}, {    \"id\": 5,    \"path\": \"test\",    \"name\": \"汉威科技技术成果产品化构想 -可视化.pptx\",    \"type\": \"file\",    \"ext\": \"pptx\",    \"modifyTime\": \"2018/03/19 18:21:20\",    \"isParent\": false,    \"size\": 2024}];return data;",
+								listHidden:true,
+								layout:"anchor",
+								listDbClick:"ZyglList_listDbClick",
+								afterrender:"ZyglList_afterrender",
+								listeners:{
+									listDbClick:ZyglList_listDbClick,
+									vmdafterrender:ZyglList_afterrender
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				xtype:"vmd.ux.Uploader",
+				id:"Uploader",
+				layout:"fit",
+				region:"south",
+				hidden:true
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+	}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MainViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

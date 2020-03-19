@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>测试</title>
+	<!--基本样式-->
+    <link href="{virtualPath}/css/common.css?ver=2.0.3.20190219" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="{virtualPath}/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.3.20190219" rel="stylesheet" />
+   
+    <link href="{virtualPath}/design/css/icons.css?ver=2.0.3.20190219" rel="stylesheet" />
+
+	<link href="{virtualPath}/lib/dhtmlx/dhtmlx.css?ver=2.0.3.20190219" rel="stylesheet" />
+	  <!--样式快捷索引表-->
+    <link href="{virtualPath}/css/shortcut.css?ver=2.0.3.20190219" rel="stylesheet" />
+    
+    <script src="{virtualPath}/lib/labjs/LAB.min.js?ver=2.0.3.20190219"></script>
+    <script src="{virtualPath}/config.js?ver=2.0.3.20190219"></script>
+    <script src="{virtualPath}/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.3.20190219"></script>
+    <script src="{virtualPath}/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.3.20190219"></script>
+    <script src="{virtualPath}/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.3.20190219"></script>
+    <script src="{virtualPath}/lib/ext-3.4/ext-all-debug.js?ver=2.0.3.20190219"></script>
+    <script src="{virtualPath}/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.3.20190219"></script>
+    <script src="{virtualPath}/js/util.js?ver=2.0.3.20190219"></script>
+    <script src="{virtualPath}/lib/dhtmlx/dhtmlx.js?ver=2.0.3.20190219"></script>
+	<script src="{virtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.3.20190219"></script>
+	<script src="{virtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.3.20190219"></script>
+    <script src="{virtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.3.20190219"></script>
+	<script src="{virtualPath}/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.3.20190219"></script>
+    <script src="{virtualPath}/js/hwdas.js?ver=2.0.3.20190219"></script>
+	<script src="{virtualPath}/js/hwMSC.js?ver=2.0.3.20190219"></script>
+    <script src="{virtualPath}/js/vmdcore.js?ver=2.0.3.20190219"></script>
+    <script src="{virtualPath}/js/vmdcomps.js?ver=2.0.3.20190219"></script>
+    <script src="{virtualPath}/js/publicMethods.js?ver=2.0.3.20190219"></script>
+    <script src="{virtualPath}/js/vmdreport.js?ver=2.0.3.20190219"></script>
+    {workspacePath}
+
+    <script src="{virtualPath}/lib/ace/ace.js"></script>
+    <script src="{virtualPath}/lib/ace/mode-base.js" type="text/javascript"></script>
+    <script src="{virtualPath}/lib/ace/theme-xcode.js" type="text/javascript" ></script>
+    <script src="{virtualPath}/lib/ace/ext-language_tools.js"></script>
+    
+
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        
+    </style>
+    <script>
+	    
+        vmd.virtualPath = '{virtualPath}';
+        
+        Ext.define("vmd.module.MyViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps(["vmd.ux.TestDemo$1.2$TestDemo"]),
+	xtype:"vmd.module.MyViewport",
+	layout:"absolute",
+	afterrender:"MyViewport_afterrender",
+	beforerender:"MyViewport_beforerender",
+	initComponent: function(){
+		var store1 = new Ext.data.JsonStore({
+    proxy: new Ext.data.MemoryProxy(),
+    fields: ['name', 'id', 'pID']
+});
+
+function div8_afterrender(sender) {
+    
+    div8.el.dom.setAttribute("data-step", "1");
+    div8.el.dom.setAttribute("data-intro", "test");
+    div8.el.dom.setAttribute("data-position", "right");
+}
+
+function MyGrid_beforerender(sender) {
+    MyGrid.store = store1
+}
+
+function MyGrid_afterrender(sender) {
+
+    var data = [{
+        name: '内核功能',
+        id: '0',
+        pID: ''
+    }, {
+        name: '报表操作',
+        id: 'F1',
+        pID: '0'
+    }, {
+        name: '脚本',
+        id: 'F2',
+        pID: '0'
+    }, {
+        name: 'CellEditRefresh(刷新控制单元格是否可以编辑)',
+        id: 'func1',
+        pID: 'F1'
+    }, {
+        name: 'CellsValueRefresh(刷新单元格值)',
+        id: 'func2',
+        pID: 'F1'
+    }, {
+        name: 'CellVisibleRefresh(刷新控制单元格是否可见)',
+        id: 'func3',
+        pID: 'F1'
+    }, {
+        name: 'ColsRefresh(刷新列)',
+        id: 'func4',
+        pID: 'F1'
+    }, {
+        name: 'DataSetSRefresh(刷新数据集)',
+        id: 'func5',
+        pID: 'F1'
+    }, {
+        name: 'MakeSql(设置sql语句)',
+        id: 'func6',
+        pID: 'F1'
+    }, {
+        name: 'ReadExcelFile(导入excel)',
+        id: 'func7',
+        pID: 'F1'
+    }, {
+        name: 'ReportRefresh(刷新报表)',
+        id: 'func8',
+        pID: 'F1'
+    }, {
+        name: 'RowsRefresh(刷新行)',
+        id: 'func9',
+        pID: 'F1'
+    }, {
+        name: 'SaveTableEvent(保存表)',
+        id: 'func10',
+        pID: 'F1'
+    }, {
+        name: 'SetParams(参数配置)',
+        id: 'func11',
+        pID: 'F1'
+    }, {
+        name: 'SubReportEvent(打开模块)',
+        id: 'func12',
+        pID: 'F1'
+    }, {
+        name: 'WindowClose(关闭窗体)',
+        id: 'func13',
+        pID: 'F1'
+    }, {
+        name: 'JavaScript(JavaScript)',
+        id: 'func14',
+        pID: 'F2'
+    }];
+    store1.loadData(data);
+
+
+    MyGrid.el.dom.setAttribute("data-step", "3");
+    MyGrid.el.dom.setAttribute("data-intro", "test3");
+    MyGrid.el.dom.setAttribute("data-position", "left");
+}
+
+function button1_click(sender, e) {
+    introJs().setOptions({
+        nextLabel: '下一步 &rarr;',
+        prevLabel: '&larr; 上一步',
+        skipLabel: '退出'
+    }).start();
+}
+
+function div_afterrender(sender) {
+
+    div.el.dom.setAttribute("data-step", "2");
+    div.el.dom.setAttribute("data-intro", "test2");
+    div.el.dom.setAttribute("data-position", "right");
+}
+
+function MyViewport_afterrender(sender) {
+    $LAB.script('/lib/introjs/intro.js')
+        .wait(function() {
+            vmd.loadCss('/lib/introjs/introjs.css')
+            var vmdinittips = LocalData.get('vmdinittips');
+            if(!vmdinittips) {
+                introJs().setOptions({
+                    nextLabel: '下一步 &rarr;',
+                    prevLabel: '&larr; 上一步',
+                    skipLabel: '退出'
+                }).start();
+                LocalData.set('vmdinittips', true)
+            }
+        })
+}
+
+function MyViewport_beforerender(sender) {
+ 
+
+}
+
+function tree_beforerender(sender){
+tree.store=store;
+tree.parentField="parent_id";
+tree.valueField="id";
+tree.textField="name";
+tree.rootText='协同开发'
+tree.rootValue='0'
+}
+
+function button_click(sender,e){    
+    vmd.Auth.login()
+//记录日志信息 
+//vmd.webBase.syslog(loginfo,logtype,operationtype,function(res){}) 
+}
+			this.MyViewport_afterrender=MyViewport_afterrender;
+		this.MyViewport_beforerender=MyViewport_beforerender;
+
+		store=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"store","autoLoad":true,"cid":"vmdJsonStore","storeConfig":"{\"id\":\"eQ9T1htRZs\",\"callcode\":\"vmdCode\",\"url\":\"CDEServcie/module/category\",\"host\":\"\",\"isHwRest\":true,\"name\":\"模块目录\",\"getMethods\":[{\"id\":\"project_id\",\"value1\":\"return 'eQ9ULgcVb1';\",\"value2\":\"\",\"defaultvalue\":\"\"},{\"id\":\"parent_id\",\"value1\":\"\",\"value2\":\"\",\"defaultvalue\":\"\"}],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"xh\",\"type\":\"string\"},{\"name\":\"code\",\"type\":\"string\"},{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"parent_id\",\"type\":\"string\"},{\"name\":\"project_id\",\"type\":\"string\"},{\"name\":\"ppdm_guid\",\"type\":\"string\"},{\"name\":\"row_changed_by\",\"type\":\"string\"},{\"name\":\"row_changed_date\",\"type\":\"datetime\"},{\"name\":\"row_created_by\",\"type\":\"string\"},{\"name\":\"row_created_date\",\"type\":\"datetime\"},{\"name\":\"row_effective_date\",\"type\":\"datetime\"},{\"name\":\"row_expiry_date\",\"type\":\"datetime\"},{\"name\":\"row_quality\",\"type\":\"string\"},{\"name\":\"effective_date\",\"type\":\"datetime\"},{\"name\":\"expiry_date\",\"type\":\"datetime\"}]}"});
+
+
+	 var subWin1=new vmd.comp.SubWindow({view:{
+			xtype:"vmd.subwindow",
+			id:"subWin1",
+			width:600,
+			height:400,
+			hide:true,
+			closable:true,
+			draggable:false,
+			maximizable:true,
+			modal:true,
+			resizable:true,
+			autoScroll:true,
+			closeAction:"close",
+			title:"2",
+			moduleId:"hwajGos4UK",
+			path:"/system/modules/eQ9ULgcVb1/hwwnhcHiLT/hwbe74dc2e/hwajGos4UK.vmd",
+			createTime:"2019-02-20 11:02:00"
+		},rootScope:this,isModule:true})
+		this.items=[
+			{
+				xtype:"vmd.button",
+				id:"button",
+				text:"导出",
+				type:"info",
+				size:"small",
+				x:180,
+				y:310,
+				click:"button_click",
+				listeners:{
+					click:button_click
+				}
+			},
+			{
+				xtype:"vmd.button",
+				id:"button1",
+				text:"取消",
+				type:"info",
+				size:"small",
+				x:250,
+				y:310,
+				click:"button1_click",
+				listeners:{
+					click:button1_click
+				}
+			},
+			{
+				xtype:"vmd.div",
+				id:"div",
+				autoEl:"div",
+				border:true,
+				backgroundRepeat:"no-repeat",
+				backgroundPosition:"top left",
+				width:310,
+				height:300,
+				x:0,
+				y:0,
+				layout:"border",
+				afterrender:"div_afterrender",
+				listeners:{
+					vmdafterrender:div_afterrender
+				},
+				items:[
+					{
+						xtype:"vmd.div",
+						id:"div1",
+						layoutConfig:{
+							align:"middle",
+							pack:"start"
+						},
+						autoEl:"div",
+						border:true,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						width:400,
+						height:36,
+						region:"north",
+						layout:"hbox",
+						items:[
+							{
+								xtype:"vmd.button",
+								id:"button2",
+								text:"  全选  ",
+								type:"text",
+								size:"small",
+								x:420,
+								y:110,
+								margins:"0 10 0 10",
+								icon:"icon-check"
+							},
+							{
+								xtype:"vmd.button",
+								id:"button3",
+								text:"选择层级",
+								type:"text",
+								size:"small",
+								x:530,
+								y:110,
+								height:26,
+								margins:""
+							},
+							{
+								xtype:"vmd.comlist",
+								id:"comlist",
+								width:45,
+								height:270
+							}
+						]
+					},
+					{
+						xtype:"vmd.div",
+						id:"div2",
+						autoEl:"div",
+						border:true,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						width:400,
+						height:50,
+						region:"center",
+						layout:"fit",
+						items:[
+							{
+								xtype:"vmd.treeex",
+								id:"tree",
+								width:285,
+								height:270,
+								hideRoot:false,
+								x:0,
+								y:60,
+								region:"west",
+								loadType:"全部加载",
+								leafImg:"/system/modules/eQ9ULgcVb1/img/model.png",
+								checkBox:true,
+								beforerender:"tree_beforerender",
+								listeners:{
+									beforerender:tree_beforerender
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				xtype:"label",
+				id:"label",
+				text:"以下模块id相同，但名称不同，导入将覆盖更新：",
+				x:470,
+				y:200,
+				style:"color: blue;        font-weight: bold"
+			},
+			{
+				xtype:"label",
+				id:"label1",
+				text:"以下模块名称相同，id不同，无法完成导入：",
+				x:470,
+				y:80,
+				style:"color: green;    font-weight: bold"
+			},
+			{
+				xtype:"label",
+				id:"label2",
+				text:"以下模块id相同，但不在同一分类下，无法完成导入：",
+				x:470,
+				y:150,
+				style:"color: orange;    font-weight: bold"
+			},
+			{
+				xtype:"label",
+				id:"label3",
+				text:"工具页面/初始化页面",
+				x:500,
+				y:100,
+				style:"color: green;"
+			},
+			{
+				xtype:"label",
+				id:"label4",
+				text:"资源管理/复合组件管理",
+				x:500,
+				y:170,
+				style:"color: orange;"
+			},
+			{
+				xtype:"label",
+				id:"label5",
+				text:"工作流/工作流基本信息",
+				x:500,
+				y:220,
+				height:20,
+				style:"color: blue;"
+			},
+			{
+				xtype:"label",
+				id:"label6",
+				text:"模版/曲线模版",
+				x:500,
+				y:120,
+				style:"color: green;"
+			},
+			{
+				xtype:"vmd.button",
+				id:"button4",
+				type:"text",
+				size:"small",
+				x:450,
+				y:75,
+				width:30,
+				icon:" icon-sort-down"
+			},
+			{
+				xtype:"vmd.button",
+				id:"button5",
+				type:"text",
+				size:"small",
+				x:450,
+				y:145,
+				width:30,
+				icon:" icon-sort-down"
+			},
+			{
+				xtype:"vmd.button",
+				id:"button6",
+				type:"text",
+				size:"small",
+				x:450,
+				y:195,
+				width:30,
+				icon:" icon-sort-down"
+			},
+			{
+				xtype:"vmd.button",
+				id:"button7",
+				text:"警告",
+				type:"warning",
+				size:"large",
+				x:450,
+				y:30,
+				icon:"icon-warning-sign",
+				style:"color：yellow",
+				width:480
+			},
+			{
+				xtype:"vmd.button",
+				id:"button8",
+				text:"确定",
+				type:"info",
+				size:"small",
+				x:640,
+				y:320
+			},
+			{
+				xtype:"vmd.button",
+				id:"button9",
+				text:"取消",
+				type:"info",
+				size:"small",
+				x:730,
+				y:320
+			},
+			{
+				xtype:"vmd.div",
+				id:"div3",
+				autoEl:"div",
+				border:true,
+				backgroundRepeat:"no-repeat",
+				backgroundPosition:"top left",
+				width:20,
+				height:15,
+				x:350,
+				y:390,
+				style:"background-color: black"
+			},
+			{
+				xtype:"vmd.div",
+				id:"div4",
+				autoEl:"div",
+				border:true,
+				backgroundRepeat:"no-repeat",
+				backgroundPosition:"top left",
+				width:20,
+				height:15,
+				x:350,
+				y:415,
+				style:"background-color: darkgreen"
+			},
+			{
+				xtype:"vmd.div",
+				id:"div5",
+				autoEl:"div",
+				border:true,
+				backgroundRepeat:"no-repeat",
+				backgroundPosition:"top left",
+				width:20,
+				height:15,
+				x:350,
+				y:490,
+				style:"background-color: orange"
+			},
+			{
+				xtype:"vmd.div",
+				id:"div6",
+				autoEl:"div",
+				border:true,
+				backgroundRepeat:"no-repeat",
+				backgroundPosition:"top left",
+				width:20,
+				height:15,
+				x:350,
+				y:440,
+				style:"background-color: red"
+			},
+			{
+				xtype:"vmd.div",
+				id:"div7",
+				autoEl:"div",
+				border:true,
+				backgroundRepeat:"no-repeat",
+				backgroundPosition:"top left",
+				width:20,
+				height:15,
+				x:350,
+				y:465,
+				style:"background-color: blue"
+			},
+			{
+				xtype:"label",
+				id:"label7",
+				text:"不存在该模块，导入时将插入模块信息，不进行提示；",
+				x:380,
+				y:390
+			},
+			{
+				xtype:"label",
+				id:"label8",
+				text:"同级目录下存在同名不同ID的模块，导入时进行提示，无法导入；",
+				x:380,
+				y:440,
+				height:20
+			},
+			{
+				xtype:"label",
+				id:"label9",
+				text:"不同分类下存在同ID的模块，导入时进行提示，无法导入。",
+				x:380,
+				y:490,
+				height:20
+			},
+			{
+				xtype:"label",
+				id:"label10",
+				text:"同级目录下存在同名同ID的模块，导入时将直接覆盖，不进行提示；",
+				x:380,
+				y:415
+			},
+			{
+				xtype:"label",
+				id:"label11",
+				text:"同级目录下存在同ID不同名的模块，导入时进行提示，将覆盖更新；",
+				x:380,
+				y:465
+			},
+			{
+				xtype:"vmd.button",
+				id:"button10",
+				text:"导入",
+				type:"info",
+				size:"small",
+				x:430,
+				y:320
+			},
+			{
+				xtype:"vmd.button",
+				id:"button11",
+				text:"取消",
+				type:"info",
+				size:"small",
+				x:540,
+				y:320
+			},
+			{
+				xtype:"label",
+				id:"label12",
+				text:"颜色标注说明：",
+				x:350,
+				y:365
+			},
+			{
+				xtype:"vmd.div",
+				id:"div8",
+				autoEl:"div",
+				border:true,
+				backgroundRepeat:"no-repeat",
+				backgroundPosition:"top left",
+				width:340,
+				height:230,
+				x:0,
+				y:350,
+				afterrender:"div8_afterrender",
+				listeners:{
+					vmdafterrender:div8_afterrender
+				}
+			},
+			{
+				xtype:"grid",
+				id:"MyGrid",
+				title:"Grid Panel",
+				loadMask:true,
+				x:810,
+				y:100,
+				beforerender:"MyGrid_beforerender",
+				afterrender:"MyGrid_afterrender",
+				height:180,
+				listeners:{
+					beforerender:MyGrid_beforerender,
+					vmdafterrender:MyGrid_afterrender
+				},
+				columns:[
+					{
+						xtype:"gridcolumn",
+						header:"Column 1",
+						sortable:true,
+						resizable:true,
+						dataIndex:"id",
+						width:100
+					},
+					{
+						xtype:"gridcolumn",
+						header:"Column 2",
+						sortable:true,
+						resizable:true,
+						dataIndex:"name",
+						width:100
+					},
+					{
+						xtype:"gridcolumn",
+						header:"Column 3",
+						sortable:true,
+						resizable:true,
+						dataIndex:"pID",
+						width:100
+					}
+				]
+			},
+			{
+				xtype:"datefield",
+				id:"hwDate",
+				format:"Y-m-d",
+				showToday:true,
+				allowBlank:true,
+				x:430,
+				y:270
+			},
+			{
+				xtype:"vmd.ux.TestDemo",
+				id:"TestDemo",
+				layoutConfig:{
+					align:"middle",
+					pack:"center"
+				},
+				ksbq:"开始",
+				jsbq:"结束",
+				layout:"hbox",
+				x:810,
+				y:340
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+			me.on('beforerender',function(){ MyViewport_beforerender.call(me,me)})
+		me.on('afterrender',function(){ MyViewport_afterrender.call(me,me)})
+}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MyViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

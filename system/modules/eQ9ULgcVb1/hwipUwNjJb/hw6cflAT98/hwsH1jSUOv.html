@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>新建项目</title>
+	<!--基本样式-->
+    <link href="/css/common.css" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="/lib/ext-3.4/resources/css/ext-all.css" rel="stylesheet" />
+   
+    <link href="/design/css/icons.css" rel="stylesheet" />
+
+	<link href="/lib/dhtmlx/dhtmlx.css" rel="stylesheet" />
+	  <!--样式快捷索引表-->
+    <link href="/css/shortcut.css" rel="stylesheet" />
+    <script src="/lib/labjs/LAB.min.js"></script>
+    <script src="/config.js"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js"></script>
+    <script src="/js/util.js"></script>
+    <script src="/lib/dhtmlx/dhtmlx.js"></script>
+	<script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js"></script>
+	 <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js"></script>
+   <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js"></script>
+	 <script src="/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js"></script>
+    <script src="/js/hwdas.js"></script>
+    <script src="/js/vmdcore.js"></script>
+    <script src="/js/vmdcomps.js"></script>
+    <script src="/js/publicMethods.js"></script>
+     <script src="/js/vmdreport.js"></script>
+	 
+    <script src="/lib/ace/ace.js"></script>
+    <script src="/lib/ace/mode-base.js" type="text/javascript"></script>
+    <script src="/lib/ace/theme-xcode.js" type="text/javascript" ></script>
+    <script src="/lib/ace/ext-language_tools.js"></script>
+
+
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        .info {
+    float: left;
+    padding: 6px 0px 0px 0px;
+    margin: 0px ;
+    text-align: center;
+    color: #333;
+    height: 20px;
+    width: 52px;
+    overflow: hidden;
+    border-top: 1px solid transparent;
+    cursor: pointer
+}
+    </style>
+    <script>
+		vmd.virtualPath=''
+        Ext.define("vmd.module.MyViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps([]),
+	xtype:"vmd.module.MyViewport",
+	layout:"absolute",
+	initComponent: function(){
+		function btnOk_click(sender, e) {
+
+    var name = txtProjectName.getValue();
+    var alias = txtProjectAlias.getValue();
+
+    var region = "";
+    var selrec = hwDataViewRegion.getSelectedRecords();
+    if(selrec.length > 0) {
+        region = selrec[0].data.name;
+    }
+
+    var objProject = {
+        "name": name,
+        "alias": alias,
+        "region": region,
+        "department": comlistDepartment.getValue(),
+        "mister": comlistMister.getValue(),
+        "manager": comlistManager.getValue(),
+        "manager2": comlistManager2.getValue(),
+        "year": comlistYear.getValue(),
+        "state": comlistState.getValue(),
+        "projectParent": comlistProjectParent.getValue(), // 父项目显示名称，记录项目ID
+        "projectContinue": comlistProjectContinue.getValue(), // 延续项目显示名称，记录项目ID
+        "dateCustomerStart": dateStart.getValue(),
+        "dateCustomerEnd": dateEnd.getValue(),
+        "dateEstimateStart": dateEstStart.getValue(),
+        "dateEstimateEnd": dateEstEnd.getValue(),
+        "estSpend": txtEstTime.getValue(),
+        "bonus": txtBonus.getValue(),
+        // 甲方单位需要显示名称，记录ID
+        "firstCustomerId": txtFirstCustomer.firstCustomerId,
+        "firstContact": comlistFirstContact.getValue(),
+        "techType": comlistTechnologyType.getValue(),
+        "bInternal": chkInternal.checked,
+        "remark": txtAreaDescription.getValue()
+        // 所需文档
+        // var arrData = [];
+        // for(var k = 0; k < chk.items.items.length; k++) {
+        //     if(chkgrpDocs.items.items[k].checked) {
+        //         var objWorkflow = {
+        //             'projectid': id,
+        //             'servicecategoryid': chkgrpDocs.items.items[k].inputValue,
+        //             'type': 0
+        //         };
+        //         arrData.push(objWorkflow);
+        //     }
+        // }
+    }
+
+    
+    // MyGridProject.newProject(objProject);
+    parent.MyGridProject.newProject(objProject);
+    parent.formNewProject.close();
+}
+
+function btnCancle_click(sender,e){
+
+    parent.formNewProject.close();
+}
+	
+
+
+		this.items=[
+			{
+				xtype:"label",
+				id:"label",
+				text:"项目名称：",
+				x:30,
+				y:10,
+				height:20
+			},
+			{
+				xtype:"textfield",
+				id:"txtProjectName",
+				allowBlank:true,
+				x:90,
+				y:0,
+				width:520
+			},
+			{
+				xtype:"label",
+				id:"label1",
+				text:"项目别名：",
+				x:30,
+				y:40
+			},
+			{
+				xtype:"textfield",
+				id:"txtProjectAlias",
+				allowBlank:true,
+				x:90,
+				y:30,
+				width:520
+			},
+			{
+				xtype:"label",
+				id:"label2",
+				text:"所属研发中心：",
+				x:6,
+				y:100
+			},
+			{
+				xtype:"label",
+				id:"label4",
+				text:"项目经理：",
+				x:30,
+				y:130,
+				height:20
+			},
+			{
+				xtype:"label",
+				id:"label5",
+				text:"主管老总：",
+				x:320,
+				y:100,
+				height:20
+			},
+			{
+				xtype:"label",
+				id:"label6",
+				text:"所属区域：",
+				x:30,
+				y:68
+			},
+			{
+				xtype:"vmd.dataview",
+				id:"hwDataViewRegion",
+				width:520,
+				height:30,
+				itemSelector:".info",
+				overClass:"info-hover",
+				selectedClass:"x-view-selected",
+				singleSelect:true,
+				multiSelect:true,
+				autoScroll:true,
+				tpl:"<ul>    <tpl for=\".\">        <li class=\"info\">            <h4>{name}</h4></li>    </tpl></ul>",
+				data:"var data = [{    \"id\": 1,    \"name\": \"胜利\"}, {    \"id\": 2,    \"name\": \"西北\"}, {    \"id\": 3,    \"name\": \"北京\"}, {    \"id\": 4,    \"name\": \"华东\"}, {    \"id\": 5,    \"name\": \"东北\"}, {    \"id\": 6,    \"name\": \"中原\"}, {    \"id\": 7,    \"name\": \"西南\"}, {    \"id\": 8,    \"name\": \"华中\"}, {    \"id\": 9,    \"name\": \"华北\"}, {    \"id\": 10,    \"name\": \"上海\"}];return data;",
+				x:90,
+				y:60,
+				autoHeight:false
+			},
+			{
+				xtype:"vmd.comlist",
+				id:"comlistDepartment",
+				width:200,
+				height:270,
+				x:90,
+				y:90
+			},
+			{
+				xtype:"vmd.comlist",
+				id:"comlistMister",
+				width:230,
+				height:270,
+				x:380,
+				y:90
+			},
+			{
+				xtype:"label",
+				id:"label7",
+				text:"第二项目经理：",
+				x:296,
+				y:130,
+				height:20
+			},
+			{
+				xtype:"vmd.comlist",
+				id:"comlistManager",
+				width:200,
+				height:270,
+				x:90,
+				y:120
+			},
+			{
+				xtype:"vmd.comlist",
+				id:"comlistManager2",
+				width:230,
+				height:270,
+				x:380,
+				y:120
+			},
+			{
+				xtype:"label",
+				id:"label8",
+				text:"项目年度：",
+				x:30,
+				y:160
+			},
+			{
+				xtype:"vmd.comlist",
+				id:"comlistYear",
+				width:200,
+				height:270,
+				x:90,
+				y:150
+			},
+			{
+				xtype:"label",
+				id:"label9",
+				text:"项目状态：",
+				x:320,
+				y:160
+			},
+			{
+				xtype:"vmd.comlist",
+				id:"comlistState",
+				width:230,
+				height:270,
+				x:380,
+				y:150
+			},
+			{
+				xtype:"label",
+				id:"label10",
+				text:"父项目：",
+				x:42,
+				y:190,
+				height:20
+			},
+			{
+				xtype:"vmd.comlist",
+				id:"comlistProjectParent",
+				width:200,
+				height:270,
+				x:90,
+				y:180
+			},
+			{
+				xtype:"vmd.comlist",
+				id:"comlistProjectContinue",
+				width:230,
+				height:270,
+				x:380,
+				y:180
+			},
+			{
+				xtype:"label",
+				id:"label11",
+				text:"延续项目：",
+				x:320,
+				y:190
+			},
+			{
+				xtype:"label",
+				id:"label12",
+				text:"甲方要求时间：",
+				x:6,
+				y:220
+			},
+			{
+				xtype:"label",
+				id:"label13",
+				text:"预计时间：",
+				x:30,
+				y:250
+			},
+			{
+				xtype:"datefield",
+				id:"dateStart",
+				format:"Y-m-d",
+				showToday:true,
+				allowBlank:true,
+				x:90,
+				y:210,
+				width:220
+			},
+			{
+				xtype:"datefield",
+				id:"dateEnd",
+				format:"Y-m-d",
+				showToday:true,
+				allowBlank:true,
+				x:330,
+				y:210,
+				width:280
+			},
+			{
+				xtype:"label",
+				id:"label14",
+				text:"--",
+				x:310,
+				y:220,
+				width:20
+			},
+			{
+				xtype:"datefield",
+				id:"dateEstStart",
+				format:"Y-m-d",
+				showToday:true,
+				allowBlank:true,
+				x:90,
+				y:240,
+				width:220
+			},
+			{
+				xtype:"datefield",
+				id:"dateEstEnd",
+				format:"Y-m-d",
+				showToday:true,
+				allowBlank:true,
+				x:330,
+				y:240,
+				width:280
+			},
+			{
+				xtype:"label",
+				id:"label15",
+				text:"--",
+				x:310,
+				y:250
+			},
+			{
+				xtype:"label",
+				id:"label3",
+				text:"预计投入：",
+				x:30,
+				y:280,
+				height:20
+			},
+			{
+				xtype:"textfield",
+				id:"txtEstTime",
+				allowBlank:true,
+				x:90,
+				y:270,
+				width:190
+			},
+			{
+				xtype:"label",
+				id:"label16",
+				text:"项目奖金：",
+				x:320,
+				y:280,
+				height:20
+			},
+			{
+				xtype:"textfield",
+				id:"txtBonus",
+				allowBlank:true,
+				x:380,
+				y:270,
+				width:210
+			},
+			{
+				xtype:"label",
+				id:"label17",
+				text:"天",
+				x:280,
+				y:280,
+				height:20
+			},
+			{
+				xtype:"label",
+				id:"label18",
+				text:"元",
+				x:590,
+				y:280,
+				height:20,
+				width:20
+			},
+			{
+				xtype:"label",
+				id:"label19",
+				text:"甲方单位：",
+				x:30,
+				y:310,
+				height:20
+			},
+			{
+				xtype:"textfield",
+				id:"txtFirstCustomer",
+				allowBlank:true,
+				x:90,
+				y:300,
+				width:170,
+				readOnly:true
+			},
+			{
+				xtype:"vmd.button",
+				id:"button",
+				text:"...",
+				type:"text",
+				size:"small",
+				x:260,
+				y:300,
+				width:30
+			},
+			{
+				xtype:"label",
+				id:"label20",
+				text:"甲方联系人：",
+				x:308,
+				y:310,
+				height:20,
+				width:80
+			},
+			{
+				xtype:"vmd.comlist",
+				id:"comlistFirstContact",
+				width:230,
+				height:270,
+				x:380,
+				y:300
+			},
+			{
+				xtype:"checkbox",
+				id:"chkInternal",
+				fieldLabel:"Checkbox",
+				boxLabel:"内部项目",
+				x:540,
+				y:330
+			},
+			{
+				xtype:"label",
+				id:"label21",
+				text:"技术类型：",
+				x:30,
+				y:340
+			},
+			{
+				xtype:"vmd.comlist",
+				id:"comlistTechnologyType",
+				width:200,
+				height:270,
+				x:90,
+				y:330
+			},
+			{
+				xtype:"tabpanel",
+				id:"tabProject",
+				activeTab:0,
+				height:190,
+				width:580,
+				x:30,
+				y:360,
+				items:[
+					{
+						xtype:"panel",
+						id:"panelDescription",
+						title:"项目概述",
+						header:true,
+						border:true,
+						height:173,
+						width:624,
+						items:[
+							{
+								xtype:"textarea",
+								id:"txtAreaDescription",
+								allowBlank:true,
+								width:579,
+								height:154
+							}
+						]
+					},
+					{
+						xtype:"panel",
+						id:"panelDoc",
+						title:"所需文档",
+						header:true,
+						border:true,
+						height:100,
+						items:[
+							{
+								xtype:"checkboxstoregroup",
+								id:"chkgrpDocs",
+								width:581,
+								height:154,
+								labelField:"label",
+								valueField:"value",
+								checkedField:"checked",
+								boxFieldName:"mycheckbox"
+							}
+						]
+					}
+				]
+			},
+			{
+				xtype:"vmd.button",
+				id:"btnOk",
+				text:"确定",
+				type:"(none)",
+				size:"small",
+				x:460,
+				y:560,
+				style:"background-color: rgb(64, 158, 255);    color: rgb(255, 255, 255);    font-size: 14px;",
+				width:70,
+				click:"btnOk_click",
+				listeners:{
+					click:btnOk_click
+				}
+			},
+			{
+				xtype:"vmd.button",
+				id:"btnCancle",
+				text:"取消",
+				type:"(none)",
+				size:"small",
+				x:540,
+				y:560,
+				width:70,
+				style:"background-color: rgb(201, 201, 201);    color: rgb(0, 0, 0);    font-size: 14px;",
+				click:"btnCancle_click",
+				listeners:{
+					click:btnCancle_click
+				}
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+	}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MyViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

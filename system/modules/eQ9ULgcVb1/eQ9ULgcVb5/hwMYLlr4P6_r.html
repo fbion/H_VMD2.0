@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>导出项目选择</title>
+	<!--基本样式-->
+    <link href="{vmdvirtualPath}/css/common.css?ver=vmd2.0.5.200306" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="{vmdvirtualPath}/lib/ext-3.4/resources/css/ext-all.css?ver=vmd2.0.5.200306" rel="stylesheet" />
+   
+    <link href="{vmdvirtualPath}/design/css/icons.css?ver=vmd2.0.5.200306" rel="stylesheet" />
+
+	<link href="{vmdvirtualPath}/lib/dhtmlx/skins/material/dhtmlx.css?ver=vmd2.0.5.200306" rel="stylesheet" />
+	  <!--样式快捷索引表-->
+    <link href="{vmdvirtualPath}/css/shortcut.css?ver=vmd2.0.5.200306" rel="stylesheet" />
+    
+	{vmdprojectcssfiles}
+    
+    <script src="{vmdvirtualPath}/lib/labjs/LAB.min.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/config.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/ext-all-debug.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/js/util.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/lib/dhtmlx/codebase/dhtmlx.js?ver=vmd2.0.5.200306"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=vmd2.0.5.200306"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=vmd2.0.5.200306"></script>
+	<script src="{vmdvirtualPath}/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/js/hwdas.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/js/vmdcore.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/js/vmdcomps.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/js/publicMethods.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/js/vmdreport.js?ver=vmd2.0.5.200306"></script>
+    
+    {vmdworkspacePath}
+	{vmdprojectconfigjs}
+	
+	{vmdprojectjsfiles}
+    
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        .info {
+    float: left;
+    padding: 0px 0px;
+    margin: 3px;
+    text-align: center;
+    font-weight: normal;
+    color: #005AA0;
+    /*color: #333;*/
+    height: 20px;
+    /*纵向居中*/
+    line-height: 20px;
+    width: 62px;
+    overflow: hidden;
+    border-top: 1px solid transparent;
+    cursor: pointer
+}
+
+.infoDepartment{
+    float: left;
+    padding: 0px 0px;
+    margin: 3px;
+    text-align: left;
+    color: #005AA0;
+    /*color: #333;*/
+    height: 20px;
+    width: 100px;
+    overflow: hidden;
+    border-top: 1px solid transparent;
+    cursor: pointer
+}
+
+.infoFirst {
+    float: left;
+    padding: 0px 0px;
+    margin: 3px;
+    text-align: left;
+    color: #005AA0;
+    /*color: #333;*/
+    height: 20px;
+    width: 240px;
+    overflow: hidden;
+    border-top: 1px solid transparent;
+    cursor: pointer
+}
+.vmd-dataview ul li.x-view-selected-ext {
+    color:rgb(255,255,255);
+    background-color: rgba(37, 119, 227, .8);
+}
+.vmd-dataview ul li.info-hover-ext {
+    color:rgb(255,255,255);
+    background-color: rgba(37, 119, 227, .8);
+    /*background-color: #eee;*/
+}
+    </style>
+    <script>
+	    
+        vmd.virtualPath = '{vmdvirtualPath}';
+        
+        Ext.define("vmd.module.MyViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps([]),
+	xtype:"vmd.module.MyViewport",
+	layout:"absolute",
+	afterrender:"MyViewport_afterrender",
+	beforerender:"MyViewport_beforerender",
+	initComponent: function(){
+		var workspaceId = "";
+
+
+//添加资源中心服务地址
+Ext.winAddProject = Ext.extend(Ext.Window, {
+    xtype: "window",
+    title: "新建项目",
+    width: 300,
+    height: 200,
+    layout: "form",
+    bodyStyle: 'padding:15px',
+    labelAlign: "left",
+    labelWidth: 40,
+    modal: true,
+    constructor: function(callback, name, alias, remark) {
+        this.callback = callback;
+        this.valueAlias = alias;
+        this.valueName = name;
+        this.valueRemark = remark;
+        this.callParent();
+    },
+    initComponent: function() {
+        var me = this;
+        this.fbar = [{
+            text: "确定",
+            handler: function() {
+                me.callback(Ext.getCmp('name').getValue(), Ext.getCmp('alias').getValue(), Ext.getCmp('remark').getValue());
+                me.close();
+            }
+        }, {
+            text: "取消",
+            handler: function() {
+                me.close();
+            }
+        }];
+
+        this.items = [{
+            id: 'name',
+            xtype: "textfield",
+            fieldLabel: "名称",
+            anchor: "100%",
+            value: this.valueName
+        }, {
+            id: 'alias',
+            xtype: "textfield",
+            fieldLabel: "别名",
+            anchor: "100%",
+            value: this.valueAlias
+        }, {
+            id: 'remark',
+            xtype: "textfield",
+            fieldLabel: "说明",
+            anchor: "100%",
+            value: this.valueRemark
+        }]
+        Ext.winAddProject.superclass.initComponent.call(this);
+    }
+})
+
+function MyViewport_afterrender(sender) {
+    workspaceId = getUrlParam("workspaceid");
+    hwvarWorkSpaceId.setValue(workspaceId);
+    storeProjectList.toRefresh();
+
+    var myDate = new Date();
+    var thisYear = myDate.getFullYear(); //获取完整的年份(4位,1970-????)
+
+    // 加载项目年度列表
+    loadProjectYear(thisYear, thisYear);
+
+    // 加载项目年度列表
+    loadContractYear(thisYear, thisYear);
+   
+}
+
+
+function MyGridProject_beforerender(sender) {
+
+}
+
+function storeProjectList_load(sender, records, options) {
+
+}
+
+function MyViewport_beforerender(sender) {
+    workspaceId = getUrlParam("workspaceid");
+    // workspaceId = "657e35d9-494a-456d-8f80-98b4924133d7";
+    hwvarWorkSpaceId.setValue(workspaceId);
+    console.log(hwvarWorkSpaceId.getValue())
+}
+
+function dataviewProjectYear_click(sender, index, node, e) {
+    var selrec = dataviewProjectYear.getSelectedRecords();
+    if(selrec.length > 0) {
+        var value = selrec[0].data.name;
+        if(value == "全部") {
+            value = "";
+        }
+        hwvarProjectYear.setValue(value);
+
+        storeProjectList.toRefresh();
+    }
+}
+
+function dataviewContractYear_click(sender, index, node, e) {
+
+    var selrec = dataviewContractYear.getSelectedRecords();
+    if(selrec.length > 0) {
+        var value = selrec[0].data.name;
+        if(value == "全部") {
+            // value = "";
+            hwvarContractStart.setValue("");
+            hwvarContractEnd.setValue("");
+        } else {
+            hwvarContractStart.setValue(value + "-01-01");
+            hwvarContractEnd.setValue(value + "-12-12");
+        }
+        storeProjectList.toRefresh();
+    }
+}
+
+function dataviewRegion_click(sender, index, node, e) {
+    var selrec = dataviewRegion.getSelectedRecords();
+    if(selrec.length > 0) {
+        var id = selrec[0].data.id;
+        var name = selrec[0].data.name;
+        // var value = selrec[0].data.name;
+        if(name == "全部") {
+            id = "";
+        }
+        hwvarRegion.setValue(id);
+        storeProjectList.toRefresh();
+    }
+}
+
+function btnSearch_click(sender, e) {
+    var value = hwTextProjectName.getValue();
+    if(null == value || undefined == value) {
+        value = "";
+    }
+    hwvarProjectName.setValue(value);
+    storeProjectList.toRefresh();
+}
+
+function btnProjectYearMore_click(sender, e) {
+
+    var myDate = new Date();
+    var thisYear = myDate.getFullYear(); //获取完整的年份(4位)
+    var selYear = 2018;
+    loadProjectYear(thisYear, selYear);
+}
+
+function btnContractYearMore_click(sender, e) {
+    var myDate = new Date();
+    var thisYear = myDate.getFullYear(); //获取完整的年份(4位)
+    var selYear = 2018;
+    loadContractYear(thisYear, selYear);
+}
+
+
+function loadProjectYear(thisYear, selYear) {
+    var arrData = [{
+        "id": 0,
+        "name": "全部"
+    }];
+    var startYear = thisYear;
+    if(selYear + 4 < thisYear) {
+        startYear = selYear + 4;
+    }
+    for(var i = 0; i < 10; i++) {
+        objData = {
+            "id": (i + 1).toString(),
+            "name": (startYear - i).toString()
+        };
+        arrData.push(objData);
+    }
+    dataviewProjectYear.store.loadData(arrData, false);
+}
+
+function loadContractYear(thisYear, selYear) {
+    var arrData = [{
+        "id": 0,
+        "name": "全部"
+    }];
+    var startYear = thisYear;
+    if(selYear + 4 < thisYear) {
+        startYear = selYear + 4;
+    }
+    for(var i = 0; i < 10; i++) {
+        objData = {
+            "id": (i + 1).toString(),
+            "name": (startYear - i).toString()
+        };
+        arrData.push(objData);
+    }
+    dataviewContractYear.store.loadData(arrData, false);
+}
+
+function MyGridProject_cellclick(sender, rowIndex, columnIndex, e) {
+}
+var isPublish=false;
+isPublish=vmd.getUrlParam("publish").toLowerCase()=="true"?true:false;
+
+
+function btnExp_click(sender, e) {
+    if(MyGridProject.getSelectionModel().selections.length > 0) {
+        var expPro = MyGridProject.getSelectionModel().selections.items[0];
+        if(parent && parent.ExpModules) {
+            if(isPublish)
+                parent.expPublicshModules(true,expPro.data.project_id)
+            else
+                parent.ExpModules(true,expPro.data.project_name, expPro.data.project_id);
+            parent.expProSelWin.close();
+        }
+    } else
+        vmd.alert("提示", "请选择要导出的项目！")
+}
+
+function btnCanel_click(sender, e) {
+    if(parent && parent.expProSelWin)
+        parent.expProSelWin.close()
+}
+			this.MyViewport_afterrender=MyViewport_afterrender;
+		this.MyViewport_beforerender=MyViewport_beforerender;
+		hwvarWorkSpaceId=new vmd.Variable({});
+		hwvarProjectName=new vmd.Variable({});
+		hwvarProjectYear=new vmd.Variable({});
+		hwvarContractYear=new vmd.Variable({});
+		hwvarRegion=new vmd.Variable({});
+		hwvarContractStart=new vmd.Variable({});
+		hwvarContractEnd=new vmd.Variable({});
+
+		storeProjectList=new vmd.store.jsonStore({listeners:{load:function(){storeProjectList_load.apply(this,arguments);}},"xtype":"vmd.jsonStore","id":"storeProjectList","xcls":"vmd.store.jsonStore","autoLoad":true,"storeConfig":"{\"id\":\"THoQDqx6yn\",\"callcode\":\"vmdCode\",\"url\":\"DataServiceWorkSpace/projectInfo/queryProjectList\",\"host\":\"\",\"isHwRest\":true,\"name\":\"查询工区中添加项目的项目列表\",\"getMethods\":[{\"id\":\"datecontractstart\",\"value1\":\"return hwvarContractStart.getValue();\",\"value2\":\"\"},{\"id\":\"datecontractend\",\"value1\":\"return hwvarContractEnd.getValue();\",\"value2\":\"\"},{\"id\":\"projectname\",\"value1\":\"return hwvarProjectName.getValue();\",\"value2\":\"\"},{\"id\":\"region\",\"value1\":\"return hwvarRegion.getValue();\",\"value2\":\"\"},{\"id\":\"year\",\"value1\":\"return hwvarProjectYear.getValue();\",\"value2\":\"\"},{\"id\":\"workspaceid\",\"value1\":\"return hwvarWorkSpaceId.getValue();\",\"value2\":\"\"}],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"project_id\",\"type\":\"string\"},{\"name\":\"project_name\",\"type\":\"string\"},{\"name\":\"year\",\"type\":\"string\"},{\"name\":\"contract_date\",\"type\":\"string\"},{\"name\":\"region\",\"type\":\"string\"},{\"name\":\"checked\",\"type\":\"int64\"}]}","load":"storeProjectList_load"});
+		storeDepartment=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"storeDepartment","xcls":"vmd.store.jsonStore","autoLoad":true,"storeConfig":"{\"id\":\"TG0ZNlw8LG\",\"callcode\":\"vmdCode\",\"url\":\"DataServiceWorkSpace/projectInfo/otherinfo/department\",\"host\":\"\",\"isHwRest\":true,\"name\":\"部门信息查询\",\"getMethods\":[],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"name\",\"type\":\"string\"}]}"});
+		storeRegion=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"storeRegion","xcls":"vmd.store.jsonStore","autoLoad":true,"storeConfig":"{\"id\":\"TG03PrfW4l\",\"callcode\":\"vmdCode\",\"url\":\"DataServiceWorkSpace/projectInfo/otherinfo/region\",\"host\":\"\",\"isHwRest\":true,\"name\":\"大区信息查询\",\"getMethods\":[{\"id\":\"filter\",\"value1\":\"\",\"value2\":\"\"}],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"alias\",\"type\":\"string\"}]}"});
+
+
+		this.items=[
+			{
+				xtype:"panel",
+				id:"panel",
+				title:"Panel",
+				header:false,
+				border:true,
+				height:450,
+				x:0,
+				y:0,
+				width:870,
+				layout:"absolute",
+				autoHeight:false,
+				items:[
+					{
+						xtype:"label",
+						id:"label",
+						text:"名称：",
+						x:10,
+						y:15,
+						height:15
+					},
+					{
+						xtype:"textfield",
+						id:"hwTextProjectName",
+						allowBlank:true,
+						enableKeyEvents:true,
+						x:50,
+						y:10,
+						width:350
+					},
+					{
+						xtype:"label",
+						id:"label1",
+						text:"区域：",
+						x:10,
+						y:115
+					},
+					{
+						xtype:"label",
+						id:"label2",
+						text:"项目：",
+						x:10,
+						y:50
+					},
+					{
+						xtype:"label",
+						id:"label3",
+						text:"合同：",
+						x:10,
+						y:82
+					},
+					{
+						xtype:"vmd.button",
+						id:"btnSearch",
+						text:"查询",
+						type:"(none)",
+						size:"small",
+						x:405,
+						y:10,
+						style:"font-size: 12px;",
+						width:60,
+						height:26,
+						click:"btnSearch_click",
+						listeners:{
+							click:btnSearch_click
+						}
+					},
+					{
+						xtype:"panel",
+						id:"panel1",
+						title:"Panel",
+						header:false,
+						border:true,
+						height:260,
+						x:10,
+						y:150,
+						width:845,
+						bodyStyle:"border: 1px solid RGB(192, 192,192);",
+						items:[
+							{
+								xtype:"grid",
+								id:"MyGridProject",
+								title:"Grid Panel",
+								loadMask:true,
+								x:20,
+								y:250,
+								height:258,
+								header:false,
+								store:storeProjectList,
+								border:true,
+								width:845,
+								beforerender:"MyGridProject_beforerender",
+								cellclick:"MyGridProject_cellclick",
+								listeners:{
+									beforerender:MyGridProject_beforerender,
+									cellclick:MyGridProject_cellclick
+								},
+								columns:[
+									{
+										xtype:"checkcolumn",
+										header:"选择",
+										sortable:true,
+										resizable:true,
+										dataIndex:"checked",
+										width:40,
+										align:"center",
+										style:"line-height: 30px;",
+										fixed:false,
+										hidden:true
+									},
+									{
+										xtype:"gridcolumn",
+										header:"项目名称",
+										sortable:true,
+										resizable:true,
+										dataIndex:"project_name",
+										width:290,
+										align:"left"
+									},
+									{
+										xtype:"gridcolumn",
+										header:"项目别名",
+										sortable:true,
+										resizable:true,
+										dataIndex:"alias_short_name",
+										width:230,
+										align:"left"
+									},
+									{
+										xtype:"gridcolumn",
+										header:"项目年度",
+										sortable:true,
+										resizable:true,
+										dataIndex:"year",
+										width:80,
+										align:"center"
+									},
+									{
+										xtype:"gridcolumn",
+										header:"合同年月",
+										sortable:true,
+										resizable:true,
+										dataIndex:"contract_date",
+										width:80,
+										align:"center"
+									},
+									{
+										xtype:"gridcolumn",
+										header:"所属区域",
+										sortable:true,
+										resizable:true,
+										dataIndex:"region",
+										width:90,
+										align:"center"
+									}
+								]
+							}
+						]
+					},
+					{
+						xtype:"vmd.dataview",
+						id:"dataviewRegion",
+						width:770,
+						height:30,
+						itemSelector:"li.info",
+						overClass:"info-hover-ext",
+						selectedClass:"x-view-selected-ext",
+						singleSelect:true,
+						multiSelect:true,
+						autoScroll:true,
+						tpl:"<ul>    <tpl for=\".\">        <li class=\"info\">{name}</li>        <!--<li class=\"info\">-->        <!--    <h4>{name}</h4></li>-->    </tpl></ul>",
+						data:"var data = [{    \"id\": 0,    \"name\": \"全部\",    \"alias\": \"全部\"}, {    \"id\": 1,    \"name\": \"胜利\",    \"alias\": \"胜利\"}, {    \"id\": 2,    \"name\": \"西北\",    \"alias\": \"西北\"}, {    \"id\": 3,    \"name\": \"北京\",    \"alias\": \"北京\"}, {    \"id\": 4,    \"name\": \"华东\",    \"alias\": \"华东\"}, {    \"id\": 5,    \"name\": \"东北\",    \"alias\": \"东北\"}, {    \"id\": 6,    \"name\": \"中原\",    \"alias\": \"中原\"}, {    \"id\": 7,    \"name\": \"西南\",    \"alias\": \"西南\"}, {    \"id\": 8,    \"name\": \"华中\",    \"alias\": \"华中\"}, {    \"id\": 9,    \"name\": \"华北\",    \"alias\": \"华北\"}, {    \"id\": 10,    \"name\": \"上海\",    \"alias\": \"上海\"}];return data;",
+						x:50,
+						y:110,
+						click:"dataviewRegion_click",
+						store:storeRegion,
+						listeners:{
+							click:dataviewRegion_click
+						}
+					},
+					{
+						xtype:"vmd.button",
+						id:"btnProjectYearMore",
+						text:"  ",
+						type:"text",
+						size:"small",
+						x:820,
+						y:48,
+						icon:"icon-chevron-right",
+						width:30,
+						click:"btnProjectYearMore_click",
+						listeners:{
+							click:btnProjectYearMore_click
+						}
+					},
+					{
+						xtype:"vmd.dataview",
+						id:"dataviewProjectYear",
+						width:770,
+						height:30,
+						itemSelector:".info",
+						overClass:"info-hover-ext",
+						selectedClass:"x-view-selected-ext",
+						singleSelect:true,
+						multiSelect:true,
+						autoScroll:true,
+						tpl:"<ul>    <tpl for=\".\">        <li class=\"info\"> {name}</li>        <!--<li class=\"info\"> <h4>{name}</h4></li>-->    </tpl></ul>",
+						data:"var data = [{    \"id\": 3,    \"name\": \"2018\"}, {    \"id\": 4,    \"name\": \"2017\"}, {    \"id\": 5,    \"name\": \"2016\"}, {    \"id\": 6,    \"name\": \"2015\"}, {    \"id\": 7,    \"name\": \"2014\"}, {    \"id\": 8,    \"name\": \"2013\"}, {    \"id\": 9,    \"name\": \"2012\"}, {    \"id\": 10,    \"name\": \"2011\"}, {    \"id\": 11,    \"name\": \"2010\"}, {    \"id\": 12,    \"name\": \"2009\"}, {    \"id\": 13,    \"name\": \"2008\"}];return data;",
+						x:50,
+						y:45,
+						style:"background: none;    border: none;",
+						click:"dataviewProjectYear_click",
+						listeners:{
+							click:dataviewProjectYear_click
+						}
+					},
+					{
+						xtype:"vmd.dataview",
+						id:"dataviewContractYear",
+						width:770,
+						height:30,
+						itemSelector:"li.info",
+						overClass:"info-hover-ext",
+						selectedClass:"x-view-selected-ext",
+						singleSelect:true,
+						multiSelect:true,
+						autoScroll:true,
+						tpl:"<ul>    <tpl for=\".\">        <li class=\"info\">{name}</li>        <!--<li class=\"info\">-->        <!--    <h4>{name}</h4></li>-->    </tpl></ul>",
+						data:"var data = [{    \"id\": 3,    \"name\": \"2018\"}, {    \"id\": 4,    \"name\": \"2017\"}, {    \"id\": 5,    \"name\": \"2016\"}, {    \"id\": 6,    \"name\": \"2015\"}, {    \"id\": 7,    \"name\": \"2014\"}, {    \"id\": 8,    \"name\": \"2013\"}, {    \"id\": 9,    \"name\": \"2012\"}, {    \"id\": 10,    \"name\": \"2011\"}, {    \"id\": 11,    \"name\": \"2010\"}, {    \"id\": 12,    \"name\": \"2009\"}, {    \"id\": 13,    \"name\": \"2008\"}];return data;",
+						x:50,
+						y:77,
+						click:"dataviewContractYear_click",
+						listeners:{
+							click:dataviewContractYear_click
+						}
+					},
+					{
+						xtype:"panel",
+						id:"panel5",
+						title:"Panel",
+						header:false,
+						border:true,
+						height:1,
+						x:5,
+						y:105,
+						layout:"absolute",
+						width:850,
+						style:"border-bottom: 1px solid rgb(221, 221, 221);"
+					},
+					{
+						xtype:"panel",
+						id:"panel2",
+						title:"Panel",
+						header:false,
+						border:true,
+						height:1,
+						x:10,
+						y:70,
+						layout:"absolute",
+						width:845,
+						style:"border-bottom: 1px solid rgb(221, 221, 221);"
+					},
+					{
+						xtype:"panel",
+						id:"panel3",
+						title:"Panel",
+						header:false,
+						border:true,
+						height:1,
+						x:10,
+						y:140,
+						layout:"absolute",
+						width:845,
+						style:"border-bottom: 1px solid rgb(221, 221, 221);"
+					},
+					{
+						xtype:"vmd.button",
+						id:"btnAdvanced",
+						text:"高级...",
+						type:"(none)",
+						size:"small",
+						x:780,
+						y:10,
+						width:70,
+						style:"font-size: 12px;",
+						hidden:true
+					},
+					{
+						xtype:"vmd.button",
+						id:"btnContractYearMore",
+						text:"  ",
+						type:"text",
+						size:"small",
+						x:820,
+						y:80,
+						icon:"icon-chevron-right",
+						width:30,
+						click:"btnContractYearMore_click",
+						listeners:{
+							click:btnContractYearMore_click
+						}
+					},
+					{
+						xtype:"vmd.button",
+						id:"btnExp",
+						text:"导出",
+						type:"(none)",
+						size:"small",
+						x:680,
+						y:420,
+						width:70,
+						style:"background-color: rgb(64, 158, 255);    color: rgb(255, 255, 255);    font-size: 14px;",
+						click:"btnExp_click",
+						listeners:{
+							click:btnExp_click
+						}
+					},
+					{
+						xtype:"vmd.button",
+						id:"btnCanel",
+						text:"取消",
+						type:"(none)",
+						size:"small",
+						x:770,
+						y:420,
+						width:70,
+						style:"font-size: 14px;",
+						click:"btnCanel_click",
+						listeners:{
+							click:btnCanel_click
+						}
+					}
+				]
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+			me.on('beforerender',function(){ MyViewport_beforerender.call(me,me)})
+		me.on('afterrender',function(){ MyViewport_afterrender.call(me,me)})
+}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MyViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

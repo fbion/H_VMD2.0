@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>新建项目</title>
+	<!--基本样式-->
+    <link href="/css/common.css?ver=2.0.3" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.3" rel="stylesheet" />
+   
+    <link href="/design/css/icons.css?ver=2.0.3" rel="stylesheet" />
+
+	<link href="/lib/dhtmlx/dhtmlx.css?ver=2.0.3" rel="stylesheet" />
+	  <!--样式快捷索引表-->
+    <link href="/css/shortcut.css?ver=2.0.3" rel="stylesheet" />
+    
+    <script src="/lib/labjs/LAB.min.js?ver=2.0.3"></script>
+    <script src="/config.js?ver=2.0.3"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.3"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.3"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.3"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=2.0.3"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.3"></script>
+    <script src="/js/util.js?ver=2.0.3"></script>
+    <script src="/lib/dhtmlx/dhtmlx.js?ver=2.0.3"></script>
+	<script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.3"></script>
+	<script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.3"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.3"></script>
+	<script src="/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.3"></script>
+    <script src="/js/hwdas.js?ver=2.0.3"></script>
+    <script src="/js/vmdcore.js?ver=2.0.3"></script>
+    <script src="/js/vmdcomps.js?ver=2.0.3"></script>
+    <script src="/js/publicMethods.js?ver=2.0.3"></script>
+     <script src="/js/vmdreport.js?ver=2.0.3"></script>
+	 
+    <script src="/lib/ace/ace.js"></script>
+    <script src="/lib/ace/mode-base.js" type="text/javascript"></script>
+    <script src="/lib/ace/theme-xcode.js" type="text/javascript" ></script>
+    <script src="/lib/ace/ext-language_tools.js"></script>
+    
+
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        .info {
+    float: left;
+    padding: 6px 0px 0px 0px;
+    margin: 0px ;
+    text-align: center;
+    color: #333;
+    height: 20px;
+    width: 52px;
+    overflow: hidden;
+    border-top: 1px solid transparent;
+    cursor: pointer
+}
+    </style>
+    <script>
+		vmd.virtualPath=''
+        Ext.define("vmd.module.MyViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps([]),
+	xtype:"vmd.module.MyViewport",
+	layout:"absolute",
+	afterrender:"MyViewport_afterrender",
+	listeners:{
+		vmdafterrender:function(){
+	this.MyViewport_afterrender(this)
+}
+	},
+	initComponent: function(){
+		login = Ext.util.Cookies.get('userName');
+var storeProjectYear = new Ext.data.JsonStore({
+    proxy: new Ext.data.MemoryProxy(),
+    fields: ['valueField', 'displayField', 'dropDownFields', 'queryField']
+});
+
+function btnOk_click(sender, e) {
+    var name = txtProjectName.getValue();
+    var alias = txtProjectAlias.getValue();
+
+    // var region = "";
+    // var selrec = hwDataViewRegion.getSelectedRecords();
+    // if(selrec.length > 0) {
+    //     region = selrec[0].data.name;
+    // }
+    var ifInternal = "0";
+    if(chkInternal.checked) {
+        ifInternal = "1";
+    }
+    if(name == '') {
+        Ext.Msg.alert("提示", "请输入项目名称！");
+        return;
+    }
+    var regex = /^[0-9]*$/;
+    var region = 0,
+        department = '',
+        mister = '',
+        manager = '',
+        manager2 = '',
+        state = '',
+        projectParent = '',
+        projectContinue = '',
+        firstCustomerId = '',
+        firstContact = '',
+        techType = '';
+    if(comlistRegion.selectedData) {
+        region = comlistRegion.selectedData.id
+    }
+    if(comlistDepartment.selectedData) {
+        department = comlistDepartment.selectedData.id
+    }
+    if(comlistMister.selectedData) {
+        mister = comlistMister.selectedData.business_associate_id
+    }
+    if(comlistManager.selectedData) {
+        manager = comlistManager.selectedData.business_associate_id
+    }
+    if(comlistManager2.selectedData) {
+        manager2 = comlistManager2.selectedData.business_associate_id
+    }
+    if(comlistState.selectedData) {
+        state = comlistState.selectedData.id
+    }
+    if(comlistProjectParent.selectedData) {
+        projectParent = comlistProjectParent.selectedData.project_id
+    }
+    if(comlistProjectContinue.selectedData) {
+        projectContinue = comlistProjectContinue.selectedData.project_id
+    }
+    if(comlistFirstParty.selectedData) {
+        firstCustomerId = comlistFirstParty.selectedData.id
+    }
+    if(comlistFirstContact.selectedData) {
+        firstContact = comlistFirstContact.selectedData.id
+    }
+    if(comlistTechnologyType.selectedData) {
+        techType = comlistTechnologyType.selectedData.id
+    }
+    if(txtEstTime.getValue() != '' && !regex.test(txtEstTime.getValue())) {
+        Ext.Msg.alert("提示", "请输入正确的天数！");
+        return;
+    }
+    if(txtBonus.getValue() != '' && !regex.test(txtBonus.getValue())) {
+        Ext.Msg.alert("提示", "请输入正确的金额！");
+        return;
+    }
+    var objProject = {
+        "name": name,
+        "alias": alias,
+        "region": region,
+        "department": department,
+        "mister": mister,
+        "manager": manager,
+        "manager2": manager2,
+        "year": comlistYear.getValue().toLocaleDateString().slice(0, 4),
+        "state": state,
+        "projectParent": projectParent, // 父项目显示名称，记录项目ID
+        "projectContinue": projectContinue, // 延续项目显示名称，记录项目ID
+        "dateCustomerStart": dateStart.getValue(),
+        "dateCustomerEnd": dateEnd.getValue(),
+        "dateEstimateStart": dateEstStart.getValue(),
+        "dateEstimateEnd": dateEstEnd.getValue(),
+        "estSpend": txtEstTime.getValue(),
+        "bonus": txtBonus.getValue(),
+        // 甲方单位需要显示名称，记录ID
+        "firstCustomerId": firstCustomerId,
+        "firstContact": firstContact,
+        "techType": techType,
+        "bInternal": ifInternal,
+        "remark": txtAreaDescription.getValue()
+            // 所需文档
+            // var arrData = [];
+            // for(var k = 0; k < chk.items.items.length; k++) {
+            //     if(chkgrpDocs.items.items[k].checked) {
+            //         var objWorkflow = {
+            //             'projectid': id,
+            //             'servicecategoryid': chkgrpDocs.items.items[k].inputValue,
+            //             'type': 0
+            //         };
+            //         arrData.push(objWorkflow);
+            //     }
+            // }
+    }
+
+    // MyGridProject.newProject(objProject);
+    // parent.MyGridProject.newProject(objProject);
+    newProject(objProject)
+}
+
+function btnCancle_click(sender, e) {
+
+    parent.formNewProject.close();
+}
+
+function comlistFirstParty_selectChanged(sender, combo, record, index) {
+
+    comlistFirstContact.setValue("");
+    hwvarFirstPartyId.setValue(record.data.id);
+    comlistFirstParty.selectedData = record.data;
+    storeFirstPartyContact.toRefresh();
+}
+
+function comlistRegion_selectChanged(sender, combo, record, index) {
+
+    comlistRegion.selectedData = record.data;
+}
+
+function comlistDepartment_selectChanged(sender, combo, record, index) {
+
+    comlistDepartment.selectedData = record.data;
+}
+
+function comlistMister_selectChanged(sender, combo, record, index) {
+
+    comlistMister.selectedData = record.data;
+}
+
+function comlistManager_selectChanged(sender, combo, record, index) {
+
+    comlistManager.selectedData = record.data;
+}
+
+function comlistManager2_selectChanged(sender, combo, record, index) {
+
+    comlistManager2.selectedData = record.data;
+}
+
+function comlistState_selectChanged(sender, combo, record, index) {
+
+    comlistState.selectedData = record.data;
+}
+
+function comlistTechnologyType_selectChanged(sender, combo, record, index) {
+
+    comlistTechnologyType.selectedData = record.data;
+}
+
+function comlistProjectParent_selectChanged(sender, combo, record, index) {
+
+    comlistProjectParent.selectedData = record.data;
+}
+
+function comlistProjectContinue_selectChanged(sender, combo, record, index) {
+
+    comlistProjectContinue.selectedData = record.data;
+}
+
+function comlistFirstContact_selectChanged(sender, combo, record, index) {
+
+    comlistFirstContact.selectedData = record.data;
+}
+
+function MyViewport_afterrender(sender) {
+    workspaceId = getUrlParam("workspaceid");
+    txtEstTime.regex = /^[0-9]*$/;
+    txtEstTime.regexText = '请输入数字';
+    txtBonus.regex = /^[0-9]*$/;
+    txtBonus.regexText = '请输入数字';
+
+}
+// 创建新项目
+var newProject = function(jsonInfo) {
+    var projectId = vmd.util.guid();
+    var aliasId = vmd.util.guid();
+    var changedBy = login;
+    var changedDate = new Date().toLocaleString();
+    var createdBy = login;
+    var createdDate = new Date().toLocaleString();
+
+    // 保存到数据库
+    hwDas.add(
+        "DataServiceWorkSpace/projectInfo/ProjectBaseInfo", {}, {}, [{
+            'workspaceid': workspaceId,
+            'projectid': projectId,
+            'name': jsonInfo.name,
+            'alias': jsonInfo.alias,
+            'aliasid': aliasId,
+            'changeddate': changedDate,
+            'changedby': changedBy,
+            'createddate': createdDate,
+            'createdby': createdBy,
+            'region': jsonInfo.region,
+            'department': jsonInfo.department,
+            'mister': jsonInfo.mister,
+            'manager': jsonInfo.manager,
+            'manager2': jsonInfo.manager2,
+            'year': jsonInfo.year,
+            'state': jsonInfo.state,
+            'projectparent': jsonInfo.projectParent,
+            'projectcontinue': jsonInfo.projectContinue,
+            'datecustomerstart': jsonInfo.dateCustomerStart,
+            'datecustomerend': jsonInfo.dateCustomerEnd,
+            'dateestimatestart': jsonInfo.dateEstimateStart,
+            'dateestimateend': jsonInfo.dateEstimateEnd,
+            'estspend': jsonInfo.estspend,
+            'bonus': jsonInfo.bonus,
+            'firstcustomerid': jsonInfo.firstCustomerId,
+            'firstcontact': jsonInfo.firstContact,
+            'techtype': jsonInfo.techType,
+            'internal': jsonInfo.bInternal,
+            'description': jsonInfo.remark
+        }],
+        // hwDas.add(
+        //     "DataServiceWorkSpace/projectInfo/ProjectBaseInfo", {}, {}, [{
+        //         'workspaceid': workspaceId,
+        //         'projectid': projectId,
+        //         'name': name,
+        //         'alias': alias,
+        //         'aliasid': aliasId,
+        //         'changeddate': changedDate,
+        //         'changedby': changedBy,
+        //         'createddate': createdDate,
+        //         'createdby': createdBy,
+        //         'description': remark
+        //     }],
+        function(result) {
+
+            Tips.tips("保存成功！", "success");
+            parent.getProject(workspaceId);
+            parent.formNewProject.close();
+            // 刷新项目列表数据集（或调用数据集对象添加一条记录）
+            // storeProjectList.toRefresh();
+
+        },
+        function(msg) {
+            Tips.tips("保存失败！", "error");
+            // Ext.Msg.alert("提示", "添加服务地址失败！");
+        }
+    );
+}
+
+function dateStart_select(sender) {
+    if(dateStart.getValue() != '') {
+        dateEnd.setMinValue(dateStart.getValue())
+    }
+}
+
+function dateEstStart_select(sender) {
+    if(dateEstStart.getValue() != '') {
+        dateEstEnd.setMinValue(dateEstStart.getValue())
+    }
+}
+			this.MyViewport_afterrender=MyViewport_afterrender;
+		hwvarFirstPartyId=new vmd.var.variable({});
+		hwvarRegion=new vmd.var.variable({value:"全部"});
+
+		storeRegion=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"storeRegion","autoLoad":true,"storeConfig":"{\"id\":\"l1nIkt29Cv\",\"callcode\":\"vmdCode\",\"url\":\"DataServiceWorkSpace/projectInfo/otherinfo/regionInfo\",\"host\":\"\",\"isHwRest\":true,\"name\":\"区域信息\",\"getMethods\":[],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"alias\",\"type\":\"string\"}]}"});
+		storeDepartment=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"storeDepartment","autoLoad":true,"storeConfig":"{\"id\":\"TG0ZNlw8LG\",\"callcode\":\"vmdCode\",\"url\":\"DataServiceWorkSpace/projectInfo/otherinfo/department\",\"host\":\"\",\"isHwRest\":true,\"name\":\"部门信息查询\",\"getMethods\":[],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"name\",\"type\":\"string\"}]}"});
+		storeProjects=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"storeProjects","autoLoad":true,"storeConfig":"{\"id\":\"l0HJ6ZysTf\",\"callcode\":\"vmdCode\",\"url\":\"DataServiceWorkSpace/projectInfo/projectallnew\",\"host\":\"\",\"isHwRest\":true,\"name\":\"所有项目1\",\"getMethods\":[],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"project_id\",\"type\":\"string\"},{\"name\":\"project_name\",\"type\":\"string\"}]}"});
+		storeProjectState=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"storeProjectState","autoLoad":true,"storeConfig":"{\"id\":\"l0H6K0clt5\",\"callcode\":\"vmdCode\",\"url\":\"DataServiceWorkSpace/projectInfo/otherinfo/projectstate\",\"host\":\"\",\"isHwRest\":true,\"name\":\"项目状态\",\"getMethods\":[],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"name\",\"type\":\"string\"}]}"});
+		storeTechnologyType=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"storeTechnologyType","autoLoad":true,"storeConfig":"{\"id\":\"l0ILo6JFjJ\",\"callcode\":\"vmdCode\",\"url\":\"DataServiceWorkSpace/projectInfo/otherinfo/technologytype\",\"host\":\"\",\"isHwRest\":true,\"name\":\"技术类型\",\"getMethods\":[],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"name\",\"type\":\"string\"}]}"});
+		storeFirstParty=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"storeFirstParty","autoLoad":true,"storeConfig":"{\"id\":\"TG044M5AVm\",\"callcode\":\"vmdCode\",\"url\":\"DataServiceWorkSpace/projectInfo/otherinfo/firstparty\",\"host\":\"\",\"isHwRest\":true,\"name\":\"甲方单位查询\",\"getMethods\":[],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"abbreviation\",\"type\":\"string\"}]}"});
+		storeFirstPartyContact=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"storeFirstPartyContact","autoLoad":true,"storeConfig":"{\"id\":\"l0IXx6bJGC\",\"callcode\":\"vmdCode\",\"url\":\"DataServiceWorkSpace/projectInfo/otherinfo/firstpartycontact\",\"host\":\"\",\"isHwRest\":true,\"name\":\"甲方联系人\",\"getMethods\":[{\"id\":\"firstpartyid\",\"value1\":\"return hwvarFirstPartyId.getValue();\",\"value2\":\"\"}],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"name\",\"type\":\"string\"}]}"});
+		storeMister=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"storeMister","autoLoad":true,"storeConfig":"{\"id\":\"l0Jyl1nMHH\",\"callcode\":\"vmdCode\",\"url\":\"DataServiceWorkSpace/BUSINESSASSOCIATE/mister\",\"host\":\"\",\"isHwRest\":true,\"name\":\"查询主管老总\",\"getMethods\":[],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"business_associate_id\",\"type\":\"string\"},{\"name\":\"first_name\",\"type\":\"string\"}]}"});
+		storeEmployee=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"storeEmployee","autoLoad":true,"storeConfig":"{\"id\":\"l0JzcNr6GW\",\"callcode\":\"vmdCode\",\"url\":\"DataServiceWorkSpace/BUSINESSASSOCIATE/employee\",\"host\":\"\",\"isHwRest\":true,\"name\":\"查询员工\",\"getMethods\":[],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"business_associate_id\",\"type\":\"string\"},{\"name\":\"first_name\",\"type\":\"string\"}]}"});
+
+
+		this.items=[
+			{
+				xtype:"label",
+				id:"label",
+				text:"项目名称：",
+				x:30,
+				y:15,
+				height:20
+			},
+			{
+				xtype:"textfield",
+				id:"txtProjectName",
+				allowBlank:true,
+				x:90,
+				y:5,
+				width:520
+			},
+			{
+				xtype:"label",
+				id:"label1",
+				text:"项目别名：",
+				x:30,
+				y:40
+			},
+			{
+				xtype:"textfield",
+				id:"txtProjectAlias",
+				allowBlank:true,
+				x:90,
+				y:30,
+				width:520
+			},
+			{
+				xtype:"label",
+				id:"label2",
+				text:"所属研发中心：",
+				x:316,
+				y:70
+			},
+			{
+				xtype:"label",
+				id:"label4",
+				text:"项目经理：",
+				x:30,
+				y:130,
+				height:20
+			},
+			{
+				xtype:"label",
+				id:"label5",
+				text:"主管老总：",
+				x:30,
+				y:100,
+				height:20
+			},
+			{
+				xtype:"label",
+				id:"label6",
+				text:"所属区域：",
+				x:30,
+				y:68
+			},
+			{
+				xtype:"vmd.comlist",
+				id:"comlistDepartment",
+				width:210,
+				height:270,
+				x:400,
+				y:60,
+				store:storeDepartment,
+				valueField:"id",
+				displayField:"name",
+				dropDownFields:"name",
+				queryField:"name",
+				selectChanged:"comlistDepartment_selectChanged",
+				editable:true,
+				query:true,
+				listeners:{
+					selectChanged:comlistDepartment_selectChanged
+				}
+			},
+			{
+				xtype:"vmd.comlist",
+				id:"comlistMister",
+				width:210,
+				height:270,
+				x:90,
+				y:90,
+				selectChanged:"comlistMister_selectChanged",
+				store:storeMister,
+				valueField:"business_associate_id",
+				displayField:"first_name",
+				dropDownFields:"first_name",
+				queryField:"business_associate_id,first_name",
+				editable:true,
+				query:true,
+				listeners:{
+					selectChanged:comlistMister_selectChanged
+				}
+			},
+			{
+				xtype:"label",
+				id:"label7",
+				text:"第二项目经理：",
+				x:316,
+				y:130,
+				height:20
+			},
+			{
+				xtype:"vmd.comlist",
+				id:"comlistManager",
+				width:210,
+				height:270,
+				x:90,
+				y:120,
+				selectChanged:"comlistManager_selectChanged",
+				store:storeEmployee,
+				valueField:"business_associate_id",
+				displayField:"first_name",
+				dropDownFields:"first_name",
+				queryField:"business_associate_id,first_name",
+				editable:true,
+				query:true,
+				listeners:{
+					selectChanged:comlistManager_selectChanged
+				}
+			},
+			{
+				xtype:"vmd.comlist",
+				id:"comlistManager2",
+				width:210,
+				height:270,
+				x:400,
+				y:120,
+				selectChanged:"comlistManager2_selectChanged",
+				store:storeEmployee,
+				valueField:"business_associate_id",
+				displayField:"first_name",
+				dropDownFields:"first_name",
+				queryField:"business_associate_id,first_name",
+				editable:true,
+				query:true,
+				listeners:{
+					selectChanged:comlistManager2_selectChanged
+				}
+			},
+			{
+				xtype:"label",
+				id:"label8",
+				text:"项目年度：",
+				x:340,
+				y:100
+			},
+			{
+				xtype:"datefield",
+				id:"comlistYear",
+				format:"Y",
+				showToday:true,
+				allowBlank:true,
+				defaultValue:"today",
+				width:210,
+				x:400,
+				y:90,
+				readOnly:true
+			},
+			{
+				xtype:"label",
+				id:"label9",
+				text:"项目状态：",
+				x:30,
+				y:160
+			},
+			{
+				xtype:"vmd.comlist",
+				id:"comlistState",
+				width:210,
+				height:270,
+				x:90,
+				y:150,
+				store:storeProjectState,
+				valueField:"id",
+				displayField:"name",
+				dropDownFields:"name",
+				queryField:"id",
+				selectChanged:"comlistState_selectChanged",
+				editable:false,
+				query:false,
+				listeners:{
+					selectChanged:comlistState_selectChanged
+				}
+			},
+			{
+				xtype:"label",
+				id:"label10",
+				text:"父项目：",
+				x:42,
+				y:190,
+				height:20
+			},
+			{
+				xtype:"vmd.comlist",
+				id:"comlistProjectParent",
+				width:210,
+				height:270,
+				x:90,
+				y:180,
+				store:storeProjects,
+				valueField:"project_id",
+				displayField:"project_name",
+				dropDownFields:"project_name",
+				queryField:"project_name",
+				selectChanged:"comlistProjectParent_selectChanged",
+				editable:true,
+				query:true,
+				listeners:{
+					selectChanged:comlistProjectParent_selectChanged
+				}
+			},
+			{
+				xtype:"vmd.comlist",
+				id:"comlistProjectContinue",
+				width:210,
+				height:270,
+				x:400,
+				y:180,
+				store:storeProjects,
+				valueField:"project_id",
+				displayField:"project_name",
+				dropDownFields:"project_name",
+				queryField:"project_name",
+				selectChanged:"comlistProjectContinue_selectChanged",
+				editable:true,
+				query:true,
+				listeners:{
+					selectChanged:comlistProjectContinue_selectChanged
+				}
+			},
+			{
+				xtype:"label",
+				id:"label11",
+				text:"延续项目：",
+				x:340,
+				y:190
+			},
+			{
+				xtype:"label",
+				id:"label12",
+				text:"甲方要求：",
+				x:30,
+				y:220
+			},
+			{
+				xtype:"label",
+				id:"label13",
+				text:"预计时间：",
+				x:30,
+				y:250
+			},
+			{
+				xtype:"datefield",
+				id:"dateStart",
+				format:"Y-m-d",
+				showToday:false,
+				allowBlank:true,
+				x:90,
+				y:210,
+				width:250,
+				readOnly:true,
+				select:"dateStart_select",
+				listeners:{
+					select:dateStart_select
+				}
+			},
+			{
+				xtype:"datefield",
+				id:"dateEnd",
+				format:"Y-m-d",
+				showToday:false,
+				allowBlank:true,
+				x:360,
+				y:210,
+				width:250,
+				readOnly:true
+			},
+			{
+				xtype:"label",
+				id:"label14",
+				text:"--",
+				x:340,
+				y:220,
+				width:20
+			},
+			{
+				xtype:"datefield",
+				id:"dateEstStart",
+				format:"Y-m-d",
+				showToday:true,
+				allowBlank:true,
+				x:90,
+				y:240,
+				width:250,
+				readOnly:true,
+				select:"dateEstStart_select",
+				listeners:{
+					select:dateEstStart_select
+				}
+			},
+			{
+				xtype:"datefield",
+				id:"dateEstEnd",
+				format:"Y-m-d",
+				showToday:true,
+				allowBlank:true,
+				x:360,
+				y:240,
+				width:250,
+				readOnly:true
+			},
+			{
+				xtype:"label",
+				id:"label15",
+				text:"--",
+				x:340,
+				y:250,
+				width:20
+			},
+			{
+				xtype:"label",
+				id:"label3",
+				text:"预计投入：",
+				x:30,
+				y:280,
+				height:20
+			},
+			{
+				xtype:"textfield",
+				id:"txtEstTime",
+				allowBlank:true,
+				x:90,
+				y:270,
+				width:190
+			},
+			{
+				xtype:"label",
+				id:"label16",
+				text:"项目奖金：",
+				x:340,
+				y:280,
+				height:20
+			},
+			{
+				xtype:"textfield",
+				id:"txtBonus",
+				allowBlank:true,
+				x:400,
+				y:270,
+				width:190
+			},
+			{
+				xtype:"label",
+				id:"label17",
+				text:"天",
+				x:280,
+				y:280,
+				height:20
+			},
+			{
+				xtype:"label",
+				id:"label18",
+				text:"元",
+				x:590,
+				y:280,
+				height:20,
+				width:20
+			},
+			{
+				xtype:"label",
+				id:"label19",
+				text:"甲方单位：",
+				x:30,
+				y:310,
+				height:20
+			},
+			{
+				xtype:"label",
+				id:"label20",
+				text:"甲方联系人：",
+				x:328,
+				y:310,
+				height:20,
+				width:80
+			},
+			{
+				xtype:"vmd.comlist",
+				id:"comlistFirstContact",
+				width:210,
+				height:270,
+				x:400,
+				y:300,
+				store:storeFirstPartyContact,
+				valueField:"id",
+				displayField:"name",
+				dropDownFields:"name",
+				queryField:"name",
+				selectChanged:"comlistFirstContact_selectChanged",
+				editable:true,
+				query:true,
+				listeners:{
+					selectChanged:comlistFirstContact_selectChanged
+				}
+			},
+			{
+				xtype:"checkbox",
+				id:"chkInternal",
+				fieldLabel:"Checkbox",
+				boxLabel:"内部项目",
+				x:540,
+				y:330
+			},
+			{
+				xtype:"label",
+				id:"label21",
+				text:"技术类型：",
+				x:340,
+				y:160
+			},
+			{
+				xtype:"vmd.comlist",
+				id:"comlistTechnologyType",
+				width:210,
+				height:270,
+				x:400,
+				y:150,
+				store:storeTechnologyType,
+				valueField:"id",
+				displayField:"name",
+				dropDownFields:"name",
+				queryField:"id,name",
+				selectChanged:"comlistTechnologyType_selectChanged",
+				editable:false,
+				listeners:{
+					selectChanged:comlistTechnologyType_selectChanged
+				}
+			},
+			{
+				xtype:"tabpanel",
+				id:"tabProject",
+				activeTab:0,
+				height:190,
+				width:580,
+				x:30,
+				y:360,
+				items:[
+					{
+						xtype:"panel",
+						id:"panelDescription",
+						title:"项目概述",
+						header:true,
+						border:true,
+						height:173,
+						width:624,
+						items:[
+							{
+								xtype:"textarea",
+								id:"txtAreaDescription",
+								allowBlank:true,
+								width:579,
+								height:154
+							}
+						]
+					},
+					{
+						xtype:"panel",
+						id:"panelDoc",
+						title:"所需文档",
+						header:true,
+						border:true,
+						height:100,
+						items:[
+							{
+								xtype:"checkboxstoregroup",
+								id:"chkgrpDocs",
+								width:581,
+								height:154,
+								labelField:"label",
+								valueField:"value",
+								checkedField:"checked",
+								boxFieldName:"mycheckbox"
+							}
+						]
+					}
+				]
+			},
+			{
+				xtype:"vmd.button",
+				id:"btnOk",
+				text:"确定",
+				type:"(none)",
+				size:"small",
+				x:460,
+				y:560,
+				style:"background-color: rgb(64, 158, 255);    color: rgb(255, 255, 255);    font-size: 14px;",
+				width:70,
+				click:"btnOk_click",
+				listeners:{
+					click:btnOk_click
+				}
+			},
+			{
+				xtype:"vmd.button",
+				id:"btnCancle",
+				text:"取消",
+				type:"(none)",
+				size:"small",
+				x:540,
+				y:560,
+				width:70,
+				style:"background-color: rgb(201, 201, 201);    color: rgb(0, 0, 0);    font-size: 14px;",
+				click:"btnCancle_click",
+				listeners:{
+					click:btnCancle_click
+				}
+			},
+			{
+				xtype:"vmd.comlist",
+				id:"comlistRegion",
+				width:210,
+				height:270,
+				x:90,
+				y:60,
+				readOnly:false,
+				store:storeRegion,
+				valueField:"id",
+				displayField:"name",
+				dropDownFields:"name",
+				queryField:"name,alias",
+				selectChanged:"comlistRegion_selectChanged",
+				editable:true,
+				query:true,
+				listeners:{
+					selectChanged:comlistRegion_selectChanged
+				}
+			},
+			{
+				xtype:"vmd.comlist",
+				id:"comlistFirstParty",
+				width:210,
+				height:270,
+				x:90,
+				y:300,
+				store:storeFirstParty,
+				valueField:"id",
+				displayField:"abbreviation",
+				dropDownFields:"abbreviation",
+				queryField:"abbreviation",
+				selectChanged:"comlistFirstParty_selectChanged",
+				editable:true,
+				query:true,
+				listeners:{
+					selectChanged:comlistFirstParty_selectChanged
+				}
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+	}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MyViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

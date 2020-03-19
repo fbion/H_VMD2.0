@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>镜像服务配置</title>
+	<!--基本样式-->
+    <link href="{vmdvirtualPath}/css/common.css?ver=vmd2.0.6.200119" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="{vmdvirtualPath}/lib/ext-3.4/resources/css/ext-all.css?ver=vmd2.0.6.200119" rel="stylesheet" />
+   
+    <link href="{vmdvirtualPath}/design/css/icons.css?ver=vmd2.0.6.200119" rel="stylesheet" />
+
+	<link href="{vmdvirtualPath}/lib/dhtmlx/skins/material/dhtmlx.css?ver=vmd2.0.6.200119" rel="stylesheet" />
+	  <!--样式快捷索引表-->
+    <link href="{vmdvirtualPath}/css/shortcut.css?ver=vmd2.0.6.200119" rel="stylesheet" />
+    
+	{vmdprojectcssfiles}
+    
+    <script src="{vmdvirtualPath}/lib/labjs/LAB.min.js?ver=vmd2.0.6.200119"></script>
+    <script src="{vmdvirtualPath}/config.js?ver=vmd2.0.6.200119"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=vmd2.0.6.200119"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=vmd2.0.6.200119"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=vmd2.0.6.200119"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/ext-all-debug.js?ver=vmd2.0.6.200119"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=vmd2.0.6.200119"></script>
+    <script src="{vmdvirtualPath}/js/util.js?ver=vmd2.0.6.200119"></script>
+    <script src="{vmdvirtualPath}/lib/dhtmlx/codebase/dhtmlx.js?ver=vmd2.0.6.200119"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=vmd2.0.6.200119"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=vmd2.0.6.200119"></script>
+    <script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=vmd2.0.6.200119"></script>
+	<script src="{vmdvirtualPath}/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=vmd2.0.6.200119"></script>
+    <script src="{vmdvirtualPath}/js/hwdas.js?ver=vmd2.0.6.200119"></script>
+    <script src="{vmdvirtualPath}/js/vmdcore.js?ver=vmd2.0.6.200119"></script>
+    <script src="{vmdvirtualPath}/js/vmdcomps.js?ver=vmd2.0.6.200119"></script>
+    <script src="{vmdvirtualPath}/js/publicMethods.js?ver=vmd2.0.6.200119"></script>
+    <script src="{vmdvirtualPath}/js/vmdreport.js?ver=vmd2.0.6.200119"></script>
+    
+    {vmdworkspacePath}
+	{vmdprojectconfigjs}
+	
+	{vmdprojectjsfiles}
+    
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        
+    </style>
+    <script>
+	    
+        vmd.virtualPath = '{vmdvirtualPath}';
+        
+        Ext.define("vmd.module.MainViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps([]),
+	xtype:"vmd.module.MainViewport",
+	layout:"absolute",
+	initComponent: function(){
+		function button_click(sender, e) {
+    var saveInfo = {
+        imageServiceIp: hwText.getValue(),
+        imageHarborIp: hwText1.getValue()
+    }
+    var hwFao = new HwFao(vmdSettings.vmdFileServiceIp || vmdSettings.dataServiceIp, "vmd");
+    hwFao.write("imageService.txt", JSON.stringify(saveInfo), function() {
+        Tips.tips("保存成功！", "success");
+    }, function() {
+        Tips.tips("保存失败！", "error");
+    })
+}
+
+function hwText_afterrender(sender) {
+    var hwFao = new HwFao(vmdSettings.vmdFileServiceIp || vmdSettings.dataServiceIp, "vmd");
+    hwFao.read("imageService.txt", function(result) {
+        var saveInfo = JSON.parse(result.data)
+        hwText.setValue(saveInfo.imageServiceIp)
+        hwText1.setValue(saveInfo.imageHarborIp)
+    }, function() {})
+}
+
+function button1_click(sender, e) {
+}
+	
+
+
+		this.items=[
+			{
+				xtype:"label",
+				id:"hwLabel",
+				text:"配置镜像服务",
+				x:140,
+				y:15,
+				style:"font-size:14px;"
+			},
+			{
+				xtype:"label",
+				id:"hwLabel1",
+				text:"镜像服务地址：",
+				x:30,
+				y:55,
+				height:20,
+				style:"font-size: 14px;"
+			},
+			{
+				xtype:"textfield",
+				id:"hwText",
+				allowBlank:true,
+				enableKeyEvents:true,
+				x:130,
+				y:50,
+				width:200,
+				style:"font-size:14px;",
+				afterrender:"hwText_afterrender",
+				listeners:{
+					vmdafterrender:hwText_afterrender
+				}
+			},
+			{
+				xtype:"label",
+				id:"hwLabel2",
+				text:"注：镜像服务是用于vmd研发环境到vmd运行环境镜像包，以及发布项目运行镜像包的生成服务",
+				x:50,
+				y:80,
+				width:280,
+				height:40,
+				style:"color:red;"
+			},
+			{
+				xtype:"vmd.button",
+				id:"button",
+				text:"保存",
+				type:"primary",
+				size:"small",
+				x:270,
+				y:170,
+				width:50,
+				click:"button_click",
+				listeners:{
+					click:button_click
+				}
+			},
+			{
+				xtype:"label",
+				id:"hwLabel3",
+				text:"镜像仓库地址：",
+				x:30,
+				y:125,
+				style:"font-size: 14px;"
+			},
+			{
+				xtype:"textfield",
+				id:"hwText1",
+				allowBlank:true,
+				enableKeyEvents:true,
+				x:130,
+				y:120,
+				width:200
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+	}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MainViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

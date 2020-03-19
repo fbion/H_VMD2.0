@@ -1,0 +1,52 @@
+﻿{
+  "runInfos": [ ],
+  "errMsg": "",
+  "isSucceed": true,
+  "data": [
+    {
+      "start": 0,
+      "size": 4,
+      "datas": [
+        {
+          "id": "group1",
+          "name": "井组1",
+          "jh": "DXY66-24"
+        },
+        {
+          "id": "group1",
+          "name": "井组1",
+          "jh": "DXY87X61"
+        },
+        {
+          "id": "group1",
+          "name": "井组1",
+          "jh": "DXY87-21"
+        },
+        {
+          "id": "group1",
+          "name": "井组1",
+          "jh": "DXY87-27"
+        }
+      ],
+      "fields": {
+        "id": "String",
+        "name": "String",
+        "jh": "String"
+      },
+      "attrs": "id,name,jh",
+      "total": 4,
+      "tableName": "",
+      "system_id": "R5Un9jFGoQ7TYcgemA18sxb7isR34CzP",
+      "sort": "",
+      "pageSize": -1,
+      "id": "",
+      "name": "select1",
+      "format": "Table",
+      "isSuccess": ""
+    }
+  ],
+  "errCode": 0,
+  "errMark": "",
+  "errContent": "",
+  "solutionMsg": ""
+}

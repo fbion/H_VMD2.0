@@ -1,0 +1,305 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>字段选择</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <link href="../../css/common.css?ver=2.0.4.20190408" rel="stylesheet" />
+    <link href="../../lib/ext-3.4/resources/css/ext-all.css?ver=2.0.4.20190408" rel="stylesheet" />
+	<link href="../../lib/dhtmlx/skins/material/dhtmlx.css?ver=vmd2.0.5.191016" rel="stylesheet" />
+    <link href="../../css/shortcut.css?ver=2.0.4.20190408" rel="stylesheet" />
+    <link href="../../design/css/icons.css?ver=2.0.4.20190408" rel="stylesheet" />
+    <script src="../../lib/labjs/LAB.min.js?ver=2.0.4.20190408"></script>
+    <script src="../../lib/labjs/LAB.src.js?ver=2.0.4.20190408"></script>
+    <script src="../../config.js?ver=2.0.4.20190408"></script>
+    <script src="../../lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.4.20190408"></script>
+    <script src="../../lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.4.20190408"></script>
+    <script src="../../lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.4.20190408"></script>
+    <script src="../../lib/ext-3.4/ext-all-debug.js?ver=2.0.4.20190408"></script>
+    <script src="../../lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.4.20190408"></script>
+    <script src="../../js/util.js?ver=2.0.4.20190408"></script>
+    <script src="../../lib/dhtmlx/dhtmlx.js?ver=2.0.4.20190408"></script>
+    <script src="../../js/hwdas.js?ver=2.0.4.20190408"></script>
+    <script src="../../js/hwMSC.js?ver=2.0.4.20190408"></script>
+    <script src="../../js/vmdcore.js?ver=2.0.4.20190408"></script>
+    <script src="../../js/vmdcomps.js?ver=2.0.4.20190408"></script>
+    <script src="../../js/publicMethods.js?ver=2.0.4.20190408"></script>
+    <script src="../../js/vmdreport.js?ver=2.0.4.20190408"></script>
+    <script src="../../lib/ace/ace.js?ver=2.0.4.20190408"></script>
+    <script src="../../lib/ace/mode-base.js?ver=2.0.4.20190408" type="text/javascript"></script>
+    <script src="../../lib/ace/theme-xcode.js?ver=2.0.4.20190408" type="text/javascript"></script>
+    <script src="../../lib/ace/ext-language_tools.js?ver=2.0.4.20190408"></script>
+    <script src="configGrid.js"></script>
+    <script src="../../lib/express/complete.js"></script>
+    <script src="../js/hwreport_core.js"></script>
+    <script src="SelectFieldGrid.js"></script>
+    <script src="upLoadJs.js"></script>
+    <style>
+        body, html {
+            height: 100%;
+            width: 100%;
+            padding: 0px;
+            margin: 0px;
+        }
+    </style>
+    <script>
+
+        var args,
+            allFields = [],
+            hiddenFields = [],
+            moveFields = [],
+            subGridHeader,
+            gridHeaderBottom,
+            clickcol,
+            gridData,
+			reportID,
+            configFile;
+
+        function query() {
+
+            debugger
+            var  datavalue = parent.fieldParams.params.datavalue;
+            args = eval('(' +parent.fieldParams.params.args + ')');
+            configFile = parent.fieldParams.params.configFile;
+            reportID = parent.fieldParams.params.reportID;
+            datavalue = decodeURIComponent(datavalue);
+            datavalue = removedStyleAttribute(datavalue, "layout-grid-mode");
+            gridData = eval('(' + datavalue + ')');
+            var hh=Ext.decode(gridData.headerJson);
+            hh.main.datasource={};
+            var headerJson =Ext.encode(hh);
+            gridData.headerJson=headerJson;
+            var ct = document.getElementById("fieldcontainer");
+            var width;
+            if (gridData.oldColWidths)
+                width = getAllColumnWidth(gridData.oldColWidths);
+            else
+                width = getAllColumnWidth(gridData.colWidths);
+            ct.style.width = "100%";
+            ct.style.height = "100%";
+            var c = document.getElementById("subGridHeaderTop");
+            c.style.width = (width + 40) + "px";
+            var obj = document.createElement("DIV");
+            //obj.id = id;
+            obj.style.width = "100%";
+            obj.style.height = "100%";
+            obj.style.position = "relative";
+            obj.style.overflow = "hidden";
+            c.appendChild(obj);
+            subGridHeader = new HwReport(obj, c, obj, obj.width, obj.height);
+            subGridHeader.vmdreport= parent.fieldParams.hwreport.vmdreport;
+            subGridHeader.setAlign("center");
+            var title = gridData.title;
+              //  subGridHeader.setTitle(title, 600);
+            var arLab = gridData.colWidths.length;
+            judgedRowNum = 0;
+            lockColNum = gridData.fixedColCount;
+			
+			//
+			var dsNames = (subGridHeader.vmdreport.dsnames && subGridHeader.vmdreport.dsnames.split(",")) || [];
+			for(var i = 0; i < dsNames.length; i++){
+				window[dsNames[i]] = parent[dsNames[i]];
+			}
+            //  lockColNum = 0;
+            subGridHeader.loadJSON(headerJson, function () {
+                // var cols = "#master_checkbox,";
+                var cols = "";
+                for (var i = 0; i < arLab; i++) {
+                    cols = cols + "#master_checkbox,";
+                }
+                //
+                cols = cols.replace(/,$/gi, "");
+                subGridHeader.grid.attachHeader(cols);
+                var str = "";
+                for (var i = 0; i < arLab; i++) {
+                    str = str + i + ",";
+                }
+                if (!(str.Length == 0)) {
+                    allFields = str.split(",");
+                    allFields.pop(allFields.length - 1);
+                }
+                subGridHeader.grid.changeHeaderHeight();
+                if (args&&args.hiddenFields) {
+                    hiddenFields = args.hiddenFields;
+                }
+                var checkboxes = getCheckBox();
+                for (var i = 0; i < checkboxes.length; i++) {
+                    checkboxes[i].checked = true;
+                }
+                var firstRowNodes = checkboxes[0].parentNode.parentNode.parentNode;
+                var lastRowNodes = checkboxes[checkboxes.length - 1].parentNode.parentNode.parentNode;
+                // if (args.allFields) {
+                // var allf = args.allFields.split(",");
+                // if (allf.length == allFields.length) {
+                if (hiddenFields) {
+                    for (var i = 0; i < hiddenFields.length; i++) {
+                        lastRowNodes.childNodes[hiddenFields[i]].getElementsByTagName("input")[0].checked = false;
+                        //���һ�и�ѡ�������渴ѡ��Ĺ�������
+                        subGridHeader.grid.setDisperseRelateColsNoChecked(hiddenFields[i], lastRowNodes.childNodes[hiddenFields[i]].childNodes[0], lastRowNodes.rowIndex);
+                    }
+                }
+                // }
+                // }
+                showBottom(gridData);
+            });
+        }
+        function removedStyleAttribute(style, attr) {
+            if (!style) {
+                return "";
+            }
+            var attrRegex = new RegExp("\\s*" + attr + "\\s*:\\s*[a-zA-Z0-9%]+;{0,1}", "gi");
+            return style.replace(attrRegex, "");
+        }
+
+        //���ȷ���ϴ�����ҳ��ˢ��
+        function upLoadAndRefresh() {
+            var mainGrid =parent.fieldParams.hwreport;
+            var filename = mainGrid.configFile;
+            var virpath = mainGrid.virtualPath;
+            var p = setAgainForConfigHiddenData(allFields);
+            upLoad(p, filename, virpath, function (status) {
+                mainGrid.grid.configRefresh(mainGrid);
+                mainGrid.selectWin.close();
+            });
+        }
+
+        function closeWindow() {
+            var mainGrid =parent.fieldParams.hwreport;
+            mainGrid.selectWin.close();
+        }
+
+        function setAgainForConfigHiddenData(allFields) {
+
+            var hidFields = [];
+            var checkboxes = getCheckBox();
+            var lastRowNodes = checkboxes[checkboxes.length - 1].parentNode.parentNode.parentNode;
+            for (var i = 0; i < lastRowNodes.childNodes.length; i++) {
+                if (lastRowNodes.childNodes[i].getElementsByTagName("input")[0]) {
+                    if (lastRowNodes.childNodes[i].getElementsByTagName("input")[0].checked == false) {
+                        hidFields.push(i);
+                    }
+                }
+            }
+            // return [objTostr(allFields), objTostr(hidFields), objTostr(moveFields)];
+            return { allFields: allFields, hidFields: hidFields, moveFields: moveFields };
+        }
+
+        function showBottom(gridData) {
+            var ct = document.getElementById("fieldcontainer");
+            ct.style.width = "100%";
+            ct.style.height = "100%";
+            ct.style.overflow = "auto";
+          //  document.getElementById("subGridHeaderBottom").style.height = getAllHeaderHeight(gridData.heights, gridData.headerLength) + "px";
+            var c = document.getElementById("subGridHeaderBottom");
+            c.style.height = getAllHeaderHeight(gridData.heights, gridData.headerLength) + "px";
+            var width;
+            if (gridData.oldColWidths)
+                width = getAllColumnWidth(gridData.oldColWidths);
+            else
+                width = getAllColumnWidth(gridData.colWidths);
+            c.style.width = (width + 40) + "px";
+            var obj = document.createElement("DIV");
+            //obj.id = id;
+            obj.style.width = "100%";
+            obj.style.height = "100%";
+            obj.style.position = "relative";
+            obj.style.overflow = "hidden";
+            c.appendChild(obj);
+            gridHeaderBottom = new HwReport(obj, c, obj, obj.width, obj.height);
+            gridHeaderBottom.vmdreport= parent.fieldParams.hwreport.vmdreport;
+            gridHeaderBottom.setAlign("center");
+            var title = gridData.title;
+              //  gridHeaderBottom.setTitle(title, 600);
+            gridHeaderBottom.loadJSON(gridData.headerJson, function () {
+                gridHeaderBottom.fixedColCount = gridData.fixedColCount;
+                // if (args.allFields) {
+                //  var allf = args.allFields.split(",");
+                //  if (allf.length == allFields.length) {
+                //debugger
+				gridHeaderBottom.vmdreport.myMask.hide();
+                if (hiddenFields) {
+                    for (var i = 0; i < hiddenFields.length; i++) {
+                        gridHeaderBottom.grid.setColumnHiddenForHeader(parseInt(hiddenFields[i]), true);
+                        //gridHeaderBottom.setColumnHidden(parseInt(hiddenFields[i]), true);
+                    }
+                    //  }
+                    // }
+                }
+            });
+        }
+
+        function checkAllCheckBox(mode) {
+            subGridHeader.grid.setAllCheckBoxChecked(mode);
+        }
+
+        function cellMove(move) {
+            alert(move)
+            if (!moveFields) {
+                moveFields = allFields;
+            }
+            if (!clickcol) {
+                alert("没有选中要移动的单元格！");
+            }
+            else {
+                if (move) {
+                    alert("左移")
+
+                }
+                else {
+                    alert("右移")
+                }
+            }
+        }
+
+    </script>
+
+    <style>
+        table.hdr tr td {
+        /*     border: 1px solid black;
+          white-space: nowrap !important;*/
+            text-align: center;
+        }
+    </style>
+
+</head>
+
+<body onload="query()" style="overflow: hidden">
+    <div id="fieldcontainer">
+        <div id="subGridHeaderTop" style="margin-left: 10px; margin-top: 20px;height: 200px; width: 100%; border: 1px solid white; padding-left: 5px"></div>
+        <!-- position: relative 相对定位 position:absolute 绝对定位，相对于浏览器-->
+        <div style="margin-left: 10px; top: 202px; height: 50px; margin-bottom: 2px">
+            <!--      <table>
+                   <tr>
+                       <td>
+                           <input type="button" value="全选" onclick="checkAllCheckBox(true)" style="width: 60px; height: 25px; float: left; text-align: center; vertical-align: middle; margin-left: 50px;" />
+                           <input type="button" value="全不选" onclick="checkAllCheckBox(false)" style="width: 60px; height: 25px; float: left; text-align: center; vertical-align: middle; margin-left: 20px;" />
+                       </td>
+                       <td>
+                           <input type="button" id="sure" value="确定" onclick="upLoadAndRefresh()" style="width: 60px; height: 25px; float: left; text-align: center; vertical-align: middle; margin-left: 100px;" />
+                           <input type="button" id="cancel" value="取消" onclick="closeWindow();" style="width: 60px; height: 25px; float: left; text-align: center; vertical-align: middle; margin-left: 20px;" />
+                       </td>
+                   </tr>
+               </table>-->
+           </div>
+           <div id="subGridHeaderBottom" style="top: 262px; margin-left: 10px; height: 100%; width: 100%; border: 1px solid white; padding-left: 5px"></div>
+       </div>
+     <div id ="checkPanel" style="top: 222px; margin-left: 10px; position: absolute; margin-bottom: 2px;">
+         <!--    <table style="width: 100%">-->
+           <table>
+               <tr>
+                   <td>
+                       <input type="button" value="全选" onclick="checkAllCheckBox(true)" style="width: 60px; height: 25px; float: left; text-align: center; vertical-align: middle; margin-left: 50px;" />
+                       <input type="button" value="全不选" onclick="checkAllCheckBox(false)" style="width: 60px; height: 25px; float: left; text-align: center; vertical-align: middle; margin-left: 20px;" />
+                   </td>
+                   <td>
+                       <input type="button" id="sure" value="确定" onclick="upLoadAndRefresh()" style="width: 60px; height: 25px; float: left; text-align: center; vertical-align: middle; margin-left: 100px;" />
+                       <input type="button" id="cancel" value="取消" onclick="closeWindow();" style="width: 60px; height: 25px; float: left; text-align: center; vertical-align: middle; margin-left: 20px;" />
+                   </td>
+               </tr>
+           </table>
+       </div>
+</body>
+</html>

@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>录入属性设置</title>
+	<!--基本样式-->
+    <link href="{vmdvirtualPath}/css/common.css?ver=2.0.4.20190331" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="{vmdvirtualPath}/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.4.20190331" rel="stylesheet" />
+   
+    <link href="{vmdvirtualPath}/design/css/icons.css?ver=2.0.4.20190331" rel="stylesheet" />
+
+	<link href="{vmdvirtualPath}/lib/dhtmlx/skins/material/dhtmlx.css?ver=2.0.4.20190331" rel="stylesheet" />
+	  <!--样式快捷索引表-->
+    <link href="{vmdvirtualPath}/css/shortcut.css?ver=2.0.4.20190331" rel="stylesheet" />
+    
+	{vmdprojectcssfiles}
+    
+    <script src="{vmdvirtualPath}/lib/labjs/LAB.min.js?ver=2.0.4.20190331"></script>
+    <script src="{vmdvirtualPath}/config.js?ver=2.0.4.20190331"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.4.20190331"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.4.20190331"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.4.20190331"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/ext-all-debug.js?ver=2.0.4.20190331"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.4.20190331"></script>
+    <script src="{vmdvirtualPath}/js/util.js?ver=2.0.4.20190331"></script>
+    <script src="{vmdvirtualPath}/lib/dhtmlx/codebase/dhtmlx.js?ver=2.0.4.20190331"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.4.20190331"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.4.20190331"></script>
+    <script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.4.20190331"></script>
+	<script src="{vmdvirtualPath}/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.4.20190331"></script>
+    <script src="{vmdvirtualPath}/js/hwdas.js?ver=2.0.4.20190331"></script>
+    <script src="{vmdvirtualPath}/js/vmdcore.js?ver=2.0.4.20190331"></script>
+    <script src="{vmdvirtualPath}/js/vmdcomps.js?ver=2.0.4.20190331"></script>
+    <script src="{vmdvirtualPath}/js/publicMethods.js?ver=2.0.4.20190331"></script>
+    <script src="{vmdvirtualPath}/js/vmdreport.js?ver=2.0.4.20190331"></script>
+    
+    {vmdworkspacePath}
+	{vmdprojectconfigjs}
+	
+	{vmdprojectjsfiles}
+    
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        .designer-input ::-webkit-scrollbar {
+		    width:12px;
+		    height:12px;
+}
+.designer-input ::-webkit-scrollbar-track {
+	background:whiteSmoke;
+	-webkit-box-shadow:inset 0 0 4px rgba(0,0,0,0.1);		
+}
+.designer-input ::-webkit-scrollbar-thumb {
+	background:#c5c5c5;
+	border-radius:10px;
+	border:whiteSmoke solid 3px;		
+}
+.designer-input ::-webkit-scrollbar-thumb:hover {
+	background:#b5b5b5;
+}
+    </style>
+    <script>
+	    
+        vmd.virtualPath = '{vmdvirtualPath}';
+        
+        Ext.define("vmd.module.MainViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps(["vmd.ux.TypeSettings$1.0$TypeSettings"]),
+	xtype:"vmd.module.MainViewport",
+	layout:"border",
+	cls:"designer-input",
+	afterrender:"MainViewport_afterrender",
+	initComponent: function(){
+		// var util = new ide.ext.DataInputUtils(page, )
+var page = this;
+page.type = parent.settingWin && parent.settingWin.params.type;
+
+function button_click(sender, e) {
+    debugger
+    parent.settingWin.setBack(hwTypeSettings.controller, true)
+}
+
+function button1_click(sender, e) {
+    parent.settingWin.setBack(hwTypeSettings.controller, false)
+}
+
+function button2_click(sender, e) {
+    debugger
+    var comp = parent.xds.eastlayout.ContentFrame.controller.comp;
+    var type = page.type;
+    var base = getBase(comp, type)
+    if (base) {
+        var component = getComponent(base.fieldsConfig.type);
+        if (component) {
+            changeValue(comp, base, component, type)
+        }
+    }
+}
+
+function changeValue(comp, base, component, type) {
+    var data = base.fieldsConfig.serialize();
+    component.setValue(data, true)
+    //true 标识forcopy，不操作事件
+    if (type == 'grid') {
+        comp.form.settings.fields[page.no].fieldsConfig = component;
+    } else {
+        comp.grid.settings.fields[page.no].fieldsConfig = component;
+    }
+}
+
+function getComponent(type) {
+    var componet;
+    switch (type) {
+        case 'text':
+            componet = new vmd.ux.inputTextProperty.Controller();
+            break;
+        case 'number':
+            componet = new vmd.ux.inputNumberProperty.Controller();
+            break;
+        case 'combo':
+            componet = new vmd.ux.inputComboProperty.Controller();
+            break;
+        case 'comboTree':
+            componet = new vmd.ux.inputComboTreeProperty.Controller();
+            break;
+        case 'comboGrid':
+            componet = new vmd.ux.inputComboGridProperty.Controller();
+            break;
+        case 'radioButton':
+            componet = new vmd.ux.inputRadioButtonProperty.Controller();
+            break;
+        case 'checkbox':
+            componet = new vmd.ux.inputCheckBoxProperty.Controller();
+            break;
+        case 'richText':
+            componet = new vmd.ux.inputRichTextProperty.Controller();
+            break;
+        case 'date':
+            componet = new vmd.ux.inputDateProperty.Controller();
+            break;
+    }
+    return componet;
+}
+
+function getBase(comp, type) {
+    if (type == 'grid') {
+        for (var i = 0; i < comp.form.settings.fields.length; i++) {
+            if (comp.grid.settings.fields[comp.grid.activeNo].dictionary.name == comp.form.settings.fields[i].dictionary.name) {
+                page.no = i;
+                return comp.grid.settings.fields[comp.grid.activeNo];
+            }
+        }
+    } else {
+        for (var i = 0; i < comp.grid.settings.fields.length; i++) {
+            if (comp.form.settings.fields[comp.form.activeNo].dictionary.name == comp.grid.settings.fields[i].dictionary.name) {
+                page.no = i;
+                return comp.form.settings.fields[comp.form.activeNo];
+            }
+        }
+    }
+}
+
+function button2_beforerender(sender) {
+    if (page.type == 'grid') {
+        button2.text = '当前字段设置应用于自由格式'
+    } else {
+        button2.text = '当前字段设置应用于网格格式'
+    }
+}
+
+function MainViewport_afterrender(sender) {
+
+}
+			this.MainViewport_afterrender=MainViewport_afterrender;
+
+
+
+		this.items=[
+			{
+				xtype:"panel",
+				id:"panel",
+				title:"Panel",
+				header:false,
+				border:false,
+				height:100,
+				x:80,
+				y:90,
+				layout:"fit",
+				region:"center",
+				items:[
+					{
+						xtype:"vmd.ux.TypeSettings",
+						id:"hwTypeSettings",
+						layout:"fit"
+					}
+				]
+			},
+			{
+				xtype:"panel",
+				id:"panel1",
+				title:"Panel",
+				header:false,
+				border:false,
+				height:45,
+				region:"south",
+				layout:"border",
+				bodyStyle:"border-top:1px solid #ddd;",
+				items:[
+					{
+						xtype:"vmd.div",
+						id:"div1",
+						layoutConfig:{
+							align:"middle"
+						},
+						autoEl:"div",
+						border:false,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						width:400,
+						height:50,
+						region:"center",
+						layout:"hbox",
+						items:[
+							{
+								xtype:"vmd.button",
+								id:"button2",
+								text:"当前字段向另一类型相同字段应用",
+								type:"text",
+								size:"small",
+								click:"button2_click",
+								margins:"0 0 0 5",
+								beforerender:"button2_beforerender",
+								listeners:{
+									click:button2_click,
+									beforerender:button2_beforerender
+								}
+							}
+						]
+					},
+					{
+						xtype:"vmd.div",
+						id:"div",
+						layoutConfig:{
+							align:"middle"
+						},
+						autoEl:"div",
+						border:false,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						width:150,
+						height:50,
+						region:"east",
+						layout:"hbox",
+						items:[
+							{
+								xtype:"vmd.button",
+								id:"button",
+								text:"确定",
+								type:"primary",
+								size:"small",
+								click:"button_click",
+								hidden:false,
+								listeners:{
+									click:button_click
+								}
+							},
+							{
+								xtype:"vmd.button",
+								id:"button1",
+								text:"关闭",
+								type:"(none)",
+								size:"small",
+								margins:"0 20 0 10",
+								click:"button1_click",
+								hidden:false,
+								listeners:{
+									click:button1_click
+								}
+							}
+						]
+					}
+				]
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+			me.on('afterrender',function(){ MainViewport_afterrender.call(me,me)})
+}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MainViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

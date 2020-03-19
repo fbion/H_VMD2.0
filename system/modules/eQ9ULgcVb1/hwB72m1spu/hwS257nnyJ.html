@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title></title>
+	<!--基本样式-->
+    <link href="/css/common.css?ver=2.0.3" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.3" rel="stylesheet" />
+   
+    <link href="/design/css/icons.css?ver=2.0.3" rel="stylesheet" />
+
+	<link href="/lib/dhtmlx/dhtmlx.css?ver=2.0.3" rel="stylesheet" />
+	  <!--样式快捷索引表-->
+    <link href="/css/shortcut.css?ver=2.0.3" rel="stylesheet" />
+    
+    <script src="/lib/labjs/LAB.min.js?ver=2.0.3"></script>
+    <script src="/config.js?ver=2.0.3"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.3"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.3"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.3"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=2.0.3"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.3"></script>
+    <script src="/js/util.js?ver=2.0.3"></script>
+    <script src="/lib/dhtmlx/dhtmlx.js?ver=2.0.3"></script>
+	<script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.3"></script>
+	<script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.3"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.3"></script>
+	<script src="/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.3"></script>
+    <script src="/js/hwdas.js?ver=2.0.3"></script>
+    <script src="/js/vmdcore.js?ver=2.0.3"></script>
+    <script src="/js/vmdcomps.js?ver=2.0.3"></script>
+    <script src="/js/publicMethods.js?ver=2.0.3"></script>
+    <script src="/js/vmdreport.js?ver=2.0.3"></script>
+    
+
+    <script src="/lib/ace/ace.js"></script>
+    <script src="/lib/ace/mode-base.js" type="text/javascript"></script>
+    <script src="/lib/ace/theme-xcode.js" type="text/javascript" ></script>
+    <script src="/lib/ace/ext-language_tools.js"></script>
+    
+
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        
+    </style>
+    <script>
+        vmd.virtualPath = '';
+        vmd.workspace={"workspaceid":"","dataServiceIp":"","workflowIp":""}
+        Ext.define("vmd.module.MyViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps([]),
+	xtype:"vmd.module.MyViewport",
+	layout:"absolute",
+	afterrender:"MyViewport_afterrender",
+	autoScroll:true,
+	listeners:{
+		vmdafterrender:function(){
+	this.MyViewport_afterrender(this)
+}
+	},
+	initComponent: function(){
+		function combo_change(sender) {
+
+
+
+
+    var record = store.getAt(0);
+    var val = combo.getValue();
+    var index = store.find('id', val) || 0;
+
+    // //获取选中的记录
+    // record=store.getAt(0);
+    // //获取对应的字段值
+    // var code =record.get('code');
+
+    // alert(code)
+}
+
+function combo1_change(sender) {
+    combo2.setValue('')
+    store2.toRefresh()
+}
+
+function button_click(sender, e) {
+    parent.refreshPage()
+}
+
+function tree_afterNodeExpand(sender, node) {
+
+}
+
+function tree_beforeNodeExpand(sender, node, deep, anim) {
+
+    // for(var i = 0; i < node.childNodes.length; i++) {
+    //     if(node.childNodes[i].getDepth() == 1) //获取节点的层级  跟节点为1  依次类推
+    //         if(node.childNodes[i].attributes.checked == undefined || node.childNodes[i].attributes.checked == null) //判断是否启用了复选框
+    //     {
+    //         node.childNodes[i].attributes.checked = false //设置节点启用复选框，默认false
+    //     }
+    // }
+
+    tree.show()
+}
+
+function MyViewport_afterrender(sender) {
+
+
+    // //创建键盘导航 
+    // var nav = new vmd.KeyNav("button", {
+    //     "left": function(e) {
+    //         //this.moveLeft(e.ctrlKey);
+    //     },
+    //     "right": function(e) {
+    //         //  this.moveRight(e.ctrlKey);
+    //     },
+    //     "enter": function(e) {
+    //         //
+    //         
+    //     },
+    //     scope: this
+    // });
+    // //支持的键： enter, left, right, up, down, tab, esc, pageUp, pageDown, del, home, end;
+
+    vmd("#testifrm").on('load', function() {
+        //
+        // alert()
+
+    })
+}
+
+function tree_beforerender(sender) {
+    this.enableDD = true
+    this.ddGroup = 'TreePanelDDGroup';
+
+}
+
+function panel1_beforerender(sender) {
+
+}
+
+function panel1_afterrender(sender) {
+    var cmp = sender;
+    var sourcePanelDropTarget = new Ext.dd.DropTarget(cmp.body.dom, {
+        ddGroup: 'TreePanelDDGroup',
+        notifyDrop: function(ddSource, e, data) {
+
+            // Ext.MessageBox.alert(data.node);
+            cmp.add(new Ext.Panel({
+                boder: true,
+                title: data.node.id,
+                id: data.node.id,
+                bodyStyle: 'padding: 5px'
+
+            }));
+            cmp.doLayout();
+            // data.node.parentNode.removeChild(data.node);
+            return true
+        }
+    });
+}
+
+function combo_afterrender(sender) {
+    combo.blur = function() {
+
+        sender.DOMelem_input.blur();
+    }
+    vmd(sender.DOMelem_input).on('focus', function(e) {
+        console.log("1")
+        var pos = combo.el.getRegion();
+        var top = pos.top + 30;
+        var left = pos.left
+        tree.show();
+        tree.el.setLeft(left);
+        tree.el.setTop(top);
+        e.stopPropagation();
+
+    }).on('blur', function() {
+
+        // alert(tree.el.isVisible())
+
+        //  tree.hide();
+
+    })
+
+}
+
+function tree_nodeclick(sender, node, e) {
+    //
+    
+    if(!node.hasChildNodes()) {
+        combo.setText(node.text)
+        combo.setValue(node.id)
+        combo.blur();
+        tree.hide();
+    }
+
+
+
+
+
+}
+			this.MyViewport_afterrender=MyViewport_afterrender;
+		hwvar=new vmd.var.variable({});
+
+		store=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"store","autoLoad":true,"cid":"vmdJsonStore","storeConfig":"{\"id\":\"eQ9TXjYMJR\",\"callcode\":\"vmdCode\",\"url\":\"CDEServcie/project/info\",\"host\":\"\",\"isHwRest\":true,\"name\":\"项目信息\",\"getMethods\":[],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"xh\",\"type\":\"string\"},{\"name\":\"code\",\"type\":\"string\"},{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"category_id\",\"type\":\"string\"},{\"name\":\"ppdm_guid\",\"type\":\"string\"},{\"name\":\"row_changed_by\",\"type\":\"string\"},{\"name\":\"row_changed_date\",\"type\":\"datetime\"},{\"name\":\"row_created_by\",\"type\":\"string\"},{\"name\":\"row_created_date\",\"type\":\"datetime\"},{\"name\":\"row_effective_date\",\"type\":\"datetime\"},{\"name\":\"row_expiry_date\",\"type\":\"datetime\"},{\"name\":\"row_quality\",\"type\":\"string\"},{\"name\":\"effective_date\",\"type\":\"datetime\"},{\"name\":\"expiry_date\",\"type\":\"datetime\"}]}"});
+		store1=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"store1","autoLoad":true,"cid":"vmdJsonStore","storeConfig":"{\"id\":\"l0JzcNr6GW\",\"callcode\":\"vmdCode\",\"url\":\"DataServiceWorkSpace/BUSINESSASSOCIATE/employee\",\"host\":\"\",\"isHwRest\":true,\"name\":\"查询员工\",\"getMethods\":[],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"business_associate_id\",\"type\":\"string\"},{\"name\":\"first_name\",\"type\":\"string\"}]}"});
+		store2=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"store2","autoLoad":true,"cid":"vmdJsonStore","storeConfig":"{\"id\":\"TxfVyP1knW\",\"callcode\":\"vmdCode\",\"url\":\"DataServiceWorkSpace/WorkSpaceInfo/WorkSpaceUserQuery\",\"host\":\"\",\"isHwRest\":true,\"name\":\"用户关联工区查询\",\"getMethods\":[{\"id\":\"loginname\",\"value1\":\"return combo1.getValue()||'';\",\"value2\":\"\"}],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"workspace_id\",\"type\":\"string\"},{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"active_ind\",\"type\":\"string\"}]}"});
+		store3=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"store3","autoLoad":true,"cid":"vmdJsonStore","storeConfig":"{\"id\":\"eQ9T1htRZs\",\"callcode\":\"vmdCode\",\"url\":\"CDEServcie/module/category\",\"host\":\"\",\"isHwRest\":true,\"name\":\"模块目录\",\"getMethods\":[{\"id\":\"project_id\",\"value1\":\"return 'eQ9ULgcVb1';\",\"value2\":\"\"},{\"id\":\"parent_id\",\"value1\":\"return 0;\",\"value2\":\"\"}],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"xh\",\"type\":\"string\"},{\"name\":\"code\",\"type\":\"string\"},{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"parent_id\",\"type\":\"string\"},{\"name\":\"project_id\",\"type\":\"string\"},{\"name\":\"ppdm_guid\",\"type\":\"string\"},{\"name\":\"row_changed_by\",\"type\":\"string\"},{\"name\":\"row_changed_date\",\"type\":\"datetime\"},{\"name\":\"row_created_by\",\"type\":\"string\"},{\"name\":\"row_created_date\",\"type\":\"datetime\"},{\"name\":\"row_effective_date\",\"type\":\"datetime\"},{\"name\":\"row_expiry_date\",\"type\":\"datetime\"},{\"name\":\"row_quality\",\"type\":\"string\"},{\"name\":\"effective_date\",\"type\":\"datetime\"},{\"name\":\"expiry_date\",\"type\":\"datetime\"}]}"});
+		store4=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"store4","autoLoad":true,"cid":"vmdJsonStore","storeConfig":"{\"id\":\"eQ9T1htRZs\",\"callcode\":\"vmdCode\",\"url\":\"CDEServcie/module/category\",\"host\":\"\",\"isHwRest\":true,\"name\":\"模块目录\",\"getMethods\":[{\"id\":\"project_id\",\"value1\":\"return 'eQ9ULgcVb1';\",\"value2\":\"\"},{\"id\":\"parent_id\",\"value1\":\"\",\"value2\":\"\"}],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"xh\",\"type\":\"string\"},{\"name\":\"code\",\"type\":\"string\"},{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"parent_id\",\"type\":\"string\"},{\"name\":\"project_id\",\"type\":\"string\"},{\"name\":\"ppdm_guid\",\"type\":\"string\"},{\"name\":\"row_changed_by\",\"type\":\"string\"},{\"name\":\"row_changed_date\",\"type\":\"datetime\"},{\"name\":\"row_created_by\",\"type\":\"string\"},{\"name\":\"row_created_date\",\"type\":\"datetime\"},{\"name\":\"row_effective_date\",\"type\":\"datetime\"},{\"name\":\"row_expiry_date\",\"type\":\"datetime\"},{\"name\":\"row_quality\",\"type\":\"string\"},{\"name\":\"effective_date\",\"type\":\"datetime\"},{\"name\":\"expiry_date\",\"type\":\"datetime\"}]}"});
+
+
+		this.items=[
+			{
+				xtype:"vmd.treeex",
+				id:"tree",
+				width:190,
+				height:270,
+				hideRoot:false,
+				x:20,
+				y:170,
+				store:store3,
+				parentField:"parent_id",
+				valueField:"id",
+				textField:"name",
+				loadType:"全部加载",
+				rootValue:"0",
+				rootText:"aa",
+				afterNodeExpand:"tree_afterNodeExpand",
+				beforeNodeExpand:"tree_beforeNodeExpand",
+				beforerender:"tree_beforerender",
+				checkBox:false,
+				nodeclick:"tree_nodeclick",
+				listeners:{
+					afterNodeExpand:tree_afterNodeExpand,
+					beforeNodeExpand:tree_beforeNodeExpand,
+					beforerender:tree_beforerender,
+					nodeclick:tree_nodeclick
+				}
+			},
+			{
+				xtype:"datefield",
+				id:"hwDate",
+				format:"Y-m",
+				showToday:true,
+				allowBlank:true,
+				defaultValue:"prevMonth",
+				x:70,
+				y:40
+			},
+			{
+				xtype:"datefield",
+				id:"hwDate1",
+				format:"Y-m",
+				showToday:true,
+				allowBlank:true,
+				defaultValue:"nextMonth",
+				x:300,
+				y:40
+			},
+			{
+				xtype:"datefield",
+				id:"hwDate2",
+				format:"Y-m",
+				showToday:true,
+				allowBlank:true,
+				x:500,
+				y:50
+			},
+			{
+				xtype:"panel",
+				id:"panel",
+				title:"Panel",
+				header:true,
+				border:true,
+				height:410,
+				x:240,
+				y:100,
+				width:690,
+				html:"<iframe src=\"/modules/hwB72m1spu/hwc83879ce.html\" id=\"testifrm\" style=\"height:100%;width:100%\"></iframe>",
+				hidden:true
+			},
+			{
+				xtype:"panel",
+				id:"panel1",
+				title:"Panel",
+				header:true,
+				border:true,
+				height:170,
+				x:170,
+				y:540,
+				width:670,
+				beforerender:"panel1_beforerender",
+				autoScroll:true,
+				afterrender:"panel1_afterrender",
+				listeners:{
+					beforerender:panel1_beforerender,
+					vmdafterrender:panel1_afterrender
+				}
+			},
+			{
+				xtype:"vmd.combo",
+				id:"combo",
+				width:150,
+				x:670,
+				y:40,
+				afterrender:"combo_afterrender",
+				listeners:{
+					vmdafterrender:combo_afterrender
+				}
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+	}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MyViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

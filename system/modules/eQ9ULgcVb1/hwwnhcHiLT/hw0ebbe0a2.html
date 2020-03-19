@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>联动组件使用</title>
+    <!--基本样式-->
+    <link href="/css/common.css?ver=2.0.4.190514" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.4.190514" rel="stylesheet" />
+    <link href="/design/css/icons.css?ver=2.0.4.190514" rel="stylesheet" />
+    <link href="/lib/dhtmlx/dhtmlx.css?ver=2.0.4.190514" rel="stylesheet" />
+    <!--样式快捷索引表-->
+    <link href="/css/shortcut.css?ver=2.0.4.190514" rel="stylesheet" />
+    <script src="/lib/labjs/LAB.min.js?ver=2.0.4.190514"></script>
+    <script src="/config.js?ver=2.0.4.190514"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.4.190514"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.4.190514"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.4.190514"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=2.0.4.190514"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.4.190514"></script>
+    <script src="/js/util.js?ver=2.0.4.190514"></script>
+    <script src="/lib/dhtmlx/dhtmlx.js?ver=2.0.4.190514"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.4.190514"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.4.190514"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.4.190514"></script>
+    <script src="/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.4.190514"></script>
+    <script src="/js/hwdas.js?ver=2.0.4.190514"></script>
+    <script src="/js/vmdcore.js?ver=2.0.4.190514"></script>
+    <script src="/js/vmdcomps.js?ver=2.0.4.190514"></script>
+    <script src="/js/publicMethods.js?ver=2.0.4.190514"></script>
+    <script src="/js/vmdreport.js?ver=2.0.4.190514"></script>
+    <style> </style>
+    <style type="text/css" id="vmdcss"> </style>
+    <script>
+        vmd.previewMode = true;
+        vmd.virtualPath = '';
+        vmd.workspace = {
+            "workspaceid": "1174c7d2-f008-4f84-bb61-1845b5d28814",
+            "workflowIp": "",
+            "dataServiceIp": "",
+            "msgIp": "",
+            "projectid": "eQ9ULgcVb1"
+        }
+        vmd.resourceSettings = {
+            "资源中心&&资源中心服务器": "http://www.hanweikeji.com:10050/resource"
+        }
+        vmd.projectInfo = {
+            "projectId": "eQ9ULgcVb1",
+            "workflowIp": "",
+            "dataServiceIp": "",
+            "msgIp": "",
+            "todoIp": "",
+            "authIp": "",
+            "docIp": "",
+            "reoprtIp": "",
+            "logIp": ""
+        }
+        Ext.define("vmd.module.MainViewport", {
+            extend: "vmd.comp.viewport",
+            requires: vmd.getCmpDeps(["vmd.ux.StartAndEndDate$1.2$StartAndEndDate", "vmd.ux.Department_personnel$1.0$Department_personnel"]),
+            xtype: "vmd.module.MainViewport",
+            layout: "absolute",
+            initComponent: function() {
+                function hwDepartment_personnel_comList1SelChange(sender, value, text) {
+                    ry.toRefresh()
+                    debugger
+                }
+
+                function button_click(sender, e) {
+                    alert(hwStartAndEndDate.getStartDateValue())
+                    //记录日志信息 
+                    //vmd.webBase.syslog(loginfo,logtype,operationtype,function(res){}) 
+                }
+
+                function hwStartAndEndDate_startDateChanged(sender, newValue, oldValue) {
+                    alert("shijian")
+                }
+
+                function report_afterrender(render) {
+                    report.query();
+                }
+                dw = new vmd.store.jsonStore({
+                    "xtype": "vmd.jsonStore",
+                    "id": "dw",
+                    "autoLoad": true,
+                    "cid": "vmdJsonStore",
+                    "storeConfig": "{\"id\":\"mzwUgcKt4Z\",\"callcode\":\"vmdCode\",\"url\":\"vmdtest/depuser/getDep\",\"host\":\"\",\"isHwRest\":true,\"name\":\"获取部门\",\"getMethods\":[],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"dwdm\",\"type\":\"string\"},{\"name\":\"dwscgs\",\"type\":\"string\"}]}"
+                });
+                dw1 = new vmd.store.jsonStore({
+                    "xtype": "vmd.jsonStore",
+                    "id": "dw1",
+                    "autoLoad": true,
+                    "cid": "vmdJsonStore",
+                    "storeConfig": "{\"id\":\"mzwUkVtnMr\",\"callcode\":\"vmdCode\",\"url\":\"vmdtest/depuser/getUser\",\"host\":\"\",\"isHwRest\":true,\"name\":\"获取用户\",\"getMethods\":[{\"id\":\"dwdm\",\"value1\":\"//返回值 \\r\\n return hwDepartment_personnel.getComList1SelValue()||\\\"\\\"\",\"value2\":\"\",\"defaultvalue\":\"\"}],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"login\",\"type\":\"string\"},{\"name\":\"name\",\"type\":\"string\"}]}"
+                });
+                this.items = [{
+                        xtype: "vmd.ux.Department_personnel",
+                        id: "hwDepartment_personnel",
+                        layoutConfig: {
+                            align: "middle"
+                        },
+                        label1Text: "单位:",
+                        label2Text: "人员:",
+                        layout: "hbox",
+                        x: 120,
+                        y: 30,
+                        comList1SelChange: "hwDepartment_personnel_comList1SelChange",
+                        combo1store: dw,
+                        combo1DisplayField: "dwscgs",
+                        combo1ValueField: "dwdm",
+                        combo2store: "ry",
+                        combo2DisplayField: "name",
+                        combo2ValueField: "login",
+                        listeners: {
+                            comList1SelChange: hwDepartment_personnel_comList1SelChange
+                        }
+                    },
+                    {
+                        xtype: "vmd.ux.StartAndEndDate",
+                        id: "hwStartAndEndDate",
+                        layoutConfig: {
+                            align: "middle"
+                        },
+                        StartLabelText: "开始日期：",
+                        StartDateFormat: "Y-m-d",
+                        EndDateFormat: "Y-m-d",
+                        EndLabelText: "结束日期：",
+                        layout: "hbox",
+                        x: 110,
+                        y: 80,
+                        startDateChanged: "hwStartAndEndDate_startDateChanged",
+                        listeners: {
+                            startDateChanged: hwStartAndEndDate_startDateChanged
+                        }
+                    },
+                    {
+                        xtype: "vmd.button",
+                        id: "button",
+                        text: "button",
+                        type: "(none)",
+                        size: "small",
+                        x: 290,
+                        y: 230,
+                        click: "button_click",
+                        listeners: {
+                            click: button_click
+                        }
+                    },
+                    {
+                        xtype: "vmd.combo",
+                        id: "combo",
+                        width: 150,
+                        x: 540,
+                        y: 280,
+                        store: ry
+                    },
+                    {
+                        xtype: "vmd.comlist",
+                        id: "comlist",
+                        width: 350,
+                        height: 270,
+                        x: 60,
+                        y: 280,
+                        store: dw,
+                        valueField: "dwdm",
+                        displayField: "dwscgs",
+                        dropDownFields: "dwdm,dwscgs"
+                    },
+                    {
+                        xtype: "vmd.div",
+                        id: "div",
+                        autoEl: "div",
+                        border: true,
+                        backgroundRepeat: "no-repeat",
+                        backgroundPosition: "top left",
+                        width: 920,
+                        height: 300,
+                        x: 80,
+                        y: 350,
+                        layout: "auto"
+                    },
+                    {
+                        xtype: "vmd.ux.StartAndEndDate",
+                        id: "hwStartAndEndDate1",
+                        layoutConfig: {
+                            align: "middle"
+                        },
+                        StartLabelText: "开始日期：",
+                        StartDateFormat: "Y-m-d",
+                        EndDateFormat: "Y-m-d",
+                        EndLabelText: "结束日期：",
+                        layout: "hbox",
+                        x: 110,
+                        y: 150
+                    }
+                ]
+                this.callParent();
+                var me = this;
+                vmd.core.moduleInit(this.items, this);
+            }
+        })
+        Ext.onReady(function() {
+            Ext.create('vmd.module.MainViewport', {
+                renderTo: document.body
+            })
+        })
+    </script>
+</head>
+
+<body> </body>
+
+</html>

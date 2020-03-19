@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>checkbox</title>
+    <!--基本样式-->
+    <link href="{vmdvirtualPath}/css/common.css?ver=2.0.3.201903121" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="{vmdvirtualPath}/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.3.201903121" rel="stylesheet" />
+    <link href="{vmdvirtualPath}/design/css/icons.css?ver=2.0.3.201903121" rel="stylesheet" />
+    <link href="{vmdvirtualPath}/lib/dhtmlx/dhtmlx.css?ver=2.0.3.201903121" rel="stylesheet" />
+    <!--样式快捷索引表-->
+    <link href="{vmdvirtualPath}/css/shortcut.css?ver=2.0.3.201903121" rel="stylesheet" />
+    <script src="{vmdvirtualPath}/lib/labjs/LAB.min.js?ver=2.0.3.201903121"></script>
+    <script src="{vmdvirtualPath}/config.js?ver=2.0.3.201903121"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.3.201903121"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.3.201903121"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.3.201903121"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/ext-all-debug.js?ver=2.0.3.201903121"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.3.201903121"></script>
+    <script src="{vmdvirtualPath}/js/util.js?ver=2.0.3.201903121"></script>
+    <script src="{vmdvirtualPath}/lib/dhtmlx/dhtmlx.js?ver=2.0.3.201903121"></script>
+    <script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.3.201903121"></script>
+    <script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.3.201903121"></script>
+    <script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.3.201903121"></script>
+    <script src="{vmdvirtualPath}/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.3.201903121"></script>
+    <script src="{vmdvirtualPath}/js/hwdas.js?ver=2.0.3.201903121"></script>
+    <script src="{vmdvirtualPath}/js/vmdcore.js?ver=2.0.3.201903121"></script>
+    <script src="{vmdvirtualPath}/js/vmdcomps.js?ver=2.0.3.201903121"></script>
+    <script src="{vmdvirtualPath}/js/publicMethods.js?ver=2.0.3.201903121"></script>
+    <script src="{vmdvirtualPath}/js/vmdreport.js?ver=2.0.3.201903121"></script> {vmdworkspacePath} <style> </style>
+    <style type="text/css" id="vmdcss"> </style>
+    <script>
+        vmd.virtualPath = '{vmdvirtualPath}';
+        Ext.define("vmd.module.MainViewport", {
+            extend: "vmd.comp.viewport",
+            requires: vmd.getCmpDeps(["vmd.ux.Checkbox$1.0$Checkbox", "vmd.ux.DatePicker$1.0$DatePicker"]),
+            xtype: "vmd.module.MainViewport",
+            layout: "absolute",
+            initComponent: function() {
+                // 创建数据集。 
+                var store = new vmd.data.Store({
+                    data: [{
+                        text: 'toggle',
+                        value: 'toggle'
+                    }, {
+                        text: 'checkbox',
+                        value: ' '
+                    }, {
+                        text: 'radio',
+                        value: 'radio'
+                    }, {
+                        text: 'slider',
+                        value: 'slider'
+                    }],
+                    fields: ['text', 'value']
+                });
+
+                function combo_beforerender(sender) {
+                    this.store = store;
+                    combo.displayField = 'text';
+                    combo.valueField = 'value'
+                }
+
+                function combo_change(sender) {
+                    var val = combo.getValue();
+                    Checkbox.setType(val)
+                }
+
+                function hwDatePicker_change(sender, newval, oldval) {
+                    alert()
+                }
+                this.items = [{
+                        xtype: "vmd.combo",
+                        id: "combo",
+                        width: 150,
+                        x: 210,
+                        y: 110,
+                        beforerender: "combo_beforerender",
+                        change: "combo_change",
+                        listeners: {
+                            beforerender: combo_beforerender,
+                            change: combo_change
+                        }
+                    },
+                    {
+                        xtype: "vmd.ux.Checkbox",
+                        id: "Checkbox",
+                        layout: "fit",
+                        x: 430,
+                        y: 110,
+                        label: "测试"
+                    },
+                    {
+                        xtype: "label",
+                        id: "label",
+                        text: "类型选择",
+                        x: 150,
+                        y: 120
+                    },
+                    {
+                        xtype: "vmd.ux.Checkbox",
+                        id: "Checkbox1",
+                        layout: "fit",
+                        x: 270,
+                        y: 490
+                    },
+                    {
+                        xtype: "vmd.ux.DatePicker",
+                        id: "hwDatePicker",
+                        layout: "auto",
+                        x: 300,
+                        y: 280,
+                        change: "hwDatePicker_change",
+                        listeners: {
+                            change: hwDatePicker_change
+                        }
+                    }
+                ]
+                this.callParent();
+                var me = this;
+                vmd.core.moduleInit(this.items, this);
+            }
+        })
+        Ext.onReady(function() {
+            Ext.create('vmd.module.MainViewport', {
+                renderTo: document.body
+            })
+        })
+    </script>
+</head>
+
+<body> </body>
+
+</html>

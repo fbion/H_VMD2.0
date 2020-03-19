@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>窗口（子视图功能演示）1</title>
+    
+    <!--基本样式-->
+    <link href="/css/common.css?ver=2.0.3.1227" rel="stylesheet" />
+
+    <!--加载dhx组件-->
+    
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.3.1227" rel="stylesheet" />
+    
+    <link href="/lib/dhtmlx/dhtmlx.css?ver=2.0.3.1227" rel="stylesheet" />
+	<link href="/report/dhtmlx/dhtmlxGrid/codebase/skins/dhtmlxgrid_dhx_skyblue.css?ver=2.0.3.1227" rel="stylesheet" />
+	<link href="/report/dhtmlx/dhtmlxGrid/codebase/skins/dhtmlxgrid_default.css?ver=2.0.3.1227" rel="stylesheet" />
+	<link href="/report/dhtmlx/dhtmlxCheckBox/codebase/skins/dhtmlxcheckbox_dhx_skyblue.css?ver=2.0.3.1227" rel="stylesheet" />
+	<link href="/report/FillReport2.2/js/Adjustment.css?ver=2.0.3.1227" rel="stylesheet" />
+    <!--样式快捷索引表-->
+    <link href="/css/shortcut.css?ver=2.0.3.1227" rel="stylesheet" />
+	 
+    <script src="/lib/labjs/LAB.min.js?ver=2.0.3.1227"></script>
+    <script src="/config.js?ver=2.0.3.1227"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.3.1227"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.3.1227"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.3.1227"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=2.0.3.1227"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.3.1227"></script>
+	<script src="/js/util.js?ver=2.0.3.1227"></script>
+    <script src="/lib/dhtmlx/dhtmlx.js?ver=2.0.3.1227"></script>
+	
+    
+   <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.3.1227"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon_old.js?ver=2.0.3.1227"></script>
+   <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.3.1227"></script>
+   <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.3.1227"></script>
+   <script src="/report/dhtmlx/dhtmlxLayout/codebase/dhtmlxlayout.js?ver=2.0.3.1227"></script>
+   <script src="/report/dhtmlx/dhtmlxWindows/codebase/dhtmlxwindows.js?ver=2.0.3.1227"></script>
+   <script src="/report/dhtmlx/dhtmlxGrid/codebase/dhtmlxgrid.js?ver=2.0.3.1227"></script>
+   <script src="/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_rowspan.js?ver=2.0.3.1227"></script>
+   <script src="/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_splt.js?ver=2.0.3.1227"></script>
+   <script src="/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_srnd.js?ver=2.0.3.1227"></script>
+   <script src="/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_selection.js?ver=2.0.3.1227"></script>
+	<script src="/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_nxml.js?ver=2.0.3.1227"></script>
+	<script src="/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_mcol.js?ver=2.0.3.1227"></script>
+	<script src="/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_undo.js?ver=2.0.3.1227"></script>
+   <script src="/report/dhtmlx/dhtmlxGrid/codebase/excells/dhtmlxgrid_excell_link_OverLoad.js?ver=2.0.3.1227"></script>
+    <script src="/report/dhtmlx/dhtmlxGrid/codebase/excells/dhtmlxgrid_excell_menu.js?ver=2.0.3.1227"></script>
+   <script src="/report/dhtmlx/dhtmlxGrid/codebase/dhtmlxtreegrid.js?ver=2.0.3.1227"></script>
+   <script src="/report/dhtmlx/dhtmlxMenu/codebase/dhtmlxmenu.js?ver=2.0.3.1227"></script>
+   <script src="/report/dhtmlx/dhtmlxGrid/codebase/Base64.js?ver=2.0.3.1227"></script>
+   <script src="/report/FillReport2.2/js/libs/hwvmain.js?ver=2.0.3.1227"></script>
+    <script src="/report/FillReport2.2/js/hw/FillReport.js?ver=2.0.3.1227"></script>
+	<script src="/report/dhtmlx/dhtmlxToolbar/codebase/dhtmlxtoolbar.js?ver=2.0.3.1227"></script>
+	<script src="/report/dhtmlx/dhtmlxWindows/codebase/ext/dhtmlxwindows_dnd.js?ver=2.0.3.1227"></script>
+	<script src="/report/dhtmlx/dhtmlxWindows/codebase/ext/dhtmlxwindows_resize.js?ver=2.0.3.1227"></script>
+	<script src="/report/dhtmlx/dhtmlxWindows/codebase/ext/dhtmlxwindows_dnd.js?ver=2.0.3.1227"></script>
+	<script src="/report/dhtmlx/dhtmlxWindows/codebase/ext/dhtmlxwindows_resize.js?ver=2.0.3.1227"></script>
+	<script src="/report/dhtmlx/dhtmlxMessage/codebase/dhtmlxmessage.js?ver=2.0.3.1227"></script>
+	<script src="/report/dhtmlx/dhtmlxGrid/codebase/dhtmlxgrid_ext.js?ver=2.0.3.1227"></script>
+	<script src="/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_validation.js?ver=2.0.3.1227"></script>
+	<script src="/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_markers.js?ver=2.0.3.1227"></script>
+	<script src="/report/dhtmlx/dhtmlxCheckBox/codebase/dhtmlxcheckbox.js?ver=2.0.3.1227"></script>
+	<script src="/report/dhtmlx/dhtmlxCombo/codebase/dhtmlxcombo.js?ver=2.0.3.1227"></script>
+	<script src="/report/dhtmlx/dhtmlxGrid/codebase/excells/dhtmlxgrid_excell_combo.js?ver=2.0.3.1227"></script>
+	<script src="/report/dhtmlx/dhtmlxTree/codebase/dhtmlxtree.js?ver=2.0.3.1227"></script>
+	<script src="/report/dhtmlx/dhtmlxTree/codebase/ext/dhtmlxtree_ed.js?ver=2.0.3.1227"></script>
+	<script src="/report/dhtmlx/dhtmlxTree/codebase/ext/dhtmlxtree_json.js?ver=2.0.3.1227"></script>
+	<script src="/report/dhtmlx/dhtmlxTree/codebase/ext/dhtmlxtree_kn.js?ver=2.0.3.1227"></script>
+	<script src="/report/dhtmlx/dhtmlxCalendar/codebase/dhtmlxcalendar.js?ver=2.0.3.1227"></script>
+	<script src="/report/dhtmlx/dhtmlxForm/codebase/ext/swfobject.js?ver=2.0.3.1227"></script>
+	<script src="/report/dhtmlx/dhtmlxEditor/codebase/dhtmlxeditor.js?ver=2.0.3.1227"></script>
+	<script src="/report/dhtmlx/dhtmlxEditor/codebase/ext/dhtmlxeditor_ext.js?ver=2.0.3.1227"></script>
+	<script src="/report/dhtmlx/dhtmlxDataStore/codebase/ext/datastore_grid.js?ver=2.0.3.1227"></script>
+	<script src="/report/dhtmlx/dhtmlxDataStore/codebase/ext/datastore_combo.js?ver=2.0.3.1227"></script>
+	<script src="/report/dhtmlx/dhtmlxDataStore/codebase/ext/datastore_tree.js?ver=2.0.3.1227"></script>
+	<script src="/report/dhtmlx/dhtmlxDataStore/codebase/datastore_ext.js?ver=2.0.3.1227"></script>
+	<script src="/report/dhtmlx/dhtmlxDataStore/codebase/ext/datastore_checkbox.js?ver=2.0.3.1227"></script>
+	<script src="/report/FillReport2.2/js/libs/HwPrint.js?ver=2.0.3.1227"></script>
+	
+    <script src="/js/hwdas.js?ver=2.0.3.1227"></script>
+	<script src="/js/hwMSC.js?ver=2.0.3.1227"></script>
+    <script src="/js/vmdcore.js?ver=2.0.3.1227"></script>
+    <script src="/js/vmdcomps.js?ver=2.0.3.1227"></script>
+    <script src="/js/vmdreport.js?ver=2.0.3.1227"></script>
+	<script src="/js/publicMethods.js?ver=2.0.3.1227"></script>
+    
+    
+
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        
+    </style>
+    <script>
+	    vmd.preivewMode=true;
+        vmd.virtualPath = '';
+        vmd.workspace={"workspaceid":"74b8010d-2acc-4ad7-b68d-80db9601e791","projectid":"eQ9ULgcVb1","workflowIp":"","msgIp":"","dataServiceIp":""}
+	vmd.resourceSettings={"资源中心&&资源中心服务器":"http://www.hanweikeji.com:10050/resource","资源中心&&服务器2":"http://www.hanweikeji.com:10050/resource"}
+        Ext.define("vmd.module.MyViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps([]),
+	xtype:"vmd.module.MyViewport",
+	layout:"absolute",
+	initComponent: function(){
+		function button_click(sender,e){
+subView.show();
+}
+	
+		登录用户所在单位=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"登录用户所在单位","autoLoad":false,"cid":"vmdJsonStore","storeConfig":"{\"id\":\"mjAbcjw4HP\",\"callcode\":\"dzljfxhy\",\"url\":\"dzljfxhy/ljfxhy/tybc/dlyhszdw\",\"host\":\"\",\"isHwRest\":true,\"name\":\"登录用户所在单位\",\"fields\":[],\"getMethods\":[],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[]}","dsName":"dlyhszdw"});
+		获取当前用户名=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"获取当前用户名","autoLoad":false,"cid":"vmdJsonStore","storeConfig":"{\"id\":\"miaRQqPF1s\",\"callcode\":\"dzljfxhy\",\"url\":\"dzljfxhy/ljfxhy/tyxl/hqdqyhm\",\"host\":\"\",\"isHwRest\":true,\"name\":\"获取当前用户名\",\"fields\":[],\"getMethods\":[],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[]}","dsName":"yhm"});
+		热蒸发烃解释数据录入=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"热蒸发烃解释数据录入","autoLoad":false,"cid":"vmdJsonStore","storeConfig":"{\"id\":\"mlGtbDrpYc\",\"callcode\":\"dzljfxhy\",\"url\":\"dzljfxhy/ljfxhy/rzfq/rzftpj\",\"host\":\"\",\"isHwRest\":true,\"name\":\"热蒸发烃解释数据录入\",\"fields\":[],\"getMethods\":[],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[]}","dsName":"rzftpj"});
+
+
+	 var subView=new vmd.comp.SubView({view:{
+			xtype:"vmd.subview",
+			id:"subView",
+			width:1004,
+			height:483,
+			layout:"fit",
+			closable:true,
+			draggable:false,
+			maximizable:true,
+			modal:false,
+			resizable:true,
+			autoScroll:false,
+			closeAction:"close",
+			header:false,
+			items:[
+				{
+					xtype:"vmd.report2_2",
+					id:"report",
+					text:"report",
+					relativepath:"Resources//Report",
+					align:"center",
+					fillReport:false,
+					nousedataset:false,
+					isServer:true,
+					ocx_version:"1,1,5,16",
+					rptVersion:"2.2"
+				}
+			]
+		},rootScope:this,isModule:true})
+		this.items=[
+			{
+				xtype:"vmd.div",
+				id:"div",
+				autoEl:"div",
+				border:true,
+				backgroundRepeat:"no-repeat",
+				backgroundPosition:"top left",
+				width:630,
+				height:170,
+				x:110,
+				y:90,
+				html:"<div>    <p>1)支持close和hide两种模式:close每次关闭清空内存对象;hide模式关闭隐藏对象。        <p>2)能够根据内容自动调整窗口大小，并可以设置固定高度和宽度</div>",
+				style:"font-family: 微软雅黑;    font-size: 20px;    line-height: 30px"
+			},
+			{
+				xtype:"label",
+				id:"label",
+				text:"子视图（div）和独立窗口（页面）功能演示",
+				x:160,
+				y:50,
+				style:"font-weight: bold;    font-size: 24px;    color: blue"
+			},
+			{
+				xtype:"vmd.button",
+				id:"button",
+				text:"打开子视图",
+				type:"(none)",
+				size:"large",
+				x:170,
+				y:390,
+				click:"button_click",
+				listeners:{
+					click:button_click
+				}
+			},
+			{
+				xtype:"vmd.button",
+				id:"button1",
+				text:"打开独立窗口",
+				type:"(none)",
+				size:"large",
+				x:350,
+				y:390
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+	}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MyViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

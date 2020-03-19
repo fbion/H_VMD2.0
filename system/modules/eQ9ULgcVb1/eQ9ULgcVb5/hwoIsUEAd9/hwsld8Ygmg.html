@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>规则定义block</title>
+    <!--基本样式-->
+    <link href="/css/common.css?ver=2.0.4.190627" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.4.190627" rel="stylesheet" />
+    <link href="/design/css/icons.css?ver=2.0.4.190627" rel="stylesheet" />
+    <link href="/lib/dhtmlx/dhtmlx.css?ver=2.0.4.190627" rel="stylesheet" />
+    <!--样式快捷索引表-->
+    <link href="/css/shortcut.css?ver=2.0.4.190627" rel="stylesheet" />
+    <script src="/lib/labjs/LAB.min.js?ver=2.0.4.190627"></script>
+    <script src="/config.js?ver=2.0.4.190627"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.4.190627"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.4.190627"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.4.190627"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=2.0.4.190627"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.4.190627"></script>
+    <script src="/js/util.js?ver=2.0.4.190627"></script>
+    <script src="/lib/dhtmlx/dhtmlx.js?ver=2.0.4.190627"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.4.190627"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.4.190627"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.4.190627"></script>
+    <script src="/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.4.190627"></script>
+    <script src="/js/hwdas.js?ver=2.0.4.190627"></script>
+    <script src="/js/vmdcore.js?ver=2.0.4.190627"></script>
+    <script src="/js/vmdcomps.js?ver=2.0.4.190627"></script>
+    <script src="/js/publicMethods.js?ver=2.0.4.190627"></script>
+    <script src="/js/vmdreport.js?ver=2.0.4.190627"></script>
+    <script src="/system/modules/eQ9ULgcVb1/project.config.js"></script>
+    <style> </style>
+    <style type="text/css" id="vmdcss">
+        .serverlist-info {
+            padding: 8px 17px;
+            margin: 2px;
+            line-height: 0.25em;
+            height: 5px;
+            width: 150px;
+            border-top: 5px solid transparent;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-margin {
+            margin: 2px 3px 2px 3px;
+            width: 30px;
+        }
+    </style>
+    <script>
+        vmd.previewMode = true;
+        vmd.virtualPath = '';
+        vmd.workspace = {
+            "workspaceid": "b87fb04c-8f21-47a8-8e7d-852e0a9d2089",
+            "workflowIp": "",
+            "dataServiceIp": "",
+            "msgIp": "",
+            "projectid": "eQ9ULgcVb1"
+        }
+        vmd.resourceSettings = {
+            "test&&资源中心服务器": "http://www.hanweikeji.com:8050/resource",
+            "test&&服务器2": "http://192.168.1.202:8050/resource",
+            "test&&555": "http://www.hanweikeji.com:8050/resource",
+            "10055&&资源中心服务器": "http://www.hanweikeji.com:10050/resource"
+        }
+        vmd.projectInfo = {
+            "projectId": "eQ9ULgcVb1",
+            "workflowIp": "",
+            "dataServiceIp": "",
+            "msgIp": "",
+            "todoIp": "",
+            "authIp": "",
+            "docIp": "",
+            "reoprtIp": "",
+            "logIp": ""
+        }
+        Ext.define("vmd.module.MainViewport", {
+            extend: "vmd.comp.viewport",
+            requires: vmd.getCmpDeps([]),
+            xtype: "vmd.module.MainViewport",
+            layout: "fit",
+            afterrender: "MainViewport_afterrender",
+            initComponent: function() {
+                //变量数组
+                window.vars = parent.xds.vmd.getVarNames()
+                var stores = parent.xds.vmd.getStoreNames()
+                //数据集信息
+                window.allStoreFields = [];
+                var storeName = getUrlParam("storename")
+                var storeFields = [];
+                var store = parent.xds.vmd.getStoreByDsName(storeName, true);
+                if (store.component && store.component.userConfig && store.component.userConfig.storeConfig) {
+                    storeFields = JSON.parse(store.component.userConfig.storeConfig).fields
+                    var bstorefields = [];
+                    for (var j = 0; j < storeFields.length; j++) {
+                        bstorefields.push([storeFields[j].cname || storeFields[j].name, storeFields[j].name])
+                    }
+                    var allfields = {
+                        name: storeName,
+                        fields: bstorefields
+                    }
+                    window.allStoreFields.push(allfields)
+                }
+                //编辑的规则内容
+                if (parent && parent.rulesEditWin_editRule) {
+                    window.editRule = parent.rulesEditWin_editRule
+                }
+
+                function div_afterrender(sender) {
+                    div.update("<iframe  id='iframe_page' src='/lib/blockly/vmdcode/index.html' width=100% height=100% frameborder=0  ></iframe>")
+                }
+
+                function button_click(sender, e) {
+                    if (hwText.getValue() == "") {
+                        Ext.Msg.alert('错误', '规则名称不能为空')
+                        return
+                    }
+                    //获取的定义信息
+                    var childWindow = $("#iframe_page")[0].contentWindow;
+                    var code = childWindow.Blockly.JavaScript.workspaceToCode(childWindow.Code.workspace);
+                    var xmlDom = childWindow.Blockly.Xml.workspaceToDom(childWindow.Code.workspace);
+                    var xmlText = childWindow.Blockly.Xml.domToPrettyText(xmlDom);
+                    parent.rulesEditWin_changeRule(code, base64Encode(xmlText), hwText.getValue(), hwText1.getValue())
+                }
+
+                function MainViewport_afterrender(sender) {
+                    //设置默认blockly内容
+                    window.setTimeout(function() {
+                        //设置 数据集/变量的块/解析脚本等信息							
+                        var childWindow = $("#iframe_page")[0].contentWindow
+                        childWindow.addStoreBlock(window.allStoreFields)
+                        childWindow.addVarBlock(window.vars)
+                        //设置默认编辑显示内容
+                        if (window.editRule) {
+                            hwText.setValue(editRule.name)
+                            hwText1.setValue(editRule.remark)
+                            var xmlTextarea = childWindow.document.getElementById('content_xml');
+                            xmlTextarea.value = base64Decode(window.editRule.xml);
+                            var xmlDom = childWindow.Blockly.Xml.textToDom(xmlTextarea.value);
+                            if (xmlDom) {
+                                childWindow.Code.workspace.clear();
+                                childWindow.Blockly.Xml.domToWorkspace(xmlDom, childWindow.Code.workspace);
+                                if (div && div.getWidth())
+                                    div.setWidth(div.getWidth() - 1)
+                            }
+                        }
+                    }, 1000)
+                }
+
+                function getFileType(field) {
+                    //
+                    var returntype = "0"; //0 string；1 num 2 date
+                    var fieldType = "string";
+                    if (storeFields.length > 0) {
+                        for (var i = 0; i < storeFields.length; i++) {
+                            if (field == storeFields[i].name) {
+                                fieldType = storeFields[i].type
+                                break
+                            }
+                        }
+                    }
+                    if (fieldType.toLowerCase() == "number" || fieldType.toLowerCase() == "int" || fieldType.toLowerCase() == "float" || fieldType.toLowerCase() == "decimal") {
+                        return "1"
+                    } else if (fieldType.toLowerCase() == "date" || fieldType.toLowerCase() == "datetime") {
+                        return "0"
+                    } else
+                        return "2"
+                }
+                window.blocklyGetFileType = getFileType;
+                this.MainViewport_afterrender = MainViewport_afterrender;
+                this.items = [{
+                    xtype: "vmd.div",
+                    id: "div3",
+                    autoEl: "div",
+                    border: false,
+                    backgroundRepeat: "no-repeat",
+                    backgroundPosition: "top left",
+                    width: 825,
+                    height: 50,
+                    region: "center",
+                    layout: "border",
+                    style: "font-size:14px;",
+                    items: [{
+                            xtype: "vmd.div",
+                            id: "div2",
+                            autoEl: "div",
+                            border: false,
+                            backgroundRepeat: "no-repeat",
+                            backgroundPosition: "top left",
+                            width: 680,
+                            height: 76,
+                            x: 30,
+                            y: -2,
+                            layout: "absolute",
+                            region: "north",
+                            items: [{
+                                    xtype: "label",
+                                    id: "label",
+                                    text: "名称：",
+                                    region: "center",
+                                    x: 20,
+                                    y: 15
+                                },
+                                {
+                                    xtype: "label",
+                                    id: "label1",
+                                    text: "说明：",
+                                    x: 20,
+                                    y: 45
+                                },
+                                {
+                                    xtype: "textfield",
+                                    id: "hwText",
+                                    allowBlank: true,
+                                    enableKeyEvents: true,
+                                    x: 60,
+                                    y: 10,
+                                    width: 430
+                                },
+                                {
+                                    xtype: "textfield",
+                                    id: "hwText1",
+                                    allowBlank: true,
+                                    enableKeyEvents: true,
+                                    x: 60,
+                                    y: 40,
+                                    width: 430
+                                }
+                            ]
+                        },
+                        {
+                            xtype: "vmd.div",
+                            id: "div4",
+                            autoEl: "div",
+                            border: false,
+                            backgroundRepeat: "no-repeat",
+                            backgroundPosition: "top left",
+                            width: 400,
+                            height: 90,
+                            x: 80,
+                            y: 150,
+                            region: "center",
+                            layout: "border",
+                            items: [{
+                                    xtype: "label",
+                                    id: "label2",
+                                    text: "规则：",
+                                    x: 20,
+                                    y: 100,
+                                    region: "north",
+                                    style: "margin-left: 20px;"
+                                },
+                                {
+                                    xtype: "vmd.div",
+                                    id: "div5",
+                                    autoEl: "div",
+                                    border: false,
+                                    backgroundRepeat: "no-repeat",
+                                    backgroundPosition: "top left",
+                                    width: 731,
+                                    height: 311,
+                                    x: 790,
+                                    y: 170,
+                                    region: "center",
+                                    style: "padding: 5px 20px 5px 20px;",
+                                    layout: "fit",
+                                    items: [{
+                                        xtype: "vmd.div",
+                                        id: "div",
+                                        autoEl: "div",
+                                        border: true,
+                                        backgroundRepeat: "no-repeat",
+                                        backgroundPosition: "top left",
+                                        width: 400,
+                                        height: 50,
+                                        afterrender: "div_afterrender",
+                                        listeners: {
+                                            vmdafterrender: div_afterrender
+                                        }
+                                    }]
+                                }
+                            ]
+                        },
+                        {
+                            xtype: "vmd.div",
+                            id: "div6",
+                            layoutConfig: {
+                                align: "middle",
+                                pack: "end"
+                            },
+                            autoEl: "div",
+                            border: false,
+                            backgroundRepeat: "no-repeat",
+                            backgroundPosition: "top left",
+                            width: 400,
+                            height: 50,
+                            x: 850,
+                            y: 360,
+                            region: "south",
+                            layout: "hbox",
+                            items: [{
+                                xtype: "vmd.button",
+                                id: "button",
+                                text: "确定",
+                                type: "primary",
+                                size: "small",
+                                margins: "0 30 0 0",
+                                click: "button_click",
+                                listeners: {
+                                    click: button_click
+                                }
+                            }]
+                        }
+                    ]
+                }]
+                this.callParent();
+                var me = this;
+                vmd.core.moduleInit(this.items, this);
+                me.on('afterrender', function() {
+                    MainViewport_afterrender.call(me, me)
+                })
+            }
+        })
+        Ext.onReady(function() {
+            Ext.create('vmd.module.MainViewport', {
+                renderTo: document.body
+            })
+        })
+    </script>
+</head>
+
+<body> </body>
+
+</html>

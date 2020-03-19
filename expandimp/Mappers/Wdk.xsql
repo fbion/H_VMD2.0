@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<mapper>
+  <select id="SelectDoc">
+    select  docid,docoriginfilename as filename,docfilenamewithpath as filepath from  dmdocinfo where docid=@docid
+  </select>
+ <insert id="InsertDoc">
+    insert into   dmdocinfo(docid,docname,login,docfiletype,docfilesize,docoriginfilename,docfilenamewithpath,submitdate,version) 
+	values(@docid,@docname,@login,@filetype,@filesize,@filename,@filepath,@submitdate,@version)
+ </insert>
+  <select id="DeleteDoc">
+   delete from  dmdocinfo where docid=@docid
+  </select>
+</mapper>
+
+
+ 

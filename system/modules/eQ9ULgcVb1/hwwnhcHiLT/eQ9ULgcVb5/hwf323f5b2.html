@@ -1,0 +1,1403 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>数据集配置</title>
+	<!--基本样式-->
+    <link href="/css/common.css?ver=2.0.3" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.3" rel="stylesheet" />
+   
+    <link href="/design/css/icons.css?ver=2.0.3" rel="stylesheet" />
+
+	<link href="/lib/dhtmlx/dhtmlx.css?ver=2.0.3" rel="stylesheet" />
+	  <!--样式快捷索引表-->
+    <link href="/css/shortcut.css?ver=2.0.3" rel="stylesheet" />
+    
+    <script src="/lib/labjs/LAB.min.js?ver=2.0.3"></script>
+    <script src="/config.js?ver=2.0.3"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.3"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.3"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.3"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=2.0.3"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.3"></script>
+    <script src="/js/util.js?ver=2.0.3"></script>
+    <script src="/lib/dhtmlx/dhtmlx.js?ver=2.0.3"></script>
+	<script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.3"></script>
+	<script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.3"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.3"></script>
+	<script src="/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.3"></script>
+    <script src="/js/hwdas.js?ver=2.0.3"></script>
+    <script src="/js/vmdcore.js?ver=2.0.3"></script>
+    <script src="/js/vmdcomps.js?ver=2.0.3"></script>
+    <script src="/js/publicMethods.js?ver=2.0.3"></script>
+    <script src="/js/vmdreport.js?ver=2.0.3"></script>
+    
+
+    <script src="/lib/ace/ace.js"></script>
+    <script src="/lib/ace/mode-base.js" type="text/javascript"></script>
+    <script src="/lib/ace/theme-xcode.js" type="text/javascript" ></script>
+    <script src="/lib/ace/ext-language_tools.js"></script>
+    
+
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        
+    </style>
+    <script>
+        vmd.virtualPath = '';
+        vmd.workspace={"workspaceid":"87965160-1346-484d-8808-8a5c310a30d0","projectid":"eQ9ULgcVb1","workflowIp":"","dataServiceIp":""}
+        Ext.define("vmd.module.MyViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps([]),
+	xtype:"vmd.module.MyViewport",
+	layout:"border",
+	afterrender:"MyViewport_afterrender",
+	beforerender:"MyViewport_beforerender",
+	listeners:{
+		vmdafterrender:function(){
+	this.MyViewport_afterrender(this)
+},
+		beforerender:function(){
+	this.MyViewport_beforerender(this)
+}
+	},
+	initComponent: function(){
+		var workspaceid;
+var projectid;
+var workspaceworkflowIp;
+var workspacedataServiceIp;
+if(parent.vmd && parent.vmd.workspace) {
+    workspaceid = parent.vmd.workspace.workspaceid || "";
+    workspaceworkflowIp = parent.vmd.workspace.workflowIp || "";
+    workspacedataServiceIp = parent.vmd.workspace.dataServiceIp || "";
+    projectid = parent.vmd.workspace.projectid || "";
+}
+if(parent.init_def_platformControlData) {
+    parent.init_def_platformControlData();
+    def_platformControl = parent.def_platformControl;
+}
+myobj = {};
+
+var saveobj = {}
+var treeloderover = false;
+
+var myMask = new Ext.LoadMask(Ext.getBody(), {
+    msg: "数据加载中,请稍后...",
+    msgCls: 'z-index:10000;'
+});
+
+function hwTree_afterrender(sender) {
+    //进度提示
+    myMask = new Ext.LoadMask(Ext.getCmp("hwTree").el, {
+        msg: "数据加载中,请稍后...",
+        msgCls: 'z-index:10000;'
+    });
+    myMask.show();
+    /*
+        myobj = Ext.decode(parent.edValue.storeConfig)
+        if(myobj.url)
+            list = myobj.url.split("/"); //字符分割 
+        if(myobj.callcode)
+            MyField.setValue(myobj.callcode)
+    */
+    var mytree = hwTree;
+    mytree.deleteChildItems(0);
+    mytree.loadJSONObject({
+        id: 0,
+        text: "我的服务",
+        item: []
+    });
+    mytree.enableRadioButtons(true)
+    mytree.enableSingleRadioMode(true)
+    mytree.itemObj = {};
+    mytree.newnode = false;
+    hwDas.appinfo.callCode = "vmdCode";
+    var firstNode = "";
+    hwDas.get("DataServiceWorkSpace/projectInfo/ProjcetServiceCategory", {}, {
+            projectid: projectid || "",
+            type: 1
+        }, function(selresult) {
+            var idarray = [];
+            if(selresult.data && selresult.data.length > 0 && selresult.data[0].datas && selresult.data[0].datas.length > 0) {
+                var datajson = selresult.data[0].datas;
+                var treeDataJson = [];
+                var toopenid = ""
+                for(var i = 0; i < datajson.length; i++) {
+                    idarray.push(datajson[i].service_category_id)
+                }
+            }
+            var urlparam;
+            if(workspacedataServiceIp) {
+                urlparam = {
+                    host: workspacedataServiceIp,
+                    url: "DataService/Service/Project"
+                }
+            } else
+                urlparam = "DataService/Service/Project"
+
+            hwDas.get(urlparam, {
+                    Ecylogin: Ext.util.Cookies.get('EcyLogin') || Ext.util.Cookies.get('ecyLogin')
+                }, {
+                    develop: "true"
+                }, function(result) {
+                    var datajson = result.data[0].datas;
+                    var treeDataJson = [];
+                    var toopenid = ""
+                    for(var i = 0; i < datajson.length; i++) {
+                        if(list.indexOf(datajson[i].code) >= 0) {
+                            toopenid = datajson[i].id
+                        }
+                        if(idarray.indexOf(datajson[i].id) >= 0  || !projectid||!workspacedataServiceIp) {
+                            mytree.insertNewChild(0, datajson[i].id, datajson[i].name);
+                            mytree.setItemImage2(datajson[i].id, "tree/projectclose.png", "tree/projectopen.png", "tree/projectclose.png");
+                            mytree.showItemCheckbox(datajson[i].id, false)
+                            mytree.insertNewChild(datajson[i].id, datajson[i].id + "-0", "");
+                            mytree.closeItem(datajson[i].id);
+                            var treenode = mytree.item(datajson[i].id);
+                            treenode.path = datajson[i].code;
+                            if(treenode) {
+                                treenode.isProject = true;
+                                treenode.loadChild = false;
+                            }
+                            mytree.itemObj[datajson[i].id] = treenode;
+                            if(firstNode == "")
+                                firstNode = datajson[i].id;
+                        }
+                    }
+                    treeloderover = true;
+                    //默认选中首项 
+                    if(firstNode != "")
+                        mytree.selectItem(firstNode);
+                    if(toopenid != "")
+                        hwTree.openItem(toopenid);
+
+                    myMask.hide();
+                },
+                function(msg) {
+                    myMask.hide();
+                    Ext.Msg.alert("提示", "获取模块信息失败", function() {})
+                })
+        }, function(msg) {
+            myMask.hide();
+            Ext.Msg.alert("提示", "获取模块信息失败", function() {})
+        })
+        // hwDas.ajax({
+        //     das: {
+        //         idedas: true
+        //     },
+        //     url: "DataService/Service/Project",
+        //     type: 'get',
+        //     timeout: 50000,
+        //     headers: {
+        //         Ecylogin: Ext.util.Cookies.get('EcyLogin') || Ext.util.Cookies.get('ecyLogin')
+        //     },
+        //     params: {
+        //         develop: "true"
+        //     },
+        //     success: function(result) {
+        //         var datajson = result.data[0].datas;
+        //         var treeDataJson = [];
+        //         var toopenid = ""
+        //         for(var i = 0; i < datajson.length; i++) {
+        //             if(list.indexOf(datajson[i].code) >= 0) {
+        //                 toopenid = datajson[i].id
+        //             }
+        //             mytree.insertNewChild(0, datajson[i].id, datajson[i].name);
+        //             mytree.setItemImage2(datajson[i].id, "tree/projectclose.png", "tree/projectopen.png", "tree/projectclose.png");
+        //             mytree.showItemCheckbox(datajson[i].id, false)
+        //             mytree.insertNewChild(datajson[i].id, datajson[i].id + "-0", "");
+        //             mytree.closeItem(datajson[i].id);
+        //             var treenode = mytree.item(datajson[i].id);
+        //             treenode.path = datajson[i].code;
+        //             if(treenode) {
+        //                 treenode.isProject = true;
+        //                 treenode.loadChild = false;
+        //             }
+        //             mytree.itemObj[datajson[i].id] = treenode;
+        //             if(firstNode == "")
+        //                 firstNode = datajson[i].id;
+        //         }
+        //         treeloderover = true;
+        //         //默认选中首项 
+        //         if(firstNode != "")
+        //             mytree.selectItem(firstNode);
+        //         if(toopenid != "")
+        //             hwTree.openItem(toopenid);
+
+    //         myMask.hide();
+    //     },
+    //     error: function(msg) {
+    //         myMask.hide();
+    //         Ext.Msg.alert("提示", "获取模块信息失败", function() {})
+    //     }
+    // })
+}
+var selNodeId = "";
+
+function hwTree_nodeClick(sender, id) {
+
+    //20171118 将所有页签隐藏 只显示查询的页签内容，操作其他页签的操作均屏蔽
+    // MyTabs.hideTabStripItem(MyPanel4);
+    // MyTabs.hideTabStripItem(MyPanel5);
+    // MyTabs.hideTabStripItem(MyPanel6);
+    // MyTabs.hideTabStripItem(MyPanel7);
+    // MyTabs.hideTabStripItem(MyPanel8);
+    var proId = id;
+    var mytree = hwTree;
+    var selnode = mytree.itemObj[proId];
+    var gridarray = [];
+    if(selNodeId != id) {
+        if(selnode.isModel) {
+
+            if(!mytree.isItemChecked(id)) {
+                if(mytree.getAllChecked() != "")
+                    mytree.setSubChecked(mytree.getAllChecked(), false)
+                mytree.setSubChecked(id, true)
+            }
+            clearAllGrid();
+            var urlparam;
+            if(workspacedataServiceIp)
+                urlparam = {
+                    host: workspacedataServiceIp,
+                    url: "DataService/Service/Method"
+                }
+            else
+                urlparam = "DataService/Service/Method"
+            hwDas.get(urlparam, {}, {
+                        resourceid: proId
+                    },
+                    function(result) {
+                        var datajson = result.data[0].datas;
+                        var treeDataJson = [];
+                        for(var i = 0; i < datajson.length; i++) {
+                            if(datajson[i].name == "get") {
+                                MyTabs.unhideTabStripItem(MyPanel4);
+                                hwGrid.methodsId = datajson[i].id;
+                                hwGrid.methodsType = datajson[i].name;
+                                bindparams(hwGrid);
+                                gridarray.push(hwGrid)
+                            }
+                        }
+                        var bindover = false;
+                        while(!bindover) {
+                            bindover = true;
+                            for(var v in gridarray) {
+                                if(gridarray[v].bindData && gridarray[v].bindData == false)
+                                    bindover = false
+                            }
+                        }
+                    },
+                    function(msg) {
+                        Ext.Msg.alert("提示", "获取服务方法信息失败", function() {})
+                    })
+                // hwDas.ajax({
+                //     das: {
+                //         idedas: true
+                //     },
+                //     url: "DataService/Service/Method",
+                //     type: 'get',
+                //     timeout: 50000,
+                //     params: ,
+                //     success: function(result) {
+                //         var datajson = result.data[0].datas;
+                //         var treeDataJson = [];
+                //         for(var i = 0; i < datajson.length; i++) {
+
+            //             if(datajson[i].name == "get") {
+            //                 MyTabs.unhideTabStripItem(MyPanel4);
+            //                 hwGrid.methodsId = datajson[i].id;
+            //                 hwGrid.methodsType = datajson[i].name;
+            //                 bindparams(hwGrid);
+            //                 gridarray.push(hwGrid)
+            //             }
+            //             //20171118 将所有页签隐藏 只显示查询的页签内容，操作其他页签的操作均屏蔽
+            //             // if(datajson[i].name == "post") {
+            //             //     MyTabs.unhideTabStripItem(MyPanel5);
+            //             //     hwGrid1.methodsId = datajson[i].id;
+            //             //     hwGrid1.methodsType = datajson[i].name;
+            //             //     bindparams(hwGrid1);
+            //             //     gridarray.push(hwGrid)
+            //             // }
+            //             // if(datajson[i].name == "put") {
+            //             //     MyTabs.unhideTabStripItem(MyPanel6);
+            //             //     hwGrid2.methodsId = datajson[i].id;
+            //             //     hwGrid2.methodsType = datajson[i].name;
+            //             //     bindparams(hwGrid2);
+            //             //     gridarray.push(hwGrid)
+            //             // }
+            //             // if(datajson[i].name == "delete") {
+            //             //     MyTabs.unhideTabStripItem(MyPanel7);
+            //             //     hwGrid3.methodsId = datajson[i].id;
+            //             //     hwGrid3.methodsType = datajson[i].name;
+            //             //     bindparams(hwGrid3);
+            //             //     gridarray.push(hwGrid)
+            //             // }
+            //             // if(datajson[i].name == "save") {
+            //             //     MyTabs.unhideTabStripItem(MyPanel8);
+            //             //     hwGrid4.methodsId = datajson[i].id;
+            //             //     hwGrid4.methodsType = datajson[i].name;
+            //             //     bindparams(hwGrid4);
+            //             //     gridarray.push(hwGrid)
+            //             // }
+            //         }
+            //         var bindover = false;
+            //         while(!bindover) {
+            //             bindover = true;
+            //             for(var v in gridarray) {
+            //                 if(gridarray[v].bindData && gridarray[v].bindData == false)
+            //                     bindover = false
+            //             }
+            //         }
+            //     },
+            //     error: function(msg) {
+            //         Ext.Msg.alert("提示", "获取服务方法信息失败", function() {})
+            //     }
+            // })
+
+        } else {}
+    }
+    bselNodeId = id;
+}
+
+function fillMethods() {}
+//点击模块节点时，清空所有网格数据
+function clearAllGrid() {
+
+    if(hwGrid.loder) {
+        hwGrid.clearAll();
+        hwGrid.bindData = false;
+    }
+    //20171118 将所有页签隐藏 只显示查询的页签内容，操作其他页签的操作均屏蔽
+    // if(hwGrid1.loder) {
+    //     hwGrid1.clearAll();
+    //     hwGrid1.bindData = false;
+    // }
+    // if(hwGrid2.loder) {
+    //     hwGrid2.clearAll();
+    //     hwGrid2.bindData = false;
+    // }
+    // if(hwGrid3.loder) {
+    //     hwGrid3.clearAll();
+    //     hwGrid3.bindData = false;
+    // }
+    // if(hwGrid4.loder) {
+    //     hwGrid4.clearAll();
+    //     hwGrid4.bindData = false;
+    // }
+}
+
+function bindparams(grid) {
+    if(!grid.loder)
+        return;
+    var urlparam;
+    if(workspacedataServiceIp) {
+        urlparam = {
+            host: workspacedataServiceIp,
+            url: "DataService/Service/Parameter"
+        }
+    } else
+        urlparam = "DataService/Service/Parameter"
+    hwDas.get(urlparam, {}, {
+            methodid: grid.methodsId
+        }, function(result) {
+            var datajson = result.data[0].datas;
+            grid.bindData = true;
+            var rows = [];
+            for(var i = 0; i < datajson.length; i++) {
+                var row = {};
+                row.id = i + 1;
+                row.data = [];
+                row.data.push(i + 1);
+                row.data.push(datajson[i].code);
+                row.data.push(datajson[i].name);
+                row.data.push(datajson[i].type);
+                var getparams = [];
+                if(myobj.id == hwTree.getSelectedItemId()) {
+                    if(grid.methodsType == "get") {
+                        getparams = myobj.getMethods;
+                    }
+                    //20171118 将所有页签隐藏 只显示查询的页签内容，操作其他页签的操作均屏蔽
+                    // if(grid.methodsType == "post") {
+                    //     getparams = myobj.postMethods;
+                    // }
+                    // if(grid.methodsType == "put") {
+                    //     getparams = myobj.putMethods;
+                    // }
+                    // if(grid.methodsType == "delete") {
+                    //     getparams = myobj.deleteMethods;
+                    // }
+                    // if(grid.methodsType == "save") {
+                    //     getparams = myobj.saveMethods;
+                    // }
+                }
+
+                for(var v = 0; v < getparams.length; v++) {
+                    if(datajson[i].code == getparams[v].id) {
+                        row.data.push(getparams[v].value1);
+                        row.data.push(getparams[v].value2);
+                        break;
+                    }
+                }
+
+                //row.data.push(datajson[i].code);
+                //row.data.push(datajson[i].code);
+                rows.push(row);
+            }
+            grid.parse({
+                rows: rows
+            }, "json");
+            //绑定参数到网格中
+        }, function(msg) {
+            Ext.Msg.alert("提示", "获取服务方法参数失败", function() {})
+        })
+        // hwDas.ajax({
+        //     das: {
+        //         idedas: true
+        //     },
+        //     url: "DataService/Service/Parameter",
+        //     type: 'get',
+        //     timeout: 50000,
+        //     params: {
+        //         methodid: grid.methodsId
+        //     },
+        //     success: function(result) {
+        //         var datajson = result.data[0].datas;
+        //         grid.bindData = true;
+
+    //         var rows = [];
+    //         for(var i = 0; i < datajson.length; i++) {
+    //             var row = {};
+    //             row.id = i + 1;
+    //             row.data = [];
+    //             row.data.push(i + 1);
+    //             row.data.push(datajson[i].code);
+    //             row.data.push(datajson[i].name);
+    //             row.data.push(datajson[i].type);
+    //             var getparams = [];
+    //             if(myobj.id == hwTree.getSelectedItemId()) {
+    //                 if(grid.methodsType == "get") {
+    //                     getparams = myobj.getMethods;
+    //                 }
+    //                 //20171118 将所有页签隐藏 只显示查询的页签内容，操作其他页签的操作均屏蔽
+    //                 // if(grid.methodsType == "post") {
+    //                 //     getparams = myobj.postMethods;
+    //                 // }
+    //                 // if(grid.methodsType == "put") {
+    //                 //     getparams = myobj.putMethods;
+    //                 // }
+    //                 // if(grid.methodsType == "delete") {
+    //                 //     getparams = myobj.deleteMethods;
+    //                 // }
+    //                 // if(grid.methodsType == "save") {
+    //                 //     getparams = myobj.saveMethods;
+    //                 // }
+    //             }
+
+    //             for(var v = 0; v < getparams.length; v++) {
+    //                 if(datajson[i].code == getparams[v].id) {
+    //                     row.data.push(getparams[v].value1);
+    //                     row.data.push(getparams[v].value2);
+    //                     break;
+    //                 }
+    //             }
+
+    //             //row.data.push(datajson[i].code);
+    //             //row.data.push(datajson[i].code);
+    //             rows.push(row);
+    //         }
+    //         grid.parse({
+    //             rows: rows
+    //         }, "json");
+    //         //绑定参数到网格中
+    //     },
+    //     error: function(msg) {
+    //         Ext.Msg.alert("提示", "获取服务方法参数失败", function() {})
+    //     }
+    // })
+}
+
+
+function bindSelTabParams(b) {
+
+    if(b.id == MyPanel4.id && !hwGrid.bindData) {
+        bindparams(hwGrid)
+    }
+    if(b.id == MyPanel5.id && !hwGrid1.bindData) {
+        bindparams(hwGrid1)
+    }
+    if(b.id == MyPanel6.id && !hwGrid2.bindData) {
+        bindparams(hwGrid2)
+    }
+    if(b.id == MyPanel7.id && !hwGrid3.bindData) {
+        bindparams(hwGrid3)
+    }
+    if(b.id == MyPanel8.id && !hwGrid4.bindData) {
+        bindparams(hwGrid4)
+    }
+}
+
+function MyTabs_afterrender(sender) {
+    //20171118 将所有页签隐藏 只显示查询的页签内容，操作其他页签的操作均屏蔽
+    // MyTabs.on('tabchange', function(a, b) {
+    //     bindSelTabParams(b);
+    // })
+}
+
+function GetSaveObj(fun) {
+    var mytree = hwTree;
+    var selId = mytree.getSelectedItemId();
+    var selnode = mytree.itemObj[selId];
+    saveobj = {};
+    saveobj.id = selId;
+    saveobj.callcode = "vmdCode";
+    saveobj.url = selnode.path;
+    saveobj.host = "";
+    saveobj.isHwRest = true;
+    saveobj.name = selnode.text;
+    saveobj.getMethods = getGridObj(hwGrid); // [];
+    saveobj.postMethods = getGridObj(hwGrid1);
+    saveobj.putMethods = getGridObj(hwGrid2);
+    saveobj.deleteMethods = getGridObj(hwGrid3);
+    saveobj.saveMethods = getGridObj(hwGrid4);
+    getFields(function(fields) {
+        saveobj.fields = fields
+        fun(saveobj)
+    });
+    //return saveobj;
+}
+
+function getFields(fun) {
+    var mytree = hwTree;
+    var selId = mytree.getSelectedItemId();
+    var selnode = mytree.itemObj[selId];
+    var selnodepath = selnode.path;
+    hwDas.appinfo.callCode = "vmdCode"
+    var urlparam;
+    if(workspacedataServiceIp) {
+        urlparam = {
+            host: workspacedataServiceIp,
+            url: selnodepath
+        }
+    } else
+        urlparam = selnodepath
+
+    hwDas.get(urlparam, {}, {}, function(result) {
+            if(fun) {
+                resultDataFields = result.data[0].fields
+                var dataFields = [];
+                for(var p in resultDataFields) {
+                    // fields
+                    if(typeof(resultDataFields[p]) == "function") {} else {
+                        var fields = {
+                            name: p,
+                            type: resultDataFields[p].toLowerCase()
+                        }
+                        dataFields.push(fields);
+                    }
+                }
+                fun(dataFields)
+            }
+        }, function(msg) {
+            Ext.Msg.alert("提示", "获取字段信息失败", function() {})
+        })
+        // hwDas.ajax({
+        //     das: {
+        //         idedas: true
+        //     },
+        //     url: selnodepath,
+        //     type: 'get',
+        //     timeout: 50000,
+        //     params: {},
+        //     success: function(result) {
+        //         if(fun) {
+        //             resultDataFields = result.data[0].fields
+        //             var dataFields = [];
+        //             for(var p in resultDataFields) {
+        //                 // fields
+        //                 if(typeof(resultDataFields[p]) == "function") {} else {
+        //                     var fields = {
+        //                         name: p,
+        //                         type: resultDataFields[p].toLowerCase()
+        //                     }
+        //                     dataFields.push(fields);
+        //                 }
+        //             }
+        //             fun(dataFields)
+        //         }
+        //     },
+        //     error: function(msg) {
+        //         Ext.Msg.alert("提示", "获取字段信息失败", function() {})
+        //     }
+        // })
+}
+
+function getGridObj(grid) {
+    var params = [];
+    if(grid.loder && grid.bindData) {
+        grid.editStop(true);
+
+        for(var i = 0; i < grid.getRowsNum(); i++) {
+            params.push({
+                id: grid.cells2(i, 1).getValue(),
+                value1: grid.cells2(i, 4).getValue(),
+                value2: grid.cells2(i, 5).getValue()
+            });
+        }
+    }
+    return params;
+}
+
+function button_click(sender) {
+    GetSaveObj(function(obj) {
+        window.vmdReturnValue = Ext.encode(obj);
+        var data = [];
+        for(var i = 0; i < obj.fields.length; i++) {
+            data.push({
+                cid: 'datafield',
+                name: obj.fields[i].name
+            })
+        }
+        parent.xds.vmd.deleteChildNodeById(parent.edValue.id)
+        parent.xds.vmd.addNode(data, parent.edValue.id)
+        parent.edClose(true);
+    })
+}
+
+function button1_click(sender) {
+    window.vmdReturnValue = ""
+    parent.edClose();
+}
+
+var list = [];
+
+function MyViewport_afterrender(sender) {
+    // myMask.hide();
+}
+
+
+function hwGrid_beforerender(sender) {
+    initgrid(sender)
+    hwGrid.loder = true;
+}
+
+function hwGrid2_beforerender(sender) {
+    initgrid(sender)
+    hwGrid2.loder = true;
+}
+
+function hwGrid1_beforerender(sender) {
+    initgrid(sender)
+    hwGrid1.loder = true;
+}
+
+function hwGrid3_beforerender(sender) {
+    initgrid(sender)
+    hwGrid3.loder = true;
+}
+
+function hwGrid4_beforerender(sender) {
+    initgrid(sender)
+    hwGrid4.loder = true;
+}
+
+function initgrid(sender) {
+    sender.headstr = "序号,编码,名称,类型,值,默认值";
+    sender.colType = "ro,ro,ro,ro,txt,txt";
+    //sender.colSorting = "int,str,str,str,str,str";
+    var headerWidth = "50,100,100,100,120,120"
+    sender.headerWidth = headerWidth;
+}
+
+function hwGrid_afterrender(sender) {
+    sender.clearAll()
+}
+
+function hwTree_onOpenEnd(sender, id, state) {
+
+
+    var proId = id;
+    var mytree = hwTree;
+    mytree.newnode = false;
+    var selnode = mytree.itemObj[proId];
+    if(!selnode.loadChild) {
+        if(selnode.isProject) {
+            fillFord(proId, {
+                projectid: proId,
+                parentid: "0"
+            });
+        } else {
+            fillFord(proId, {
+                parentid: proId
+            });
+            fillMode(proId, {
+                categoryid: proId
+            });
+        }
+        if(!selnode.loadChild) {
+            mytree.deleteItem(id + "-0", false);
+        }
+    }
+    selnode.loadChild = true;
+}
+
+function fillFord(id, params) {
+    myMask.show();
+    var proId = id;
+    var mytree = hwTree;
+    var selnode = mytree.itemObj[proId];
+    var selnodepath = selnode.path;
+    var urlparam;
+    if(workspacedataServiceIp) {
+        urlparam = {
+            host: workspacedataServiceIp,
+            url: "DataService/Service/Category"
+        }
+    } else
+        urlparam = "DataService/Service/Category"
+
+    hwDas.get(urlparam, {}, params, function(result) {
+            var mytree = hwTree;
+            var datajson = result.data[0].datas;
+            var treeDataJson = [];
+            var toopenid = "";
+            for(var i = 0; i < datajson.length; i++) {
+                if(list.indexOf(datajson[i].code) >= 0 && list.indexOf(datajson[i].code) < list.length - 1) {
+                    toopenid = datajson[i].id
+                }
+
+                mytree.insertNewChild(proId, datajson[i].id, datajson[i].name);
+                mytree.setItemImage2(datajson[i].id, "tree/folderClosed.gif", "tree/folderOpen.gif", "tree/folderClosed.gif")
+                mytree.showItemCheckbox(datajson[i].id, false)
+                mytree.insertNewChild(datajson[i].id, datajson[i].id + "-0", "");
+                mytree.closeItem(datajson[i].id);
+                var treenode = mytree.item(datajson[i].id);
+                treenode.path = selnodepath + "/" + datajson[i].code;
+                if(treenode) {
+                    treenode.isFord = true;
+                    treenode.loadChild = false;
+                }
+                mytree.itemObj[datajson[i].id] = treenode;
+            }
+            if(toopenid != "") {
+                mytree.openItem(toopenid)
+            }
+            myMask.hide();
+        }, function(msg) {
+            myMask.hide();
+            Ext.Msg.alert("提示", "获取模块信息失败", function() {})
+        })
+        // hwDas.ajax({
+        //     das: {
+        //         idedas: true
+        //     },
+        //     url: "DataService/Service/Category",
+        //     type: 'get',
+        //     timeout: 50000,
+        //     params: params,
+        //     success: function(result) {
+        //         var mytree = hwTree;
+        //         var datajson = result.data[0].datas;
+        //         var treeDataJson = [];
+        //         var toopenid = "";
+        //         for(var i = 0; i < datajson.length; i++) {
+        //             if(list.indexOf(datajson[i].code) >= 0 && list.indexOf(datajson[i].code) < list.length - 1) {
+        //                 toopenid = datajson[i].id
+        //             }
+
+    //             mytree.insertNewChild(proId, datajson[i].id, datajson[i].name);
+    //             mytree.setItemImage2(datajson[i].id, "tree/folderClosed.gif", "tree/folderOpen.gif", "tree/folderClosed.gif")
+    //             mytree.showItemCheckbox(datajson[i].id, false)
+    //             mytree.insertNewChild(datajson[i].id, datajson[i].id + "-0", "");
+    //             mytree.closeItem(datajson[i].id);
+    //             var treenode = mytree.item(datajson[i].id);
+    //             treenode.path = selnodepath + "/" + datajson[i].code;
+    //             if(treenode) {
+    //                 treenode.isFord = true;
+    //                 treenode.loadChild = false;
+    //             }
+    //             mytree.itemObj[datajson[i].id] = treenode;
+    //         }
+    //         if(toopenid != "") {
+    //             mytree.openItem(toopenid)
+    //         }
+    //         myMask.hide();
+    //     },
+    //     error: function(msg) {
+    //         myMask.hide();
+    //         Ext.Msg.alert("提示", "获取模块信息失败", function() {})
+    //     }
+    // })
+}
+
+
+function fillMode(id, params) {
+    myMask.show();
+    var proId = id;
+    var mytree = hwTree;
+    var selnode = mytree.itemObj[proId];
+    var selnodepath = selnode.path;
+    var urlparam;
+    if(workspacedataServiceIp) {
+        urlparam = {
+            host: workspacedataServiceIp,
+            url: "DataService/Service/Resource"
+        }
+    } else
+        urlparam = "DataService/Service/Resource"
+    hwDas.get(urlparam, {}, params, function(result) {
+            var datajson = result.data[0].datas;
+            var treeDataJson = [];
+            var toselectid = "";
+            for(var i = 0; i < datajson.length; i++) {
+                if(list.indexOf(datajson[i].code) >= 0 && myobj) {
+                    if(myobj.id && datajson[i].id == myobj.id)
+                        toselectid = datajson[i].id
+                    if(myobj.id == "")
+                        toselectid = datajson[i].id
+                }
+                var mytree = hwTree;
+                mytree.insertNewChild(proId, datajson[i].id, datajson[i].name);
+                mytree.setItemImage2(datajson[i].id, "tree/model.png", "tree/model.png", "tree/model.png")
+                var treenode = mytree.item(datajson[i].id);
+                treenode.path = selnodepath + "/" + datajson[i].code;
+                if(treenode) {
+                    treenode.isModel = true;
+                }
+                mytree.itemObj[datajson[i].id] = treenode;
+            }
+            if(toselectid != "") {
+                mytree.selectItem(toselectid, true)
+            }
+            //数据操作   
+            myMask.hide();
+        }, function(msg) {
+            myMask.hide();
+            Ext.Msg.alert("提示", "获取模块信息失败")
+        })
+        // hwDas.ajax({
+        //     das: {
+        //         idedas: true
+        //     },
+        //     url: "DataService/Service/Resource",
+        //     type: 'get',
+        //     timeout: 50000,
+        //     params: params,
+        //     success: function(result) {
+        //         var datajson = result.data[0].datas;
+        //         var treeDataJson = [];
+        //         var toselectid = "";
+        //         for(var i = 0; i < datajson.length; i++) {
+        //             if(list.indexOf(datajson[i].code) >= 0 && myobj) {
+        //                 if(myobj.id && datajson[i].id == myobj.id)
+        //                     toselectid = datajson[i].id
+        //                 if(myobj.id == "")
+        //                     toselectid = datajson[i].id
+        //             }
+        //             var mytree = hwTree;
+        //             mytree.insertNewChild(proId, datajson[i].id, datajson[i].name);
+        //             mytree.setItemImage2(datajson[i].id, "tree/model.png", "tree/model.png", "tree/model.png")
+        //             var treenode = mytree.item(datajson[i].id);
+        //             treenode.path = selnodepath + "/" + datajson[i].code;
+        //             if(treenode) {
+        //                 treenode.isModel = true;
+        //             }
+        //             mytree.itemObj[datajson[i].id] = treenode;
+        //         }
+        //         if(toselectid != "") {
+        //             mytree.selectItem(toselectid, true)
+        //         }
+        //         //数据操作   
+        //         myMask.hide();
+        //     },
+        //     error: function(msg) {
+        //         myMask.hide();
+        //         Ext.Msg.alert("提示", "获取模块信息失败")
+        //     }
+        // })
+
+}
+
+function hwGrid1_afterrender(sender) {
+    sender.clearAll()
+}
+
+function hwGrid2_afterrender(sender) {
+    sender.clearAll()
+}
+
+function hwGrid3_afterrender(sender) {
+    sender.clearAll()
+}
+
+function hwGrid4_afterrender(sender) {
+    sender.clearAll()
+}
+
+function MyViewport_beforerender(sender) {
+    // myMask.show();
+    MyTabs.hideTabHeader = true;
+    if(!parent.edValue || !parent.edValue.storeConfig)
+        return
+    myobj = Ext.decode(parent.edValue.storeConfig)
+    if(myobj.url)
+        list = myobj.url.split("/"); //字符分割 
+}
+
+
+function hwGrid1_beforeSelect(sender, stage, rowId, cellInd) {
+    var mygrid = sender;
+    valueEditFrm(mygrid, new_row, new_col_index);
+}
+
+function hwGrid2_beforeSelect(sender, stage, rowId, cellInd) {
+    var mygrid = sender;
+    valueEditFrm(mygrid, new_row, new_col_index);
+}
+
+function hwGrid3_beforeSelect(sender, stage, rowId, cellInd) {
+    var mygrid = sender;
+    valueEditFrm(mygrid, new_row, new_col_index);
+}
+
+function hwGrid4_beforeSelect(sender, stage, rowId, cellInd) {
+    var mygrid = sender;
+    valueEditFrm(mygrid, new_row, new_col_index);
+}
+
+function hwGrid_beforeSelect(sender, new_row, old_row, new_col_index) {
+    var mygrid = sender;
+    valueEditFrm(mygrid, new_row, new_col_index);
+}
+
+function valueEditFrm(grid, rowId, cellInd) {
+    if(cellInd == "4" || cellInd == "5") {
+        var mygrid = grid;
+        var win = new Ext.Window({
+            title: "参数值代码编辑",
+            modal: true,
+            maximized: false,
+            height: 400,
+            width: 500,
+            maximizable: true,
+            resizable: true,
+            bodyStyle: "background-color:#fff",
+            closeAction: 'close'
+
+        })
+        win.editor = new vmd.comp.Ace({
+            language: 'javascript'
+        })
+        win.add(win.editor);
+        //关闭
+        win.hidefn = function() {
+            var value = win.editor.getValue()
+            mygrid.cells(rowId, cellInd).setValue(value)
+            Ext.getDoc().select('.dhx_textarea', true).hide()
+        }
+        win.on('hide', win.hidefn);
+        win.editor.value = mygrid.cells(rowId, cellInd).getValue();
+        win.show();
+        Ext.defer(function() {
+            win.editor.focus();
+        }, 100)
+    }
+}
+
+function hwTree_Check(sender, id, state) {
+    var mytree = hwTree;
+    mytree.selectItem(id, true);
+    mytree.setSubChecked(id, true)
+}
+			this.MyViewport_afterrender=MyViewport_afterrender;
+		this.MyViewport_beforerender=MyViewport_beforerender;
+
+
+
+		this.items=[
+			{
+				xtype:"panel",
+				id:"MyPanel1",
+				title:"Panel",
+				header:false,
+				border:false,
+				height:350,
+				x:0,
+				y:10,
+				layout:"border",
+				maskDisabled:true,
+				hideCollapseTool:false,
+				collapsible:false,
+				padding:"5",
+				bodyStyle:"padding: 5px;    background-color: white;",
+				style:"border:1px red;",
+				bodyBorder:false,
+				region:"center",
+				width:800,
+				items:[
+					{
+						xtype:"panel",
+						id:"MyPanel2",
+						title:"Panel",
+						header:false,
+						border:true,
+						height:100,
+						region:"west",
+						width:228,
+						layout:"border",
+						split:true,
+						collapseMode:"mini",
+						margins:"",
+						style:"padding: 5px 0 5px 5px;",
+						items:[
+							{
+								xtype:"panel",
+								id:"MyPanel",
+								title:"Panel",
+								header:false,
+								border:false,
+								height:100,
+								region:"center",
+								layout:"fit",
+								items:[
+									{
+										xtype:"vmd.tree",
+										id:"hwTree",
+										skin:"material",
+										width:300,
+										height:200,
+										isdesign:false,
+										afterrender:"hwTree_afterrender",
+										nodeClick:"hwTree_nodeClick",
+										onOpenEnd:"hwTree_onOpenEnd",
+										Check:"hwTree_Check",
+										listeners:{
+											vmdafterrender:hwTree_afterrender,
+											nodeClick:hwTree_nodeClick,
+											onOpenEnd:hwTree_onOpenEnd,
+											Check:hwTree_Check
+										}
+									}
+								]
+							},
+							{
+								xtype:"panel",
+								id:"MyPanel10",
+								title:"Panel",
+								header:false,
+								border:false,
+								height:30,
+								region:"north",
+								layout:"absolute",
+								style:"border-bottom: 1px red;",
+								items:[
+									{
+										xtype:"label",
+										id:"MyLabel",
+										text:"数据服务",
+										x:5,
+										y:5
+									}
+								]
+							}
+						]
+					},
+					{
+						xtype:"panel",
+						id:"MyPanel3",
+						title:"Panel",
+						header:false,
+						border:false,
+						height:100,
+						region:"center",
+						layout:"border",
+						style:"padding: 5px 5px 5px 0;",
+						width:800,
+						items:[
+							{
+								xtype:"panel",
+								id:"MyPanel11",
+								title:"Panel",
+								header:false,
+								border:true,
+								height:30,
+								region:"north",
+								layout:"absolute",
+								items:[
+									{
+										xtype:"label",
+										id:"MyLabel1",
+										text:"参数",
+										x:5,
+										y:5
+									}
+								]
+							},
+							{
+								xtype:"panel",
+								id:"MyPanel12",
+								title:"Panel",
+								header:false,
+								border:false,
+								height:100,
+								region:"center",
+								layout:"fit",
+								items:[
+									{
+										xtype:"tabpanel",
+										id:"MyTabs",
+										activeTab:0,
+										height:150,
+										width:500,
+										region:"center",
+										afterrender:"MyTabs_afterrender",
+										style:"background-color: #fff;    background-image: url()",
+										bodyStyle:"background-color: #fff;    background-image: url();",
+										hideBorders:false,
+										autoDestroy:false,
+										listeners:{
+											vmdafterrender:MyTabs_afterrender
+										},
+										items:[
+											{
+												xtype:"panel",
+												id:"MyPanel4",
+												title:"查询",
+												header:false,
+												border:false,
+												height:100,
+												layout:"fit",
+												items:[
+													{
+														xtype:"vmd.grid",
+														id:"hwGrid",
+														skin:"material",
+														width:300,
+														height:200,
+														isdesign:true,
+														beforerender:"hwGrid_beforerender",
+														afterrender:"hwGrid_afterrender",
+														beforeSelect:"hwGrid_beforeSelect",
+														listeners:{
+															beforerender:hwGrid_beforerender,
+															vmdafterrender:hwGrid_afterrender,
+															beforeSelect:hwGrid_beforeSelect
+														}
+													}
+												]
+											},
+											{
+												xtype:"panel",
+												id:"MyPanel5",
+												title:"添加",
+												header:false,
+												border:false,
+												height:100,
+												layout:"fit",
+												items:[
+													{
+														xtype:"vmd.grid",
+														id:"hwGrid1",
+														skin:"material",
+														width:300,
+														height:200,
+														isdesign:true,
+														beforerender:"hwGrid1_beforerender",
+														afterrender:"hwGrid1_afterrender",
+														beforeSelect:"hwGrid1_beforeSelect",
+														listeners:{
+															beforerender:hwGrid1_beforerender,
+															vmdafterrender:hwGrid1_afterrender,
+															beforeSelect:hwGrid1_beforeSelect
+														}
+													}
+												]
+											},
+											{
+												xtype:"panel",
+												id:"MyPanel6",
+												title:"修改",
+												header:false,
+												border:false,
+												height:100,
+												layout:"fit",
+												items:[
+													{
+														xtype:"vmd.grid",
+														id:"hwGrid2",
+														skin:"material",
+														width:300,
+														height:200,
+														isdesign:true,
+														beforerender:"hwGrid2_beforerender",
+														afterrender:"hwGrid2_afterrender",
+														beforeSelect:"hwGrid2_beforeSelect",
+														listeners:{
+															beforerender:hwGrid2_beforerender,
+															vmdafterrender:hwGrid2_afterrender,
+															beforeSelect:hwGrid2_beforeSelect
+														}
+													}
+												]
+											},
+											{
+												xtype:"panel",
+												id:"MyPanel7",
+												title:"删除",
+												header:false,
+												border:false,
+												height:100,
+												layout:"fit",
+												items:[
+													{
+														xtype:"vmd.grid",
+														id:"hwGrid3",
+														skin:"material",
+														width:300,
+														height:200,
+														isdesign:true,
+														beforerender:"hwGrid3_beforerender",
+														afterrender:"hwGrid3_afterrender",
+														beforeSelect:"hwGrid3_beforeSelect",
+														listeners:{
+															beforerender:hwGrid3_beforerender,
+															vmdafterrender:hwGrid3_afterrender,
+															beforeSelect:hwGrid3_beforeSelect
+														}
+													}
+												]
+											},
+											{
+												xtype:"panel",
+												id:"MyPanel8",
+												title:"保存",
+												header:false,
+												border:false,
+												height:100,
+												layout:"fit",
+												items:[
+													{
+														xtype:"vmd.grid",
+														id:"hwGrid4",
+														skin:"material",
+														width:300,
+														height:200,
+														isdesign:true,
+														beforerender:"hwGrid4_beforerender",
+														afterrender:"hwGrid4_afterrender",
+														beforeSelect:"hwGrid4_beforeSelect",
+														listeners:{
+															beforerender:hwGrid4_beforerender,
+															vmdafterrender:hwGrid4_afterrender,
+															beforeSelect:hwGrid4_beforeSelect
+														}
+													}
+												]
+											}
+										]
+									}
+								]
+							}
+						]
+					}
+				]
+			},
+			{
+				xtype:"panel",
+				id:"MyPanel9",
+				title:"Panel",
+				header:false,
+				border:false,
+				height:50,
+				x:0,
+				y:355,
+				layout:"column",
+				padding:"5",
+				bodyStyle:"border-top: 1px solid lightblue",
+				region:"south",
+				items:[
+					{
+						xtype:"vmd.div",
+						id:"div",
+						autoEl:"div",
+						border:false,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						width:400,
+						height:50,
+						columnWidth:0.5
+					},
+					{
+						xtype:"vmd.div",
+						id:"div1",
+						autoEl:"div",
+						border:false,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						width:200,
+						height:50,
+						layout:"absolute",
+						items:[
+							{
+								xtype:"vmd.button",
+								id:"button",
+								text:"确定",
+								type:"info",
+								size:"small",
+								x:50,
+								y:10,
+								click:"button_click",
+								listeners:{
+									click:button_click
+								}
+							},
+							{
+								xtype:"vmd.button",
+								id:"button1",
+								text:"取消",
+								type:"(none)",
+								size:"small",
+								x:150,
+								y:10,
+								click:"button1_click",
+								listeners:{
+									click:button1_click
+								}
+							}
+						]
+					},
+					{
+						xtype:"vmd.div",
+						id:"div2",
+						autoEl:"div",
+						border:false,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						width:400,
+						height:50,
+						columnWidth:0.5
+					}
+				]
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+	}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MyViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

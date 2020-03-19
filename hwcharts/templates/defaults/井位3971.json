@@ -1,0 +1,290 @@
+{
+	"vers": "1.0",
+	"coorSys": "Beijing_1954_GK_Zone_21",
+	"dataset":{
+		"ds1": {
+			"type":0,
+			"priority":1,
+			"url":"txwebh/txweb/scjw",
+			"params":{
+				"dydm": "",
+				"wellid":""
+			}
+		},
+		"ds5":{
+			"type":0,
+			"url":"txwebh/txweb/xndcsj",
+			"params":{
+
+			}
+		},
+		"ds9":{
+			"type":0,
+			"priority":0,
+			"url":"txwebh/txweb/xnkczb",
+			"params":{
+				"dydm": "",
+				"jb":""
+			}
+		},
+		"ds6":{
+			"type":0,
+			"priority":0,
+			"url":"txwebh/txweb/xndgx",
+			"params":{
+				"dydm": "",
+				"jb":""
+			}
+		},
+		"ds2":{
+			"type":0,
+			"priority":0,
+			"url":"txwebh/txweb/xnjmx",
+			"params":{
+				"dydm": "",
+				"jb":""
+			}
+		},
+		"ds3":{
+			"type":0,
+			"priority":0,
+			"url":"txwebh/txweb/tmkfbj",
+			"params":{
+				"dydm": "",
+				"jb":""
+			}
+		},
+		"ds4":{
+			"type":0,
+			"priority":0,
+			"url":"txwebh/txweb/gdclqbj",
+			"params":{
+				"dydm": "",
+				"jb":""
+			}
+		},
+		"ds10":{
+			"type":0,
+			"url":"txwebh/txweb/mjsj",
+			"params":{
+				"type": "0"
+			}
+		},
+		"ds11":{
+			"type":0,
+			"url":"txwebh/txweb/djyyrsj",
+			"params":{
+				"type": "0"
+			}
+		},
+		"ds12":{
+			"type":0,
+			"url":"txwebh/txweb/xnjgjsj",
+			"params":{
+				"type": "0"
+			}
+		},
+		"ds13":{
+			"type":0,
+			"url":"txwebh/txweb/djjwrsj",
+			"params":{
+				"type": "0"
+			}
+		},
+		"ds14":{
+			"type":1,
+			"priority":0,
+			"url":"ISOAlgorithm/isoline",
+			"params":{
+				"dydm": "",
+				"wellid":""
+			}
+		},
+		"ds15":{
+			"type":1,
+			"priority":0,
+			"url":"ISOAlgorithm/isoarea",
+			"params":{
+				"dydm": "",
+				"wellid":""
+			}
+		}
+	},
+	"seriesMapping":[
+		{	"seriseName": "砂体范围",
+			"source":"ds10",
+			"fields":["id","name","x","y"]
+		},
+		{	"seriseName": "断层",
+			"source":"ds5",
+			"fields":["id","", "type","wallid","walltype","x","y"]
+		},
+		{
+			"source":"ds1",
+			"seriseName": "油井井位",
+			"fields":["jh","jm","jb","x","y"]
+		},
+		{
+			"source":"ds12",
+			"seriseName": "油井井轨迹",
+			"fields":["jh","jk_x","jk_y","jd_x","jd_y","a_x","a_y","b_x","b_y"]
+		},
+		{
+			"source":"ds9",
+			"seriseName": "柱形开采指标",
+			"fields":[],
+			"fieldsUrl":"../templates/defaults/columnIndexJson.json"
+		},
+		{
+			"source":"ds6",
+			"seriseName": "等高线",
+			"fields":["id","value","x","y","maxx","minx","maxy","miny"]
+		},
+		{
+			"source":"ds2",
+			"seriseName": "尖灭线",
+			"fields":["id","x","y","maxx","minx","maxy","miny"]
+		},
+		{
+			"source":"ds3",
+			"seriseName": "探明开发储量区边界",
+			"fields":["id","x","y","maxx","minx","maxy","miny"]
+		},
+		{
+			"source":"ds4",
+			"seriseName": "滚动储量区边界",
+			"fields":["id","x","y","maxx","minx","maxy","miny"]
+		},
+		{
+			"source":"ds11",
+			"seriseName": "油压",
+			"fields":["jh","value"]
+		},
+		{
+			"source":"ds13",
+			"seriseName": "井口温度",
+			"fields":["jh","value"]
+		},
+		{
+			"source":"ds14",
+			"seriseName": "等压线"
+		},
+		{
+			"source":"ds14",
+			"seriseName": "等温线"
+		},
+		{
+			"source":"ds15",
+			"seriseName": "等压区"
+		},
+		{
+			"source":"ds15",
+			"seriseName": "等温区"
+		}
+	],
+	"toolbox": {
+		"items": {
+			"define": {
+				"tabs": [
+					{ "seriesName": "baseProperty", "text": "基本属性", "active": true },
+					{ "seriesName": "wellSymbol", "text": "井位", "active": false },
+					{ "seriesName": "miningIndex", "text": "开采指标", "active": false }
+				]
+			}
+		}
+	},
+	"title": {
+		"text": "井位3971",
+
+		"textStyle": {
+			"fontSize": 18
+		}
+	},
+	"frame": {
+		"id":"2",
+		"style":
+		{
+			"show": true,
+			"font": "3"
+		}
+	},
+	"frameNew": {
+		"id":"11",
+		"text": "新图框",
+		"style":
+		{
+			"show": true,
+			"font": "3"
+		}
+	},
+	"scale": {
+		"id":"4",
+		"text": "比例尺",
+		"textStyle": {
+			"fontSize": 24
+		}
+	},
+	"compass": {
+		"id":"5",
+		"text": "指北针",
+		"textStyle": {
+			"fontSize": 24
+		}
+	},
+	"mapInfo": {
+		"text": "编图单位：东营汉威    绘制人：XXX    编制人：XXX    录入人：XXX    审核人：XXX    日期：2019-11-30",
+		"values": {
+			"btdw":"东营汉威",
+			"hzr":"XXX",
+			"bzr":"XXX",
+			"lrr":"XXX",
+			"shr":"XXX",
+			"rq":"2019-11-30"
+		},
+
+		"textStyle": {
+			"fontSize": 12,
+			"fontWeight": "normal",
+			"fontFamily": "Simsun"
+		}
+	},
+	"geo": [{
+		"map": "testMap",
+		"roam": true,
+		"width": 480,
+		"itemStyle": {
+			"normal": {
+				"borderColor": "rgba(26,82,231, 1)",
+				"borderWidth": 1,
+				"areaColor": "#FFFFFF",
+				"shadowColor": "rgba(255, 255, 255, 0)",
+				"shadowOffsetX": -2,
+				"shadowOffsetY": 2,
+				"shadowBlur": 10
+			},
+			"emphasis": {
+				"areaColor": "transparent"
+			}
+		}
+	}],
+	"series": [
+		{
+			"type": "wellSymbol",
+			"name": "油井井位",
+			"scale":0.2,
+			"label": {
+				"normal":{
+					"color": "black",
+					"show": true,
+					"formatter": "{b}",
+					"position": "right"
+				}
+			},
+			"data": [],
+			"symbolSize": 15
+		}
+	],
+	"layers": [
+
+	]
+}

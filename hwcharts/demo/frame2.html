@@ -1,0 +1,206 @@
+﻿
+
+
+<html>
+<head>
+   <title>aaa</title>
+    <meta charset="utf-8">
+    <!--<script src="../js/core/base.js"></script>-->
+    <script src="../js/core/base.min.js"></script>
+
+    <script src="../js/core/base-ext.js"></script>
+    <!--zrender-->
+    <script src="../lib/zrender/dist/zrender.js"></script>
+    <script src="../lib/jquery.min.js"></script>
+    <!--hwchart-->
+    <script src="../js/hwcharts.js"></script>
+</head>
+<body oncontextmenu="return false">
+<style>
+    html, body, #main {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+    }
+</style>
+<div id="main"></div>
+<script>
+
+
+    var chart;
+    Vmd.onReady(function () {
+
+        Vmd.require([
+            'hwchart.component.Geo',
+            'hwchart.component.Frame',
+            //'hwchart.chart.Map',
+            'hwchart.component.Legend',
+            'hwchart.chart.WellSymbol',
+            'hwchart.chart.WellTrace',
+            //'hwchart.component.Tooltip',
+            'hwchart.component.Title',
+            'hwchart.component.MapInfo',
+            //'hwchart.component.VisualMap',
+            //'hwchart.component.MarkPoint'
+        ], function () {
+
+            $.get('../lib/map/rectJson.json', function (rectJson) {
+                if (typeof rectJson === 'string') {
+                    rectJson = eval('(' + rectJson + ')');
+                }
+                hwcharts.registerMap('testMap', rectJson);
+                chart = hwcharts.init(document.getElementById('main'), null, {});
+                
+               
+
+                chart.setOption({
+                    title: {
+                        text: '孤东XXX区块井位图',
+                       // left: 'center',
+                       // top: 40,
+                        //padding: 20,
+                        textStyle: {
+                            fontSize: 20
+                        },
+                    },
+                    mapinfo: {
+                        text: '编图单位：东营汉威    绘制人：XXX    编制人：XXX    录入人：XXX    审核人：XXX    日期：2019-11-21',
+                        //padding: 810,
+                        //left: 'center',
+                        top: 810,
+                        textStyle: {
+                            fontSize: 12,
+                            fontFamily: "SimSun",
+                            fontWeight: 'normal',
+                            color: '#333'
+                        },
+                    },
+                    frame: {
+                         
+                    },
+                    geo: [{
+                        map: 'testMap',
+                        roam: true,
+                        //left: 300,
+                       // width: 630,
+                        itemStyle: {
+                            normal: {
+                                borderColor: 'rgba(0,0,0, 1)',
+                                borderWidth: 1,
+                                areaColor: "#FFFFFF",
+                                shadowColor: 'rgba(255, 255, 255, 0)',
+                                shadowOffsetX: -2,
+                                shadowOffsetY: 2,
+                                shadowBlur: 0
+                            },
+                            emphasis: {
+                                areaColor: "#FFFFFF"
+                            }
+                        },
+                        scaleLimit: {
+                            min: 0.2,
+                            max: 2
+                        }
+                    }],
+                    legend: {
+                        orient: 'vertical',
+                        left: '80%',
+                        top:'80%',
+                        borderWidth:1,
+                        borderColor:'#333',
+                        data: ['wellTop', 'wellBottom', 'wellTrace']
+                    },
+                    series: [{
+                        type: 'wellSymbol',
+                        name: 'wellTop',
+                        symbol: 'TJLB-31C',
+                        coordinateSystem: 'geo',
+                        data: [{
+                            wellId: 'Gd010',
+                            wellName: '孤东010',
+                            symbol: 'TJLB-31C',
+                            value:[102.9199,30.4663]
+                        },{
+                            wellId: 'Gd011',
+                            wellName: '孤东011',
+                            symbol: 'TJLB-30C',
+                            value:[112.9199,40.4663]
+                        }],
+                        symbolSize: 20
+                    }, {
+                        type: 'wellSymbol',
+                        name: 'wellBottom',
+                        coordinateSystem: 'geo',
+                        symbol: 'TJLB-32C',
+                        data: [{
+                            wellId: 'Gd010',
+                            value:[102.9199,28.4663]
+                        } ,{
+                            wellId: 'Gd010',
+                            value:[104.9199,28.4663]
+                        }, {
+                            wellId: 'Gd011',
+                            value:[113.9199,38.4663]
+                        }],
+                        symbolSize: 12
+                    }
+                    , {
+                        type: 'wellTrace',
+                        name: 'wellTrace',
+                        coordinateSystem: 'geo',
+                        data: [],
+                        polyline: true,
+                        lineStyle: {
+                            normal: {
+                                color: 'red',
+                                width: 3,
+                                opacity: 0.3
+                            }
+                           
+                        }
+                    }
+                    ]
+                });
+                window.onresize = chart.resize;
+                
+                //chart.on('contextmenu', 'series.wellSymbol', function () {
+                //    alert()
+                //})
+
+                chart.on('contextmenu', function (params) {
+                    if (params.seriesType == 'wellSymbol')
+                      alert(params.seriesType)
+                })
+            });
+
+            window.setTimeout(function () {
+                chart.setOption({
+                    series: [{
+                        name: 'wellTrace',
+                        data: [{
+                            wellId: 'Gd010',
+                            wellMasterId: '',
+                            wellMasterName: '',
+                            coords: [[102.9199, 30.4663], [101.9199, 29.4663], [102.9199, 28.4663]]
+                        }, {
+                            wellId: 'Gd010',
+                            wellMasterId: '',
+                            wellMasterName: '',
+                            coords: [[102.9199, 30.4663], [104.9199, 28.4663]]
+                        }, {
+                            wellId: 'Gd011',
+                            wellMasterId: '',
+                            wellMasterName: '',
+                            coords: [[112.9199, 40.4663], [113.9199, 38.4663]]
+                        }]
+                    }]
+                })
+            }, 500)
+        })
+    });
+
+  
+
+</script>
+</body>
+</html>

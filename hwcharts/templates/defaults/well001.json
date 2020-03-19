@@ -1,0 +1,373 @@
+{
+	"vers": "1.0", 
+	"coorSys": "Beijing_1954_GK_Zone_21",
+	"dataset":{ 
+		"ds1": { 
+				"type":0,  
+				"priority":1, 
+				"url":"txwebh/txweb/jwsj",
+				"params":{
+					"dydm": "",
+					"wellid":""
+				}
+			},
+		"ds2": { 
+				"type":0, 
+				"priority":0,
+				"url":"txwebh/txweb/sjjwsj",
+				"params":{
+					"dydm": "",
+					"wellid":""
+				}
+			},			
+		"ds3":{ 
+				"type":0, 
+				"priority":0,
+				"url":"txwebh/txweb/webjsx",
+				"params":{
+					"dydm": "",
+					"wellid":""
+				}
+			},
+		"ds4":{ 
+			"type":0, 
+			"url":"txwebh/txweb/jzsj",
+			"params":{
+				"wellgroupid": ""
+			}
+		},
+		"ds5":{ 
+			"type":0, 
+			"url":"txwebh/txweb/dcsj",
+			"params":{
+				
+			}
+		},
+		"ds6":{ 
+			"type":1, 
+			"priority":0,
+			"url":"ISOAlgorithm/isoline",
+			"params":{
+				"dydm": "",
+				"wellid":""
+			}
+		},
+		"ds7":{
+			"type":0, 
+			"url":"txwebh/txweb/yjkczb",
+			"params":{
+				"jb": ""
+			}
+		},
+		"ds8":{ 
+			"type":1, 
+			"priority":0,
+			"url":"ISOAlgorithm/isoarea", 
+			"params":{
+				"dydm": "",
+				"wellid":""
+			}
+		},
+		"ds9":{ 
+			"type":0, 
+			"priority":0,
+			"url":"txwebh/txweb/zxkczb", 
+			"params":{
+				"dydm": "",
+				"jb":""
+			}
+		}
+	},	
+	"seriesMapping":[
+		{
+			"source":"ds8",
+			"seriseName": "等值区"
+		},
+		{
+			"source":"ds3",
+			"seriseName": "井旁标注",
+			"fields":["jh","value"]
+		},
+		{
+			"source":"ds1",
+			"seriseName": "油井井位",
+			"fields":["jh","jm","jb","x","y"]
+		},
+		{
+			"source":"ds2",
+			"seriseName": "水井井位",
+			"fields":["jh","jm","jb","x","y"]
+		},
+		{	"seriseName": "井组",
+			"source":"ds4",
+			"fields":["id","name", "jh"]
+		},
+		{	"seriseName": "断层",
+			"source":"ds5",
+			"fields":["id","", "type","wallid","walltype","x","y"]
+		},
+		{
+			"source":"ds6",
+			"seriseName": "等值线"
+		},
+		{
+			"source":"ds9",
+			"seriseName": "柱形开采指标",
+			"fields":[],
+			"fieldsUrl":"../templates/columnIndexJson.json"
+		}
+	],
+	"title": { 
+		"text": "等值图",
+		
+		"textStyle": {
+			"fontSize": 24
+		}
+	}, 
+	"frame": {  
+		"id":"2", 
+		"style":  
+		{
+			"show": true, 
+			"font": "3"
+		}
+	}, 
+	"frameNew": {  
+		"id":"11", 
+		"style":  
+		{
+			"show": true, 
+			"font": "3"
+		}
+	}, 
+	"legend": { 		
+		"id":"3",  
+		"text": "图例",
+		"z": 100,
+        "orient": "vertical",
+        "borderColor": "#000",
+        "backgroundColor": "#fff",
+        "borderWidth": 2,
+        "top": 26,
+        "width": 80,
+        "height": 160,
+        "padding": [5, 15, 5, 15],
+        "itemGap": 8,
+        "itemWidth": 30,
+        "itemHeight": 24,
+		"textStyle":  
+		{
+			"fontSize": 14, 
+			"fontFamily": "Simsun"
+		},
+        "data": ["柱形开采指标"]
+	},
+	"scale": { 
+		"id":"4",  
+		"text": "比例尺",
+		
+		"textStyle": {
+			"fontSize": 24
+		}
+	}, 
+	"compass": { 
+		"id":"5",  
+		"style":  
+		{
+			"show": true, 
+			"font": "3"
+		}
+	},
+	"mapInfo": { 
+		"text": "编图单位：东营汉威    绘制人：XXX    编制人：XXX    录入人：XXX    审核人：XXX    日期：2019-11-30",
+	
+		"textStyle": {
+			"fontSize": 12,
+			"fontWeight": "normal",
+			"fontFamily": "Simsun"
+		}
+	}, 	
+	"geo": [{
+		"map": "testMap",
+		"roam": true,
+		
+		"width": 480,
+		"itemStyle": {
+			"normal": {
+				"borderColor": "rgba(26,82,231, 1)",
+				"borderWidth": 1,
+				"areaColor": "#FFFFFF",
+				"shadowColor": "rgba(255, 255, 255, 0)",
+				"shadowOffsetX": -2,
+				"shadowOffsetY": 2,
+				"shadowBlur": 10
+			},
+			"emphasis": {
+				"areaColor": "#FFFFFF"
+			}
+		}
+	}],
+	"visualMap": {
+		"min": 19,
+		"max": 100,
+		"left": "left",
+		"top": "bottom",
+		"text": ["高", "低"],
+		"seriesIndex": [0],
+		"inRange": {
+			"color": ["rgb(0, 204, 255)", "rgb(0, 0, 255)"]
+		},
+		"calculable": true
+	},
+    "graphic": [{
+        "id": "img",
+        "type": "image",
+        "left": 10,
+        "top": 10,
+        "style": {
+            "image": "/images/compass4.svg",
+            "width": 64,
+            "height": 64,
+            "opacity": 1
+        },
+        "z": 100
+    }],
+	"series": [
+		{
+			"type": "isoArea",
+			"name": "等值区",
+			"dependentSeries": ["油井井位","井旁标注"],
+			"data": [],
+			"dense": 0
+		},
+		{
+			"type": "wellLabel",
+			"name": "井旁标注",
+			"itemStyle": {
+				"normal": {
+					"color": "red",
+					"show": true,
+					"formatter": "{b}"
+				}
+			},
+			"data": []
+		},
+		{ 
+	      "type": "wellSymbol",
+		  "name": "油井井位",
+		  "label": {
+			"normal":{
+				"color": "black",
+				"show": true,
+				"formatter": "{b}",
+				"position": "right"
+				}
+			},
+	      "data": [],
+	      "symbolSize": 15
+	  	},
+		{ 
+			"type": "wellSymbol",
+			"name": "水井井位",
+			"label": {
+				"normal":{
+					"color": "black",
+					"show": true,
+					"formatter": "{b}",
+					"position": "right"
+				}
+			},
+			"data": [],
+			"symbolSize": 15
+		},
+		{
+			"type": "wellGroup",
+			"name": "井组",
+			"data": [],
+			"areaStyle": {
+				"normal": {
+					"color": "red",
+					"show": true,
+					"formatter": "{b}",
+					"position": "right"
+				}
+			}
+		},
+		{
+			"type": "faultLine",
+			"name": "断层",
+			"lineStyle": {
+				"normal":{
+					"type": "faultLine",
+					"color": "red"
+				}
+			},
+			"data": []
+		},
+		{
+			"type": "isoLine",
+			"name": "等值线",
+			"dependentSeries": ["油井井位","井旁标注"],
+			"data": [],
+			"polyline": true,
+			"lineStyle": {
+				"normal":{
+					"color": "#000000",
+					"width": 1,
+					"opacity": 0.3
+				}
+			}
+		},
+		{
+			"type": "miningIndex",
+			"name": "柱形开采指标",
+			"wellType":"21",
+			"data": [],
+			"symbolSize": 80
+		}
+		
+	],
+	"layers": [
+		{
+			"id":"1",  
+			"name":"井位图层", 
+			"zIndex":"1",  
+			"show":true,  
+			"editable":true,  
+			"objs":["oilwell"]
+		}
+	],
+	"fonts":{
+		"1": {
+			"fontFamily": "Arial", 
+			"fontStyle": "normal", 
+			"fontSize": "40px",  
+			"fontColor": "#000000", 
+			"fontWeight": "bold", 
+			"textAlign": "left", 
+			"textVerticalAlign": "middle", 
+			"textRotation": "0"
+		}, 
+		"2": {	
+			"fontFamily": "Georgia", 
+			"fontStyle": "normal", 
+			"fontSize": "12px",  
+			"fontColor": "#000000", 
+			"fontWeight": "normal", 
+			"textAlign": "left", 
+			"textVerticalAlign": "middle", 
+			"textRotation": "0"
+		}, 
+		"3": {
+			"fontFamily": "serif", 
+			"fontStyle": "normal", 
+			"fontSize": "9px",  
+			"fontColor": "#000000", 
+			"fontWeight": "normal", 
+			"textAlign": "left", 
+			"textVerticalAlign": "middle", 
+			"textRotation": "0" 
+		}
+	}
+	
+}

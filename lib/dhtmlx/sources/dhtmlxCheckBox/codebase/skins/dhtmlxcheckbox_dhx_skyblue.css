@@ -1,0 +1,83 @@
+        div.dhxcheckbox_dhx_skyblue_opt{
+            float:left;
+            cursor:pointer;
+        }
+        div.dhxcheckbox_dhx_skyblue_opt_qita{
+            float:left;
+            margin-left:10px;
+            margin-top:4px;
+        }
+        div.dhxcheckbox_dhx_skyblue_chk0{
+            width: 18px;
+            height: 18px;
+            float:left; 
+            margin-top:1px;
+            background-image: url('../material/imgs/dhxgrid_material/item_chk0.gif');
+        }
+        div.dhxcheckbox_dhx_skyblue_chk1{
+            width: 18px;
+            height: 18px;
+            float:left; 
+            margin-top:1px;
+            background-image: url('../material/imgs/dhxgrid_material/item_chk1.gif');
+        }
+        div.dhxcheckbox_dhx_skyblue_chk0_dis{
+            width: 18px;
+            height: 18px;
+            float:left; 
+            margin-top:1px;
+            background-image: url('../material/imgs/dhxgrid_material/item_chk0_dis.gif');
+        }
+        div.dhxcheckbox_dhx_skyblue_chk1_dis{
+            width: 18px;
+            height: 18px;
+            float:left; 
+            margin-top:1px;
+            background-image: url('../material/imgs/dhxgrid_material/item_chk1_dis.gif');
+        }
+        div.dhxcheckbox_dhx_skyblue_rad0{
+            width: 18px;
+            height: 18px;
+            float:left; 
+            margin-top:1px;
+            background-image: url('../material/imgs/dhxgrid_material/radio_chk0.gif');
+        }
+        div.dhxcheckbox_dhx_skyblue_rad1{
+            width: 18px;
+            height: 18px;
+            float:left; 
+            margin-top:1px;
+            background-image: url('../material/imgs/dhxgrid_material/radio_chk1.gif');
+        }
+        div.dhxcheckbox_dhx_skyblue_rad0_dis{
+            width: 18px;
+            height: 18px;
+            float:left; 
+            margin-top:1px;
+            background-image: url('../material/imgs/dhxgrid_material/radio_chk0_dis.gif');
+        }
+        div.dhxcheckbox_dhx_skyblue_rad1_dis{
+            width: 18px;
+            height: 18px;
+            float:left; 
+            margin-top:1px;
+            background-image: url('../material/imgs/dhxgrid_material/radio_chk1_dis.gif');
+        }
+        span.dhxcheckbox_dhx_skyblue_txt{
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            -khtml-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            line-height:23px;
+        }
+        input.dhxcheckbox_dhx_skyblue_input {
+            margin-left:5px;
+            border-color: #000000; 
+            border-style: solid; 
+            border-top-width: 0px;
+            border-right-width: 0px; 
+            border-bottom-width: 1px;
+            border-left-width: 0px
+        }

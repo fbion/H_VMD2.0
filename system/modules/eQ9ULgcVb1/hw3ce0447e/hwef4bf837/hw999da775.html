@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>资源管理服务器配置</title>
+	<!--基本样式-->
+    <link href="/css/common.css?ver=2.0.3.20190219" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.3.20190219" rel="stylesheet" />
+   
+    <link href="/design/css/icons.css?ver=2.0.3.20190219" rel="stylesheet" />
+
+	<link href="/lib/dhtmlx/dhtmlx.css?ver=2.0.3.20190219" rel="stylesheet" />
+	  <!--样式快捷索引表-->
+    <link href="/css/shortcut.css?ver=2.0.3.20190219" rel="stylesheet" />
+    
+    <script src="/lib/labjs/LAB.min.js?ver=2.0.3.20190219"></script>
+    <script src="/config.js?ver=2.0.3.20190219"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.3.20190219"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.3.20190219"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.3.20190219"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=2.0.3.20190219"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.3.20190219"></script>
+    <script src="/js/util.js?ver=2.0.3.20190219"></script>
+    <script src="/lib/dhtmlx/dhtmlx.js?ver=2.0.3.20190219"></script>
+	<script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.3.20190219"></script>
+	<script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.3.20190219"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.3.20190219"></script>
+	<script src="/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.3.20190219"></script>
+    <script src="/js/hwdas.js?ver=2.0.3.20190219"></script>
+	<script src="/js/hwMSC.js?ver=2.0.3.20190219"></script>
+    <script src="/js/vmdcore.js?ver=2.0.3.20190219"></script>
+    <script src="/js/vmdcomps.js?ver=2.0.3.20190219"></script>
+    <script src="/js/publicMethods.js?ver=2.0.3.20190219"></script>
+    <script src="/js/vmdreport.js?ver=2.0.3.20190219"></script>
+    
+
+    <script src="/lib/ace/ace.js"></script>
+    <script src="/lib/ace/mode-base.js" type="text/javascript"></script>
+    <script src="/lib/ace/theme-xcode.js" type="text/javascript" ></script>
+    <script src="/lib/ace/ext-language_tools.js"></script>
+    
+
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        
+    </style>
+    <script>
+	    vmd.preivewMode=true;
+        vmd.virtualPath = '';
+        vmd.workspace={"workspaceid":"254f1fb7-7079-48bf-bdd4-f7925e0eb4a3","workflowIp":"","dataServiceIp":"","msgIp":"","projectid":"hw3ce0447e"}
+	vmd.resourceSettings={"测试资源中心&&资源中心服务器":"http://www.hanweikeji.com:8050/resource","测试资源中心&&服务器2":"http://192.168.1.202:8050/resource"}
+        Ext.define("vmd.module.MyViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps(["vmd.ux.ZyglServerList$1.0$ZyglServerList"]),
+	xtype:"vmd.module.MyViewport",
+	layout:"border",
+	height:500,
+	width:500,
+	style:"background-color: white;",
+	initComponent: function(){
+		function ZyglServerList_serverClick(sender, index, node, e) {
+
+    var selServerData = ZyglServerList.getSelServerData();
+    if(selServerData) {
+        if(selServerData.server_id == "0000000001") {
+            t_name.setDisabled(true);
+            t_serverIp.setDisabled(true);
+            t_port.setDisabled(true);
+            t_remark.setDisabled(true);
+        } else {
+            t_name.setDisabled(false);
+            t_serverIp.setDisabled(false);
+            t_port.setDisabled(false);
+            t_remark.setDisabled(false);
+        }
+        selServerId.setValue(selServerData.server_id);
+        t_name.setValue(selServerData.name);
+        t_serverIp.setValue(selServerData.ip);
+        t_port.setValue(selServerData.port);
+        t_creat.setValue(selServerData.row_created_date);
+        t_change.setValue(selServerData.row_changed_date);
+        t_remark.setValue(selServerData.remark);
+    }
+}
+
+function ZyglServerList_addServerConfig(sender, e) {
+    selServerId.setValue(vmd.util.guid());
+    t_name.setValue("新建服务器");
+    t_serverIp.setValue("");
+    t_port.setValue("");
+    t_creat.setValue("");
+    t_change.setValue("");
+    t_remark.setValue("");
+}
+
+function btn_save_click(sender, e) {
+    hwDas.save("zyzx/zyzxtree/getServer", {}, {}, {
+        server_id: selServerId.getValue(),
+        name: t_name.getValue(),
+        server_ip: t_serverIp.getValue(),
+        port: t_port.getValue(),
+        remark: t_remark.getValue()
+    }, function() {
+        Tips.tips("保存成功", "success");
+        liststore.toRefresh();
+    }, function(msg) {
+        Tips.tips("保存失败", "success");
+    })
+}
+
+function ZyglServerList_delServerConfig(sender) {
+    hwDas.del("zyzx/zyzxtree/getServer", {}, {
+        server_id: selServerId.getValue()
+    }, function() {
+        Tips.tips("保存成功", "success");
+        liststore.toRefresh();
+    }, function(msg) {
+        Tips.tips("保存失败", "success");
+    })
+}
+
+function t_port_afterrender(sender) {}
+
+function t_port_beforerender(sender) {
+    t_port.regex = /^[0-9]*$/;
+    t_port.regexText = "端口必须为空或数字";
+}
+
+function t_serverIp_beforerender(sender) {
+    var strRegex = '^(([0-9a-z_!~*().&=+$%-]+: )?[0-9a-z_!~*().&=+$%-]+@)?' //ftp的user@
+        +
+        '(([0-9]{1,3}.){3}[0-9]{1,3}' // IP形式的URL- 199.194.52.184
+        +
+        '|' // 允许IP和DOMAIN（域名）
+        +
+        '([0-9a-z_!~*()-]+.)*' // 域名- www.
+        +
+        '([0-9a-z][0-9a-z-]{0,61})?[0-9a-z].' // 二级域名
+        +
+        '[a-z]{2,6})' // first level domain- .com or .museum
+        //+ '(:[0-9]{1,4})?' // 端口- :80
+        +
+        '((/?)|' // a slash isn't required if there is no file name
+        +
+        "(/[0-9a-z_!~*().;?:@&=+$,%#-]+)+/?)$";
+
+    t_serverIp.regex = new RegExp(strRegex)
+    // t_serverIp.regex = /[\w\-]+(\.[\w\-]+)+([\w\-\.,@?^=%&:\/~\+#]*[\w\-\@?^=%&\/~\+#])?$/;
+    //t_serverIp.regex = /^((ht|f)tps?):\/\/[\w\-]+(\.[\w\-]+)+([\w\-\.,@?^=%&:\/~\+#]*[\w\-\@?^=%&\/~\+#])?$/;
+    t_serverIp.regexText = "输入标准的服务器地址！无需输入‘http://’和端口";
+}
+
+function button_click(sender, e) {
+    if(parent && parent.serverEditWin) {
+        parent.serverEditWin.close()
+    }
+}
+			selServerId=new vmd.var.variable({});
+
+		liststore=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"liststore","autoLoad":true,"storeConfig":"{\"id\":\"TBsf2M8hEi\",\"callcode\":\"vmdCode\",\"url\":\"zyzx/zyzxtree/getServer\",\"host\":\"\",\"isHwRest\":true,\"name\":\"获取服务器\",\"getMethods\":[{\"id\":\"server_id\",\"value1\":\"\",\"value2\":\"\"}],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"server_id\",\"type\":\"string\"},{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"ip\",\"type\":\"string\"},{\"name\":\"port\",\"type\":\"string\"},{\"name\":\"remark\",\"type\":\"string\"},{\"name\":\"row_created_date\",\"type\":\"datetime\"},{\"name\":\"row_changed_date\",\"type\":\"datetime\"}]}"});
+
+
+		this.items=[
+			{
+				xtype:"panel",
+				id:"MyPanel3",
+				title:"West",
+				header:false,
+				border:true,
+				height:100,
+				region:"west",
+				width:204,
+				layout:"fit",
+				margins:"5 ",
+				bodyStyle:"background-color: white",
+				items:[
+					{
+						xtype:"vmd.ux.ZyglServerList",
+						id:"ZyglServerList",
+						serverListTpl:"<ul>    <tpl for=\".\">        <li class='info serverlist-info'> {name} </li>    </tpl></ul>",
+						serverListData:"var data = [{    \"server_id\": \"0000000001\",    \"name\": \"服务器1\",    \"ip\": \"192.168.1.188\",    \"port\": \"8000\",    \"remark\": \"test\"}, {    \"server_id\": \"0000000002\",    \"name\": \"服务器2\",    \"ip\": \"192.168.1.188\",    \"port\": \"8030\",    \"remark\": \"test\"}];return data;",
+						serverListStore:liststore,
+						store:liststore,
+						style:"border:1px;",
+						width:189,
+						serverClick:"ZyglServerList_serverClick",
+						addServerConfig:"ZyglServerList_addServerConfig",
+						delServerConfig:"ZyglServerList_delServerConfig",
+						region:"north",
+						height:352,
+						listeners:{
+							serverClick:ZyglServerList_serverClick,
+							addServerConfig:ZyglServerList_addServerConfig,
+							delServerConfig:ZyglServerList_delServerConfig
+						}
+					}
+				]
+			},
+			{
+				xtype:"panel",
+				id:"panel",
+				title:"Panel",
+				header:false,
+				border:false,
+				height:100,
+				region:"center",
+				margins:"5",
+				layout:"anchor",
+				items:[
+					{
+						xtype:"panel",
+						id:"panel1",
+						title:"Panel",
+						header:false,
+						border:true,
+						height:37,
+						region:"north",
+						style:"border-bottom: 5px;    border-bottom-color: #20a0ff;",
+						layout:"absolute",
+						x:0,
+						y:0,
+						items:[
+							{
+								xtype:"vmd.div",
+								id:"div",
+								autoEl:"div",
+								border:true,
+								backgroundRepeat:"no-repeat",
+								backgroundPosition:"top left",
+								width:104,
+								height:35,
+								style:"background-color: #20a0ff",
+								layout:"absolute",
+								items:[
+									{
+										xtype:"label",
+										id:"label",
+										text:"基础信息",
+										style:"color: white;    font-size: 15px;",
+										x:15,
+										y:7
+									}
+								]
+							}
+						]
+					},
+					{
+						xtype:"panel",
+						id:"panel3",
+						title:"Panel",
+						header:false,
+						border:false,
+						height:2,
+						bodyStyle:"background-color: #20a0ff"
+					},
+					{
+						xtype:"panel",
+						id:"panel2",
+						title:"Panel",
+						header:false,
+						border:false,
+						height:100,
+						region:"center",
+						layout:"absolute",
+						anchor:"100% -40",
+						items:[
+							{
+								xtype:"label",
+								id:"label1",
+								text:"名称：",
+								height:20,
+								x:66,
+								y:20
+							},
+							{
+								xtype:"label",
+								id:"label2",
+								text:"服务器地址：",
+								x:30,
+								y:60
+							},
+							{
+								xtype:"label",
+								id:"label3",
+								text:"端口：",
+								x:66,
+								y:100
+							},
+							{
+								xtype:"label",
+								id:"label4",
+								text:"创建时间：",
+								x:42,
+								y:140
+							},
+							{
+								xtype:"label",
+								id:"label5",
+								text:"修改时间：",
+								x:42,
+								y:180
+							},
+							{
+								xtype:"label",
+								id:"label6",
+								text:"说明：",
+								x:66,
+								y:220,
+								height:20
+							},
+							{
+								xtype:"textfield",
+								id:"t_name",
+								allowBlank:true,
+								enableKeyEvents:true,
+								x:110,
+								y:15,
+								width:290,
+								emptyText:"请输入名称"
+							},
+							{
+								xtype:"textfield",
+								id:"t_serverIp",
+								allowBlank:true,
+								enableKeyEvents:true,
+								x:110,
+								y:55,
+								width:290,
+								emptyText:"请输入服务器地址",
+								beforerender:"t_serverIp_beforerender",
+								listeners:{
+									beforerender:t_serverIp_beforerender
+								}
+							},
+							{
+								xtype:"textfield",
+								id:"t_port",
+								allowBlank:true,
+								enableKeyEvents:true,
+								x:110,
+								y:95,
+								width:290,
+								afterrender:"t_port_afterrender",
+								beforerender:"t_port_beforerender",
+								listeners:{
+									vmdafterrender:t_port_afterrender,
+									beforerender:t_port_beforerender
+								}
+							},
+							{
+								xtype:"textfield",
+								id:"t_creat",
+								allowBlank:true,
+								enableKeyEvents:true,
+								x:110,
+								y:135,
+								width:290,
+								disabled:true
+							},
+							{
+								xtype:"textfield",
+								id:"t_change",
+								allowBlank:true,
+								enableKeyEvents:true,
+								x:110,
+								y:175,
+								width:290,
+								disabled:true
+							},
+							{
+								xtype:"textarea",
+								id:"t_remark",
+								allowBlank:true,
+								x:110,
+								y:220,
+								width:290,
+								height:90
+							},
+							{
+								xtype:"vmd.button",
+								id:"btn_save",
+								text:"保存",
+								type:"primary",
+								size:"small",
+								x:260,
+								y:330,
+								width:60,
+								click:"btn_save_click",
+								listeners:{
+									click:btn_save_click
+								}
+							},
+							{
+								xtype:"vmd.button",
+								id:"button",
+								text:"关闭",
+								type:"(none)",
+								size:"small",
+								x:340,
+								y:330,
+								width:60,
+								click:"button_click",
+								listeners:{
+									click:button_click
+								}
+							}
+						]
+					}
+				]
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+	}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MyViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

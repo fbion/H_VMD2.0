@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>字体弹窗</title>
+    <!--基本样式-->
+    <link href="/css/common.css?ver=2.0.4.20190408" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.4.20190408" rel="stylesheet" />
+    <link href="/design/css/icons.css?ver=2.0.4.20190408" rel="stylesheet" />
+    <link href="/lib/dhtmlx/dhtmlx.css?ver=2.0.4.20190408" rel="stylesheet" />
+    <!--样式快捷索引表-->
+    <link href="/css/shortcut.css?ver=2.0.4.20190408" rel="stylesheet" />
+    <script src="/lib/labjs/LAB.min.js?ver=2.0.4.20190408"></script>
+    <script src="/config.js?ver=2.0.4.20190408"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.4.20190408"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.4.20190408"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.4.20190408"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=2.0.4.20190408"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.4.20190408"></script>
+    <script src="/js/util.js?ver=2.0.4.20190408"></script>
+    <script src="/lib/dhtmlx/dhtmlx.js?ver=2.0.4.20190408"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.4.20190408"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.4.20190408"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.4.20190408"></script>
+    <script src="/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.4.20190408"></script>
+    <script src="/js/hwdas.js?ver=2.0.4.20190408"></script>
+    <script src="/js/vmdcore.js?ver=2.0.4.20190408"></script>
+    <script src="/js/vmdcomps.js?ver=2.0.4.20190408"></script>
+    <script src="/js/publicMethods.js?ver=2.0.4.20190408"></script>
+    <script src="/js/vmdreport.js?ver=2.0.4.20190408"></script>
+    <style> </style>
+    <style type="text/css" id="vmdcss"> </style>
+    <script>
+        vmd.preivewMode = true;
+        vmd.virtualPath = '';
+        vmd.workspace = {
+            "workspaceid": "e47d5ad1-b8c1-4d19-bb2b-b2373006ee4f",
+            "workflowIp": "",
+            "dataServiceIp": "",
+            "msgIp": "",
+            "projectid": "eQ9ULgcVb1"
+        }
+        vmd.resourceSettings = {
+            "test&&资源中心服务器": "http://www.hanweikeji.com:10050/resource"
+        }
+        vmd.projectInfo = {
+            "projectId": "eQ9ULgcVb1",
+            "workflowIp": "",
+            "dataServiceIp": "",
+            "msgIp": "",
+            "todoIp": "",
+            "authIp": "",
+            "docIp": "",
+            "reoprtIp": "",
+            "logIp": ""
+        }
+        Ext.define("vmd.module.MainViewport", {
+            extend: "vmd.comp.viewport",
+            requires: vmd.getCmpDeps(["vmd.ux.FontSetting$1.0$FontSetting"]),
+            xtype: "vmd.module.MainViewport",
+            layout: "fit",
+            afterrender: "MainViewport_afterrender",
+            initComponent: function() {
+                var type = parent.fontSettingWin.finfo.type;
+                var info = parent.fontSettingWin.finfo.info;
+
+                function close() {
+                    window.fontSettingWin.close();
+                }
+
+                function MainViewport_afterrender(sender) {
+                    var obj = {};
+                    switch (type) {
+                        case 'spyj':
+                            obj.spzj_spyj_fontFamily = info.spzj_spyj_fontFamily.value;
+                            obj.spzj_spyj_fontStyle = info.spzj_spyj_fontStyle.value;
+                            obj.spzj_spyj_fontSize = info.spzj_spyj_fontSize.value;
+                            obj.spzj_spyj_color = info.spzj_spyj_color.value;
+                            obj.spzj_spyj_underLine = info.spzj_spyj_underLine.value;
+                            obj.spzj_spyj_mark = info.spzj_spyj_mark.value;
+                            break;
+                        case 'spz':
+                            obj.spzj_spz_fontFamily = info.spzj_spz_fontFamily.value;
+                            obj.spzj_spz_fontStyle = info.spzj_spz_fontStyle.value;
+                            obj.spzj_spz_fontSize = info.spzj_spz_fontSize.value;
+                            obj.spzj_spz_color = info.spzj_spz_color.value;
+                            obj.spzj_spz_underLine = info.spzj_spz_underLine.value;
+                            obj.spzj_spz_mark = info.spzj_spz_mark.value;
+                            break;
+                        case 'spbm':
+                            obj.spzj_spbm_fontFamily = info.spzj_spbm_fontFamily.value;
+                            obj.spzj_spbm_fontStyle = info.spzj_spbm_fontStyle.value;
+                            obj.spzj_spbm_fontSize = info.spzj_spbm_fontSize.value;
+                            obj.spzj_spbm_color = info.spzj_spbm_color.value;
+                            obj.spzj_spbm_underLine = info.spzj_spbm_underLine.value;
+                            obj.spzj_spbm_mark = info.spzj_spbm_mark.value;
+                            break;
+                        case 'ty':
+                            obj.spzj_ty_fontFamily = info.spzj_ty_fontFamily.value;
+                            obj.spzj_ty_fontStyle = info.spzj_ty_fontStyle.value;
+                            obj.spzj_ty_fontSize = info.spzj_ty_fontSize.value;
+                            obj.spzj_ty_color = info.spzj_ty_color.value;
+                            obj.spzj_ty_underLine = info.spzj_ty_underLine.value;
+                            obj.spzj_ty_mark = info.spzj_ty_mark.value;
+                            break;
+                        case 'bty':
+                            obj.spzj_bty_fontFamily = info.spzj_bty_fontFamily.value;
+                            obj.spzj_bty_fontStyle = info.spzj_bty_fontStyle.value;
+                            obj.spzj_bty_fontSize = info.spzj_bty_fontSize.value;
+                            obj.spzj_bty_color = info.spzj_bty_color.value;
+                            obj.spzj_bty_underLine = info.spzj_bty_underLine.value;
+                            obj.spzj_bty_mark = info.spzj_bty_mark.value;
+                            break;
+                        case 'th':
+                            obj.spzj_th_fontFamily = info.spzj_th_fontFamily.value;
+                            obj.spzj_th_fontStyle = info.spzj_th_fontStyle.value;
+                            obj.spzj_th_fontSize = info.spzj_th_fontSize.value;
+                            obj.spzj_th_color = info.spzj_th_color.value;
+                            obj.spzj_th_underLine = info.spzj_th_underLine.value;
+                            obj.spzj_th_mark = info.spzj_th_mark.value;
+                            break;
+                        case 'spr':
+                            obj.spzj_spr_fontFamily = info.spzj_spr_fontFamily.value;
+                            obj.spzj_spr_fontStyle = info.spzj_spr_fontStyle.value;
+                            obj.spzj_spr_fontSize = info.spzj_spr_fontSize.value;
+                            obj.spzj_spr_color = info.spzj_spr_color.value;
+                            obj.spzj_spr_underLine = info.spzj_spr_underLine.value;
+                            obj.spzj_spr_mark = info.spzj_spr_mark.value;
+                            break;
+                        case 'sprq':
+                            obj.spzj_sprq_fontFamily = info.spzj_sprq_fontFamily.value;
+                            obj.spzj_sprq_fontStyle = info.spzj_sprq_fontStyle.value;
+                            obj.spzj_sprq_fontSize = info.spzj_sprq_fontSize.value;
+                            obj.spzj_sprq_color = info.spzj_sprq_color.value;
+                            obj.spzj_sprq_underLine = info.spzj_sprq_underLine.value;
+                            obj.spzj_sprq_mark = info.spzj_sprq_mark.value;
+                            break;
+                    }
+                    hwFontSetting.setInfo(obj, type)
+                }
+                this.MainViewport_afterrender = MainViewport_afterrender;
+                this.items = [{
+                    xtype: "vmd.ux.FontSetting",
+                    id: "hwFontSetting",
+                    layout: "absolute",
+                    x: 0,
+                    y: 0
+                }]
+                this.callParent();
+                var me = this;
+                vmd.core.moduleInit(this.items, this);
+                me.on('afterrender', function() {
+                    MainViewport_afterrender.call(me, me)
+                })
+            }
+        })
+        Ext.onReady(function() {
+            Ext.create('vmd.module.MainViewport', {
+                renderTo: document.body
+            })
+        })
+    </script>
+</head>
+
+<body> </body>
+
+</html>

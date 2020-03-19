@@ -1,0 +1,1546 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>单元格审批</title>
+	<!--基本样式-->
+    <link href="{virtualPath}/css/common.css?ver=2.0.3.0908" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="{virtualPath}/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.3.0908" rel="stylesheet" />
+   
+    <link href="{virtualPath}/design/css/icons.css?ver=2.0.3.0908" rel="stylesheet" />
+
+	<link href="{virtualPath}/lib/dhtmlx/dhtmlx.css?ver=2.0.3.0908" rel="stylesheet" />
+	  <!--样式快捷索引表-->
+    <link href="{virtualPath}/css/shortcut.css?ver=2.0.3.0908" rel="stylesheet" />
+    
+    <script src="{virtualPath}/lib/labjs/LAB.min.js?ver=2.0.3.0908"></script>
+    <script src="{virtualPath}/config.js?ver=2.0.3.0908"></script>
+    <script src="{virtualPath}/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.3.0908"></script>
+    <script src="{virtualPath}/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.3.0908"></script>
+    <script src="{virtualPath}/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.3.0908"></script>
+    <script src="{virtualPath}/lib/ext-3.4/ext-all-debug.js?ver=2.0.3.0908"></script>
+    <script src="{virtualPath}/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.3.0908"></script>
+    <script src="{virtualPath}/js/util.js?ver=2.0.3.0908"></script>
+    <script src="{virtualPath}/lib/dhtmlx/dhtmlx.js?ver=2.0.3.0908"></script>
+	<script src="{virtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.3.0908"></script>
+	<script src="{virtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.3.0908"></script>
+    <script src="{virtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.3.0908"></script>
+	<script src="{virtualPath}/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.3.0908"></script>
+    <script src="{virtualPath}/js/hwdas.js?ver=2.0.3.0908"></script>
+	<script src="{virtualPath}/js/hwMSC.js?ver=2.0.3.0908"></script>
+    <script src="{virtualPath}/js/vmdcore.js?ver=2.0.3.0908"></script>
+    <script src="{virtualPath}/js/vmdcomps.js?ver=2.0.3.0908"></script>
+    <script src="{virtualPath}/js/publicMethods.js?ver=2.0.3.0908"></script>
+    <script src="{virtualPath}/js/vmdreport.js?ver=2.0.3.0908"></script>
+    {workspacePath}
+
+    <script src="{virtualPath}/lib/ace/ace.js"></script>
+    <script src="{virtualPath}/lib/ace/mode-base.js" type="text/javascript"></script>
+    <script src="{virtualPath}/lib/ace/theme-xcode.js" type="text/javascript" ></script>
+    <script src="{virtualPath}/lib/ace/ext-language_tools.js"></script>
+    
+
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        
+    </style>
+    <script>
+	    
+        vmd.virtualPath = '{virtualPath}';
+        
+        Ext.define("vmd.module.MainViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps(["vmd.ux.ApprovlType$1.0$ApprovlType"]),
+	xtype:"vmd.module.MainViewport",
+	layout:"absolute",
+	beforerender:"MainViewport_beforerender",
+	listeners:{
+		beforerender:function(){
+	this.MainViewport_beforerender(this)
+}
+	},
+	initComponent: function(){
+		function cellApprovlType() {
+    this.allowEdit = {
+            id: "allowEdit",
+            value: "true",
+            type: "CheckBox"
+        },
+        this.allowPrint = {
+            id: "allowPrint",
+            value: "true",
+            type: "CheckBox"
+        },
+        this.ty_display = {
+            id: "ty_display",
+            value: "true",
+            type: "CheckBox"
+        },
+        this.ty_bqmc = {
+            id: "ty_bqmc",
+            value: "",
+            type: "Text"
+        },
+        this.ty_spjg = {
+            id: "ty_spjg",
+            value: "",
+            type: "Text"
+        },
+        this.ty_font = {
+            id: "ty_font",
+            value: "",
+            type: "Text"
+        },
+        this.ty_x = {
+            id: "ty_x",
+            value: "",
+            type: "Text"
+        },
+        this.ty_y = {
+            id: "ty_y",
+            value: "",
+            type: "Text"
+        },
+        this.ty_height = {
+            id: "ty_height",
+            value: "",
+            type: "Text"
+        },
+        this.ty_width = {
+            id: "ty_width",
+            value: "",
+            type: "Text"
+        }
+
+
+
+        ,
+        this.bty_display = {
+            id: "bty_display",
+            value: "true",
+            type: "CheckBox"
+        },
+        this.bty_bqmc = {
+            id: "bty_bqmc",
+            value: "",
+            type: "Text"
+        },
+        this.bty_spjg = {
+            id: "bty_spjg",
+            value: "",
+            type: "Text"
+        },
+        this.bty_font = {
+            id: "bty_font",
+            value: "",
+            type: "Text"
+        },
+        this.bty_x = {
+            id: "bty_x",
+            value: "",
+            type: "Text"
+        },
+        this.bty_y = {
+            id: "bty_y",
+            value: "",
+            type: "Text"
+        },
+        this.bty_height = {
+            id: "bty_height",
+            value: "",
+            type: "Text"
+        },
+        this.bty_width = {
+            id: "bty_width",
+            value: "",
+            type: "Text"
+        }
+
+
+
+
+        ,
+        this.th_display = {
+            id: "th_display",
+            value: "true",
+            type: "CheckBox"
+        },
+        this.th_bqmc = {
+            id: "th_bqmc",
+            value: "",
+            type: "Text"
+        },
+        this.th_spjg = {
+            id: "th_spjg",
+            value: "",
+            type: "Text"
+        },
+        this.th_font = {
+            id: "th_font",
+            value: "",
+            type: "Text"
+        },
+        this.th_x = {
+            id: "th_x",
+            value: "",
+            type: "Text"
+        },
+        this.th_y = {
+            id: "th_y",
+            value: "",
+            type: "Text"
+        },
+        this.th_height = {
+            id: "th_height",
+            value: "",
+            type: "Text"
+        },
+        this.th_width = {
+            id: "th_width",
+            value: "",
+            type: "Text"
+        }
+
+
+
+        ,
+        this.spz_display = {
+            id: "spz_display",
+            value: "true",
+            type: "CheckBox"
+        },
+        this.spz_bqmc = {
+            id: "spz_bqmc",
+            value: "",
+            type: "Text"
+        },
+        this.spz_tply = {
+            id: "spz_tply",
+            value: "",
+            type: "Text"
+        },
+        this.spz_font = {
+            id: "spz_font",
+            value: "",
+            type: "Text"
+        },
+        this.spz_x = {
+            id: "spz_x",
+            value: "",
+            type: "Text"
+        },
+        this.spz_y = {
+            id: "spz_y",
+            value: "",
+            type: "Text"
+        },
+        this.spz_height = {
+            id: "spz_height",
+            value: "",
+            type: "Text"
+        },
+        this.spz_width = {
+            id: "spz_width",
+            value: "",
+            type: "Text"
+        }
+
+
+
+
+        ,
+        this.spr_display = {
+            id: "spr_display",
+            value: "true",
+            type: "CheckBox"
+        },
+        this.spr_bqmc = {
+            id: "spr_bqmc",
+            value: "",
+            type: "Text"
+        },
+        this.spr_spr = {
+            id: "spr_spr",
+            value: "",
+            type: "Text"
+        },
+        this.spr_font = {
+            id: "spr_font",
+            value: "",
+            type: "Text"
+        },
+        this.spr_x = {
+            id: "spr_x",
+            value: "",
+            type: "Text"
+        },
+        this.spr_y = {
+            id: "spr_y",
+            value: "",
+            type: "Text"
+        },
+        this.spr_height = {
+            id: "spr_height",
+            value: "",
+            type: "Text"
+        },
+        this.spr_width = {
+            id: "spr_width",
+            value: "",
+            type: "Text"
+        },
+        this.spr_qmzp = {
+            id: "spr_qmzp",
+            value: "",
+            type: "Text"
+        }
+
+
+        ,
+        this.sprq_display = {
+            id: "sprq_display",
+            value: "true",
+            type: "CheckBox"
+        },
+        this.sprq_bqmc = {
+            id: "sprq_bqmc",
+            value: "",
+            type: "Text"
+        },
+        this.sprq_sprq = {
+            id: "sprq_sprq",
+            value: "",
+            type: "Text"
+        },
+        this.sprq_font = {
+            id: "sprq_font",
+            value: "",
+            type: "Text"
+        },
+        this.sprq_x = {
+            id: "sprq_x",
+            value: "",
+            type: "Text"
+        },
+        this.sprq_y = {
+            id: "sprq_y",
+            value: "",
+            type: "Text"
+        },
+        this.sprq_height = {
+            id: "sprq_height",
+            value: "",
+            type: "Text"
+        },
+        this.sprq_width = {
+            id: "sprq_width",
+            value: "",
+            type: "Text"
+        },
+        this.sprq_rqgs = {
+            id: "sprq_rqgs",
+            value: "0",
+            type: "comlist"
+        }
+
+
+
+        ,
+        this.spyj_display = {
+            id: "spyj_display",
+            value: "true",
+            type: "CheckBox"
+        },
+        this.spyj_bqmc = {
+            id: "spyj_bqmc",
+            value: "",
+            type: "Text"
+        },
+        this.spyj_yjnr = {
+            id: "spyj_yjnr",
+            value: "",
+            type: "Text"
+        },
+        this.spyj_font = {
+            id: "spyj_font",
+            value: "",
+            type: "Text"
+        },
+        this.spyj_x = {
+            id: "spyj_x",
+            value: "",
+            type: "Text"
+        },
+        this.spyj_y = {
+            id: "spyj_y",
+            value: "",
+            type: "Text"
+        },
+        this.spyj_height = {
+            id: "spyj_height",
+            value: "",
+            type: "Text"
+        },
+        this.spyj_width = {
+            id: "spyj_width",
+            value: "",
+            type: "Text"
+        }
+
+
+        ,
+        this.spbm_display = {
+            id: "spbm_display",
+            value: "true",
+            type: "CheckBox"
+        },
+        this.spbm_bqmc = {
+            id: "spbm_bqmc",
+            value: "",
+            type: "Text"
+        },
+        this.spbm_bmmc = {
+            id: "spbm_bmmc",
+            value: "",
+            type: "Text"
+        },
+        this.spbm_font = {
+            id: "spbm_font",
+            value: "",
+            type: "Text"
+        },
+        this.spbm_x = {
+            id: "spbm_x",
+            value: "",
+            type: "Text"
+        },
+        this.spbm_y = {
+            id: "spbm_y",
+            value: "",
+            type: "Text"
+        },
+        this.spbm_height = {
+            id: "spbm_height",
+            value: "",
+            type: "Text"
+        },
+        this.spbm_width = {
+            id: "spbm_width",
+            value: "",
+            type: "Text"
+        }
+
+
+
+
+    //清空属性
+    this.clearInfo = function() {
+        this.allowEdit.value = "true"
+        this.allowPrint.value = "true"
+        this.ty_display.value = "true"
+        this.ty_bqmc.value = ""
+        this.ty_spjg.value = ""
+        this.ty_font.value = ""
+        this.ty_x.value = ""
+        this.ty_y.value = ""
+        this.ty_height.value = ""
+        this.ty_width.value = ""
+
+        this.bty_display.value = "true"
+        this.bty_bqmc.value = ""
+        this.bty_spjg.value = ""
+        this.bty_font.value = ""
+        this.bty_x.value = ""
+        this.bty_y.value = ""
+        this.bty_height.value = ""
+        this.bty_width.value = ""
+
+        this.th_display.value = "true"
+        this.th_bqmc.value = ""
+        this.th_spjg.value = ""
+        this.th_font.value = ""
+        this.th_x.value = ""
+        this.th_y.value = ""
+        this.th_height.value = ""
+        this.th_width.value = ""
+
+        this.spz_display.value = "true"
+        this.spz_bqmc.value = ""
+        this.spz_tply.value = ""
+        this.spz_font.value = ""
+        this.spz_x.value = ""
+        this.spz_y.value = ""
+        this.spz_height.value = ""
+        this.spz_width.value = ""
+
+        this.spr_display.value = "true"
+        this.spr_bqmc.value = ""
+        this.spr_spr.value = ""
+        this.spr_font.value = ""
+        this.spr_x.value = ""
+        this.spr_y.value = ""
+        this.spr_height.value = ""
+        this.spr_width.value = ""
+        this.spr_qmzp.value = ""
+
+        this.sprq_display.value = "true"
+        this.sprq_bqmc.value = ""
+        this.sprq_sprq.value = ""
+        this.sprq_font.value = ""
+        this.sprq_x.value = ""
+        this.sprq_y.value = ""
+        this.sprq_height.value = ""
+        this.sprq_width.value = ""
+        this.sprq_rqgs.value = "0"
+
+        this.spyj_display.value = "true"
+        this.spyj_bqmc.value = ""
+        this.spyj_yjnr.value = ""
+        this.spyj_font.value = ""
+        this.spyj_x.value = ""
+        this.spyj_y.value = ""
+        this.spyj_height.value = ""
+        this.spyj_width.value = ""
+
+        this.spbm_display.value = "true"
+        this.spbm_bqmc.value = ""
+        this.spbm_bmmc.value = ""
+        this.spbm_font.value = ""
+        this.spbm_x.value = ""
+        this.spbm_y.value = ""
+        this.spbm_height.value = ""
+        this.spbm_width.value = ""
+    };
+
+    //设置值
+    this.setCellTextInfo = function(info, cell) {
+        this.allowEdit.value = info.allowEdit.value
+        this.allowPrint.value = info.allowPrint.value
+        this.ty_display.value = info.ty_display.value
+        this.ty_bqmc.value = info.ty_bqmc.value
+        this.ty_spjg.value = info.ty_spjg.value
+        this.ty_font.value = info.ty_font.value
+        this.ty_x.value = info.ty_x.value
+        this.ty_y.value = info.ty_y.value
+        this.ty_height.value = info.ty_height.value
+        this.ty_width.value = info.ty_width.value
+
+        this.bty_display.value = info.bty_display.value
+        this.bty_bqmc.value = info.bty_bqmc.value
+        this.bty_spjg.value = info.bty_spjg.value
+        this.bty_font.value = info.bty_font.value
+        this.bty_x.value = info.bty_x.value
+        this.bty_y.value = info.bty_y.value
+        this.bty_height.value = info.bty_height.value
+        this.bty_width.value = info.bty_width.value
+
+        this.th_display.value = info.th_display.value
+        this.th_bqmc.value = info.th_bqmc.value
+        this.th_spjg.value = info.th_spjg.value
+        this.th_font.value = info.th_font.value
+        this.th_x.value = info.th_x.value
+        this.th_y.value = info.th_y.value
+        this.th_height.value = info.th_height.value
+        this.th_width.value = info.th_width.value
+
+        this.spz_display.value = info.spz_display.value
+        this.spz_bqmc.value = info.spz_bqmc.value
+        this.spz_tply.value = info.spz_tply.value
+        this.spz_font.value = info.spz_font.value
+        this.spz_x.value = info.spz_x.value
+        this.spz_y.value = info.spz_y.value
+        this.spz_height.value = info.spz_height.value
+        this.spz_width.value = info.spz_width.value
+
+        this.spr_display.value = info.spr_display.value
+        this.spr_bqmc.value = info.spr_bqmc.value
+        this.spr_spr.value = info.spr_spr.value
+        this.spr_font.value = info.spr_font.value
+        this.spr_x.value = info.spr_x.value
+        this.spr_y.value = info.spr_y.value
+        this.spr_height.value = info.spr_height.value
+        this.spr_width.value = info.spr_width.value
+        this.spr_qmzp.value = info.spr_qmzp.value
+
+        this.sprq_display.value = info.sprq_display.value
+        this.sprq_bqmc.value = info.sprq_bqmc.value
+        this.sprq_sprq.value = info.sprq_sprq.value
+        this.sprq_font.value = info.sprq_font.value
+        this.sprq_x.value = info.sprq_x.value
+        this.sprq_y.value = info.sprq_y.value
+        this.sprq_height.value = info.sprq_height.value
+        this.sprq_width.value = info.sprq_width.value
+        this.sprq_rqgs.value = info.sprq_rqgs.value
+
+        this.spyj_display.value = info.spyj_display.value
+        this.spyj_bqmc.value = info.spyj_bqmc.value
+        this.spyj_yjnr.value = info.spyj_yjnr.value
+        this.spyj_font.value = info.spyj_font.value
+        this.spyj_x.value = info.spyj_x.value
+        this.spyj_y.value = info.spyj_y.value
+        this.spyj_height.value = info.spyj_height.value
+        this.spyj_width.value = info.spyj_width.value
+
+        this.spbm_display.value = info.spbm_display.value
+        this.spbm_bqmc.value = info.spbm_bqmc.value
+        this.spbm_bmmc.value = info.spbm_bmmc.value
+        this.spbm_font.value = info.spbm_font.value
+        this.spbm_x.value = info.spbm_x.value
+        this.spbm_y.value = info.spbm_y.value
+        this.spbm_height.value = info.spbm_height.value
+        this.spbm_width.value = info.spbm_width.value
+    };
+
+    // 根据id设置相应属性的值
+    this.setCellInfos = function(id, value) {
+        var c = this.getInfoByID(id);
+        if(c) {
+            if(c.type == "Text") {
+                c.value = value;
+            }
+            if(c.type == "CheckBox") {
+                c.checked = value;
+            }
+            if(c.type == "ComboBox") {
+                c.value = value;
+            }
+            if(c.type == "compound") {
+                c.value = value;
+            }
+            if(c.type == "combo") {
+                c.value = value;
+            }
+            if(c.type == "radiostoregroup") {
+                c.value = value;
+            }
+            if(c.type == "ColorSelect") {
+                c.value = value;
+            }
+            if(c.type == "LineStyle") {
+                c.value = value;
+            }
+        }
+    };
+
+    //通过id获取属性
+    this.getInfoByID = function(id) {
+        if(this.allowEdit.id == id) {
+            return this.allowEdit;
+        }
+        if(this.allowPrint.id == id) {
+            return this.allowPrint;
+        }
+        if(this.ty_display.id == id) {
+            return this.ty_display;
+        }
+        if(this.ty_bqmc.id == id) {
+            return this.ty_bqmc;
+        }
+        if(this.ty_spjg.id == id) {
+            return this.ty_spjg;
+        }
+        if(this.ty_font.id == id) {
+            return this.ty_font;
+        }
+        if(this.ty_x.id == id) {
+            return this.ty_x;
+        }
+        if(this.ty_y.id == id) {
+            return this.ty_y;
+        }
+        if(this.ty_height.id == id) {
+            return this.ty_height;
+        }
+        if(this.ty_width.id == id) {
+            return this.ty_width;
+        }
+
+        if(this.bty_display.id == id) {
+            return this.bty_display;
+        }
+        if(this.bty_bqmc.id == id) {
+            return this.bty_bqmc;
+        }
+        if(this.bty_spjg.id == id) {
+            return this.bty_spjg;
+        }
+        if(this.bty_font.id == id) {
+            return this.bty_font;
+        }
+        if(this.bty_x.id == id) {
+            return this.bty_x;
+        }
+        if(this.bty_y.id == id) {
+            return this.bty_y;
+        }
+        if(this.bty_height.id == id) {
+            return this.bty_height;
+        }
+        if(this.bty_width.id == id) {
+            return this.bty_width;
+        }
+
+        if(this.th_display.id == id) {
+            return this.th_display;
+        }
+        if(this.th_bqmc.id == id) {
+            return this.th_bqmc;
+        }
+        if(this.th_spjg.id == id) {
+            return this.th_spjg;
+        }
+        if(this.th_font.id == id) {
+            return this.th_font;
+        }
+        if(this.th_x.id == id) {
+            return this.th_x;
+        }
+        if(this.th_y.id == id) {
+            return this.th_y;
+        }
+        if(this.th_height.id == id) {
+            return this.th_height;
+        }
+        if(this.th_width.id == id) {
+            return this.th_width;
+        }
+
+
+        if(this.spz_display.id == id) {
+            return this.spz_display;
+        }
+        if(this.spz_bqmc.id == id) {
+            return this.spz_bqmc;
+        }
+        if(this.spz_tply.id == id) {
+            return this.spz_tply;
+        }
+        if(this.spz_font.id == id) {
+            return this.spz_font;
+        }
+        if(this.spz_x.id == id) {
+            return this.spz_x;
+        }
+        if(this.spz_y.id == id) {
+            return this.spz_y;
+        }
+        if(this.spz_height.id == id) {
+            return this.spz_height;
+        }
+        if(this.spz_width.id == id) {
+            return this.spz_width;
+        }
+
+        if(this.spr_display.id == id) {
+            return this.spr_display;
+        }
+        if(this.spr_bqmc.id == id) {
+            return this.spr_bqmc;
+        }
+        if(this.spr_spr.id == id) {
+            return this.spr_spr;
+        }
+        if(this.spr_font.id == id) {
+            return this.spr_font;
+        }
+        if(this.spr_x.id == id) {
+            return this.spr_x;
+        }
+        if(this.spr_y.id == id) {
+            return this.spr_y;
+        }
+        if(this.spr_height.id == id) {
+            return this.spr_height;
+        }
+        if(this.spr_width.id == id) {
+            return this.spr_width;
+        }
+        if(this.spr_qmzp.id == id) {
+            return this.spr_qmzp;
+        }
+
+
+        if(this.sprq_display.id == id) {
+            return this.sprq_display;
+        }
+        if(this.sprq_bqmc.id == id) {
+            return this.sprq_bqmc;
+        }
+        if(this.sprq_sprq.id == id) {
+            return this.sprq_sprq;
+        }
+        if(this.sprq_font.id == id) {
+            return this.sprq_font;
+        }
+        if(this.sprq_x.id == id) {
+            return this.sprq_x;
+        }
+        if(this.sprq_y.id == id) {
+            return this.sprq_y;
+        }
+        if(this.sprq_height.id == id) {
+            return this.sprq_height;
+        }
+        if(this.sprq_width.id == id) {
+            return this.sprq_width;
+        }
+        if(this.sprq_rqgs.id == id) {
+            return this.sprq_rqgs;
+        }
+
+
+        if(this.spyj_display.id == id) {
+            return this.spyj_display;
+        }
+        if(this.spyj_bqmc.id == id) {
+            return this.spyj_bqmc;
+        }
+        if(this.spyj_yjnr.id == id) {
+            return this.spyj_yjnr;
+        }
+        if(this.spyj_font.id == id) {
+            return this.spyj_font;
+        }
+        if(this.spyj_x.id == id) {
+            return this.spyj_x;
+        }
+        if(this.spyj_y.id == id) {
+            return this.spyj_y;
+        }
+        if(this.spyj_height.id == id) {
+            return this.spyj_height;
+        }
+        if(this.spyj_width.id == id) {
+            return this.spyj_width;
+        }
+
+
+        if(this.spbm_display.id == id) {
+            return this.spbm_display;
+        }
+        if(this.spbm_bqmc.id == id) {
+            return this.spbm_bqmc;
+        }
+        if(this.spbm_bmmc.id == id) {
+            return this.spbm_bmmc;
+        }
+        if(this.spbm_font.id == id) {
+            return this.spbm_font;
+        }
+        if(this.spbm_x.id == id) {
+            return this.spbm_x;
+        }
+        if(this.spbm_y.id == id) {
+            return this.spbm_y;
+        }
+        if(this.spbm_height.id == id) {
+            return this.spbm_height;
+        }
+        if(this.spbm_width.id == id) {
+            return this.spbm_width;
+        }
+
+
+    }
+
+    //转换JSON串
+    this.cellInfoToJson = function() {
+        json = {
+            cellApprovlInfo: [{
+                allowEdit: {
+                    id: 'allowEdit',
+                    value: this.allowEdit.value,
+                    type: 'CheckBox'
+                },
+                allowPrint: {
+                    id: 'allowPrint',
+                    value: this.allowPrint.value,
+                    type: 'CheckBox'
+                },
+                ty_display: {
+                    id: 'ty_display',
+                    value: this.ty_display.value,
+                    type: 'CheckBox'
+                },
+                ty_bqmc: {
+                    id: 'ty_bqmc',
+                    value: this.ty_bqmc.value,
+                    type: 'Text'
+                },
+                ty_spjg: {
+                    id: 'ty_spjg',
+                    value: this.ty_spjg.value,
+                    type: 'Text'
+                },
+                ty_font: {
+                    id: 'ty_font',
+                    value: this.ty_font.value,
+                    type: 'Text'
+                },
+                ty_x: {
+                    id: 'ty_x',
+                    value: this.ty_x.value,
+                    type: 'Text'
+                },
+                ty_y: {
+                    id: 'ty_y',
+                    value: this.ty_y.value,
+                    type: 'Text'
+                },
+                ty_height: {
+                    id: 'ty_height',
+                    value: this.ty_height.value,
+                    type: 'Text'
+                },
+                ty_width: {
+                    id: 'ty_width',
+                    value: this.ty_width.value,
+                    type: 'Text'
+                }
+
+
+
+                ,
+                bty_display: {
+                    id: 'bty_display',
+                    value: this.bty_display.value,
+                    type: 'CheckBox'
+                },
+                bty_bqmc: {
+                    id: 'bty_bqmc',
+                    value: this.bty_bqmc.value,
+                    type: 'Text'
+                },
+                bty_spjg: {
+                    id: 'bty_spjg',
+                    value: this.bty_spjg.value,
+                    type: 'Text'
+                },
+                bty_font: {
+                    id: 'bty_font',
+                    value: this.bty_font.value,
+                    type: 'Text'
+                },
+                bty_x: {
+                    id: 'bty_x',
+                    value: this.bty_x.value,
+                    type: 'Text'
+                },
+                bty_y: {
+                    id: 'bty_y',
+                    value: this.bty_y.value,
+                    type: 'Text'
+                },
+                bty_height: {
+                    id: 'bty_height',
+                    value: this.bty_height.value,
+                    type: 'Text'
+                },
+                bty_width: {
+                    id: 'bty_width',
+                    value: this.bty_width.value,
+                    type: 'Text'
+                }
+
+
+                ,
+                th_display: {
+                    id: 'th_display',
+                    value: this.th_display.value,
+                    type: 'CheckBox'
+                },
+                th_bqmc: {
+                    id: 'th_bqmc',
+                    value: this.th_bqmc.value,
+                    type: 'Text'
+                },
+                th_spjg: {
+                    id: 'th_spjg',
+                    value: this.th_spjg.value,
+                    type: 'Text'
+                },
+                th_font: {
+                    id: 'th_font',
+                    value: this.th_font.value,
+                    type: 'Text'
+                },
+                th_x: {
+                    id: 'th_x',
+                    value: this.th_x.value,
+                    type: 'Text'
+                },
+                th_y: {
+                    id: 'th_y',
+                    value: this.th_y.value,
+                    type: 'Text'
+                },
+                th_height: {
+                    id: 'th_height',
+                    value: this.th_height.value,
+                    type: 'Text'
+                },
+                th_width: {
+                    id: 'th_width',
+                    value: this.th_width.value,
+                    type: 'Text'
+                }
+
+
+                ,
+                spz_display: {
+                    id: 'spz_display',
+                    value: this.spz_display.value,
+                    type: 'CheckBox'
+                },
+                spz_bqmc: {
+                    id: 'spz_bqmc',
+                    value: this.spz_bqmc.value,
+                    type: 'Text'
+                },
+                spz_tply: {
+                    id: 'spz_tply',
+                    value: this.spz_tply.value,
+                    type: 'Text'
+                },
+                spz_font: {
+                    id: 'spz_font',
+                    value: this.spz_font.value,
+                    type: 'Text'
+                },
+                spz_x: {
+                    id: 'spz_x',
+                    value: this.spz_x.value,
+                    type: 'Text'
+                },
+                spz_y: {
+                    id: 'spz_y',
+                    value: this.spz_y.value,
+                    type: 'Text'
+                },
+                spz_height: {
+                    id: 'spz_height',
+                    value: this.spz_height.value,
+                    type: 'Text'
+                },
+                spz_width: {
+                    id: 'spz_width',
+                    value: this.spz_width.value,
+                    type: 'Text'
+                }
+
+                ,
+                spr_display: {
+                    id: 'spr_display',
+                    value: this.spr_display.value,
+                    type: 'CheckBox'
+                },
+                spr_bqmc: {
+                    id: 'spr_bqmc',
+                    value: this.spr_bqmc.value,
+                    type: 'Text'
+                },
+                spr_spr: {
+                    id: 'spr_spr',
+                    value: this.spr_spr.value,
+                    type: 'Text'
+                },
+                spr_font: {
+                    id: 'spr_font',
+                    value: this.spr_font.value,
+                    type: 'Text'
+                },
+                spr_x: {
+                    id: 'spr_x',
+                    value: this.spr_x.value,
+                    type: 'Text'
+                },
+                spr_y: {
+                    id: 'spr_y',
+                    value: this.spr_y.value,
+                    type: 'Text'
+                },
+                spr_height: {
+                    id: 'spr_height',
+                    value: this.spr_height.value,
+                    type: 'Text'
+                },
+                spr_width: {
+                    id: 'spr_width',
+                    value: this.spr_width.value,
+                    type: 'Text'
+                },
+                spr_qmzp: {
+                    id: 'spr_qmzp',
+                    value: this.spr_qmzp.value,
+                    type: 'Text'
+                }
+
+
+                ,
+                sprq_display: {
+                    id: 'sprq_display',
+                    value: this.sprq_display.value,
+                    type: 'CheckBox'
+                },
+                sprq_bqmc: {
+                    id: 'sprq_bqmc',
+                    value: this.sprq_bqmc.value,
+                    type: 'Text'
+                },
+                sprq_sprq: {
+                    id: 'sprq_sprq',
+                    value: this.sprq_sprq.value,
+                    type: 'Text'
+                },
+                sprq_font: {
+                    id: 'sprq_font',
+                    value: this.sprq_font.value,
+                    type: 'Text'
+                },
+                sprq_x: {
+                    id: 'sprq_x',
+                    value: this.sprq_x.value,
+                    type: 'Text'
+                },
+                sprq_y: {
+                    id: 'sprq_y',
+                    value: this.sprq_y.value,
+                    type: 'Text'
+                },
+                sprq_height: {
+                    id: 'sprq_height',
+                    value: this.sprq_height.value,
+                    type: 'Text'
+                },
+                sprq_width: {
+                    id: 'sprq_width',
+                    value: this.sprq_width.value,
+                    type: 'Text'
+                },
+                sprq_rqgs: {
+                    id: 'sprq_rqgs',
+                    value: this.sprq_rqgs.value,
+                    type: 'comlist'
+                }
+
+
+                ,
+                spyj_display: {
+                    id: 'spyj_display',
+                    value: this.spyj_display.value,
+                    type: 'CheckBox'
+                },
+                spyj_bqmc: {
+                    id: 'spyj_bqmc',
+                    value: this.spyj_bqmc.value,
+                    type: 'Text'
+                },
+                spyj_yjnr: {
+                    id: 'spyj_yjnr',
+                    value: this.spyj_yjnr.value,
+                    type: 'Text'
+                },
+                spyj_font: {
+                    id: 'spyj_font',
+                    value: this.spyj_font.value,
+                    type: 'Text'
+                },
+                spyj_x: {
+                    id: 'spyj_x',
+                    value: this.spyj_x.value,
+                    type: 'Text'
+                },
+                spyj_y: {
+                    id: 'spyj_y',
+                    value: this.spyj_y.value,
+                    type: 'Text'
+                },
+                spyj_height: {
+                    id: 'spyj_height',
+                    value: this.spyj_height.value,
+                    type: 'Text'
+                },
+                spyj_width: {
+                    id: 'spyj_width',
+                    value: this.spyj_width.value,
+                    type: 'Text'
+                }
+
+
+                ,
+                spbm_display: {
+                    id: 'spbm_display',
+                    value: this.spbm_display.value,
+                    type: 'CheckBox'
+                },
+                spbm_bqmc: {
+                    id: 'spbm_bqmc',
+                    value: this.spbm_bqmc.value,
+                    type: 'Text'
+                },
+                spbm_bmmc: {
+                    id: 'spbm_bmmc',
+                    value: this.spbm_bmmc.value,
+                    type: 'Text'
+                },
+                spbm_font: {
+                    id: 'spbm_font',
+                    value: this.spbm_font.value,
+                    type: 'Text'
+                },
+                spbm_x: {
+                    id: 'spbm_x',
+                    value: this.spbm_x.value,
+                    type: 'Text'
+                },
+                spbm_y: {
+                    id: 'spbm_y',
+                    value: this.spbm_y.value,
+                    type: 'Text'
+                },
+                spbm_height: {
+                    id: 'spbm_height',
+                    value: this.spbm_height.value,
+                    type: 'Text'
+                },
+                spbm_width: {
+                    id: 'spbm_width',
+                    value: this.spbm_width.value,
+                    type: 'Text'
+                }
+            }]
+
+        }
+    }
+}
+var p = new cellApprovlType()
+
+function button_click(sender, e) {
+    p.allowEdit.value = "false"
+    p.allowPrint.value = "false"
+    p.ty_display.value = "false"
+    p.ty_bqmc.value = "false"
+    p.ty_spjg.value = "false"
+    p.ty_font.value = "false"
+    p.ty_x.value = "false"
+    p.ty_y.value = "false"
+    p.ty_height.value = "false"
+    p.ty_width.value = "false"
+    p.bty_display.value = "false"
+    p.bty_bqmc.value = "false"
+    p.bty_spjg.value = "false"
+    p.bty_font.value = "false"
+    p.bty_x.value = "false"
+    p.bty_y.value = "false"
+    p.bty_height.value = "false"
+    p.bty_width.value = "false"
+    p.th_display.value = "false"
+    p.th_bqmc.value = "false"
+    p.th_spjg.value = "false"
+    p.th_font.value = "false"
+    p.th_x.value = "false"
+    p.th_y.value = "false"
+    p.th_height.value = "false"
+    p.th_width.value = "false"
+    p.spz_display.value = "false"
+    p.spz_bqmc.value = "false"
+    p.spz_tply.value = "false"
+    p.spz_font.value = "false"
+    p.spz_x.value = "false"
+    p.spz_y.value = "false"
+    p.spz_height.value = "false"
+    p.spz_width.value = "false"
+    p.spr_display.value = "false"
+    p.spr_bqmc.value = "false"
+    p.spr_spr.value = "false"
+    p.spr_font.value = "false"
+    p.spr_x.value = "false"
+    p.spr_y.value = "false"
+    p.spr_height.value = "false"
+    p.spr_width.value = "false"
+    p.spr_qmzp.value = "false"
+    p.sprq_display.value = "false"
+    p.sprq_bqmc.value = "false"
+    p.sprq_sprq.value = "false"
+    p.sprq_font.value = "false"
+    p.sprq_x.value = "false"
+    p.sprq_y.value = "false"
+    p.sprq_height.value = "false"
+    p.sprq_width.value = "false"
+    p.sprq_rqgs.value = "false"
+    p.spyj_display.value = "false"
+    p.spyj_bqmc.value = "false"
+    p.spyj_yjnr.value = "false"
+    p.spyj_font.value = "false"
+    p.spyj_x.value = "false"
+    p.spyj_y.value = "false"
+    p.spyj_height.value = "false"
+    p.spyj_width.value = "false"
+    p.spbm_display.value = "false"
+    p.spbm_bqmc.value = "false"
+    p.spbm_bmmc.value = "false"
+    p.spbm_font.value = "false"
+    p.spbm_x.value = "false"
+    p.spbm_y.value = "false"
+    p.spbm_height.value = "false"
+    p.spbm_width.value = "false"
+    ApprovlType.setInfo(p, null)
+}
+
+function button1_click(sender, e) {
+    p.allowEdit.value = ApprovlType.getInfo("allowEdit")
+    p.allowPrint.value = ApprovlType.getInfo("allowPrint")
+    p.ty_display.value = ApprovlType.getInfo("ty_display")
+    p.ty_bqmc.value = ApprovlType.getInfo("ty_bqmc")
+    p.ty_spjg.value = ApprovlType.getInfo("ty_spjg")
+    p.ty_font.value = ApprovlType.getInfo("ty_font")
+    p.ty_x.value = ApprovlType.getInfo("ty_x")
+    p.ty_y.value = ApprovlType.getInfo("ty_y")
+    p.ty_height.value = ApprovlType.getInfo("ty_height")
+    p.ty_width.value = ApprovlType.getInfo("ty_width")
+    p.bty_display.value = ApprovlType.getInfo("bty_display")
+    p.bty_bqmc.value = ApprovlType.getInfo("bty_bqmc")
+    p.bty_spjg.value = ApprovlType.getInfo("bty_spjg")
+    p.bty_font.value = ApprovlType.getInfo("bty_font")
+    p.bty_x.value = ApprovlType.getInfo("bty_x")
+    p.bty_y.value = ApprovlType.getInfo("bty_y")
+    p.bty_height.value = ApprovlType.getInfo("bty_height")
+    p.bty_width.value = ApprovlType.getInfo("bty_width")
+    p.th_display.value = ApprovlType.getInfo("th_display")
+    p.th_bqmc.value = ApprovlType.getInfo("th_bqmc")
+    p.th_spjg.value = ApprovlType.getInfo("th_spjg")
+    p.th_font.value = ApprovlType.getInfo("th_font")
+    p.th_x.value = ApprovlType.getInfo("th_x")
+    p.th_y.value = ApprovlType.getInfo("th_y")
+    p.th_height.value = ApprovlType.getInfo("th_height")
+    p.th_width.value = ApprovlType.getInfo("th_width")
+    p.spz_display.value = ApprovlType.getInfo("spz_display")
+    p.spz_bqmc.value = ApprovlType.getInfo("spz_bqmc")
+    p.spz_tply.value = ApprovlType.getInfo("spz_tply")
+    p.spz_font.value = ApprovlType.getInfo("spz_font")
+    p.spz_x.value = ApprovlType.getInfo("spz_x")
+    p.spz_y.value = ApprovlType.getInfo("spz_y")
+    p.spz_height.value = ApprovlType.getInfo("spz_height")
+    p.spz_width.value = ApprovlType.getInfo("spz_width")
+    p.spr_display.value = ApprovlType.getInfo("spr_display")
+    p.spr_bqmc.value = ApprovlType.getInfo("spr_bqmc")
+    p.spr_spr.value = ApprovlType.getInfo("spr_spr")
+    p.spr_font.value = ApprovlType.getInfo("spr_font")
+    p.spr_x.value = ApprovlType.getInfo("spr_x")
+    p.spr_y.value = ApprovlType.getInfo("spr_y")
+    p.spr_height.value = ApprovlType.getInfo("spr_height")
+    p.spr_width.value = ApprovlType.getInfo("spr_width")
+    p.spr_qmzp.value = ApprovlType.getInfo("spr_qmzp")
+    p.sprq_display.value = ApprovlType.getInfo("sprq_display")
+    p.sprq_bqmc.value = ApprovlType.getInfo("sprq_bqmc")
+    p.sprq_sprq.value = ApprovlType.getInfo("sprq_sprq")
+    p.sprq_font.value = ApprovlType.getInfo("sprq_font")
+    p.sprq_x.value = ApprovlType.getInfo("sprq_x")
+    p.sprq_y.value = ApprovlType.getInfo("sprq_y")
+    p.sprq_height.value = ApprovlType.getInfo("sprq_height")
+    p.sprq_width.value = ApprovlType.getInfo("sprq_width")
+    p.sprq_rqgs.value = ApprovlType.getInfo("sprq_rqgs")
+    p.spyj_display.value = ApprovlType.getInfo("spyj_display")
+    p.spyj_bqmc.value = ApprovlType.getInfo("spyj_bqmc")
+    p.spyj_yjnr.value = ApprovlType.getInfo("spyj_yjnr")
+    p.spyj_font.value = ApprovlType.getInfo("spyj_font")
+    p.spyj_x.value = ApprovlType.getInfo("spyj_x")
+    p.spyj_y.value = ApprovlType.getInfo("spyj_y")
+    p.spyj_height.value = ApprovlType.getInfo("spyj_height")
+    p.spyj_width.value = ApprovlType.getInfo("spyj_width")
+    p.spbm_display.value = ApprovlType.getInfo("spbm_display")
+    p.spbm_bqmc.value = ApprovlType.getInfo("spbm_bqmc")
+    p.spbm_bmmc.value = ApprovlType.getInfo("spbm_bmmc")
+    p.spbm_font.value = ApprovlType.getInfo("spbm_font")
+    p.spbm_x.value = ApprovlType.getInfo("spbm_x")
+    p.spbm_y.value = ApprovlType.getInfo("spbm_y")
+    p.spbm_height.value = ApprovlType.getInfo("spbm_height")
+    p.spbm_width.value = ApprovlType.getInfo("spbm_width")
+
+
+    alert(p.allowEdit.value + "," + p.allowPrint.value + "," + p.ty_display.value + "," + p.ty_bqmc.value + "," + p.ty_spjg.value + "," +
+        p.ty_font.value + "," + p.ty_x.value + "," + p.ty_y.value + "," + p.ty_height.value + "," + p.ty_width.value + "," + p.bty_display.value + "," +
+        p.bty_bqmc.value + "," + p.bty_spjg.value + "," + p.bty_font.value + "," + p.bty_x.value + "," +
+        p.bty_y.value + "," + p.bty_height.value + "," + p.bty_width.value + "," +
+        p.th_display.value + "," + p.th_bqmc.value + "," + p.th_spjg.value + "," +
+        p.th_font.value + "," + p.th_x.value + "," + p.th_y.value + "," + p.th_height.value + "," +
+        p.th_width.value + "," + p.spz_display.value + "," + p.spz_bqmc.value + "," + p.spz_tply.value + "," +
+        p.spz_font.value + "," + p.spz_x.value + "," + p.spz_y.value + "," + p.spz_height.value + "," +
+        p.spz_width.value + "," + p.spr_display.value + "," + p.spr_bqmc.value + "," + p.spr_spr.value + "," +
+        p.spr_font.value + "," + p.spr_x.value + "," + p.spr_y.value + "," + p.spr_height.value + "," + p.spr_width.value + "," +
+        p.spr_qmzp.value + "," + p.sprq_display.value + "," + p.sprq_bqmc.value + "," + p.sprq_sprq.value + "," +
+        p.sprq_font.value + "," + p.sprq_x.value + "," + p.sprq_y.value + "," + p.sprq_height.value + "," +
+        p.sprq_width.value + "," + p.sprq_rqgs.value + "," + p.spyj_display.value + "," + p.spyj_bqmc.value + "," +
+        p.spyj_yjnr.value + "," + p.spyj_font.value + "," + p.spyj_x.value + "," + p.spyj_y.value + "," + p.spyj_height.value + "," +
+        p.spyj_width.value + "," + p.spbm_display.value + "," + p.spbm_bqmc.value + "," + p.spbm_bmmc.value + "," +
+        p.spbm_font.value + "," + p.spbm_x.value + "," + p.spbm_y.value + "," + p.spbm_height.value + "," + p.spbm_width.value)
+}
+
+function button3_click(sender, e) {
+    p.clearInfo()
+    ApprovlType.setInfo(p, null)
+}
+
+function button2_click(sender, e) {
+    p.allowEdit.value = ApprovlType.getInfo("allowEdit")
+    p.allowPrint.value = ApprovlType.getInfo("allowPrint")
+    p.ty_display.value = ApprovlType.getInfo("ty_display")
+    p.ty_bqmc.value = ApprovlType.getInfo("ty_bqmc")
+    p.ty_spjg.value = ApprovlType.getInfo("ty_spjg")
+    p.ty_font.value = ApprovlType.getInfo("ty_font")
+    p.ty_x.value = ApprovlType.getInfo("ty_x")
+    p.ty_y.value = ApprovlType.getInfo("ty_y")
+    p.ty_height.value = ApprovlType.getInfo("ty_height")
+    p.ty_width.value = ApprovlType.getInfo("ty_width")
+    p.bty_display.value = ApprovlType.getInfo("bty_display")
+    p.bty_bqmc.value = ApprovlType.getInfo("bty_bqmc")
+    p.bty_spjg.value = ApprovlType.getInfo("bty_spjg")
+    p.bty_font.value = ApprovlType.getInfo("bty_font")
+    p.bty_x.value = ApprovlType.getInfo("bty_x")
+    p.bty_y.value = ApprovlType.getInfo("bty_y")
+    p.bty_height.value = ApprovlType.getInfo("bty_height")
+    p.bty_width.value = ApprovlType.getInfo("bty_width")
+    p.th_display.value = ApprovlType.getInfo("th_display")
+    p.th_bqmc.value = ApprovlType.getInfo("th_bqmc")
+    p.th_spjg.value = ApprovlType.getInfo("th_spjg")
+    p.th_font.value = ApprovlType.getInfo("th_font")
+    p.th_x.value = ApprovlType.getInfo("th_x")
+    p.th_y.value = ApprovlType.getInfo("th_y")
+    p.th_height.value = ApprovlType.getInfo("th_height")
+    p.th_width.value = ApprovlType.getInfo("th_width")
+    p.spz_display.value = ApprovlType.getInfo("spz_display")
+    p.spz_bqmc.value = ApprovlType.getInfo("spz_bqmc")
+    p.spz_tply.value = ApprovlType.getInfo("spz_tply")
+    p.spz_font.value = ApprovlType.getInfo("spz_font")
+    p.spz_x.value = ApprovlType.getInfo("spz_x")
+    p.spz_y.value = ApprovlType.getInfo("spz_y")
+    p.spz_height.value = ApprovlType.getInfo("spz_height")
+    p.spz_width.value = ApprovlType.getInfo("spz_width")
+    p.spr_display.value = ApprovlType.getInfo("spr_display")
+    p.spr_bqmc.value = ApprovlType.getInfo("spr_bqmc")
+    p.spr_spr.value = ApprovlType.getInfo("spr_spr")
+    p.spr_font.value = ApprovlType.getInfo("spr_font")
+    p.spr_x.value = ApprovlType.getInfo("spr_x")
+    p.spr_y.value = ApprovlType.getInfo("spr_y")
+    p.spr_height.value = ApprovlType.getInfo("spr_height")
+    p.spr_width.value = ApprovlType.getInfo("spr_width")
+    p.spr_qmzp.value = ApprovlType.getInfo("spr_qmzp")
+    p.sprq_display.value = ApprovlType.getInfo("sprq_display")
+    p.sprq_bqmc.value = ApprovlType.getInfo("sprq_bqmc")
+    p.sprq_sprq.value = ApprovlType.getInfo("sprq_sprq")
+    p.sprq_font.value = ApprovlType.getInfo("sprq_font")
+    p.sprq_x.value = ApprovlType.getInfo("sprq_x")
+    p.sprq_y.value = ApprovlType.getInfo("sprq_y")
+    p.sprq_height.value = ApprovlType.getInfo("sprq_height")
+    p.sprq_width.value = ApprovlType.getInfo("sprq_width")
+    p.sprq_rqgs.value = ApprovlType.getInfo("sprq_rqgs")
+    p.spyj_display.value = ApprovlType.getInfo("spyj_display")
+    p.spyj_bqmc.value = ApprovlType.getInfo("spyj_bqmc")
+    p.spyj_yjnr.value = ApprovlType.getInfo("spyj_yjnr")
+    p.spyj_font.value = ApprovlType.getInfo("spyj_font")
+    p.spyj_x.value = ApprovlType.getInfo("spyj_x")
+    p.spyj_y.value = ApprovlType.getInfo("spyj_y")
+    p.spyj_height.value = ApprovlType.getInfo("spyj_height")
+    p.spyj_width.value = ApprovlType.getInfo("spyj_width")
+    p.spbm_display.value = ApprovlType.getInfo("spbm_display")
+    p.spbm_bqmc.value = ApprovlType.getInfo("spbm_bqmc")
+    p.spbm_bmmc.value = ApprovlType.getInfo("spbm_bmmc")
+    p.spbm_font.value = ApprovlType.getInfo("spbm_font")
+    p.spbm_x.value = ApprovlType.getInfo("spbm_x")
+    p.spbm_y.value = ApprovlType.getInfo("spbm_y")
+    p.spbm_height.value = ApprovlType.getInfo("spbm_height")
+    p.spbm_width.value = ApprovlType.getInfo("spbm_width")
+    p.cellInfoToJson()
+    alert(JSON.stringify(json))
+}
+
+function MainViewport_beforerender(sender) {
+
+}
+			this.MainViewport_beforerender=MainViewport_beforerender;
+
+
+
+		this.items=[
+			{
+				xtype:"vmd.ux.ApprovlType",
+				id:"ApprovlType",
+				layout:"absolute",
+				x:60,
+				y:20
+			},
+			{
+				xtype:"vmd.button",
+				id:"button",
+				text:"取值",
+				type:"(none)",
+				size:"small",
+				x:530,
+				y:110,
+				click:"button_click",
+				listeners:{
+					click:button_click
+				}
+			},
+			{
+				xtype:"vmd.button",
+				id:"button1",
+				text:"传值",
+				type:"(none)",
+				size:"small",
+				x:530,
+				y:150,
+				click:"button1_click",
+				listeners:{
+					click:button1_click
+				}
+			},
+			{
+				xtype:"vmd.button",
+				id:"button2",
+				text:"json",
+				type:"(none)",
+				size:"small",
+				x:530,
+				y:230,
+				click:"button2_click",
+				listeners:{
+					click:button2_click
+				}
+			},
+			{
+				xtype:"vmd.button",
+				id:"button3",
+				text:"clear",
+				type:"(none)",
+				size:"small",
+				x:530,
+				y:190,
+				click:"button3_click",
+				listeners:{
+					click:button3_click
+				}
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+	}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MainViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

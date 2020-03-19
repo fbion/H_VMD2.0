@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>模版选择</title>
+	<!--基本样式-->
+    <link href="{vmdvirtualPath}/css/common.css?ver=2.0.3.20190321" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="{vmdvirtualPath}/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.3.20190321" rel="stylesheet" />
+   
+    <link href="{vmdvirtualPath}/design/css/icons.css?ver=2.0.3.20190321" rel="stylesheet" />
+
+	<link href="{vmdvirtualPath}/lib/dhtmlx/dhtmlx.css?ver=2.0.3.20190321" rel="stylesheet" />
+	  <!--样式快捷索引表-->
+    <link href="{vmdvirtualPath}/css/shortcut.css?ver=2.0.3.20190321" rel="stylesheet" />
+    
+    {vmdrescssfiles}
+    <script src="{vmdvirtualPath}/lib/labjs/LAB.min.js?ver=2.0.3.20190321"></script>
+    <script src="{vmdvirtualPath}/config.js?ver=2.0.3.20190321"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.3.20190321"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.3.20190321"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.3.20190321"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/ext-all-debug.js?ver=2.0.3.20190321"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.3.20190321"></script>
+    <script src="{vmdvirtualPath}/js/util.js?ver=2.0.3.20190321"></script>
+    <script src="{vmdvirtualPath}/lib/dhtmlx/dhtmlx.js?ver=2.0.3.20190321"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.3.20190321"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.3.20190321"></script>
+    <script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.3.20190321"></script>
+	<script src="{vmdvirtualPath}/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.3.20190321"></script>
+    <script src="{vmdvirtualPath}/js/hwdas.js?ver=2.0.3.20190321"></script>
+    <script src="{vmdvirtualPath}/js/vmdcore.js?ver=2.0.3.20190321"></script>
+    <script src="{vmdvirtualPath}/js/vmdcomps.js?ver=2.0.3.20190321"></script>
+    <script src="{vmdvirtualPath}/js/publicMethods.js?ver=2.0.3.20190321"></script>
+    <script src="{vmdvirtualPath}/js/vmdreport.js?ver=2.0.3.20190321"></script>
+    
+    {vmdresjsfiles}
+    {vmdworkspacePath}
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        .vmd-button{
+    
+    border-radius:0px;
+}
+
+
+.vmd-dataview ul {
+    position: relative;
+    display: block;
+    height: auto;
+    
+}
+.vmd-dataview ul li {
+    float: left;
+   cursor: pointer;
+   height: 130px;
+   margin:5px 5px 5px 10px;
+   width: 160px;
+   zoom:1;
+}
+.vmd-dataview ul li img {
+    border:1px solid #ddd;
+    /*float:left;*/
+    height: 80px;
+    margin:20px 20px 0px 20px;
+    width: 120px;
+}
+
+.vmd-dataview ul h4{
+    color: #555;
+    font-weight: bold;
+    font-size:14px;
+    margin-top:5px;
+    text-align: center
+}
+
+.vmd-dataview ul li.phone-hover {
+    background-color: #CEEBFE;
+
+}
+ 
+.vmd-dataview ul li.x-view-selected {
+    background-color:#CEEBFE ;
+  
+}
+
+
+.fenlei--info{
+    
+    background-color: #20a0ff;
+    border-color:#20a0ff;
+    color:#fff !important;
+}
+.fenlei--over{
+    
+    background-color: #CEEBFE;
+   
+}
+    </style>
+    <script>
+	    
+        vmd.virtualPath = '{vmdvirtualPath}';
+        
+        Ext.define("vmd.module.MyViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps([]),
+	xtype:"vmd.module.MyViewport",
+	layout:"fit",
+	afterrender:"MyViewport_afterrender",
+	initComponent: function(){
+		var store = new Ext.data.JsonStore({
+    proxy: new Ext.data.MemoryProxy(),
+    id: 'id',
+    fields: ['tplpath', 'url', 'id', 'picname', 'name', 'desc']
+});
+var data = [{
+        tplpath: 'system/modules/eQ9ULgcVb1/hw880ccc70/hw21d96e2f/hw11bf7549.vmd',
+        id: 1,
+        picname: "border-layout.gif",
+        name: 'Border Layout',
+        desc: '方位布局'
+    }, {
+        tplpath: 'system/modules/eQ9ULgcVb1/hw880ccc70/hw21d96e2f/hw92bf72d6.vmd',
+        id: 2,
+        picname: "layout-accordion.gif",
+        name: 'Accordion Layout',
+        desc: '手风琴布局'
+    }, {
+        tplpath: 'system/modules/eQ9ULgcVb1/hw880ccc70/hw21d96e2f/hw03da2792.vmd',
+        id: 3,
+        picname: "layout-anchor.gif",
+        name: 'Accordion Layout',
+        desc: '百分比布局'
+    }, {
+        tplpath: 'system/modules/eQ9ULgcVb1/hw880ccc70/hw21d96e2f/hw86859915.vmd',
+        id: 4,
+        picname: "layout-form.gif",
+        name: 'Absolute Layout',
+        desc: '绝对定位布局'
+    }, {
+        tplpath: 'system/modules/eQ9ULgcVb1/hw880ccc70/hw21d96e2f/hw20722b1d.vmd',
+        id: 5,
+        picname: "layout-column.gif",
+        name: 'Column Layout',
+        desc: '列布局'
+    }, {
+        tplpath: 'system/modules/eQ9ULgcVb1/hw880ccc70/hw21d96e2f/hwb4c38f5a.vmd',
+        id: 6,
+        picname: "layout-table.gif",
+        name: 'Table Layout',
+        desc: '表格布局'
+    }, {
+        tplpath: 'system/modules/eQ9ULgcVb1/hw880ccc70/hw21d96e2f/hw69ec9979.vmd',
+        id: 7,
+        picname: "layout-column.gif",
+        name: 'HBox Layout',
+        desc: '水平布局'
+    }, {
+        tplpath: 'system/modules/eQ9ULgcVb1/hw880ccc70/hw21d96e2f/hwf1a90c7a.vmd',
+        id: 8,
+        picname: "layout-vbox.gif",
+        name: 'VBox Layout',
+        desc: '垂直布局'
+    }, {
+        tplpath: 'system/modules/eQ9ULgcVb1/hw880ccc70/hw21d96e2f/hwOPmezn63.vmd',
+        id: 9,
+        picname: "nine.png",
+        name: 'Speed Dial',
+        desc: '九宫格布局'
+    },
+    {
+        tplpath: '',
+        id: 10,
+        picname: "blank.png",
+        name: 'Blank',
+        desc: '空白绝对布局'
+    }
+]
+
+var reportData = [{
+    tplpath: 'system/modules/eQ9ULgcVb1/hw880ccc70/hw07ddcc2b/hwmfjYmx1l.vmd',
+    id: 1,
+    picname: "report1.png",
+    name: '',
+    desc: '无条件区模版'
+}, {
+    tplpath: 'system/modules/eQ9ULgcVb1/hw880ccc70/hw07ddcc2b/hwAOcagSHg.vmd',
+    id: 2,
+    picname: "report.png",
+    name: '',
+    desc: '带有条件区模版'
+}]
+
+var chartData = [
+        {
+        tplpath: 'system/modules/eQ9ULgcVb1/hw880ccc70/hwipdLy5QL/hwBTar3U2b.vmd',
+        id: 1,
+        picname: "chart1.png",
+        name: '',
+        desc: '报表曲线模版(左右)'
+    },
+    {
+        tplpath: 'system/modules/eQ9ULgcVb1/hw880ccc70/hwipdLy5QL/hwtbsjjqV2.vmd',
+        id: 2,
+        picname: "chart.png",
+        name: '',
+        desc: '报表曲线模版(上下)'
+    },
+    {
+        tplpath: 'system/modules/eQ9ULgcVb1/hw880ccc70/hwipdLy5QL/hw34fc239a.vmd',
+        id: 3,
+        picname: "line1.png",
+        name: '',
+        desc: '折线图'
+    }, {
+        tplpath: 'system/modules/eQ9ULgcVb1/hw880ccc70/hwipdLy5QL/hw34fc239a.vmd',
+        id: 4,
+        picname: "spline.png",
+        name: '',
+        charttplpath: "spline",
+        desc: '曲线图'
+    }, {
+        tplpath: 'system/modules/eQ9ULgcVb1/hw880ccc70/hwipdLy5QL/hw34fc239a.vmd',
+        id: 5,
+        picname: "column1.png",
+        name: '',
+        charttplpath: "column",
+        desc: '柱状图'
+    }, {
+        tplpath: 'system/modules/eQ9ULgcVb1/hw880ccc70/hwipdLy5QL/hw34fc239a.vmd',
+        id: 6,
+        picname: "pie1.png",
+        name: '',
+        charttplpath: "pie",
+        desc: '饼图'
+    }, {
+        tplpath: 'system/modules/eQ9ULgcVb1/hw880ccc70/hwipdLy5QL/hw34fc239a.vmd',
+        id: 7,
+        picname: "scatter.png",
+        name: '',
+        charttplpath: "scatter",
+        desc: '散点图'
+    }, {
+        tplpath: 'system/modules/eQ9ULgcVb1/hw880ccc70/hwipdLy5QL/hw34fc239a.vmd',
+        id: 8,
+        picname: "area.png",
+        name: '',
+        charttplpath: "area",
+        desc: '面积图'
+    }, {
+        tplpath: 'system/modules/eQ9ULgcVb1/hw880ccc70/hwipdLy5QL/hw34fc239a.vmd',
+        id: 9,
+        picname: "annular.png",
+        name: '',
+        charttplpath: "annular",
+        desc: '环形图'
+    }, {
+        tplpath: 'system/modules/eQ9ULgcVb1/hw880ccc70/hwipdLy5QL/hw34fc239a.vmd',
+        id: 10,
+        picname: "dAxis.png",
+        name: '',
+        charttplpath: "multi_axis",
+        desc: '多轴曲线'
+    }, {
+        tplpath: 'system/modules/eQ9ULgcVb1/hw880ccc70/hwipdLy5QL/hw34fc239a.vmd',
+        id: 11,
+        picname: "mixChar.png",
+        name: '',
+        charttplpath: "mix_chart",
+        desc: '多轴混合曲线'
+    }, {
+        tplpath: 'system/modules/eQ9ULgcVb1/hw880ccc70/hwipdLy5QL/hw34fc239a.vmd',
+        id: 12,
+        picname: "area_stack.png",
+        name: '',
+        charttplpath: "area_stack",
+        desc: '堆叠面积图'
+    }, {
+        tplpath: 'system/modules/eQ9ULgcVb1/hw880ccc70/hwipdLy5QL/hw34fc239a.vmd',
+        id: 13,
+        picname: "column_stack.png",
+        name: '',
+        charttplpath: "column_stack",
+        desc: '堆叠柱形图'
+    }
+]
+
+var tplData = {
+    layout: data,
+    report: reportData,
+    chart: chartData
+}
+
+var name = getUrlParam('name'),
+    path = getUrlParam('path'),
+    id = getUrlParam('id'),
+    isSubView = getUrlParam('isSubView'),
+    pid = getUrlParam("pid"),
+    workspaceid = getUrlParam("workspaceid")
+
+function hwDataView_afterrender(sender) {
+
+    store.loadData(data);
+    sender.setStore(store)
+}
+
+function MyViewport_afterrender(sender) {
+    //对左侧按钮增加统一代理处理
+    Ext.select('.fenlei').on('click', function() {
+
+        var curBtn = Ext.fly(this);
+        curBtn.parent().select('.fenlei').removeClass('fenlei--info')
+        curBtn.addClass('fenlei--info')
+
+
+    })
+    Ext.select('.fenlei').hover(function() {
+        var me = Ext.fly(this);
+        if(me.hasClass('fenlei--info')) {
+
+            me.removeClass('fenlei--over')
+        }
+
+    }, function() {
+
+
+    })
+}
+
+function report_btn_click(sender) {
+    store.loadData(tplData.report);
+}
+
+function layout_btn_click(sender) {
+    store.loadData(tplData.layout);
+}
+
+function getSlectedTpl(selectTpl) {
+    var tplpath = selectTpl[0].data.tplpath;
+    var selWorkspaceid=getUrlParam("workspaceid")
+    var params = {
+        path: path,
+        name: name,
+        id: id,
+        tplpath: tplpath,
+        charttplpath: selectTpl[0].json.charttplpath,
+        vmdMode: 'new',
+        workspaceid: selWorkspaceid
+    }
+    if(pid)
+        params.pid = pid;
+    if(workspaceid)
+        params.workspaceid = workspaceid;
+    if(!isSubView)
+        window.open('/design/default.html?' + Ext.urlEncode(params));
+    parent.closeSelMode(true, Ext.urlEncode(params))
+}
+
+
+function button_click(sender) {
+
+    var selectTpl = hwDataView.getSelectedRecords();
+    if(selectTpl.length == 0) {
+        Ext.Msg.alert('提示', '请选择模版！')
+        return;
+    }
+    getSlectedTpl(selectTpl)
+
+}
+
+
+
+function hwDataView_dblclick(sender, index, node, e) {
+
+    var selectTpl = hwDataView.getSelectedRecords();
+    getSlectedTpl(selectTpl)
+}
+
+function button1_click(sender) {
+    parent.closeSelMode(false)
+}
+
+function chart_btn_click(sender) {
+    store.loadData(tplData.chart);
+}
+			this.MyViewport_afterrender=MyViewport_afterrender;
+
+
+
+		this.items=[
+			{
+				xtype:"panel",
+				id:"MyPanel",
+				title:"Panel",
+				header:false,
+				border:false,
+				height:450,
+				x:0,
+				y:0,
+				layout:"border",
+				bbar:[
+					"->",
+					{
+						xtype:"vmd.button",
+						id:"button",
+						text:"确定",
+						type:"primary",
+						size:"small",
+						style:"margin-right: 10px",
+						width:70,
+						click:"button_click",
+						listeners:{
+							click:button_click
+						}
+					},
+					{
+						xtype:"vmd.button",
+						id:"button1",
+						text:"取消",
+						type:"(none)",
+						size:"small",
+						cls:"margin_right10",
+						width:70,
+						click:"button1_click",
+						listeners:{
+							click:button1_click
+						}
+					}
+				],
+				items:[
+					{
+						xtype:"panel",
+						id:"MyPanel1",
+						title:"模版分类",
+						header:true,
+						border:true,
+						height:100,
+						region:"west",
+						width:165,
+						layout:"auto",
+						items:[
+							{
+								xtype:"vmd.button",
+								id:"layout_btn",
+								text:"布局（10）",
+								type:"text",
+								size:"large",
+								width:163,
+								style:"height: 80px",
+								cls:"fenlei fenlei--info",
+								overCls:"fenlei--over",
+								click:"layout_btn_click",
+								listeners:{
+									click:layout_btn_click
+								}
+							},
+							{
+								xtype:"vmd.button",
+								id:"report_btn",
+								text:"报表（2）",
+								type:"text",
+								size:"large",
+								width:163,
+								style:"height: 80px",
+								cls:"fenlei",
+								overCls:"fenlei--over",
+								click:"report_btn_click",
+								listeners:{
+									click:report_btn_click
+								}
+							},
+							{
+								xtype:"vmd.button",
+								id:"chart_btn",
+								text:"曲线（13）",
+								type:"text",
+								size:"large",
+								width:165,
+								style:"height: 80px",
+								cls:"fenlei",
+								overCls:"fenlei--over",
+								click:"chart_btn_click",
+								listeners:{
+									click:chart_btn_click
+								}
+							}
+						]
+					},
+					{
+						xtype:"panel",
+						id:"MyPanel2",
+						title:"模版名称",
+						header:true,
+						border:false,
+						height:100,
+						region:"center",
+						layout:"fit",
+						items:[
+							{
+								xtype:"vmd.dataview",
+								id:"hwDataView",
+								width:824,
+								height:465,
+								itemSelector:"li.info",
+								overClass:"info-hover",
+								selectedClass:"x-view-selected",
+								singleSelect:true,
+								multiSelect:true,
+								autoScroll:true,
+								tpl:"<ul>    <tpl for=\".\">        <li class=\"info\" tplpath={tplpath}><img src=\"/system/img/dataview/layout/{picname}\" /> <h4>{desc}</h4>        </li>    </tpl></ul>",
+								data:"var data = [{    \"id\": 1,    \"picname\": \"border-layout.gif\",    \"name\": \"Border Layout\",    \"desc\": \"方位布局\"}, {    \"id\": 2,    \"picname\": \"layout-accordion.gif\",    \"name\": \"Accordion Layout\",    \"desc\": \"手风琴布局\"}, {    \"id\": 3,    \"picname\": \"layout-anchor.gif\",    \"name\": \"Accordion Layout\",    \"desc\": \"百分比布局\"}, {    \"id\": 4,    \"picname\": \"layout-form.gif\",    \"name\": \"Absolute Layout\",    \"desc\": \"绝对定位布局\"}, {    \"id\": 5,    \"picname\": \"layout-column.gif\",    \"name\": \"Column Layout\",    \"desc\": \"列布局\"}, {    \"id\": 6,    \"picname\": \"layout-table.gif\",    \"name\": \"Table Layout\",    \"desc\": \"表格布局\"}];return data;",
+								afterrender:"hwDataView_afterrender",
+								dblclick:"hwDataView_dblclick",
+								listeners:{
+									vmdafterrender:hwDataView_afterrender,
+									dblclick:hwDataView_dblclick
+								}
+							}
+						]
+					}
+				]
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+			me.on('afterrender',function(){ MyViewport_afterrender.call(me,me)})
+}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MyViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

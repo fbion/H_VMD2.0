@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<mapper>
+  <select id="table">
+    select a.*,b.group_id,b.object_obs_no from ppdm_table a left join ppdm_group_object b on  a.system_id=b.system_id and  a.table_name=b.table_name
+    where  a.active_ind='Y' and a.system_id=@system_id  order by group_id,object_obs_no
+  </select>
+  <select id="column">
+    select * from ppdm_column where active_ind='Y' and system_id=@system_id  order by table_name,column_sequence
+  </select>
+  <select id="index">
+    select * from ppdm_index where active_ind='Y' and system_id=@system_id   order by table_name
+  </select>
+  <select id="indexcolumn">
+    select * from ppdm_index_column where active_ind='Y' and  system_id=@system_id   order by table_name,index_id,index_seq_no
+  </select>
+  <select id="constraint">
+    select * from ppdm_constraint where active_ind='Y' and  system_id=@system_id   order by table_name
+  </select>
+  <select id="constraintcolumn">
+    select * from ppdm_cons_column where active_ind='Y' and  system_id=@system_id   order by table_name,constraint_name,constraint_seq_no
+  </select>
+  <select id="procedure">
+    select a.*,b.group_id ,b.object_obs_no from ppdm_procedure a left join ppdm_group_object b on  a.system_id=b.system_id and  a.procedure_id=b.procedure_id
+    where a.active_ind='Y' and  a.system_id=@system_id   order by group_id,object_obs_no
+  </select>
+</mapper>
+
+
+ 

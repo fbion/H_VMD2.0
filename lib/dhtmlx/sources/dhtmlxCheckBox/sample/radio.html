@@ -1,0 +1,87 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>init radio</title>
+	<meta charset="utf-8" />
+    <link href="../codebase/skins/dhtmlxcombo_dhx_skyblue.css" rel="stylesheet" />
+    <style>
+
+
+    </style>
+</head>
+<body>
+    <div id="check" style="height:50px;width:800px;border:1px solid #eee;"></div>
+    <br/>
+    <p>
+        获取值：
+        <input type="button" name="name" value="获取值" onclick="alert(checkbox.getValue())" />
+    </p>
+    <p>
+        设置值：
+        <input type="button" name="name" value="设置值为" onclick="checkbox.setValue(document.getElementById('v').value)" />
+        <input type="text" value="3" id="v" />
+    </p>
+    <p>
+        启用/禁用：
+        <input type="button" name="name" value="启用" onclick="checkbox.enable()" />
+        <input type="button" name="name" value="禁用" onclick="checkbox.disable()" />
+    </p>
+    <p>
+        隐藏/显示：
+        <input type="button" name="name" value="隐藏" onclick="checkbox.hide()" />
+        <input type="button" name="name" value="显示" onclick="checkbox.show()" />
+    </p>
+    <script src="../../dhtmlxCommon/codebase/dhtmlxcommon.js"></script>
+    <script src="../codebase/dhtmlxcheckbox.js"></script>
+    <script src="../../dhtmlxDataStore/codebase/datastore_ext.js"></script>
+    <script src="../../dhtmlxDataStore/ext/datastore_checkbox.js"></script>
+
+    <script>
+        var myDataStore = new dhtmlXDataStore();
+        myDataStore.parse([
+            { "id": "1", "text": "选项一", "checked": 0 },
+            { "id": "2", "text": "选项二", "checked": 1 },
+            { "id": "3", "text": "选项三", "checked": 0 },
+            { "id": "4", "text": "选项四", "checked": 0 },
+            { "id": "5", "text": "选项五", "checked": 0 },
+            { "id": "6", "text": "选项六", "checked": 0 },
+            { "id": "7", "text": "选项七", "checked": 0 },
+            { "id": "8", "text": "选项八", "checked": 0 },
+            { "id": "9", "text": "选项九", "checked": 0 },
+            { "id": "10", "text": "选项十", "checked": 0 },
+            { "id": "11", "text": "选项十一", "checked": 0 },
+            { "id": "12", "text": "选项十二", "checked": 0 },
+            { "id": "13", "text": "选项十三", "checked": 0 },
+            { "id": "14", "text": "选项十四", "checked": 0 },
+            { "id": "15", "text": "选项十五", "checked": 0 },
+            { "id": "16", "text": "选项十六", "checked": 0 },
+            { "id": "17", "text": "选项十七", "checked": 0 },
+            { "id": "18", "text": "选项十八", "checked": 0 }
+        ]);
+        var checkbox = new dhtmlXCheckBox("check", {
+            scheme: {//字段对应
+                text: "text",
+                value: "id"
+            },
+            skin: "skyblue",
+            enabled: true,//启用
+            enableAll: true,//启用全选，默认启用
+            data: [
+            { "id": "1", "text": "选项一", "checked": 0 },
+            { "id": "2", "text": "选项二", "checked": 1 },
+            { "id": "3", "text": "选项三", "checked": 0 },
+            { "id": "4", "text": "选项四", "checked": 0 },
+            ],
+            mode: "radio"
+        });
+        //datastore加载
+        checkbox.sync(myDataStore);
+        //值改变事件，返回新值
+        checkbox.attachEvent("onCheckChanged", function (newValue) {
+            console.log(newValue);
+        });
+
+    </script>
+</body>
+</html>

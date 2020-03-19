@@ -1,0 +1,55 @@
+﻿<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>vmd文件上传</title>
+    <link href="../../../lib/ext-3.4/resources/css/ext-all.css" rel="stylesheet" />
+    <script src="../../../config.js"></script>
+    <script src="../../../lib/ext-3.4/adapter/ext/ext-base-debug.js"></script>
+    <script src="../../../lib/ext-3.4/adapter/ext/ext-base-lang.js"></script>
+    <script src="../../../lib/ext-3.4/adapter/ext/ext-base-class.js"></script>
+    <script src="../../../lib/ext-3.4/ext-all-debug.js"></script>
+    <script src="../../../lib/webuploader/webuploader.min.js"></script>
+    <script src="../../hwDas.js"></script>
+    <script src="../../vmdcore.js"></script>
+    
+ 
+    <script>
+        var win, aa;
+    
+        Ext.onReady(function () {
+            
+            var aa=function() {
+
+                win = new vmd.window(
+                   {
+                       url: 'index.html?savedir=aa',
+                       auto: false,
+                       height: 520,
+                       width: 680
+                   }
+                 )
+                 win.show();
+                //调用上传弹框必须这样写
+               
+                Ext.defer(function () {
+                    win.iframe.uploadFile.upload(win, function (fileList) {
+                        debugger
+                    });
+                    
+                }, 500)
+                win.hide()
+
+            }
+            $('#aa').bind('click', aa)
+
+        })
+        
+    </script>
+    
+</head>
+<body>
+   <input id="aa"  type="button" value="test" />
+
+</body>
+</html>

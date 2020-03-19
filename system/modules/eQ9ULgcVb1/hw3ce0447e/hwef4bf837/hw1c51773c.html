@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>ace编辑</title>
+    <!--基本样式-->
+    <link href="/css/common.css?ver=2.0.4.190627" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.4.190627" rel="stylesheet" />
+    <link href="/design/css/icons.css?ver=2.0.4.190627" rel="stylesheet" />
+    <link href="/lib/dhtmlx/dhtmlx.css?ver=2.0.4.190627" rel="stylesheet" />
+    <!--样式快捷索引表-->
+    <link href="/css/shortcut.css?ver=2.0.4.190627" rel="stylesheet" />
+    <script src="/lib/labjs/LAB.min.js?ver=2.0.4.190627"></script>
+    <script src="/config.js?ver=2.0.4.190627"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.4.190627"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.4.190627"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.4.190627"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=2.0.4.190627"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.4.190627"></script>
+    <script src="/js/util.js?ver=2.0.4.190627"></script>
+    <script src="/lib/dhtmlx/dhtmlx.js?ver=2.0.4.190627"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.4.190627"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.4.190627"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.4.190627"></script>
+    <script src="/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.4.190627"></script>
+    <script src="/js/hwdas.js?ver=2.0.4.190627"></script>
+    <script src="/js/vmdcore.js?ver=2.0.4.190627"></script>
+    <script src="/js/vmdcomps.js?ver=2.0.4.190627"></script>
+    <script src="/js/publicMethods.js?ver=2.0.4.190627"></script>
+    <script src="/js/vmdreport.js?ver=2.0.4.190627"></script>
+    <script src="/system/modules/eQ9ULgcVb1/project.config.js"></script>
+    <script src="/lib/ace/ace.js?ver=2.0.4.190627"></script>
+    <script src="/lib/ace/mode-base.js?ver=2.0.4.190627"></script>
+    <script src="/lib/ace/theme-xcode.js?ver=2.0.4.190627"></script>
+    <script src="/lib/ace/ext-language_tools.js?ver=2.0.4.190627"></script>
+    <style> </style>
+    <style type="text/css" id="vmdcss"> </style>
+    <script>
+        vmd.previewMode = true;
+        vmd.virtualPath = '';
+        vmd.workspace = {
+            "workspaceid": "b87fb04c-8f21-47a8-8e7d-852e0a9d2089",
+            "workflowIp": "",
+            "dataServiceIp": "",
+            "msgIp": "",
+            "projectid": "eQ9ULgcVb1"
+        }
+        vmd.resourceSettings = {
+            "test&&资源中心服务器": "http://www.hanweikeji.com:8050/resource",
+            "test&&服务器2": "http://192.168.1.202:8050/resource",
+            "test&&555": "http://www.hanweikeji.com:8050/resource"
+        }
+        vmd.projectInfo = {
+            "projectId": "eQ9ULgcVb1",
+            "workflowIp": "",
+            "dataServiceIp": "",
+            "msgIp": "",
+            "todoIp": "",
+            "authIp": "",
+            "docIp": "",
+            "reoprtIp": "",
+            "logIp": ""
+        }
+        Ext.define("vmd.module.MyViewport", {
+            extend: "vmd.comp.viewport",
+            requires: vmd.getCmpDeps([]),
+            xtype: "vmd.module.MyViewport",
+            layout: "border",
+            afterrender: "MyViewport_afterrender",
+            initComponent: function() {
+                var path = getUrlParam('path');
+                var readonly = getUrlParam('readonly');
+                var editServer
+                if (parent.hwdasFileServer)
+                    editServer = parent.hwdasFileServer;
+
+                function MyViewport_afterrender(sender) {
+                    if (readonly) {
+                        div.hide();
+                        this.doLayout();
+                    }
+                    if (!path) {
+                        Tips.tips('路径不能为空！', 'warning')
+                        return;
+                    }
+                    var filename = path.substring(path.lastIndexOf('/') + 1)
+                    var filenameArr = filename.split('.');
+                    var ext = filenameArr[filenameArr.length - 1];
+                    var isloadjs = false;
+                    switch (ext) {
+                        case 'js':
+                            ext = 'javascript';
+                            break;
+                        case 'html':
+                        case 'htm':
+                            ext = 'html';
+                            break;
+                        case 'json':
+                            ext = 'json';
+                            break;
+                        case 'xml':
+                            ext = 'xml';
+                            break;
+                        case 'md':
+                            ext = 'markdown';
+                            break;
+                        case 'css':
+                            ext = 'css';
+                            break;
+                        default:
+                            ext = 'text';
+                            break;
+                    }
+                    //读取文件
+                    hwDas.read(editServer, path, function(result) {
+                        MyAce.language = ext;
+                        MyAce.getSession().setMode("ace/mode/" + ext);
+                        MyAce.setValue(result.data);
+                    }, function(err) {
+                        Tips.tips(err, 'error')
+                    })
+                }
+
+                function button_click(sender, e) {
+                    var context = MyAce.getValue();
+                    if (!path) {
+                        Tips.tips('路径不能为空！', 'warning')
+                        return;
+                    }
+                    hwDas.write(editServer, path, context, function(result) {
+                        Tips.tips("保存文件成功")
+                        if (parent && parent.saveAceFileEditinfo) {
+                            parent.saveAceFileEditinfo();
+                        }
+                    }, function(err) {
+                        Tips.tips(err, 'error')
+                    })
+                }
+                this.MyViewport_afterrender = MyViewport_afterrender;
+                this.items = [{
+                        xtype: "vmd.div",
+                        id: "div",
+                        autoEl: "div",
+                        border: true,
+                        backgroundRepeat: "no-repeat",
+                        backgroundPosition: "top left",
+                        height: 40,
+                        x: 240,
+                        y: 110,
+                        style: "padding: 5px",
+                        layout: "auto",
+                        region: "north",
+                        items: [{
+                                xtype: "vmd.button",
+                                id: "button",
+                                text: "保存",
+                                type: "primary",
+                                size: "small",
+                                icon: "icon-save font",
+                                click: "button_click",
+                                disabled: false,
+                                listeners: {
+                                    click: button_click
+                                }
+                            },
+                            {
+                                xtype: "label",
+                                id: "label",
+                                text: "（温馨提示：编辑后请点击保存）",
+                                style: "padding-left: 10px;    font-family: Microsoft YaHei;    font-size: 14px;    color: #f7ba2a;    color: #ff4949;"
+                            }
+                        ]
+                    },
+                    {
+                        xtype: "vmd.div",
+                        id: "div1",
+                        autoEl: "div",
+                        border: true,
+                        backgroundRepeat: "no-repeat",
+                        backgroundPosition: "top left",
+                        height: 50,
+                        x: 260,
+                        y: 230,
+                        anchor: "100% -40",
+                        layout: "fit",
+                        region: "center",
+                        items: [{
+                            xtype: "vmd.ace",
+                            id: "MyAce",
+                            height: 300,
+                            width: 600,
+                            language: "javascript"
+                        }]
+                    }
+                ]
+                this.callParent();
+                var me = this;
+                vmd.core.moduleInit(this.items, this);
+                me.on('afterrender', function() {
+                    MyViewport_afterrender.call(me, me)
+                })
+            }
+        })
+        Ext.onReady(function() {
+            Ext.create('vmd.module.MyViewport', {
+                renderTo: document.body
+            })
+        })
+    </script>
+</head>
+
+<body> </body>
+
+</html>

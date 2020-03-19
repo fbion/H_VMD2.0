@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>导入模块选择</title>
+	<!--基本样式-->
+    <link href="{vmdvirtualPath}/css/common.css?ver=vmd2.0.6.200119" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="{vmdvirtualPath}/lib/ext-3.4/resources/css/ext-all.css?ver=vmd2.0.6.200119" rel="stylesheet" />
+   
+    <link href="{vmdvirtualPath}/design/css/icons.css?ver=vmd2.0.6.200119" rel="stylesheet" />
+
+	<link href="{vmdvirtualPath}/lib/dhtmlx/skins/material/dhtmlx.css?ver=vmd2.0.6.200119" rel="stylesheet" />
+	  <!--样式快捷索引表-->
+    <link href="{vmdvirtualPath}/css/shortcut.css?ver=vmd2.0.6.200119" rel="stylesheet" />
+    
+	{vmdprojectcssfiles}
+    
+    <script src="{vmdvirtualPath}/lib/labjs/LAB.min.js?ver=vmd2.0.6.200119"></script>
+    <script src="{vmdvirtualPath}/config.js?ver=vmd2.0.6.200119"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=vmd2.0.6.200119"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=vmd2.0.6.200119"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=vmd2.0.6.200119"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/ext-all-debug.js?ver=vmd2.0.6.200119"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=vmd2.0.6.200119"></script>
+    <script src="{vmdvirtualPath}/js/util.js?ver=vmd2.0.6.200119"></script>
+    <script src="{vmdvirtualPath}/lib/dhtmlx/codebase/dhtmlx.js?ver=vmd2.0.6.200119"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=vmd2.0.6.200119"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=vmd2.0.6.200119"></script>
+    <script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=vmd2.0.6.200119"></script>
+	<script src="{vmdvirtualPath}/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=vmd2.0.6.200119"></script>
+    <script src="{vmdvirtualPath}/js/hwdas.js?ver=vmd2.0.6.200119"></script>
+    <script src="{vmdvirtualPath}/js/vmdcore.js?ver=vmd2.0.6.200119"></script>
+    <script src="{vmdvirtualPath}/js/vmdcomps.js?ver=vmd2.0.6.200119"></script>
+    <script src="{vmdvirtualPath}/js/publicMethods.js?ver=vmd2.0.6.200119"></script>
+    <script src="{vmdvirtualPath}/js/vmdreport.js?ver=vmd2.0.6.200119"></script>
+    
+    {vmdworkspacePath}
+	{vmdprojectconfigjs}
+	
+	{vmdprojectjsfiles}
+    
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        .x-form-cb-label {
+    color: #5EA0FF;
+}
+
+.nodecolor1 a span {
+    color: red;
+    font-weight:bold
+}
+
+.nodecolor2 a span  {
+    color: blue;
+    font-weight:bold
+}
+
+.nodecolor3  a span  {
+    color: green;
+    font-weight:bold
+}
+
+.nodecolor4 a span {
+    color: black;
+    font-weight:bold
+}
+
+.nodecolor5 a span {
+    color: orangered;
+    font-weight:bold
+}
+
+    </style>
+    <script>
+	    
+        vmd.virtualPath = '{vmdvirtualPath}';
+        
+        Ext.define("vmd.module.MainViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps([]),
+	xtype:"vmd.module.MainViewport",
+	layout:"border",
+	initComponent: function(){
+		var modulesCheckInfos = {};
+if (parent.modulesCheckInfos)
+    modulesCheckInfos = parent.modulesCheckInfos;
+var hwproject_Name = modulesCheckInfos.proName;
+var hwproject_Id = modulesCheckInfos.project_id;
+var treestore;
+
+function hwCheckbox_check(sender, checked) {
+    var rootnode = tree.getRootNode();
+    if (checked == true) {
+        tree.setNodeCheckById(0, true); //设置根节点 被勾中
+        for (var i = 0; i < rootnode.childNodes.length; i++) {
+            var c_type = rootnode.childNodes[i].nodeDataJson.c_type;
+            if (c_type == "3" || c_type == "4") {
+                tree.setNodeCheckById(rootnode.childNodes[i].id, true);
+                if (rootnode.childNodes[i].childNodes.length > 0) {
+                    findchildnode(rootnode.childNodes[i]);
+                }
+            }
+        }
+    } else {
+        tree.setNodeCheckById(0, false); //设置根节点 不被勾中
+        for (var i = 0; i < rootnode.childNodes.length; i++) {
+            tree.setNodeCheckById(rootnode.childNodes[i].id, false);
+            if (rootnode.childNodes[i].childNodes.length > 0) {
+                findchildnode(rootnode.childNodes[i]);
+            }
+        }
+    }
+}
+//遍历树形子节点
+function findchildnode(roonodes) { //树形全勾中
+    var childnodes = roonodes.childNodes;
+    for (var i = 0; i < childnodes.length; i++) { // 从节点中取出子节点依次遍历
+        var c_type = childnodes[i].nodeDataJson.c_type;
+        if (c_type == "3" || c_type == "4") {
+            tree.setNodeCheckById(childnodes[i].id, hwCheckbox.checked);
+            if (childnodes[i].childNodes.length > 0) {
+                findchildnode(childnodes[i]); // 如果存在子节点 递归
+            }
+        }
+    }
+}
+
+function button2_click(sender, e) {
+    hwCheckbox.setValue(false); // 全选不勾中
+    tree.setNodeCheckById(0, false); //设置根节点 不被勾中
+    var rootnode = tree.getRootNode();
+    category_findchildnode(rootnode);
+}
+//只选择分类按钮(遍历树形子节点)
+function category_findchildnode(roonodes) { //树形全勾中
+    var childnodes = roonodes.childNodes;
+    for (var i = 0; i < childnodes.length; i++) { // 从节点中取出子节点依次遍历
+        if (childnodes[i].childNodes.length > 0) {
+            tree.setNodeCheckById(childnodes[i].id, true);
+            category_findchildnode(childnodes[i]); // 如果存在子节点 递归
+        } else {
+            if (childnodes[i].nodeDataJson.type == 'category') {
+                tree.setNodeCheckById(childnodes[i].id, true);
+            } else
+                tree.setNodeCheckById(childnodes[i].id, false);
+        }
+    }
+}
+
+function tree_afterBindData(sender) {
+    tree.getRootNode().setText(modulesCheckInfos.proName);
+    //树形全选
+    var rootnode = tree.getRootNode();
+    if (hwCheckbox.checked === true) {
+        tree.setNodeCheckById(0, true); //设置根节点 被勾中
+        for (var i = 0; i < rootnode.childNodes.length; i++) {
+            var c_type = rootnode.childNodes[i].nodeDataJson.c_type;
+            if (c_type == "3" || c_type == "4") {
+                tree.setNodeCheckById(rootnode.childNodes[i].id, true);
+                if (rootnode.childNodes[i].childNodes.length > 0) {
+                    findchildnode(rootnode.childNodes[i]);
+                }
+            }
+        }
+    }
+    tree.expandAll();
+   // rootnode.expand();
+}
+
+var myMask;
+
+function button_click(sender, e) {
+
+    Ext.Msg.confirm("提示", "导入后，相同的模块将会被覆盖，无法恢复。确定要导入模块吗？", function(type) {
+        if (type == "yes") {
+            myMask = new Ext.LoadMask(document.body, {
+                msg: "正在导入,请稍后...",
+                msgCls: 'z-index:10000;'
+            });
+            myMask.show();
+            //处理导入
+            var impInfos = getSelNodeIDs();
+            vmd.ajax({
+                url: "/expandimp/api/ModuleImp",
+                type: 'post',
+                timeout: 120000,
+                //dataType:"text",
+                //contentType: 'application/json;charset=UTF-8',
+                data: {
+                    modulesId: impInfos.ModulesId,
+                    categorysId: impInfos.CategorysId,
+                    modulesInfo: impInfos.ModulesInfo,
+                    projectId: modulesCheckInfos.project_id,
+                    proName: modulesCheckInfos.proName,
+                    impPath: modulesCheckInfos.path,
+                    impUser: modulesCheckInfos.impUser,
+                    impDate: modulesCheckInfos.impUser,
+                    creatPro: modulesCheckInfos.creatPro
+                }, //jsonp: "callbackparam", 
+                success: function(result) {
+                    myMask.hide();
+                    if (result.type == "success") {
+                        Ext.Msg.alert("提示", "导入成功！", function() {
+                            if (parent && parent.modulesCheckWin)
+                                parent.modulesCheckWin.close();
+                        });
+                    } else
+                        Ext.Msg.alert("提示", result.msg);
+                },
+                error: function(msg) {
+                    myMask.hide();
+                    console.log(msg.msg);
+                }
+            });
+        }
+    });
+
+}
+var cnodeIds = [];
+var mnodeIds = [];
+var mnodeInfo = [];
+
+function getNodeId(node) {
+    for (var i = 0; i < node.childNodes.length; i++) {
+        var cnode = node.childNodes[i];
+        if (cnode.attributes.checked) {
+            if (cnode.childNodes.length > 0) {
+                getNodeId(cnode);
+                cnodeIds.push(cnode.id);
+            } else {
+                if (cnode.nodeDataJson.type == 'category') {
+                    cnodeIds.push(cnode.id);
+                } else {
+                    mnodeInfo.push({
+                        id: cnode.id,
+                        path: cnode.getPath().replace('/0/', '/' + hwproject_Id + '/')
+                    });
+                    mnodeIds.push(cnode.id);
+                }
+            }
+        }
+    }
+}
+//获取选中的节点信息
+function getSelNodeIDs() {
+    cnodeIds = [];
+    mnodeIds = [];
+    mnodeInfo = [];
+    var rootnode = tree.getRootNode();
+    getNodeId(rootnode);
+    var ExpModulesInfo = {};
+    ExpModulesInfo.ModulesId = mnodeIds;
+    ExpModulesInfo.ModulesInfo = mnodeInfo;
+    ExpModulesInfo.CategorysId = cnodeIds;
+    ExpModulesInfo.ProjectId = hwproject_Id;
+    ExpModulesInfo.ProjectName = hwproject_Name;
+    return ExpModulesInfo
+}
+
+function button1_click(sender, e) {
+    if (parent && parent.modulesCheckWin)
+        parent.modulesCheckWin.close()
+}
+
+function tree_beforerender(sender) {
+    // 创建数据集。 
+    tree.rootText = modulesCheckInfos.proName;
+    var treeData = modulesCheckInfos.checkInfo;
+    treestore = new vmd.data.Store({
+        data: treeData,
+        fields: ['id', 'name', 'parent_id', 'type', 'c_type']
+    })
+    tree.store = treestore;
+}
+
+function tree_beforeNodeExpand(sender, node, deep, anim) {}
+
+function tree_afterNodeExpand(sender, node) {
+    if (node.childNodes.length > 0) {
+        for (var i = 0; i < node.childNodes.length; i++) {
+            if (node.childNodes[i].nodeDataJson.c_type == '1')
+                node.childNodes[i].ui.addClass("nodecolor1")
+            if (node.childNodes[i].nodeDataJson.c_type == '2')
+                node.childNodes[i].ui.addClass("nodecolor2")
+            if (node.childNodes[i].nodeDataJson.c_type == '3')
+                node.childNodes[i].ui.addClass("nodecolor3")
+            if (node.childNodes[i].nodeDataJson.c_type == '4')
+                node.childNodes[i].ui.addClass("nodecolor4")
+            if (node.childNodes[i].nodeDataJson.c_type == '5')
+                node.childNodes[i].ui.addClass("nodecolor5")
+        }
+    }
+}
+	
+
+
+		this.items=[
+			{
+				xtype:"vmd.div",
+				id:"div1",
+				autoEl:"div",
+				border:true,
+				backgroundRepeat:"no-repeat",
+				backgroundPosition:"top left",
+				width:400,
+				height:31,
+				region:"north",
+				layout:"absolute",
+				items:[
+					{
+						xtype:"checkbox",
+						id:"hwCheckbox",
+						fieldLabel:"Checkbox",
+						boxLabel:"全选",
+						x:20,
+						y:5,
+						style:"color: #5EA0FF;",
+						check:"hwCheckbox_check",
+						checked:true,
+						listeners:{
+							check:hwCheckbox_check
+						}
+					},
+					{
+						xtype:"vmd.button",
+						id:"button2",
+						text:"只选分类",
+						type:"text",
+						size:"small",
+						x:80,
+						y:5,
+						click:"button2_click",
+						listeners:{
+							click:button2_click
+						}
+					}
+				]
+			},
+			{
+				xtype:"vmd.div",
+				id:"div",
+				autoEl:"div",
+				border:true,
+				backgroundRepeat:"no-repeat",
+				backgroundPosition:"top left",
+				width:400,
+				height:50,
+				region:"center",
+				layout:"fit",
+				items:[
+					{
+						xtype:"vmd.treeex",
+						id:"tree",
+						width:350,
+						height:270,
+						hideRoot:false,
+						loadType:"全部加载",
+						x:20,
+						y:20,
+						checkBox:true,
+						store:treestore,
+						parentField:"parent_id",
+						valueField:"id",
+						textField:"name",
+						rootValue:"0",
+						rootText:"协同开发",
+						cascading:true,
+						nodeMarkFiled:"type",
+						folderValue:"category",
+						leafValue:"module",
+						rootImg:"/system/modules/eQ9ULgcVb1/img/server5.png",
+						folderImg:"/system/modules/eQ9ULgcVb1/img/folderClosed.gif",
+						leafImg:"/system/modules/eQ9ULgcVb1/img/model.png",
+						afterBindData:"tree_afterBindData",
+						beforerender:"tree_beforerender",
+						beforeNodeExpand:"tree_beforeNodeExpand",
+						afterNodeExpand:"tree_afterNodeExpand",
+						listeners:{
+							afterBindData:tree_afterBindData,
+							beforerender:tree_beforerender,
+							beforeNodeExpand:tree_beforeNodeExpand,
+							afterNodeExpand:tree_afterNodeExpand
+						}
+					}
+				]
+			},
+			{
+				xtype:"vmd.div",
+				id:"div2",
+				layoutConfig:{
+					align:"middle",
+					pack:"center"
+				},
+				autoEl:"div",
+				border:true,
+				backgroundRepeat:"no-repeat",
+				backgroundPosition:"top left",
+				width:400,
+				height:50,
+				region:"south",
+				layout:"hbox",
+				items:[
+					{
+						xtype:"vmd.button",
+						id:"button",
+						text:"导入",
+						type:"info",
+						size:"small",
+						margins:"10",
+						click:"button_click",
+						listeners:{
+							click:button_click
+						}
+					},
+					{
+						xtype:"vmd.button",
+						id:"button1",
+						text:"取消",
+						type:"(none)",
+						size:"small",
+						margins:"10",
+						click:"button1_click",
+						listeners:{
+							click:button1_click
+						}
+					}
+				]
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+	}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MainViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>提交规则</title>
+	<!--基本样式-->
+    <link href="{vmdvirtualPath}/css/common.css?ver=2.0.4.190514" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="{vmdvirtualPath}/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.4.190514" rel="stylesheet" />
+   
+    <link href="{vmdvirtualPath}/design/css/icons.css?ver=2.0.4.190514" rel="stylesheet" />
+
+	<link href="{vmdvirtualPath}/lib/dhtmlx/dhtmlx.css?ver=2.0.4.190514" rel="stylesheet" />
+	  <!--样式快捷索引表-->
+    <link href="{vmdvirtualPath}/css/shortcut.css?ver=2.0.4.190514" rel="stylesheet" />
+    
+	{vmdprojectcssfiles}
+    
+    <script src="{vmdvirtualPath}/lib/labjs/LAB.min.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/config.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/ext-all-debug.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/js/util.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/lib/dhtmlx/dhtmlx.js?ver=2.0.4.190514"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.4.190514"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.4.190514"></script>
+	<script src="{vmdvirtualPath}/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/js/hwdas.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/js/vmdcore.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/js/vmdcomps.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/js/publicMethods.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/js/vmdreport.js?ver=2.0.4.190514"></script>
+    
+	{vmdprojectjsfiles}
+    
+    {vmdworkspacePath}
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        .b{
+    border: 1px solid #ccc
+}
+    </style>
+    <script>
+	    
+        vmd.virtualPath = '{vmdvirtualPath}';
+        
+        Ext.define("vmd.module.MyViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps([]),
+	xtype:"vmd.module.MyViewport",
+	layout:"border",
+	afterrender:"MyViewport_afterrender",
+	beforerender:"MyViewport_beforerender",
+	initComponent: function(){
+		var page = this;
+page.dataList = [];
+page.saveInfo = [];
+//初始化处理ace的api
+if (parent.init_def_platformControlData) {
+    parent.init_def_platformControlData();
+    def_platformControl = parent.def_platformControl;
+}
+if (parent.allPublicMethods)
+    window.allPublicMethods = parent.allPublicMethods;
+else
+    window.allPublicMethods = {};
+if (parent.publicMethodsType)
+    window.publicMethodsType = parent.publicMethodsType;
+else
+    window.publicMethodsType = {};
+if (parent.init_def_platformFun) {
+    parent.init_def_platformFun({
+        vmd: allPublicMethods
+    });
+    parent.init_def_platformVmd();
+    def_platformWidget = parent.def_platformWidget;
+}
+//ext框架类自动识别
+def_platformExtjs = parent.def_platformExtjs;
+//初始化获取工区等信息
+var workspaceid;
+var projectid;
+var workspaceworkflowIp;
+var workspacedataServiceIp;
+if (parent.vmd && parent.vmd.workspace) {
+    workspaceid = parent.vmd.workspace.workspaceid || "";
+    workspaceworkflowIp = parent.vmd.workspace.workflowIp || "";
+    workspacedataServiceIp = parent.vmd.workspace.dataServiceIp || "";
+    projectid = parent.vmd.workspace.projectid || "";
+}
+if (parent.init_def_platformControlData) {
+    parent.init_def_platformControlData();
+    def_platformControl = parent.def_platformControl;
+}
+myobj = {};
+var saveobj = {}
+var treeloderover = false;
+var myMask = new Ext.LoadMask(Ext.getBody(), {
+    msg: "数据加载中,请稍后...",
+    msgCls: 'z-index:10000;'
+});
+
+function hwTree_afterrender(sender) {
+    //进度提示
+    myMask = new Ext.LoadMask(Ext.getCmp("hwTree").el, {
+        msg: "数据加载中,请稍后...",
+        msgCls: 'z-index:10000;'
+    });
+    myMask.show();
+    /*
+        myobj = Ext.decode(parent.edValue.storeConfig)
+        if(myobj.url)
+            list = myobj.url.split("/"); //字符分割 
+        if(myobj.callcode)
+            MyField.setValue(myobj.callcode)
+    */
+    var mytree = hwTree;
+    mytree.deleteChildItems(0);
+    mytree.loadJSONObject({
+        id: 0,
+        text: "我的服务",
+        item: []
+    });
+    mytree.enableRadioButtons(true)
+    mytree.enableSingleRadioMode(true)
+    mytree.itemObj = {};
+    mytree.newnode = false;
+    hwDas.appinfo.callCode = "vmdCode";
+    var firstNode = "";
+    hwDas.get("DataServiceWorkSpace/projectInfo/ProjcetServiceCategory", {}, {
+        projectid: projectid || "",
+        type: 1
+    }, function(selresult) {
+        var idarray = [];
+        if (selresult.data && selresult.data.length > 0 && selresult.data[0].datas && selresult.data[0].datas.length > 0) {
+            var datajson = selresult.data[0].datas;
+            var treeDataJson = [];
+            var toopenid = ""
+            for (var i = 0; i < datajson.length; i++) {
+                idarray.push(datajson[i].service_category_id)
+            }
+        }
+        var urlparam;
+        if (workspacedataServiceIp) {
+            urlparam = {
+                host: workspacedataServiceIp,
+                url: "DataService/Service/Project"
+            }
+        } else
+            urlparam = "DataService/Service/Project"
+        hwDas.get(urlparam, {
+                Ecylogin: Ext.util.Cookies.get('EcyLogin') || Ext.util.Cookies.get('ecyLogin')
+            }, {
+                develop: "true"
+            }, function(result) {
+                var datajson = result.data[0].datas;
+                var treeDataJson = [];
+                var toopenid = ""
+                for (var i = 0; i < datajson.length; i++) {
+                    if (list.indexOf(datajson[i].code) >= 0) {
+                        toopenid = datajson[i].id
+                    }
+                    if (idarray.indexOf(datajson[i].id) >= 0 || !projectid || !workspacedataServiceIp) {
+                        mytree.insertNewChild(0, datajson[i].id, datajson[i].name);
+                        mytree.setItemImage2(datajson[i].id, "tree/projectclose.png", "tree/projectopen.png", "tree/projectclose.png");
+                        mytree.showItemCheckbox(datajson[i].id, false)
+                        mytree.insertNewChild(datajson[i].id, datajson[i].id + "-0", "");
+                        mytree.closeItem(datajson[i].id);
+                        var treenode = mytree.item(datajson[i].id);
+                        treenode.path = datajson[i].code;
+                        if (treenode) {
+                            treenode.isProject = true;
+                            treenode.loadChild = false;
+                        }
+                        mytree.itemObj[datajson[i].id] = treenode;
+                        if (firstNode == "")
+                            firstNode = datajson[i].id;
+                    }
+                }
+                treeloderover = true;
+                //默认选中首项 
+                if (firstNode != "")
+                    mytree.selectItem(firstNode);
+                if (toopenid != "")
+                    hwTree.openItem(toopenid);
+                myMask.hide();
+            },
+            function(msg) {
+                myMask.hide();
+                Ext.Msg.alert("提示", "获取模块信息失败", function() {})
+            })
+    }, function(msg) {
+        myMask.hide();
+        Ext.Msg.alert("提示", "获取模块信息失败", function() {})
+    })
+    // hwDas.ajax({
+    //     das: {
+    //         idedas: true
+    //     },
+    //     url: "DataService/Service/Project",
+    //     type: 'get',
+    //     timeout: 5000,
+    //     headers: {
+    //         Ecylogin: Ext.util.Cookies.get('EcyLogin') || Ext.util.Cookies.get('ecyLogin')
+    //     },
+    //     params: {
+    //         develop: "true"
+    //     },
+    //     success: function(result) {
+    //         var datajson = result.data[0].datas;
+    //         var treeDataJson = [];
+    //         var toopenid = ""
+    //         for(var i = 0; i < datajson.length; i++) {
+    //             if(list.indexOf(datajson[i].code) >= 0) {
+    //                 toopenid = datajson[i].id
+    //             }
+    //             mytree.insertNewChild(0, datajson[i].id, datajson[i].name);
+    //             mytree.setItemImage2(datajson[i].id, "tree/projectclose.png", "tree/projectopen.png", "tree/projectclose.png");
+    //             mytree.showItemCheckbox(datajson[i].id, false)
+    //             mytree.insertNewChild(datajson[i].id, datajson[i].id + "-0", "");
+    //             mytree.closeItem(datajson[i].id);
+    //             var treenode = mytree.item(datajson[i].id);
+    //             treenode.path = datajson[i].code;
+    //             if(treenode) {
+    //                 treenode.isProject = true;
+    //                 treenode.loadChild = false;
+    //             }
+    //             mytree.itemObj[datajson[i].id] = treenode;
+    //             if(firstNode == "")
+    //                 firstNode = datajson[i].id;
+    //         }
+    //         treeloderover = true;
+    //         //默认选中首项 
+    //         if(firstNode != "")
+    //             mytree.selectItem(firstNode);
+    //         if(toopenid != "")
+    //             hwTree.openItem(toopenid);
+    //         myMask.hide();
+    //     },
+    //     error: function(msg) {
+    //         myMask.hide();
+    //         Ext.Msg.alert("提示", "获取模块信息失败", function() {})
+    //     }
+    // })
+}
+var selNodeId = "";
+
+function hwTree_nodeClick(sender, id) {
+    var proId = id;
+    var mytree = hwTree;
+    var selnode = mytree.itemObj[proId];
+    submit_ruleName.setValue(selnode.text)
+    if (selNodeId != id) {
+        if (selnode.isModel) {
+            if (!mytree.isItemChecked(id)) {
+                if (mytree.getAllChecked() != "")
+                    mytree.setSubChecked(mytree.getAllChecked(), false)
+                mytree.setSubChecked(id, true)
+            }
+            var urlparam;
+            if (workspacedataServiceIp) {
+                urlparam = {
+                    host: workspacedataServiceIp,
+                    url: "DataService/Service/Method"
+                }
+            } else {
+                urlparam = "DataService/Service/Method"
+            }
+            hwDas.get(urlparam, {}, {
+                    resourceid: proId
+                },
+                function(result) {
+                    var datajson = result.data[0].datas;
+                    var treeDataJson = [];
+                    for (var i = 0; i < datajson.length; i++) {
+                        if (datajson[i].name == "save") {
+                            debugger
+                            var id = datajson[i].id;
+                            if (workspacedataServiceIp) {
+                                urlparam = {
+                                    host: workspacedataServiceIp,
+                                    url: "DataService/Service/Parameter"
+                                }
+                            } else
+                                urlparam = "DataService/Service/Parameter";
+                            hwDas.get(urlparam, {}, {
+                                methodid: id
+                            }, function(result) {
+                                debugger
+                                page.dataList = [];
+                                for (var i = 0; i < result.data[0].datas.length; i++) {
+                                    page.dataList.push({
+                                        name: result.data[0].datas[i].code
+                                    })
+                                }
+                            })
+                        }
+                    }
+                    var bindover = false;
+                    while (!bindover) {
+                        bindover = true;
+                    }
+                },
+                function(msg) {
+                    Ext.Msg.alert("提示", "获取服务方法信息失败", function() {})
+                })
+        } else {}
+    }
+    bselNodeId = id;
+    var thePath = selnode.path;
+    var pathArray = thePath.split('/');
+    var text = "";
+    var temp = "";
+    for (var i = 0; i < pathArray.length; i++) {
+        if (i == 0) {
+            temp = pathArray[i];
+            for (var n in hwTree.itemObj) {
+                if (temp == hwTree.itemObj[n].path) {
+                    text += hwTree.itemObj[n].text;
+                }
+            }
+        } else {
+            temp = temp + '/' + pathArray[i];
+            for (var n in hwTree.itemObj) {
+                if (temp == hwTree.itemObj[n].path) {
+                    text += "-" + hwTree.itemObj[n].text;
+                }
+            }
+        }
+    }
+    page.chooseId = bselNodeId;
+}
+
+function fillMethods() {}
+
+function GetSaveObj(fun) {
+    var mytree = hwTree;
+    var selId = mytree.getSelectedItemId();
+    var selnode = mytree.itemObj[selId];
+    saveobj = {};
+    saveobj.id = selId;
+    saveobj.callcode = "vmdCode";
+    saveobj.url = selnode.path;
+    saveobj.host = "";
+    saveobj.isHwRest = true;
+    saveobj.name = selnode.text;
+    getFields(function(fields) {
+        saveobj.fields = fields
+        fun(saveobj)
+    });
+}
+
+function getFields(fun) {
+    var mytree = hwTree;
+    var selId = mytree.getSelectedItemId();
+    var selnode = mytree.itemObj[selId];
+    var selnodepath = selnode.path;
+    hwDas.appinfo.callCode = "vmdCode"
+    var urlparam;
+    if (workspacedataServiceIp) {
+        urlparam = {
+            host: workspacedataServiceIp,
+            url: selnodepath
+        }
+    } else {
+        urlparam = selnodepath
+    }
+    page.saveInfo.push(urlparam)
+    hwDas.get(urlparam, {}, {}, function(result) {
+        if (fun) {
+            resultDataFields = result.data[0].fields
+            var dataFields = [];
+            for (var p in resultDataFields) {
+                // fields
+                if (typeof(resultDataFields[p]) == "function") {} else {
+                    var fields = {
+                        name: p,
+                        type: resultDataFields[p].toLowerCase()
+                    }
+                    dataFields.push(fields);
+                }
+            }
+            fun(dataFields)
+        }
+    }, function(msg) {
+        Ext.Msg.alert("提示", "获取字段信息失败!请检查数据服务是否正确,并查看参数处理是否准确！", function() {})
+    })
+}
+
+function button_click(sender) {
+    debugger
+    if (MyTabs.getActiveTab().title == '服务选择') {
+        if (submit_ruleName.getValue() == "") {
+            vmd.alert('警告', '规则名称不许为空')
+            return;
+        }
+        var mytree = hwTree;
+        var selId = mytree.getSelectedItemId();
+        var selnode = mytree.itemObj[selId];
+        var obj = {}
+        obj.id = selId;
+        obj.callcode = "vmdCode";
+        obj.url = selnode.path;
+        obj.host = "";
+        obj.isHwRest = true;
+        obj.name = selnode.text;
+        // GetSaveObj(function(obj) {
+        //     window.vmdReturnValue = Ext.encode(obj);
+        // var data = [];
+        // for(var i = 0; i < obj.fields.length; i++) {
+        //     data.push({
+        //         cid: 'datafield',
+        //         name: obj.fields[i].name
+        //     })
+        // }
+        if (page.dataList.length > 0) {
+            parent.getSubmitData(page.dataList, submit_ruleName.getValue(), page.chooseId, obj, page.saveInfo);
+            parent.edClose(true);
+        } else {
+            vmd.alert('错误','查询结果不包含保存方法变量，请核对后重新选择')
+        }
+        // })
+    }
+    // else {
+    //     if (submit_ruleName2.getValue() == "") {
+    //         vmd.alert('警告', '规则名称不许为空')
+    //         return;
+    //     }
+    //     hwDas.appinfo.callCode = "vmdCode"
+    //     var urlparam;
+    //     if (workspacedataServiceIp) {
+    //         urlparam = {
+    //             host: workspacedataServiceIp,
+    //             url: page.chooseRecent
+    //         }
+    //     } else
+    //         urlparam = page.chooseRecent
+    //     hwDas.get(urlparam, {}, {}, function(result) {
+    //         resultDataFields = result.data[0].fields
+    //         var dataFields = [];
+    //         for (var p in resultDataFields) {
+    //             // fields
+    //             if (typeof(resultDataFields[p]) == "function") {} else {
+    //                 var fields = {
+    //                     name: p,
+    //                     type: resultDataFields[p].toLowerCase()
+    //                 }
+    //                 dataFields.push(fields);
+    //             }
+    //         }
+    //         parent.getSubmitData(dataFields, submit_ruleName.getValue(), page.chooseId);
+    //         parent.edClose(true);
+    //     }, function(msg) {
+    //         Ext.Msg.alert("提示", "获取字段信息失败!请检查数据服务是否正确,并查看参数处理是否准确！", function() {})
+    //     })
+    // }
+}
+
+function button1_click(sender) {
+    window.vmdReturnValue = ""
+    parent.edClose();
+}
+var list = [];
+
+function MyViewport_afterrender(sender) {
+    // myMask.hide();
+}
+
+function hwTree_onOpenEnd(sender, id, state) {
+    var proId = id;
+    var mytree = hwTree;
+    mytree.newnode = false;
+    var selnode = mytree.itemObj[proId];
+    if (!selnode.loadChild) {
+        if (selnode.isProject) {
+            fillFord(proId, {
+                projectid: proId,
+                parentid: "0"
+            });
+        } else {
+            fillFord(proId, {
+                parentid: proId
+            });
+            fillMode(proId, {
+                categoryid: proId
+            });
+        }
+        if (!selnode.loadChild) {
+            mytree.deleteItem(id + "-0", false);
+        }
+    }
+    selnode.loadChild = true;
+}
+
+function fillFord(id, params) {
+    myMask.show();
+    var proId = id;
+    var mytree = hwTree;
+    var selnode = mytree.itemObj[proId];
+    var selnodepath = selnode.path;
+    var urlparam;
+    if (workspacedataServiceIp) {
+        urlparam = {
+            host: workspacedataServiceIp,
+            url: "DataService/Service/Category"
+        }
+    } else
+        urlparam = "DataService/Service/Category"
+    hwDas.get(urlparam, {}, params, function(result) {
+        var mytree = hwTree;
+        var datajson = result.data[0].datas;
+        var treeDataJson = [];
+        var toopenid = "";
+        for (var i = 0; i < datajson.length; i++) {
+            if (list.indexOf(datajson[i].code) >= 0 && list.indexOf(datajson[i].code) < list.length - 1) {
+                toopenid = datajson[i].id
+            }
+            mytree.insertNewChild(proId, datajson[i].id, datajson[i].name);
+            mytree.setItemImage2(datajson[i].id, "tree/folderClosed.gif", "tree/folderOpen.gif", "tree/folderClosed.gif")
+            mytree.showItemCheckbox(datajson[i].id, false)
+            mytree.insertNewChild(datajson[i].id, datajson[i].id + "-0", "");
+            mytree.closeItem(datajson[i].id);
+            var treenode = mytree.item(datajson[i].id);
+            treenode.path = selnodepath + "/" + datajson[i].code;
+            if (treenode) {
+                treenode.isFord = true;
+                treenode.loadChild = false;
+            }
+            mytree.itemObj[datajson[i].id] = treenode;
+        }
+        if (toopenid != "") {
+            mytree.openItem(toopenid)
+        }
+        myMask.hide();
+    }, function(msg) {
+        myMask.hide();
+        Ext.Msg.alert("提示", "获取模块信息失败", function() {})
+    })
+}
+
+function fillMode(id, params) {
+    myMask.show();
+    var proId = id;
+    var mytree = hwTree;
+    var selnode = mytree.itemObj[proId];
+    var selnodepath = selnode.path;
+    var urlparam;
+    if (workspacedataServiceIp) {
+        urlparam = {
+            host: workspacedataServiceIp,
+            url: "DataService/Service/Resource"
+        }
+    } else
+        urlparam = "DataService/Service/Resource"
+    hwDas.get(urlparam, {}, params, function(result) {
+        var datajson = result.data[0].datas;
+        var treeDataJson = [];
+        var toselectid = "";
+        for (var i = 0; i < datajson.length; i++) {
+            if (list.indexOf(datajson[i].code) >= 0 && myobj) {
+                if (myobj.id && datajson[i].id == myobj.id)
+                    toselectid = datajson[i].id
+                if (myobj.id == "")
+                    toselectid = datajson[i].id
+            }
+            var mytree = hwTree;
+            mytree.insertNewChild(proId, datajson[i].id, datajson[i].name);
+            mytree.setItemImage2(datajson[i].id, "tree/model.png", "tree/model.png", "tree/model.png")
+            var treenode = mytree.item(datajson[i].id);
+            treenode.path = selnodepath + "/" + datajson[i].code;
+            if (treenode) {
+                treenode.isModel = true;
+            }
+            mytree.itemObj[datajson[i].id] = treenode;
+        }
+        if (toselectid != "") {
+            mytree.selectItem(toselectid, true)
+        }
+        //数据操作   
+        myMask.hide();
+    }, function(msg) {
+        myMask.hide();
+        Ext.Msg.alert("提示", "获取模块信息失败")
+    })
+}
+
+function MyViewport_beforerender(sender) {
+    // myMask.show();
+    // MyTabs.hideTabHeader = true;
+    if (!parent.edValue || !parent.edValue.storeConfig)
+        return
+    myobj = Ext.decode(parent.edValue.storeConfig)
+    if (myobj.url)
+        list = myobj.url.split("/"); //字符分割 
+}
+
+function hwTree_Check(sender, id, state) {
+    var mytree = hwTree;
+    mytree.selectItem(id, true);
+    mytree.setSubChecked(id, true)
+}
+
+function MyTabs_tabchange(sender, tab) {
+    if (tab.title == '最近使用') {
+        // hwDataView.el.dom.childNodes
+        var path = Ext.decode(LocalData.get('path'))
+        // var data = Ext.decode(LocalData.get('data'))
+        // ThisIsStartHead
+        var ul = hwDataView.el.dom.childNodes[0];
+        for (var i = 0; i < path.length; i++) {
+            var li = document.createElement('li');
+            ul.appendChild(li);
+            li.innerText = path[i];
+            li.style.fontSize = '14px';
+            li.style.padding = '4px';
+            li.style.cursor = 'pointer';
+            li.style.display = 'list-item';
+            li.style.textAlign = '-webkit-match-parent';
+            li.setAttribute('id', i)
+            li.onclick = function() {
+                var temp = this.parentElement.childNodes;
+                for (var n = 1; n < temp.length; n++) {
+                    temp[n].style.backgroundColor = 'white'
+                    temp[n].style.color = "#000"
+                }
+                this.style.backgroundColor = '#50BFFF'
+                this.style.color = 'white'
+                submit_ruleName2.setValue(path[this.id].split("-")[path[this.id].split("-").length - 1])
+                page.chooseOne = this.id;
+            }
+            li.onmouseover = function() {
+                this.style.backgroundColor = '#50BFFF'
+            }
+            li.onmouseleave = function() {
+                if (this.id != page.chooseOne) {
+                    this.style.backgroundColor = "white"
+                    this.style.color = "#000"
+                }
+            }
+        }
+    }
+}
+			this.MyViewport_afterrender=MyViewport_afterrender;
+		this.MyViewport_beforerender=MyViewport_beforerender;
+
+
+
+		this.items=[
+			{
+				xtype:"panel",
+				id:"MyPanel9",
+				layoutConfig:{
+					align:"middle",
+					pack:"center"
+				},
+				title:"Panel",
+				header:false,
+				border:false,
+				height:50,
+				x:0,
+				y:355,
+				layout:"hbox",
+				padding:"5",
+				bodyStyle:"border-top: 1px solid lightblue",
+				region:"south",
+				items:[
+					{
+						xtype:"vmd.button",
+						id:"button",
+						text:"确定",
+						type:"info",
+						size:"small",
+						x:50,
+						y:10,
+						click:"button_click",
+						listeners:{
+							click:button_click
+						}
+					},
+					{
+						xtype:"vmd.button",
+						id:"button1",
+						text:"取消",
+						type:"(none)",
+						size:"small",
+						x:150,
+						y:10,
+						click:"button1_click",
+						margins:"0 0 0 30",
+						listeners:{
+							click:button1_click
+						}
+					}
+				]
+			},
+			{
+				xtype:"tabpanel",
+				id:"MyTabs",
+				activeTab:0,
+				height:150,
+				width:500,
+				region:"center",
+				tabchange:"MyTabs_tabchange",
+				listeners:{
+					tabchange:MyTabs_tabchange
+				},
+				items:[
+					{
+						xtype:"panel",
+						id:"panel",
+						title:"服务选择",
+						header:true,
+						border:true,
+						height:100,
+						layout:"fit",
+						items:[
+							{
+								xtype:"panel",
+								id:"MyPanel",
+								title:"Panel",
+								header:false,
+								border:false,
+								height:100,
+								region:"center",
+								layout:"border",
+								items:[
+									{
+										xtype:"vmd.tree",
+										id:"hwTree",
+										skin:"material",
+										width:822,
+										height:513,
+										isdesign:false,
+										afterrender:"hwTree_afterrender",
+										nodeClick:"hwTree_nodeClick",
+										onOpenEnd:"hwTree_onOpenEnd",
+										Check:"hwTree_Check",
+										region:"center",
+										listeners:{
+											vmdafterrender:hwTree_afterrender,
+											nodeClick:hwTree_nodeClick,
+											onOpenEnd:hwTree_onOpenEnd,
+											Check:hwTree_Check
+										}
+									},
+									{
+										xtype:"vmd.div",
+										id:"div3",
+										layoutConfig:{
+											align:"middle"
+										},
+										autoEl:"div",
+										border:false,
+										backgroundRepeat:"no-repeat",
+										backgroundPosition:"top left",
+										width:400,
+										height:50,
+										region:"south",
+										layout:"hbox",
+										items:[
+											{
+												xtype:"label",
+												id:"label",
+												text:"规则名称：",
+												margins:"0 0 0 10",
+												region:"west"
+											},
+											{
+												xtype:"textfield",
+												id:"submit_ruleName",
+												allowBlank:true,
+												enableKeyEvents:true,
+												cls:"b",
+												region:"east"
+											},
+											{
+												xtype:"label",
+												id:"label2",
+												text:"此处可修改显示的规则命名",
+												margins:"0 0 0 20",
+												style:"color:#ccc;"
+											}
+										]
+									}
+								]
+							}
+						]
+					},
+					{
+						xtype:"panel",
+						id:"panel1",
+						title:"最近使用",
+						header:true,
+						border:true,
+						height:100,
+						layout:"fit",
+						items:[
+							{
+								xtype:"panel",
+								id:"panel2",
+								title:"Panel",
+								header:false,
+								border:false,
+								height:100,
+								region:"center",
+								layout:"border",
+								items:[
+									{
+										xtype:"vmd.div",
+										id:"div",
+										layoutConfig:{
+											align:"middle"
+										},
+										autoEl:"div",
+										border:false,
+										backgroundRepeat:"no-repeat",
+										backgroundPosition:"top left",
+										width:400,
+										height:50,
+										region:"south",
+										layout:"hbox",
+										items:[
+											{
+												xtype:"label",
+												id:"label1",
+												text:"规则名称：",
+												margins:"0 0 0 10",
+												region:"west"
+											},
+											{
+												xtype:"textfield",
+												id:"submit_ruleName2",
+												allowBlank:true,
+												enableKeyEvents:true,
+												cls:"b",
+												region:"east"
+											}
+										]
+									},
+									{
+										xtype:"vmd.dataview",
+										id:"hwDataView",
+										width:350,
+										height:270,
+										itemSelector:"li.info",
+										overClass:"info-hover",
+										selectedClass:"x-view-selected",
+										singleSelect:true,
+										multiSelect:true,
+										autoScroll:true,
+										tpl:"<ul>   </ul>",
+										data:"var data=[{\"id\":1,\"picname\":\"border-layout.gif\",\"name\":\"Border Layout\",\"desc\":\"方位布局\"},{\"id\":2,\"picname\":\"layout-accordion.gif\",\"name\":\"Accordion Layout\",\"desc\":\"手风琴布局\"},{\"id\":3,\"picname\":\"layout-anchor.gif\",\"name\":\"Accordion Layout\",\"desc\":\"百分比布局\"},{\"id\":4,\"picname\":\"layout-form.gif\",\"name\":\"Absolute Layout\",\"desc\":\"绝对定位布局\"},{\"id\":5,\"picname\":\"layout-column.gif\",\"name\":\"Column Layout\",\"desc\":\"列布局\"},{\"id\":6,\"picname\":\"layout-table.gif\",\"name\":\"Table Layout\",\"desc\":\"表格布局\"}];return data;",
+										region:"center"
+									}
+								]
+							}
+						]
+					}
+				]
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+			me.on('beforerender',function(){ MyViewport_beforerender.call(me,me)})
+		me.on('afterrender',function(){ MyViewport_afterrender.call(me,me)})
+}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MyViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

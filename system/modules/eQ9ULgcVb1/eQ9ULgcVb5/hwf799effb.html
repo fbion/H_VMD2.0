@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>关于</title>
+    <!--基本样式-->
+    <link href="/css/common.css?ver=vmd2.0.5.191228" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=vmd2.0.5.191228" rel="stylesheet" />
+    <link href="/design/css/icons.css?ver=vmd2.0.5.191228" rel="stylesheet" />
+    <link href="/lib/dhtmlx/skins/material/dhtmlx.css?ver=vmd2.0.5.191228" rel="stylesheet" />
+    <!--样式快捷索引表-->
+    <link href="/css/shortcut.css?ver=vmd2.0.5.191228" rel="stylesheet" />
+    <script src="/lib/labjs/LAB.min.js?ver=vmd2.0.5.191228"></script>
+    <script src="/config.js?ver=vmd2.0.5.191228"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=vmd2.0.5.191228"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=vmd2.0.5.191228"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=vmd2.0.5.191228"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=vmd2.0.5.191228"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=vmd2.0.5.191228"></script>
+    <script src="/js/util.js?ver=vmd2.0.5.191228"></script>
+    <script src="/lib/dhtmlx/codebase/dhtmlx.js?ver=vmd2.0.5.191228"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=vmd2.0.5.191228"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=vmd2.0.5.191228"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=vmd2.0.5.191228"></script>
+    <script src="/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=vmd2.0.5.191228"></script>
+    <script src="/js/hwdas.js?ver=vmd2.0.5.191228"></script>
+    <script src="/js/vmdcore.js?ver=vmd2.0.5.191228"></script>
+    <script src="/js/vmdcomps.js?ver=vmd2.0.5.191228"></script>
+    <script src="/js/publicMethods.js?ver=vmd2.0.5.191228"></script>
+    <script src="/js/vmdreport.js?ver=vmd2.0.5.191228"></script>
+    <script src="/system/modules/eQ9ULgcVb1/project.config.js"></script>
+    <style> </style>
+    <style type="text/css" id="vmdcss"> </style>
+    <script>
+        vmd.previewMode = true;
+        vmd.virtualPath = '';
+        vmd.workspace = {
+            "workspaceid": "1174c7d2-f008-4f84-bb61-1845b5d28814",
+            "workflowIp": "",
+            "dataServiceIp": "",
+            "msgIp": "",
+            "projectid": "eQ9ULgcVb1"
+        }
+        vmd.resourceSettings = {
+            "资源中心&&资源中心服务器": "http://www.hanweikeji.com:10050/resource"
+        }
+        vmd.projectInfo = {
+            "projectId": "eQ9ULgcVb1",
+            "workflowIp": "",
+            "dataServiceIp": "",
+            "msgIp": "",
+            "todoIp": "",
+            "authIp": "",
+            "docIp": "",
+            "reoprtIp": "",
+            "reportIp": "",
+            "logIp": ""
+        }
+        Ext.define("vmd.module.MainViewport", {
+            extend: "vmd.comp.viewport",
+            requires: vmd.getCmpDeps([]),
+            xtype: "vmd.module.MainViewport",
+            layout: "border",
+            initComponent: function() {
+                var hwFao = new HwFao(vmdSettings.vmdFileServiceIp || vmd.MicService.getReportIp(), "vmd");
+
+                function label_afterrender(sender) {
+                    hwFao.read("version.txt", function(result) {
+                        label.setText("版本：" + result.data)
+                    }, function() {})
+                }
+
+                function label_beforerender(sender) {}
+                this.items = [{
+                        xtype: "vmd.div",
+                        id: "div",
+                        autoEl: "div",
+                        border: false,
+                        backgroundRepeat: "no-repeat",
+                        backgroundPosition: "top left",
+                        width: 400,
+                        height: 643,
+                        x: 250,
+                        y: 60,
+                        region: "center",
+                        layout: "border",
+                        items: [{
+                                xtype: "vmd.div",
+                                id: "div2",
+                                layoutConfig: {
+                                    align: "center",
+                                    pack: "center"
+                                },
+                                autoEl: "div",
+                                border: false,
+                                backgroundRepeat: "no-repeat",
+                                backgroundPosition: "top left",
+                                width: 699,
+                                height: 241,
+                                region: "center",
+                                layout: "vbox",
+                                items: [{
+                                        xtype: "vmd.div",
+                                        id: "div4",
+                                        autoEl: "div",
+                                        border: false,
+                                        backgroundRepeat: "no-repeat",
+                                        backgroundPosition: "top left",
+                                        width: 58,
+                                        height: 78,
+                                        style: "background: url(/system/img/main/vmdlogo.png) center center no-repeat;"
+                                    },
+                                    {
+                                        xtype: "label",
+                                        id: "label2",
+                                        text: "VMD可视化定制工具2.0",
+                                        style: "font-size:18px"
+                                    }
+                                ]
+                            },
+                            {
+                                xtype: "vmd.div",
+                                id: "div3",
+                                layoutConfig: {
+                                    align: "center",
+                                    pack: "center"
+                                },
+                                autoEl: "div",
+                                border: false,
+                                backgroundRepeat: "no-repeat",
+                                backgroundPosition: "top left",
+                                width: 400,
+                                height: 70,
+                                region: "south",
+                                layout: "vbox",
+                                items: [{
+                                        xtype: "label",
+                                        id: "label",
+                                        text: "版本:2.0.3.1228",
+                                        style: "font-size:14px;",
+                                        afterrender: "label_afterrender",
+                                        beforerender: "label_beforerender",
+                                        listeners: {
+                                            vmdafterrender: label_afterrender,
+                                            beforerender: label_beforerender
+                                        }
+                                    },
+                                    {
+                                        xtype: "label",
+                                        id: "label1",
+                                        text: "东营汉威石油技术开发有限公司。保留所有权利。",
+                                        margins: "10 0 0 10",
+                                        style: "color:blue;font-size: 14px"
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        xtype: "vmd.div",
+                        id: "div1",
+                        layoutConfig: {
+                            align: "middle",
+                            pack: "end"
+                        },
+                        autoEl: "div",
+                        border: false,
+                        backgroundRepeat: "no-repeat",
+                        backgroundPosition: "top left",
+                        width: 400,
+                        height: 40,
+                        x: 250,
+                        y: 170,
+                        region: "south",
+                        layout: "hbox",
+                        hidden: true,
+                        items: [{
+                            xtype: "vmd.button",
+                            id: "button",
+                            text: "确定",
+                            type: "primary",
+                            size: "small",
+                            margins: "0 30 0 0 "
+                        }]
+                    }
+                ]
+                this.callParent();
+                var me = this;
+                vmd.core.moduleInit(this.items, this);
+            }
+        })
+        Ext.onReady(function() {
+            Ext.create('vmd.module.MainViewport', {
+                renderTo: document.body
+            })
+        })
+    </script>
+</head>
+
+<body> </body>
+
+</html>

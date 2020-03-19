@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>工具栏</title>
+    
+    <!--基本样式-->
+    <link href="{vmdvirtualPath}/css/common.css?ver=2.0.4" rel="stylesheet" />
+
+    <!--加载dhx组件-->
+    
+    <link href="{vmdvirtualPath}/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.4" rel="stylesheet" />
+    
+    <link href="{vmdvirtualPath}/lib/dhtmlx/dhtmlx.css?ver=2.0.4" rel="stylesheet" />
+	<link href="{vmdvirtualPath}/report/dhtmlx/dhtmlxGrid/codebase/skins/dhtmlxgrid_dhx_skyblue.css?ver=2.0.4" rel="stylesheet" />
+	<link href="{vmdvirtualPath}/report/dhtmlx/dhtmlxGrid/codebase/skins/dhtmlxgrid_default.css?ver=2.0.4" rel="stylesheet" />
+	<link href="{vmdvirtualPath}/report/dhtmlx/dhtmlxCheckBox/codebase/skins/dhtmlxcheckbox_dhx_skyblue.css?ver=2.0.4" rel="stylesheet" />
+	<link href="{vmdvirtualPath}/report/FillReport2.2/js/Adjustment.css?ver=2.0.4" rel="stylesheet" />
+    <!--样式快捷索引表-->
+    <link href="{vmdvirtualPath}/css/shortcut.css?ver=2.0.4" rel="stylesheet" />
+	
+    
+    <script src="{vmdvirtualPath}/lib/labjs/LAB.min.js?ver=2.0.4"></script>
+    <script src="{vmdvirtualPath}/config.js?ver=2.0.4"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.4"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.4"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.4"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/ext-all-debug.js?ver=2.0.4"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.4"></script>
+	<script src="{vmdvirtualPath}/js/util.js?ver=2.0.4"></script>
+    <script src="{vmdvirtualPath}/lib/dhtmlx/dhtmlx.js?ver=2.0.4"></script>
+	
+    
+   <script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.4"></script>
+    <script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon_old.js?ver=2.0.4"></script>
+   <script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.4"></script>
+   <script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.4"></script>
+   <script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxLayout/codebase/dhtmlxlayout.js?ver=2.0.4"></script>
+   <script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxWindows/codebase/dhtmlxwindows.js?ver=2.0.4"></script>
+   <script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxGrid/codebase/dhtmlxgrid.js?ver=2.0.4"></script>
+   <script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_rowspan.js?ver=2.0.4"></script>
+   <script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_splt.js?ver=2.0.4"></script>
+   <script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_srnd.js?ver=2.0.4"></script>
+   <script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_selection.js?ver=2.0.4"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_nxml.js?ver=2.0.4"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_mcol.js?ver=2.0.4"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_undo.js?ver=2.0.4"></script>
+   <script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxGrid/codebase/excells/dhtmlxgrid_excell_link_OverLoad.js?ver=2.0.4"></script>
+    <script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxGrid/codebase/excells/dhtmlxgrid_excell_menu.js?ver=2.0.4"></script>
+   <script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxGrid/codebase/dhtmlxtreegrid.js?ver=2.0.4"></script>
+   <script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxMenu/codebase/dhtmlxmenu.js?ver=2.0.4"></script>
+   <script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxGrid/codebase/Base64.js?ver=2.0.4"></script>
+   <script src="{vmdvirtualPath}/report/FillReport2.2/js/libs/hwvmain.js?ver=2.0.4"></script>
+    <script src="{vmdvirtualPath}/report/FillReport2.2/js/hw/FillReport.js?ver=2.0.4"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxToolbar/codebase/dhtmlxtoolbar.js?ver=2.0.4"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxWindows/codebase/ext/dhtmlxwindows_dnd.js?ver=2.0.4"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxWindows/codebase/ext/dhtmlxwindows_resize.js?ver=2.0.4"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxWindows/codebase/ext/dhtmlxwindows_dnd.js?ver=2.0.4"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxWindows/codebase/ext/dhtmlxwindows_resize.js?ver=2.0.4"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxMessage/codebase/dhtmlxmessage.js?ver=2.0.4"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxGrid/codebase/dhtmlxgrid_ext.js?ver=2.0.4"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_validation.js?ver=2.0.4"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_markers.js?ver=2.0.4"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCheckBox/codebase/dhtmlxcheckbox.js?ver=2.0.4"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCombo/codebase/dhtmlxcombo.js?ver=2.0.4"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxGrid/codebase/excells/dhtmlxgrid_excell_combo.js?ver=2.0.4"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxTree/codebase/dhtmlxtree.js?ver=2.0.4"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxTree/codebase/ext/dhtmlxtree_ed.js?ver=2.0.4"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxTree/codebase/ext/dhtmlxtree_json.js?ver=2.0.4"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxTree/codebase/ext/dhtmlxtree_kn.js?ver=2.0.4"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCalendar/codebase/dhtmlxcalendar.js?ver=2.0.4"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxForm/codebase/ext/swfobject.js?ver=2.0.4"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxEditor/codebase/dhtmlxeditor.js?ver=2.0.4"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxEditor/codebase/ext/dhtmlxeditor_ext.js?ver=2.0.4"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxDataStore/codebase/ext/datastore_grid.js?ver=2.0.4"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxDataStore/codebase/ext/datastore_combo.js?ver=2.0.4"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxDataStore/codebase/ext/datastore_tree.js?ver=2.0.4"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxDataStore/codebase/datastore_ext.js?ver=2.0.4"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxDataStore/codebase/ext/datastore_checkbox.js?ver=2.0.4"></script>
+	<script src="{vmdvirtualPath}/report/FillReport2.2/js/libs/HwPrint.js?ver=2.0.4"></script>
+	
+    <script src="{vmdvirtualPath}/js/hwdas.js?ver=2.0.4"></script>
+    <script src="{vmdvirtualPath}/js/vmdcore.js?ver=2.0.4"></script>
+    <script src="{vmdvirtualPath}/js/vmdcomps.js?ver=2.0.4"></script>
+    <script src="{vmdvirtualPath}/js/vmdreport.js?ver=2.0.4"></script>
+	<script src="{vmdvirtualPath}/js/publicMethods.js?ver=2.0.4"></script>
+    
+    
+    {vmdworkspacePath}
+
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        
+    </style>
+    <script>
+	    
+        vmd.virtualPath = '{vmdvirtualPath}';
+        
+        Ext.define("vmd.module.MainViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps([]),
+	xtype:"vmd.module.MainViewport",
+	layout:"border",
+	width:44,
+	autoScroll:true,
+	initComponent: function(){
+		function report_afterrender(render) {
+    report.query();
+}
+
+function report1_afterrender(render) {
+    report1.query();
+}
+
+function button_click(sender, e) {
+    panel2.disable()
+    //记录日志信息 
+    //vmd.webBase.syslog(loginfo,logtype,operationtype,function(res){}) 
+}
+	
+
+
+	 var subView=new vmd.comp.SubView({view:{
+			xtype:"vmd.subview",
+			id:"subView",
+			width:1324,
+			height:741,
+			layout:"fit",
+			closable:true,
+			draggable:false,
+			maximizable:true,
+			modal:true,
+			resizable:true,
+			autoScroll:true,
+			closeAction:"close",
+			header:false,
+			items:[
+				{
+					xtype:"vmd.report2_2",
+					id:"report1",
+					text:"report",
+					relativepath:"report/system/modules/eQ9ULgcVb1/hwB72m1spu/hw9d8fe2f8",
+					align:"center",
+					fillReport:false,
+					loadMode:"nomal",
+					nousedataset:false,
+					isServer:true,
+					ocx_version:"1,2,2,0",
+					rptVersion:"2.2",
+					x:240,
+					y:220,
+					afterrender:"report1_afterrender",
+					width:1192,
+					height:678,
+					path:"工具栏_report1.json",
+					isWebEdit:true,
+					listeners:{
+						vmdafterrender:report1_afterrender
+					}
+				}
+			]
+		},rootScope:this,isModule:true})
+		this.items=[
+			{
+				xtype:"panel",
+				id:"panel",
+				title:"Panel",
+				header:true,
+				border:true,
+				height:358,
+				layout:"fit",
+				region:"center",
+				width:322,
+				items:[
+					{
+						xtype:"vmd.report2_2",
+						id:"report",
+						text:"report",
+						relativepath:"report/system/modules/eQ9ULgcVb1/hwB72m1spu/hw9d8fe2f8",
+						align:"center",
+						fillReport:false,
+						loadMode:"nomal",
+						nousedataset:false,
+						isServer:true,
+						ocx_version:"1,2,2,0",
+						rptVersion:"2.2",
+						afterrender:"report_afterrender",
+						path:"工具栏_report.json",
+						isWebEdit:true,
+						listeners:{
+							vmdafterrender:report_afterrender
+						}
+					}
+				]
+			},
+			{
+				xtype:"panel",
+				id:"panel1",
+				title:"Panel",
+				header:true,
+				border:true,
+				height:521,
+				layout:"fit",
+				region:"west",
+				width:245
+			},
+			{
+				xtype:"panel",
+				id:"panel2",
+				title:"戊二醛无若群无若无群若",
+				header:true,
+				border:true,
+				height:100,
+				region:"east",
+				width:300,
+				items:[
+					{
+						xtype:"vmd.button",
+						id:"button127722244ff8",
+						text:"werqwerqwr",
+						type:"(none)",
+						size:"small",
+						click:"button_click",
+						width:110,
+						height:26,
+						listeners:{
+							click:button_click
+						}
+					},
+					{
+						xtype:"vmd.button",
+						id:"button",
+						text:"二维若群翁人",
+						type:"(none)",
+						size:"small",
+						width:99
+					}
+				]
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+	}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MainViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

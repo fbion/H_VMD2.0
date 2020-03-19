@@ -1,0 +1,94 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>认证</title>
+    <script src="../config.js?ver=2.0.4.190627"></script>
+    <script src="../lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=vmd2.0.5.190911"></script>
+    <script src="../lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=vmd2.0.5.190911"></script>
+    <script src="../lib/ext-3.4/adapter/ext/ext-base-class.js?ver=vmd2.0.5.190911"></script>
+    <script src="../lib/ext-3.4/ext-all-debug.js?ver=vmd2.0.5.190911"></script>
+    <script src="../js/util.js?ver=vmd2.0.5.190911"></script>
+    <script src="../js/hwdas.js?ver=vmd2.0.5.190911"></script>
+    <script src="../js/vmdcore.js?ver=vmd2.0.5.190911"></script>
+    <script src="../js/vmdcomps.js?ver=vmd2.0.5.190911"></script>
+    <script src="../js/publicMethods.js?ver=vmd2.0.5.190911"></script>
+    <style type="text/css" id="vmdcss"> </style>
+    <script>
+        vmd.previewMode = true;
+        vmd.virtualPath = '';
+        vmd.workspace = {
+        }
+        vmd.resourceSettings = {
+        }
+        vmd.projectInfo = {
+        }
+        Ext.define("vmd.module.MainViewport", {
+            extend: "vmd.comp.viewport",
+            requires: vmd.getCmpDeps([]),
+            xtype: "vmd.module.MainViewport",
+            layout: "absolute",
+            afterrender: "MainViewport_afterrender",
+            initComponent: function() {
+			debugger
+                var backurl =decodeURIComponent( vmd.getUrlParam("backurl"));
+                var errurl =decodeURIComponent( vmd.getUrlParam("errurl"));
+                var usermark =decodeURIComponent( vmd.getUrlParam("usermark"));
+                var type = decodeURIComponent(vmd.getUrlParam("type"));
+                var appkey = decodeURIComponent(vmd.getUrlParam("appkey"));
+                var host = decodeURIComponent(vmd.getUrlParam("host"));
+				
+
+                function MainViewport_afterrender(sender) {
+                    if (backurl && usermark && host) {
+						authurl="http://"+host+"/SSOService/ThirdAppSSO/ThirdAppSSo"
+						hwDas.ajax({
+							url: authurl,
+							type: 'get',
+							timeout: 20000,
+							params: {thirdssoid:type,loginName:usermark},
+							success: function(result) {
+								if(result.token){
+									Cookie.set("hwToken", result.token||"");
+									Cookie.set("usermark", usermark);
+									window.setTimeout(function(){window.location.href = backurl;},200)
+									 }
+								else {
+									if(errurl.indexOf('?')>=0)							
+										window.location.href = errurl+"&backurl="+backurl || errurl;
+									else							
+										window.location.href = errurl+"?backurl="+backurl || errurl;
+								}								
+							},
+							error:function(){		
+								if(errurl.indexOf('?')>=0)							
+									window.location.href = errurl+"&backurl="+backurl || errurl
+								else						
+									window.location.href = errurl+"?backurl="+backurl || errurl
+							}
+						})                        
+                    } else {
+                        vmd.alert("错误", "缺少认证所需的参数。")
+                    }
+                }
+                this.MainViewport_afterrender = MainViewport_afterrender;
+                this.callParent();
+                var me = this;
+                vmd.core.moduleInit(this.items, this);
+                me.on('afterrender', function() {
+                    MainViewport_afterrender.call(me, me)
+                })
+            }
+        })
+        Ext.onReady(function() {
+            Ext.create('vmd.module.MainViewport', {
+                renderTo: document.body
+            })
+        })
+    </script>
+</head>
+
+<body> </body>
+
+</html>

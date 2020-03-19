@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>锚点布局（Absolut layout）</title>
+    
+    <!--基本样式-->
+    <link href="/css/common.css" rel="stylesheet" />
+
+    <!--加载dhx组件-->
+    
+    <link href="/lib/ext-3.4/resources/css/ext-all.css" rel="stylesheet" />
+     <!--样式快捷索引表-->
+    <link href="/css/shortcut.css" rel="stylesheet" />
+    <link href="/lib/dhtmlx/dhtmlx.css" rel="stylesheet" />
+
+    <script src="/lib/labjs/LAB.min.js"></script>
+    <script src="/config.js"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js"></script>
+
+    <script src="/lib/dhtmlx/dhtmlx.js"></script>
+    <script src="/js/hwdas.js"></script>
+    <script src="/js/vmdcore.js"></script>
+    <script src="/js/vmdcomps.js"></script>
+     <script src="/js/vmdreport.js"></script>
+    <style>
+        .x-viewport, .x-viewport body {
+            overflow:auto !important
+        }
+    </style>
+    <style type="text/css" id="vmdcss">
+        
+    </style>
+    <script>
+
+        Ext.define("vmd.module.MyViewport" ,{
+	extend:"Ext.Viewport",
+	xtype:"vmd.module.MyViewport",
+	layout:"anchor",
+	initComponent: function(){
+		this.items=[
+			{
+				xtype:"panel",
+				id:"MyPanel",
+				title:"Item1",
+				header:true,
+				border:true,
+				height:216,
+				anchor:"right 20%"
+			},
+			{
+				xtype:"panel",
+				id:"MyPanel1",
+				title:"Item2",
+				header:true,
+				border:true,
+				height:100,
+				width:515,
+				anchor:"50% 30%"
+			},
+			{
+				xtype:"panel",
+				id:"MyPanel2",
+				title:"Item3",
+				header:true,
+				border:true,
+				height:154,
+				anchor:"-200 50%"
+			}
+		]
+		this.callParent();
+		vmd.core.moduleInit(this.items, this);
+			undefined
+	}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MyViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

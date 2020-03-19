@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>消息推送测试</title>
+	<!--基本样式-->
+    <link href="{vmdvirtualPath}/css/common.css?ver=2.0.4.190514" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="{vmdvirtualPath}/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.4.190514" rel="stylesheet" />
+   
+    <link href="{vmdvirtualPath}/design/css/icons.css?ver=2.0.4.190514" rel="stylesheet" />
+
+	<link href="{vmdvirtualPath}/lib/dhtmlx/dhtmlx.css?ver=2.0.4.190514" rel="stylesheet" />
+	  <!--样式快捷索引表-->
+    <link href="{vmdvirtualPath}/css/shortcut.css?ver=2.0.4.190514" rel="stylesheet" />
+    <link href="{vmdvirtualPath}/lib/laydate/theme/default/laydate.css?ver=2.0.4.190514" rel="stylesheet" />
+	{vmdprojectcssfiles}
+    
+    <script src="{vmdvirtualPath}/lib/labjs/LAB.min.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/config.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/ext-all-debug.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/js/util.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/lib/dhtmlx/dhtmlx.js?ver=2.0.4.190514"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.4.190514"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.4.190514"></script>
+	<script src="{vmdvirtualPath}/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/js/hwdas.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/js/vmdcore.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/js/vmdcomps.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/js/publicMethods.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/js/vmdreport.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/lib/ueditor/ueditor.config.js?ver=2.0.4.190514" ></script>
+	<script src="{vmdvirtualPath}/lib/ueditor/ueditor.all.js?ver=2.0.4.190514" ></script>
+	<script src="{vmdvirtualPath}/lib/ueditor/lang/zh-cn/zh-cn.js?ver=2.0.4.190514" ></script>
+	<script src="{vmdvirtualPath}/lib/ueditor/kityformula-plugin/addKityFormulaDialog.js?ver=2.0.4.190514" ></script>
+	<script src="{vmdvirtualPath}/lib/ueditor/kityformula-plugin/getKfContent.js?ver=2.0.4.190514" ></script>
+	<script src="{vmdvirtualPath}/lib/ueditor/kityformula-plugin/defaultFilterFix.js?ver=2.0.4.190514" ></script>
+	<script src="{vmdvirtualPath}/lib/laydate/laydate.src.js?ver=2.0.4.190514" ></script>
+	<script src="{vmdvirtualPath}/js/hwMSC.js?ver=2.0.4.190514" ></script>
+	{vmdprojectjsfiles}
+    <script src="{资源中心&&资源中心服务器}/脚本/a.js?v=2.0.4.190514" ></script>
+    {vmdworkspacePath}
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        
+    </style>
+    <script>
+	    
+        vmd.virtualPath = '{vmdvirtualPath}';
+        
+        Ext.define("vmd.module.MainViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps([]),
+	xtype:"vmd.module.MainViewport",
+	layout:"absolute",
+	initComponent: function(){
+		
+function report_afterrender(render){
+ report.query();
+}
+	
+		store=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"store","autoLoad":true,"cid":"vmdJsonStore","storeConfig":"{\"id\":\"104FPZAhJt\",\"callcode\":\"vmdCode\",\"url\":\"DataService/Power/Manage\",\"host\":\"\",\"isHwRest\":true,\"name\":\"管理\",\"getMethods\":[{\"id\":\"userid\",\"value1\":\"\",\"value2\":\"\",\"defaultvalue\":\"@UserId\"},{\"id\":\"projectid\",\"value1\":\"\",\"value2\":\"\",\"defaultvalue\":\"\"}],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"projectid\",\"type\":\"string\"},{\"name\":\"userid\",\"type\":\"string\"}]}"});
+
+
+		hwMSC=new vmd.service.HwMSC();
+		this.items=[
+			{
+				xtype:"vmd.button",
+				id:"button",
+				text:"连接",
+				type:"(none)",
+				size:"small",
+				x:70,
+				y:90
+			},
+			{
+				xtype:"vmd.button",
+				id:"button1",
+				text:"订阅",
+				type:"(none)",
+				size:"small",
+				x:70,
+				y:190
+			},
+			{
+				xtype:"vmd.button",
+				id:"button2",
+				text:"推送",
+				type:"(none)",
+				size:"small",
+				x:70,
+				y:240
+			},
+			{
+				xtype:"vmd.button",
+				id:"button3",
+				text:"断开连接",
+				type:"(none)",
+				size:"small",
+				x:70,
+				y:140,
+				disabled:false
+			},
+			{
+				xtype:"vmd.richTextEditor",
+				id:"hwRichTextEditor",
+				height:300,
+				width:600,
+				zIndex:30000,
+				x:240,
+				y:130
+			},
+			{
+				xtype:"vmd.dateTime",
+				id:"dateTime",
+				text:"dateTime",
+				width:150,
+				height:28,
+				format:"yyyy-MM-dd",
+				x:650,
+				y:60
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+	}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MainViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

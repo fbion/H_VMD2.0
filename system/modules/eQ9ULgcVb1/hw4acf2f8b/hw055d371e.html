@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>工作流节点已绑定模块列表new</title>
+	<!--基本样式-->
+    <link href="/css/common.css?ver=2.0.3.20190219" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.3.20190219" rel="stylesheet" />
+   
+    <link href="/design/css/icons.css?ver=2.0.3.20190219" rel="stylesheet" />
+
+	<link href="/lib/dhtmlx/dhtmlx.css?ver=2.0.3.20190219" rel="stylesheet" />
+	  <!--样式快捷索引表-->
+    <link href="/css/shortcut.css?ver=2.0.3.20190219" rel="stylesheet" />
+    
+    <script src="/lib/labjs/LAB.min.js?ver=2.0.3.20190219"></script>
+    <script src="/config.js?ver=2.0.3.20190219"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.3.20190219"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.3.20190219"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.3.20190219"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=2.0.3.20190219"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.3.20190219"></script>
+    <script src="/js/util.js?ver=2.0.3.20190219"></script>
+    <script src="/lib/dhtmlx/dhtmlx.js?ver=2.0.3.20190219"></script>
+	<script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.3.20190219"></script>
+	<script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.3.20190219"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.3.20190219"></script>
+	<script src="/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.3.20190219"></script>
+    <script src="/js/hwdas.js?ver=2.0.3.20190219"></script>
+	<script src="/js/hwMSC.js?ver=2.0.3.20190219"></script>
+    <script src="/js/vmdcore.js?ver=2.0.3.20190219"></script>
+    <script src="/js/vmdcomps.js?ver=2.0.3.20190219"></script>
+    <script src="/js/publicMethods.js?ver=2.0.3.20190219"></script>
+    <script src="/js/vmdreport.js?ver=2.0.3.20190219"></script>
+    
+
+    <script src="/lib/ace/ace.js"></script>
+    <script src="/lib/ace/mode-base.js" type="text/javascript"></script>
+    <script src="/lib/ace/theme-xcode.js" type="text/javascript" ></script>
+    <script src="/lib/ace/ext-language_tools.js"></script>
+    
+
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        
+    </style>
+    <script>
+	    vmd.preivewMode=true;
+        vmd.virtualPath = '';
+        vmd.workspace={"workspaceid":"254f1fb7-7079-48bf-bdd4-f7925e0eb4a3","workflowIp":"","dataServiceIp":"","msgIp":"","projectid":"eQ9ULgcVb1"}
+	vmd.resourceSettings={"测试&&资源中心服务器":"http://www.hanweikeji.com:10050/resource","测试&&服务器2":"http://www.hanweikeji.com:10050/resource"}
+        Ext.define("vmd.module.MainViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps([]),
+	xtype:"vmd.module.MainViewport",
+	layout:"border",
+	afterrender:"MainViewport_afterrender",
+	initComponent: function(){
+		var selmodules = {
+    modulesInfo: [{
+        xh: "1",
+        moduleName: "模拟流程",
+        moduleId: "hw34e2f623",
+        modulePath: "/hw34e2f623.html"
+    }],
+    rule: ""
+}
+
+var keyString = false;
+
+selmodules.modulesInfo = []
+var obj = {}
+if(getUrlParam("type") == "1") {
+    if(parent && parent.workflowSelnodeInfo) {
+        var obj = parent.workflowSelnodeInfo
+    }
+} else {
+    var strNodeModuleInfo
+    if(parent && parent.workflowSelnodeInfo) {
+        strNodeModuleInfo = parent.workflowSelnodeInfo.variantNode.formkeydefinition
+    }
+    if(strNodeModuleInfo) {
+        try {
+            obj = Ext.decode(strNodeModuleInfo);
+        } catch (ex) {
+            obj = strNodeModuleInfo
+        }
+    }
+}
+if(parent && parent.workflowSelnodeInfo) {
+    var newmodulesinfo = []
+    if(typeof(obj) == "string") {
+        keyString = true
+        var oldmoduleinfo = {
+            moduleId: obj,
+            moduleName: "",
+            modulePath: ""
+        }
+        selmodules.modulesInfo.push(oldmoduleinfo)
+    } else { //先判断有没有绑定该模块
+        if(obj.modulesInfo) {
+            for(var k = 0; k < obj.modulesInfo.length; k++) {
+                var moduleinfo = {
+                    xh: k + 1,
+                    moduleId: obj.modulesInfo[k].moduleId,
+                    moduleName: obj.modulesInfo[k].moduleName,
+                    modulePath: obj.modulesInfo[k].modulePath
+                }
+                selmodules.modulesInfo.push(moduleinfo)
+            }
+        }
+        selmodules.rule = obj.rule;
+
+    }
+}
+
+var comData = selmodules.modulesInfo;
+var _store = new vmd.data.Store({
+    data: comData,
+    fields: ['xh', 'moduleName', 'moduleId', 'modulePath']
+})
+
+function MainViewport_afterrender(sender) {
+    hwTextArea.setValue(selmodules.rule)
+}
+
+//编辑模块
+function moduleEdit(index) {
+    var record = MyGrid.store.getAt(index);
+    var moduelId = record.get("moduleId")
+    //从服务中找到moduleId对应的模块 并打开编辑页面
+    hwDas.get("CDEServcie/module/info", {}, {
+            id: moduelId
+        }, function(result) {
+            if(result.data[0].datas.length > 0) { //打开vmd编辑
+                hwDas.get("CDEServcie/module/file", {}, {
+                        module_id: moduelId
+                    }, function(result1) {
+                        if(result1.data[0].datas.length > 0) { //打开vmd编辑
+                            var selWorkspaceid = vmd.workspace.workspaceid
+                            var params = {
+                                id: moduelId,
+                                name: result.data[0].datas[0].name,
+                                path: "modules" + result1.data[0].datas[0].filepath + '.vmd',
+                                workspaceid: selWorkspaceid
+                            }
+                            var url = vmd.virtualPath + '/design/default.html?' + Ext.urlEncode(params);
+                            if(vmd.isIE9) {
+                                var name = params.name
+                            } else {
+                                var name = params.name + " 模块设计&workspaceid=" + selWorkspaceid
+                            }
+                            window.open(url, name)
+                        } else {
+                            vmd.alert("提示", "vmd中找不到该定制页面，无法编辑！")
+                        }
+                    },
+                    function() {}
+                )
+            } else {
+                vmd.alert("提示", "vmd中找不到该定制页面，无法编辑！")
+            }
+        },
+        function() {}
+    )
+}
+window.moduleEdit = moduleEdit
+
+function MyGrid_beforerender(sender) {
+    this.store = _store
+    this.colModel.config[4].renderer = function(value, cellmeta, record) { //可以根据行字段的某个类型进行转换设置显示值
+        return '<button class="vmd-button vmd-button--text vmd-button--small " style="height:10px;"' +
+            'onclick=moduleEdit(' + record.store.indexOf(record) + ')>编辑模块</button>'
+    }
+}
+  var savemodulesInfo = function() {
+        selmodules.modulesInfo = []
+        for(var i = 0; i < MyGrid.store.getCount(); i++) {
+            var rec = MyGrid.store.getAt(i)
+            selmodules.modulesInfo.push({
+                moduleId: rec.data.moduleId,
+                moduleName: rec.data.moduleName,
+                modulePath: rec.data.modulePath
+            })
+        }
+        selmodules.rule = hwTextArea.getValue();
+
+        if(getUrlParam("type") == "1") {
+            if(parent && parent.setWorkflowNodeModelInfo) {
+                parent.setWorkflowNodeModelInfo(Ext.encode(selmodules))
+                vmd.tip('设置成功', "success");
+            }
+        } else {
+            var selNodeId = ""
+            if(parent && parent.workflowSelnodeInfo) {
+                selNodeId = parent.workflowSelnodeInfo.variantNode.taskNodeid
+            } else
+                return
+            if(parent && parent.bindNodesForm) {
+                parent.bindNodesForm([{
+                    nodeId: selNodeId,
+                    modulesInfo: Ext.encode(selmodules)
+                }], function() {
+                    // 顶部浮动提示 
+                    vmd.tip('保存成功', "success");
+                })
+            }
+        }
+    }
+//确定操作 组织模块信息并存储到流程中
+function button2_click(sender, e) {
+    if(typeof(obj) == "string")
+        Ext.Msg.confirm("提示", "模块信息记录的为模块ID，确定后将修改为模块对象，待办获取模块部分需要进行相应的调整。确定要修改么？", function(type) {
+            if(type == "yes") {
+                savemodulesInfo();
+            } else
+                return;
+        })
+    else
+        savemodulesInfo()
+  
+
+} //删除操作，删除后重新排列序号
+function button1_click(sender, e) {
+    var selmodel = MyGrid.getSelectionModel();
+    if(selmodel.getCount() > 0) {
+        MyGrid.store.remove(selmodel.getSelections()[0])
+    }
+    //重新设置序号
+    for(var i = 0; i < MyGrid.store.getCount(); i++) {
+        var rec = MyGrid.store.getAt(i);
+        MyGrid.store.getAt(i).set("xh", i + 1)
+    }
+}
+
+//打开模版选择界面
+function button_click(sender, e) {
+    var moduleSelWin = new vmd.window({
+        title: "模块选择",
+        url: vmd.core.getVirtualPath() + "/modules/eQ9ULgcVb1/hw4acf2f8b/hwac4371c9.html",
+        auto: false,
+        height: 500,
+        width: 450,
+        maximizable: false,
+        enableLoading: true,
+        resizable: true,
+        params: {
+            projectid: vmd.getUrlParam("project_id") || vmd.workspace.projectid,
+            r: new Date().getTime()
+        }
+    })
+    moduleSelWin.show();
+    window.moduleSelWin = moduleSelWin;
+}
+//添加模版选择界面选择的模版到数据集中
+function addSelModule(modules) {
+    var count = MyGrid.store.getCount();
+    for(var i = 0; i < modules.length; i++) {
+        var s_records = MyGrid.store.query("moduleId", modules[i].moduleId)
+        if(s_records.items.length > 0) {
+            s_records.items[0].set("moduleName", modules[i].moduleName)
+            s_records.items[0].set("modulePath", modules[i].modulePath)
+        } else {
+            var count = MyGrid.store.getCount();
+            var record = vmd.data.Record.create({
+                xh: count + 1,
+                moduleId: modules[i].moduleId,
+                moduleName: modules[i].moduleName,
+                modulePath: modules[i].modulePath
+            })
+            MyGrid.store.add(record)
+        }
+    }
+}
+window.addSelModule = addSelModule;
+
+//关闭突出编辑界面
+function button3_click(sender, e) {
+    if(parent && parent.openSelModuleListWin)
+        parent.openSelModuleListWin.close()
+}
+			this.MainViewport_afterrender=MainViewport_afterrender;
+
+
+
+		this.items=[
+			{
+				xtype:"vmd.div",
+				id:"div",
+				autoEl:"div",
+				border:false,
+				backgroundRepeat:"no-repeat",
+				backgroundPosition:"top left",
+				width:400,
+				height:409,
+				x:300,
+				y:100,
+				region:"center",
+				layout:"border",
+				items:[
+					{
+						xtype:"vmd.div",
+						id:"div2",
+						autoEl:"div",
+						border:false,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						width:400,
+						height:50,
+						region:"center",
+						layout:"border",
+						items:[
+							{
+								xtype:"vmd.div",
+								id:"div4",
+								autoEl:"div",
+								border:true,
+								backgroundRepeat:"no-repeat",
+								backgroundPosition:"top left",
+								width:400,
+								height:50,
+								region:"center",
+								layout:"fit",
+								margins:"5 10 0 10",
+								items:[
+									{
+										xtype:"grid",
+										id:"MyGrid",
+										title:"Grid Panel",
+										loadMask:true,
+										enableHdMenu:true,
+										disableHeaderClick:true,
+										hideHeaders:false,
+										header:false,
+										border:false,
+										beforerender:"MyGrid_beforerender",
+										listeners:{
+											beforerender:MyGrid_beforerender
+										},
+										columns:[
+											{
+												xtype:"numbercolumn",
+												header:"序号",
+												sortable:true,
+												resizable:true,
+												dataIndex:"xh",
+												width:50,
+												format:"0",
+												align:"center",
+												menuDisabled:true
+											},
+											{
+												xtype:"gridcolumn",
+												header:"模块名称",
+												sortable:true,
+												resizable:true,
+												dataIndex:"moduleName",
+												width:150,
+												menuDisabled:true
+											},
+											{
+												xtype:"gridcolumn",
+												header:"模块ID",
+												sortable:true,
+												resizable:true,
+												dataIndex:"moduleId",
+												width:150,
+												menuDisabled:true
+											},
+											{
+												xtype:"gridcolumn",
+												header:"模块路径",
+												sortable:true,
+												resizable:true,
+												dataIndex:"modulePath",
+												width:250,
+												menuDisabled:true
+											},
+											{
+												xtype:"templatecolumn",
+												header:"操作",
+												sortable:true,
+												resizable:true,
+												width:100,
+												tpl:"<button class=\"vmd-button vmd-button--success vmd-button--small\" style=\"height:10px\">模块编辑</button>",
+												menuDisabled:true,
+												align:"center"
+											}
+										]
+									}
+								]
+							},
+							{
+								xtype:"vmd.div",
+								id:"div5",
+								autoEl:"div",
+								border:false,
+								backgroundRepeat:"no-repeat",
+								backgroundPosition:"top left",
+								width:400,
+								height:37,
+								region:"north",
+								hidden:true
+							}
+						]
+					},
+					{
+						xtype:"vmd.div",
+						id:"div3",
+						autoEl:"div",
+						border:false,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						width:400,
+						height:35,
+						region:"north",
+						style:"border-bottom: 1px #f2f2f2 solid",
+						layout:"border",
+						items:[
+							{
+								xtype:"vmd.div",
+								id:"div9",
+								autoEl:"div",
+								border:false,
+								backgroundRepeat:"no-repeat",
+								backgroundPosition:"top left",
+								width:400,
+								height:50,
+								region:"west",
+								layout:"absolute",
+								items:[
+									{
+										xtype:"label",
+										id:"label",
+										text:"模块列表",
+										style:"font-size: 14px",
+										x:5,
+										y:10
+									}
+								]
+							},
+							{
+								xtype:"vmd.div",
+								id:"div10",
+								layoutConfig:{
+									align:"middle",
+									pack:"end"
+								},
+								autoEl:"div",
+								border:false,
+								backgroundRepeat:"no-repeat",
+								backgroundPosition:"top left",
+								width:400,
+								height:50,
+								region:"center",
+								layout:"hbox",
+								items:[
+									{
+										xtype:"vmd.button",
+										id:"button",
+										text:"添加模块",
+										type:"text",
+										size:"small",
+										icon:"icon-plus",
+										style:"margin-left: 20px;    margin-top: 5px",
+										click:"button_click",
+										margins:"0 20 0 0 ",
+										listeners:{
+											click:button_click
+										}
+									},
+									{
+										xtype:"vmd.button",
+										id:"button1",
+										text:"删除模块",
+										type:"text",
+										size:"small",
+										icon:"icon-minus",
+										style:"margin-left: 20px;    margin-top: 5px",
+										click:"button1_click",
+										margins:"0 50 0 0",
+										listeners:{
+											click:button1_click
+										}
+									}
+								]
+							}
+						]
+					}
+				]
+			},
+			{
+				xtype:"vmd.div",
+				id:"div1",
+				autoEl:"div",
+				border:false,
+				backgroundRepeat:"no-repeat",
+				backgroundPosition:"top left",
+				width:400,
+				height:200,
+				x:280,
+				y:250,
+				region:"south",
+				layout:"border",
+				items:[
+					{
+						xtype:"vmd.div",
+						id:"div6",
+						autoEl:"div",
+						border:false,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						width:400,
+						height:50,
+						region:"center",
+						layout:"fit",
+						margins:"5 10 5 10",
+						items:[
+							{
+								xtype:"textarea",
+								id:"hwTextArea",
+								allowBlank:true
+							}
+						]
+					},
+					{
+						xtype:"vmd.div",
+						id:"div7",
+						autoEl:"div",
+						border:false,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						width:400,
+						height:35,
+						region:"north",
+						style:"border-bottom: 1px #f2f2f2 solid",
+						layout:"absolute",
+						items:[
+							{
+								xtype:"label",
+								id:"label1",
+								text:"调用规则",
+								style:"font-size: 14px",
+								x:5,
+								y:10
+							}
+						]
+					},
+					{
+						xtype:"vmd.div",
+						id:"div8",
+						layoutConfig:{
+							align:"middle",
+							pack:"end"
+						},
+						autoEl:"div",
+						border:false,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						width:400,
+						height:40,
+						region:"south",
+						layout:"hbox",
+						style:"background-color: #f2f2f2",
+						items:[
+							{
+								xtype:"vmd.button",
+								id:"button2",
+								text:"保存",
+								type:"primary",
+								size:"small",
+								margins:"0 20 0 0",
+								click:"button2_click",
+								listeners:{
+									click:button2_click
+								}
+							},
+							{
+								xtype:"vmd.button",
+								id:"button3",
+								text:"关闭",
+								type:"(none)",
+								size:"small",
+								margins:"0 20 0 0",
+								click:"button3_click",
+								listeners:{
+									click:button3_click
+								}
+							}
+						]
+					}
+				]
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+			me.on('afterrender',function(){ MainViewport_afterrender.call(me,me)})
+}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MainViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

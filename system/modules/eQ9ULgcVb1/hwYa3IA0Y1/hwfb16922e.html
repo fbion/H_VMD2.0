@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>单元格日期</title>
+	<!--基本样式-->
+    <link href="/css/common.css?ver=2.0.3.0908" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.3.0908" rel="stylesheet" />
+   
+    <link href="/design/css/icons.css?ver=2.0.3.0908" rel="stylesheet" />
+
+	<link href="/lib/dhtmlx/dhtmlx.css?ver=2.0.3.0908" rel="stylesheet" />
+	  <!--样式快捷索引表-->
+    <link href="/css/shortcut.css?ver=2.0.3.0908" rel="stylesheet" />
+    
+    <script src="/lib/labjs/LAB.min.js?ver=2.0.3.0908"></script>
+    <script src="/config.js?ver=2.0.3.0908"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.3.0908"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.3.0908"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.3.0908"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=2.0.3.0908"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.3.0908"></script>
+    <script src="/js/util.js?ver=2.0.3.0908"></script>
+    <script src="/lib/dhtmlx/dhtmlx.js?ver=2.0.3.0908"></script>
+	<script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.3.0908"></script>
+	<script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.3.0908"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.3.0908"></script>
+	<script src="/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.3.0908"></script>
+    <script src="/js/hwdas.js?ver=2.0.3.0908"></script>
+    <script src="/js/vmdcore.js?ver=2.0.3.0908"></script>
+    <script src="/js/vmdcomps.js?ver=2.0.3.0908"></script>
+    <script src="/js/publicMethods.js?ver=2.0.3.0908"></script>
+    <script src="/js/vmdreport.js?ver=2.0.3.0908"></script>
+    
+
+    <script src="/lib/ace/ace.js"></script>
+    <script src="/lib/ace/mode-base.js" type="text/javascript"></script>
+    <script src="/lib/ace/theme-xcode.js" type="text/javascript" ></script>
+    <script src="/lib/ace/ext-language_tools.js"></script>
+    
+
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        
+    </style>
+    <script>
+	    vmd.preivewMode=true;
+        vmd.virtualPath = '';
+        vmd.workspace={"workspaceid":"a10139fa-d032-472f-b1f4-1933b14b4765","projectid":"eQ9ULgcVb1","workflowIp":"","dataServiceIp":""}
+        Ext.define("vmd.module.MainViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps(["vmd.ux.DateType$1.0$DateType"]),
+	xtype:"vmd.module.MainViewport",
+	layout:"absolute",
+	afterrender:"MainViewport_afterrender",
+	listeners:{
+		vmdafterrender:function(){
+	this.MainViewport_afterrender(this)
+}
+	},
+	initComponent: function(){
+		function cellDateType() {
+    this.allowEdit = {
+            id: "allowEdit",
+            value: "true",
+            type: "CheckBox"
+        },
+        this.customize = {
+            id: "customize",
+            value: "",
+            type: "CheckBox"
+        },
+        this.dateStyle = {
+            id: "dateStyle",
+            value: "",
+            type: "comlist"
+        },
+        this.defaultToday = {
+            id: "defaultToday",
+            value: "true",
+            type: "CheckBox"
+        },
+        this.allowPrint = {
+            id: "allowPrint",
+            value: "true",
+            type: "CheckBox"
+        },
+        this.allowEmpty = {
+            id: "allowEmpty",
+            value: "true",
+            type: "CheckBox"
+        },
+        this.emptyAlert = {
+            id: "emptyAlert",
+            value: "",
+            type: "Text"
+        }
+
+
+
+    //清空属性
+    this.clearInfo = function() {
+        this.allowEdit.value = "true"
+        this.customize.value = "true"
+        this.dateStyle.value = ""
+        this.defaultToday.value = "true"
+        this.allowPrint.value = "true"
+        this.allowEmpty.value = "true"
+        this.emptyAlert.value = ""
+    };
+
+    //设置值
+    this.setCellTextInfo = function(info, cell) {
+        this.allowEmpty.value = info.allowEmpty.value
+        this.allowEdit.value = info.allowEdit.value
+        this.allowPrint.value = info.allowPrint.value
+        this.customize.value = info.customize.value
+        this.defaultToday.value = info.defaultToday.value
+        this.dateStyle.value = info.dateStyle.value
+        this.emptyAlert.value = info.emptyAlert.value
+    };
+
+    // 根据id设置相应属性的值
+    this.setCellInfos = function(id, value) {
+        var c = this.getInfoByID(id);
+        if(c) {
+            if(c.type == "Text") {
+                c.value = value;
+            }
+            if(c.type == "CheckBox") {
+                c.checked = value;
+            }
+            if(c.type == "ComboBox") {
+                c.value = value;
+            }
+            if(c.type == "compound") {
+                c.value = value;
+            }
+            if(c.type == "combo") {
+                c.value = value;
+            }
+            if(c.type == "radiostoregroup") {
+                c.value = value;
+            }
+            if(c.type == "ColorSelect") {
+                c.value = value;
+            }
+            if(c.type == "LineStyle") {
+                c.value = value;
+            }
+        }
+    };
+
+    //通过id获取属性
+    this.getInfoByID = function(id) {
+        if(this.allowEdit.id == id) {
+            return this.allowEdit;
+        }
+        if(this.allowPrint.id == id) {
+            return this.allowPrint;
+        }
+        if(this.allowEmpty.id == id) {
+            return this.allowEmpty;
+        }
+        if(this.customize.id == id) {
+            return this.customize;
+        }
+        if(this.emptyAlert.id == id) {
+            return this.emptyAlert;
+        }
+        if(this.dateStyle.id == id) {
+            return this.dateStyle;
+        }
+        if(this.defaultToday.id == id) {
+            return this.defaultToday;
+        }
+    }
+
+    //转换JSON串
+    this.cellInfoToJson = function() {
+        json = {
+            cellDateInfo: [{
+                allowEdit: {
+                    id: 'allowEdit',
+                    value: this.allowEdit.value,
+                    type: 'CheckBox'
+                },
+                allowPrint: {
+                    id: 'allowPrint',
+                    value: this.allowPrint.value,
+                    type: 'CheckBox'
+                },
+                allowEmpty: {
+                    id: 'allowEmpty',
+                    value: this.allowEmpty.value,
+                    type: 'CheckBox'
+                },
+                dateStyle: {
+                    id: 'dateStyle',
+                    value: this.dateStyle.value,
+                    type: 'comlist'
+                },
+                emptyAlert: {
+                    id: 'emptyAlert',
+                    value: this.emptyAlert.value,
+                    type: 'Text'
+                },
+                defaultToday: {
+                    id: 'defaultToday',
+                    value: this.defaultToday.value,
+                    type: 'CheckBox'
+                },
+                customize: {
+                    id: 'customize',
+                    value: this.customize.value,
+                    type: 'CheckBox'
+                }
+            }]
+
+        }
+    }
+}
+var p = new cellDateType()
+
+function button_click(sender, e) {
+    p.allowEmpty.value = "true"
+    p.allowEdit.value = "true"
+    p.allowPrint.value = "true"
+    p.customize.value = "false"
+    p.defaultToday.value = "true"
+    p.dateStyle.value = "2"
+    p.emptyAlert.value = "111"
+    DateType.setInfo(p, null)
+}
+
+function button1_click(sender, e) {
+    p.allowEmpty.value = DateType.getInfo("allowEmpty")
+    p.allowEdit.value = DateType.getInfo("allowEdit")
+    p.allowPrint.value = DateType.getInfo("allowPrint")
+    p.customize.value = DateType.getInfo("customize")
+    p.defaultToday.value = DateType.getInfo("defaultToday")
+    p.dateStyle.value = DateType.getInfo("dateStyle")
+    p.emptyAlert.value = DateType.getInfo("emptyAlert")
+    alert(p.allowEmpty.value + "," + p.allowEdit.value + "," + p.allowPrint.value +
+        "," + p.customize.value + "," + p.defaultToday.value + "," + p.dateStyle.value +
+        "," + p.emptyAlert.value)
+}
+
+function button2_click(sender, e) {
+    p.clearInfo()
+    DateType.setInfo(p, null)
+}
+
+function button3_click(sender, e) {
+     p.allowEmpty.value = DateType.getInfo("allowEmpty")
+    p.allowEdit.value = DateType.getInfo("allowEdit")
+    p.allowPrint.value = DateType.getInfo("allowPrint")
+    p.customize.value = DateType.getInfo("customize")
+    p.defaultToday.value = DateType.getInfo("defaultToday")
+    p.dateStyle.value = DateType.getInfo("dateStyle")
+    p.emptyAlert.value = DateType.getInfo("emptyAlert")
+    p.cellInfoToJson()
+    alert(JSON.stringify(json))
+}
+
+function MainViewport_afterrender(sender) {
+
+}
+			this.MainViewport_afterrender=MainViewport_afterrender;
+
+
+
+		this.items=[
+			{
+				xtype:"vmd.ux.DateType",
+				id:"DateType",
+				layout:"absolute",
+				x:60,
+				y:20
+			},
+			{
+				xtype:"vmd.button",
+				id:"button",
+				text:"取值",
+				type:"(none)",
+				size:"small",
+				x:560,
+				y:100,
+				click:"button_click",
+				listeners:{
+					click:button_click
+				}
+			},
+			{
+				xtype:"vmd.button",
+				id:"button1",
+				text:"传值",
+				type:"(none)",
+				size:"small",
+				x:560,
+				y:140,
+				click:"button1_click",
+				listeners:{
+					click:button1_click
+				}
+			},
+			{
+				xtype:"vmd.button",
+				id:"button2",
+				text:"clear",
+				type:"(none)",
+				size:"small",
+				x:560,
+				y:180,
+				click:"button2_click",
+				listeners:{
+					click:button2_click
+				}
+			},
+			{
+				xtype:"vmd.button",
+				id:"button3",
+				text:"json",
+				type:"(none)",
+				size:"small",
+				x:560,
+				y:220,
+				click:"button3_click",
+				listeners:{
+					click:button3_click
+				}
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+	}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MainViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>组件样式</title>
+    <!--基本样式-->
+    <link href="/css/common.css?ver=2.0.4.190627" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.4.190627" rel="stylesheet" />
+    <link href="/design/css/icons.css?ver=2.0.4.190627" rel="stylesheet" />
+    <link href="/lib/dhtmlx/dhtmlx.css?ver=2.0.4.190627" rel="stylesheet" />
+    <!--样式快捷索引表-->
+    <link href="/css/shortcut.css?ver=2.0.4.190627" rel="stylesheet" />
+    <script src="/lib/labjs/LAB.min.js?ver=2.0.4.190627"></script>
+    <script src="/config.js?ver=2.0.4.190627"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.4.190627"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.4.190627"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.4.190627"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=2.0.4.190627"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.4.190627"></script>
+    <script src="/js/util.js?ver=2.0.4.190627"></script>
+    <script src="/lib/dhtmlx/dhtmlx.js?ver=2.0.4.190627"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.4.190627"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.4.190627"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.4.190627"></script>
+    <script src="/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.4.190627"></script>
+    <script src="/js/hwdas.js?ver=2.0.4.190627"></script>
+    <script src="/js/vmdcore.js?ver=2.0.4.190627"></script>
+    <script src="/js/vmdcomps.js?ver=2.0.4.190627"></script>
+    <script src="/js/publicMethods.js?ver=2.0.4.190627"></script>
+    <script src="/js/vmdreport.js?ver=2.0.4.190627"></script>
+    <script src="/system/modules/eQ9ULgcVb1/project.config.js"></script>
+    <script src="/js/Datainput.js?ver=2.0.4.190627"></script>
+    <script src="/lib/express/complete.js?ver=2.0.4.190627"></script>
+    <script src="/report/js/hwreport_core.js?ver=2.0.4.190627"></script>
+    <style> </style>
+    <style type="text/css" id="vmdcss"> </style>
+    <script>
+        vmd.previewMode = true;
+        vmd.virtualPath = '';
+        vmd.workspace = {
+            "workspaceid": "b87fb04c-8f21-47a8-8e7d-852e0a9d2089",
+            "workflowIp": "",
+            "dataServiceIp": "",
+            "msgIp": "",
+            "projectid": "eQ9ULgcVb1"
+        }
+        vmd.resourceSettings = {
+            "10055&&资源中心服务器": "http://www.hanweikeji.com:10050/resource",
+            "test&&资源中心服务器": "http://www.hanweikeji.com:8050/resource",
+            "test&&服务器2": "http://192.168.1.202:8050/resource",
+            "test&&555": "http://www.hanweikeji.com:8050/resource"
+        }
+        vmd.projectInfo = {
+            "projectId": "eQ9ULgcVb1",
+            "workflowIp": "",
+            "dataServiceIp": "",
+            "msgIp": "",
+            "todoIp": "",
+            "authIp": "",
+            "docIp": "",
+            "reoprtIp": "",
+            "logIp": ""
+        }
+        Ext.define("vmd.module.MainViewport", {
+            extend: "vmd.comp.viewport",
+            requires: vmd.getCmpDeps([]),
+            xtype: "vmd.module.MainViewport",
+            layout: "absolute",
+            initComponent: function() {
+                this.items = [{
+                    xtype: "vmd.datainput",
+                    id: "hwDataInput",
+                    height: 600,
+                    width: 800,
+                    x: 220,
+                    y: 170,
+                    inputConfig: {
+                        form: {
+                            events: {
+                                rowChange: "",
+                                rowClick: ""
+                            },
+                            settings: {
+                                displayMode: "0",
+                                fields: [],
+                                formColumn: "3",
+                                issave: true
+                            }
+                        },
+                        grid: {
+                            events: {
+                                rowChange: "",
+                                rowClick: ""
+                            },
+                            settings: {
+                                displayMode: "0",
+                                fields: [],
+                                issave: true
+                            }
+                        },
+                        layout: {
+                            dataSet: "",
+                            displayMode: "style1",
+                            isShowForm: true,
+                            isShowGrid: true,
+                            isShowNavigation: true,
+                            isShowOperation: true,
+                            isShowStatistics: true
+                        },
+                        navigation: {
+                            click: "",
+                            first: true,
+                            firstCls: "",
+                            firstName: "首行",
+                            last: true,
+                            lastCls: "",
+                            lastName: "尾行",
+                            next: true,
+                            nextCls: "",
+                            nextName: "下一行",
+                            pageNum: true,
+                            prev: true,
+                            prevCls: "",
+                            prevName: "上一行"
+                        },
+                        operation: {
+                            addCls: "",
+                            addName: "",
+                            addbar: true,
+                            click: "",
+                            deleteCls: "",
+                            deleteName: "",
+                            deletebar: true,
+                            exData: true,
+                            exDataCls: "",
+                            exDataName: "",
+                            printCls: "",
+                            printName: "",
+                            printbar: true,
+                            saveCls: "",
+                            saveName: "",
+                            savebar: true
+                        },
+                        statistics: {
+                            expression: ""
+                        }
+                    }
+                }]
+                this.callParent();
+                var me = this;
+                vmd.core.moduleInit(this.items, this);
+            }
+        })
+        Ext.onReady(function() {
+            Ext.create('vmd.module.MainViewport', {
+                renderTo: document.body
+            })
+        })
+    </script>
+</head>
+
+<body> </body>
+
+</html>

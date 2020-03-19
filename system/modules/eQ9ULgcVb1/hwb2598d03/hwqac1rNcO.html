@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>aceEdit代码编辑器</title>
+	<!--基本样式-->
+    <link href="/css/common.css?ver=2.0.3.0710" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.3.0710" rel="stylesheet" />
+   
+    <link href="/design/css/icons.css?ver=2.0.3.0710" rel="stylesheet" />
+
+	<link href="/lib/dhtmlx/dhtmlx.css?ver=2.0.3.0710" rel="stylesheet" />
+	  <!--样式快捷索引表-->
+    <link href="/css/shortcut.css?ver=2.0.3.0710" rel="stylesheet" />
+    
+    <script src="/lib/labjs/LAB.min.js?ver=2.0.3.0710"></script>
+    <script src="/config.js?ver=2.0.3.0710"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.3.0710"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.3.0710"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.3.0710"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=2.0.3.0710"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.3.0710"></script>
+    <script src="/js/util.js?ver=2.0.3.0710"></script>
+    <script src="/lib/dhtmlx/dhtmlx.js?ver=2.0.3.0710"></script>
+	<script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.3.0710"></script>
+	<script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.3.0710"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.3.0710"></script>
+	<script src="/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.3.0710"></script>
+    <script src="/js/hwdas.js?ver=2.0.3.0710"></script>
+    <script src="/js/vmdcore.js?ver=2.0.3.0710"></script>
+    <script src="/js/vmdcomps.js?ver=2.0.3.0710"></script>
+    <script src="/js/publicMethods.js?ver=2.0.3.0710"></script>
+    <script src="/js/vmdreport.js?ver=2.0.3.0710"></script>
+    
+
+    <script src="/lib/ace/ace.js"></script>
+    <script src="/lib/ace/mode-base.js" type="text/javascript"></script>
+    <script src="/lib/ace/theme-xcode.js" type="text/javascript" ></script>
+    <script src="/lib/ace/ext-language_tools.js"></script>
+    
+
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        
+    </style>
+    <script>
+        vmd.virtualPath = '';
+        vmd.workspace={"workspaceid":"cdccf79f-11ed-4183-9f55-0a4df6a954a9","projectid":"eQ9ULgcVb1","workflowIp":"","dataServiceIp":""}
+        Ext.define("vmd.module.MyViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps([]),
+	xtype:"vmd.module.MyViewport",
+	layout:"border",
+	afterrender:"MyViewport_afterrender",
+	beforerender:"MyViewport_beforerender",
+	listeners:{
+		vmdafterrender:function(){
+	this.MyViewport_afterrender(this)
+},
+		beforerender:function(){
+	this.MyViewport_beforerender(this)
+}
+	},
+	initComponent: function(){
+		 if(parent.init_def_platformControlData) {
+
+     parent.init_def_platformControlData();
+     def_platformControl = parent.def_platformControl;
+ }
+ if(parent.init_def_platformFun) {
+
+     parent.init_def_platformFun({
+         vmd: allPublicMethods
+     });
+     parent.init_def_platformVmd();
+     //parent.init_def_platformExt();
+     def_platformWidget = parent.def_platformWidget;
+ }
+
+ //ext框架类自动识别
+ def_platformExtjs = parent.def_platformExtjs;
+ var components = parent.xds.inspector.root.childNodes;
+
+ aceEditCt = new vmd.comp.AceEx({
+     language: 'javascript',
+     id: "ace_code"
+ })
+aceEdit=aceEditCt.ace
+
+ if(parent.Ext.getCmp("aceWin")) {
+     p_aceEdit = parent.Ext.getCmp("aceWin")
+     aceEdit.value = p_aceEdit.val;
+     parent.Ext.getCmp("aceWin").on('close', closeAce)
+ }
+ // p_aceEdit = new vmd.comp.Ace({
+ //     language: 'javascript',
+ //     id: "ace_code",
+ //     value: "sss \n bbb \n  ccc",
+ //     aceline: "2"
+ // })
+
+ function hwTree3_afterrender(sender) {
+     // bindtree()
+ }
+
+ function bindtree() {
+     var mytree = compsTree;
+     mytree.iconURL = "";
+     mytree.deleteChildItems(0);
+     mytree.loadJSONObject({
+         id: 0,
+         text: "我的组件",
+         item: []
+     });
+     mytree.itemObj = {};
+     Ext.each(components, function(comp) {
+
+
+         mytree.insertNewChild(0, comp.id, comp.text);
+         var treenode = mytree.item(comp.id);
+         treenode.cid = comp.component.cid;
+         treenode.iconCls = comp.attributes.iconCls;
+         mytree.itemObj[comp.id] = treenode;
+         var iconImg = Ext.get(comp.ui.iconNode).getStyle('background-image').replace('url("', '').replace('")', '')
+         mytree.setItemImage2(comp.id, iconImg, iconImg, iconImg)
+
+         if(comp.childNodes.length > 0) {
+             Ext.each(comp.childNodes, function(childComp) {
+                 addComTree(childComp, comp.id);
+             })
+         }
+     })
+ }
+
+ function addComTree(comp, parentId) {
+     var mytree = compsTree;
+     mytree.insertNewChild(parentId, comp.id, comp.text);
+     var treenode = mytree.item(comp.id);
+     treenode.cid = comp.component.cid;
+     treenode.iconCls = comp.attributes.iconCls;
+     mytree.itemObj[comp.id] = treenode;
+     var iconImg = Ext.get(comp.ui.iconNode).getStyle('background-image');
+     var iconImg = Ext.get(comp.ui.iconNode).getStyle('background-image').replace('url("', '').replace('")', '')
+     mytree.setItemImage2(comp.id, iconImg, iconImg, iconImg)
+     if(comp.childNodes.length > 0) {
+         Ext.each(comp.childNodes, function(childComp) {
+             addComTree(childComp, comp.id);
+         })
+     }
+
+     mytree.closeItem(comp.id)
+ }
+
+ function compsTree_nodeClick(sender, id) {
+     var mytree = compsTree;
+     var m_mytree = compMethods;
+     var p_mytree = compPropertys;
+     var e_mytree = compEvent;
+     clearcompMethods();
+     clearcompPropertys();
+     clearcompEvent();
+     var selNode = mytree.getSelectedItemId();
+     if(!selNode)
+         return;
+     if(def_platformControl[selNode]) {
+         var methods = def_platformControl[def_platformControl[selNode]["!type"].replace("+", "")]
+         if(methods) {
+             for(var method in methods.prototype) {
+                 if(methods.prototype[method]["!type"] == 'fn()') {
+                     if(m_mytree.rendered) {
+                         m_mytree.insertNewChild(0, method, method);
+                         m_mytree.setItemImage2(method, "tree/fun.png", "tree/fun.png", "tree/fun.png")
+                         var treenode = m_mytree.item(method);
+                         treenode.content = methods.prototype[method]["!doc"];
+                         m_mytree.itemObj[method] = treenode;
+                     }
+                 } else if(methods.prototype[method]["!type"] == 'event') {
+                     if(e_mytree.rendered) {
+                         e_mytree.insertNewChild(0, method, method);
+                         e_mytree.setItemImage2(method, "tree/event.png", "tree/event.png", "tree/event.png")
+                         var treenode = e_mytree.item(method);
+                         treenode.content = methods.prototype[method]["!doc"];
+                         e_mytree.itemObj[method] = treenode;
+                     }
+                 } else {
+                     if(p_mytree.rendered) {
+                         p_mytree.insertNewChild(0, method, method);
+                         p_mytree.setItemImage2(method, "tree/pro.png", "tree/pro.png", "tree/pro.png")
+                         var treenode = p_mytree.item(method);
+                         treenode.content = methods.prototype[method]["!doc"];
+                         p_mytree.itemObj[method] = treenode;
+                     }
+                 }
+             }
+         }
+     }
+ }
+
+ function addComMethods(methods) {
+     var mytree = compsTree;
+     var m_mytree = compMethods;
+     var selNode = mytree.getSelectedItemId()
+     if(!selNode)
+         return;
+     if(def_platformControl[selNode]) {
+         var methods = def_platformControl[def_platformControl[selNode]["!type"].replace("+", "")]
+         if(methods) {
+             for(var method in methods.prototype) {
+                 if(methods.prototype[method]["!type"] == 'fn()') {
+                     m_mytree.insertNewChild(0, method, method);
+                     m_mytree.setItemImage2(method, "tree/fun.png", "tree/fun.png", "tree/fun.png")
+                     var treenode = m_mytree.item(method);
+                     treenode.content = methods.prototype[method]["!doc"];
+                     m_mytree.itemObj[method] = treenode;
+                 }
+             }
+         }
+     }
+ }
+
+ function addComEvent(methods) {
+     var mytree = compsTree;
+     var e_mytree = compEvent;
+     var selNode = mytree.getSelectedItemId()
+     if(!selNode)
+         return;
+     if(def_platformControl[selNode]) {
+         var methods = def_platformControl[def_platformControl[selNode]["!type"].replace("+", "")]
+         if(methods) {
+             for(var method in methods.prototype) {
+                 if(methods.prototype[method]["!type"] == 'event') {
+                     e_mytree.insertNewChild(0, method, method);
+                     e_mytree.setItemImage2(method, "tree/event.png", "tree/event.png", "tree/event.png")
+                     var treenode = e_mytree.item(method);
+                     treenode.content = methods.prototype[method]["!doc"];
+                     e_mytree.itemObj[method] = treenode;
+                 }
+             }
+         }
+     }
+ }
+
+ function addComPropertys(methods) {
+     var mytree = compsTree;
+     var p_mytree = compPropertys;
+     var selNode = mytree.getSelectedItemId()
+     if(!selNode)
+         return
+     if(def_platformControl[selNode]) {
+         var methods = def_platformControl[def_platformControl[selNode]["!type"].replace("+", "")]
+         if(methods) {
+             for(var method in methods.prototype) {
+                 if(methods.prototype[method]["!type"] == '') {
+                     p_mytree.insertNewChild(0, method, method);
+                     p_mytree.setItemImage2(method, "tree/pro.png", "tree/pro.png", "tree/pro.png")
+                     var treenode = p_mytree.item(method);
+                     treenode.content = methods.prototype[method]["!doc"];
+                     p_mytree.itemObj[method] = treenode;
+                 }
+             }
+         }
+     }
+ }
+
+ function clearcompPropertys() {
+     var mytree = compPropertys;
+     if(mytree.rendered) {
+         mytree.deleteChildItems(0);
+         mytree.loadJSONObject({
+             id: 0,
+             text: "我的属性",
+             item: []
+         });
+         mytree.itemObj = {};
+     }
+ }
+
+ function clearcompMethods() {
+     var mytree = compMethods;
+     if(mytree.rendered) {
+         mytree.deleteChildItems(0);
+         mytree.loadJSONObject({
+             id: 0,
+             text: "我的方法",
+             item: []
+         });
+         mytree.itemObj = {};
+     }
+ }
+
+ function clearcompEvent() {
+     var mytree = compEvent;
+     if(mytree.rendered) {
+         mytree.deleteChildItems(0);
+         mytree.loadJSONObject({
+             id: 0,
+             text: "我的事件",
+             item: []
+         });
+         mytree.itemObj = {};
+     }
+ }
+
+ function compPropertys_afterrender(sender) {
+     clearcompPropertys();
+     // addComPropertys();
+ }
+
+ function compMethods_afterrender(sender) {
+     clearcompMethods();
+     addComMethods();
+ }
+
+ function compEvent_afterrender(sender) {
+     clearcompEvent();
+     addComEvent();
+ }
+
+ function compPropertys_nodeClick(sender, id) {
+     hwEditor.setValue(compPropertys.itemObj[id].content);
+     hwEditor.readOnly = true;
+ }
+
+ function hwEditor_afterrender(sender) {
+     hwEditor.readOnly = true;
+ }
+
+ function compMethods_nodeClick(sender, id) {
+     hwEditor.setValue(compMethods.itemObj[id].content);
+     hwEditor.readOnly = true;
+ }
+
+ function compEvent_nodeClick(sender, id) {
+     hwEditor.setValue(compEvent.itemObj[id].content);
+     hwEditor.readOnly = true;
+ }
+
+ function compPropertys_doubleClick(sender, id) {
+     aceEdit.insert(compsTree.getSelectedItemId() + "." + compPropertys.itemObj[id].text);
+ }
+
+ function compMethods_doubleClick(sender, id) {
+     aceEdit.insert(compsTree.getSelectedItemId() + "." + compMethods.itemObj[id].text);
+ }
+
+ function compEvent_doubleClick(sender, id) {
+     aceEdit.insert(compsTree.getSelectedItemId() + "." + compEvent.itemObj[id].text);
+ }
+
+ function publicMethodsTree_afterrender(sender) {
+     var mytree = publicMethodsTree;
+     mytree.deleteChildItems(0);
+     mytree.loadJSONObject({
+         id: 0,
+         text: "我的组件",
+         item: []
+     });
+     mytree.itemObj = {};
+     //添加分类
+
+     for(var Mymethods in allPublicMethods.items) {
+         var methods = allPublicMethods.items[Mymethods];
+         mytree.insertNewChild(0, methods.name, methods.text);
+         var treenode = mytree.item(methods.id);
+         treenode.insert = "";
+         mytree.itemObj[methods.name] = treenode;
+         if(methods.type == publicMethodsType.Category)
+             mytree.setItemImage2(methods.name, "folderClosed.gif", "folderOpen.gif", "folderClosed.gif")
+         if(methods.items) {
+             for(var method in methods.items) {
+                 addMethodsTree(methods.items[method], methods.name);
+             }
+         }
+     }
+ }
+
+ function addMethodsTree(method, parentId) {
+     var mytree = publicMethodsTree;
+     mytree.insertNewChild(parentId, method.name, method.text);
+     var treenode = mytree.item(method.name);
+     treenode.insert = method.insert;
+     treenode.comment = method.comment;
+     mytree.itemObj[method.name] = treenode;
+     if(method.type == publicMethodsType.Category)
+         mytree.setItemImage2(method.name, "folderClosed.gif", "folderOpen.gif", "folderClosed.gif")
+     if(method.type == publicMethodsType.fun)
+         mytree.setItemImage2(method.name, "tree/fun.png", "tree/fun.png", "tree/fun.png")
+     if(method.items) {
+         for(var c_method in method.items) {
+             addMethodsTree(method.items[c_method], method.name);
+         }
+     }
+ }
+
+ function publicMethodsTree_nodeClick(sender, id) {
+     hwEditor1.setValue(publicMethodsTree.itemObj[id].comment);
+     hwEditor1.readOnly = true;
+ }
+
+ function publicMethodsTree_doubleClick(sender, id) {
+     aceEdit.insert(publicMethodsTree.itemObj[id].insert);
+ }
+
+ function MyViewport_afterrender(sender) {
+
+     parent.Ext.getCmp("aceWin") && parent.Ext.getCmp("aceWin").loading.hide();
+     setTimeout(function() {
+         bindtree()
+
+     }, 200)
+
+ }
+
+ function p_ace_afterrender(sender) {
+
+     p_ace.add(aceEditCt);
+     p_ace.doLayout();
+     if(typeof(p_aceEdit) != 'undefined' && p_aceEdit) {
+         window.setTimeout(function() {
+             aceEdit.gotoLine(p_aceEdit.aceline)
+             aceEdit.ace.focus()
+         }, 150)
+     }
+ }
+
+ function closeAce() {
+     if(typeof(p_aceEdit) != 'undefined' && p_aceEdit) {
+         parent.Ext.getCmp("aceWin").val = aceEdit.getValue();
+
+         parent.Ext.getCmp("aceWin").un('close', closeAce)
+         parent.Ext.getCmp("aceWin").closeFn();
+     }
+
+ }
+
+ function MyViewport_beforerender(sender) {
+
+ }
+			this.MyViewport_afterrender=MyViewport_afterrender;
+		this.MyViewport_beforerender=MyViewport_beforerender;
+
+
+
+		this.items=[
+			{
+				xtype:"panel",
+				id:"p_ace",
+				title:"Panel",
+				header:false,
+				border:true,
+				x:0,
+				y:70,
+				layout:"fit",
+				region:"center",
+				autoScroll:false,
+				afterrender:"p_ace_afterrender",
+				listeners:{
+					vmdafterrender:p_ace_afterrender
+				}
+			},
+			{
+				xtype:"panel",
+				id:"panel1",
+				title:"Panel",
+				header:false,
+				border:true,
+				height:50,
+				region:"west",
+				layout:"border",
+				width:230,
+				split:true,
+				collapseMode:"mini",
+				bodyStyle:"background-color: #fff",
+				items:[
+					{
+						xtype:"tabpanel",
+						id:"MyTabs",
+						activeTab:1,
+						height:150,
+						width:500,
+						region:"center",
+						split:true,
+						collapseMode:"mini",
+						unstyled:true,
+						maskDisabled:true,
+						activeItem:"panel2",
+						items:[
+							{
+								xtype:"panel",
+								id:"panel2",
+								title:"组件",
+								header:false,
+								border:false,
+								height:362,
+								width:249,
+								layout:"border",
+								bodyStyle:"background-color: #fff",
+								items:[
+									{
+										xtype:"vmd.tree",
+										id:"compsTree",
+										skin:"material",
+										height:250,
+										isdesign:false,
+										region:"north",
+										split:true,
+										afterrender:"hwTree3_afterrender",
+										nodeClick:"compsTree_nodeClick",
+										anchor:"100% 40%",
+										style:"height: 100px",
+										minHeight:150,
+										listeners:{
+											vmdafterrender:hwTree3_afterrender,
+											nodeClick:compsTree_nodeClick
+										}
+									},
+									{
+										xtype:"tabpanel",
+										id:"MyTabs1",
+										activeTab:0,
+										height:150,
+										width:500,
+										region:"center",
+										bodyStyle:"background-color: #fff;    border: 0px solid;",
+										hideBorders:false,
+										autoDestroy:false,
+										unstyled:true,
+										anchor:"100% 30%",
+										minHeight:150,
+										items:[
+											{
+												xtype:"panel",
+												id:"panel3",
+												title:"属性",
+												header:false,
+												border:false,
+												height:100,
+												layout:"fit",
+												items:[
+													{
+														xtype:"vmd.tree",
+														id:"compPropertys",
+														skin:"material",
+														width:300,
+														height:200,
+														isdesign:false,
+														afterrender:"compPropertys_afterrender",
+														nodeClick:"compPropertys_nodeClick",
+														doubleClick:"compPropertys_doubleClick",
+														listeners:{
+															vmdafterrender:compPropertys_afterrender,
+															nodeClick:compPropertys_nodeClick,
+															doubleClick:compPropertys_doubleClick
+														}
+													}
+												]
+											},
+											{
+												xtype:"panel",
+												id:"panel4",
+												title:"方法",
+												header:false,
+												border:false,
+												height:100,
+												layout:"fit",
+												items:[
+													{
+														xtype:"vmd.tree",
+														id:"compMethods",
+														skin:"material",
+														width:300,
+														height:200,
+														isdesign:false,
+														afterrender:"compMethods_afterrender",
+														nodeClick:"compMethods_nodeClick",
+														doubleClick:"compMethods_doubleClick",
+														listeners:{
+															vmdafterrender:compMethods_afterrender,
+															nodeClick:compMethods_nodeClick,
+															doubleClick:compMethods_doubleClick
+														}
+													}
+												]
+											},
+											{
+												xtype:"panel",
+												id:"panel5",
+												title:"事件",
+												header:false,
+												border:false,
+												height:100,
+												layout:"fit",
+												items:[
+													{
+														xtype:"vmd.tree",
+														id:"compEvent",
+														skin:"material",
+														width:300,
+														height:200,
+														isdesign:false,
+														afterrender:"compEvent_afterrender",
+														nodeClick:"compEvent_nodeClick",
+														doubleClick:"compEvent_doubleClick",
+														listeners:{
+															vmdafterrender:compEvent_afterrender,
+															nodeClick:compEvent_nodeClick,
+															doubleClick:compEvent_doubleClick
+														}
+													}
+												]
+											}
+										]
+									},
+									{
+										xtype:"panel",
+										id:"panel7",
+										title:"说明",
+										header:false,
+										border:false,
+										height:150,
+										region:"south",
+										layout:"border",
+										split:true,
+										collapseMode:"standard",
+										autoScroll:false,
+										anchor:"100% 30%",
+										minHeight:150,
+										items:[
+											{
+												xtype:"htmleditor",
+												id:"hwEditor",
+												fieldLabel:"Html Editor",
+												height:150,
+												width:300,
+												enableAlignments:false,
+												enableColors:false,
+												enableFont:false,
+												enableFontSize:false,
+												enableFormat:false,
+												enableLinks:false,
+												enableLists:false,
+												enableSourceEdit:false,
+												region:"center",
+												afterrender:"hwEditor_afterrender",
+												style:"background-color: #fff;    border-left: 0px;    border-right: 0px;    margin-top: -5",
+												floatable:false,
+												margins:"-3",
+												split:false,
+												autoHide:false,
+												animFloat:false,
+												hidden:false,
+												listeners:{
+													vmdafterrender:hwEditor_afterrender
+												}
+											}
+										]
+									}
+								]
+							},
+							{
+								xtype:"panel",
+								id:"panel6",
+								title:"公共方法",
+								header:false,
+								border:false,
+								height:100,
+								layout:"border",
+								bodyStyle:"background-color: #fff",
+								items:[
+									{
+										xtype:"vmd.tree",
+										id:"publicMethodsTree",
+										skin:"material",
+										width:300,
+										height:200,
+										isdesign:false,
+										afterrender:"publicMethodsTree_afterrender",
+										nodeClick:"publicMethodsTree_nodeClick",
+										doubleClick:"publicMethodsTree_doubleClick",
+										anchor:"100% 70%",
+										region:"center",
+										minHeight:150,
+										listeners:{
+											vmdafterrender:publicMethodsTree_afterrender,
+											nodeClick:publicMethodsTree_nodeClick,
+											doubleClick:publicMethodsTree_doubleClick
+										}
+									},
+									{
+										xtype:"panel",
+										id:"panel",
+										title:"说明",
+										header:false,
+										border:false,
+										height:250,
+										region:"south",
+										layout:"border",
+										split:true,
+										collapseMode:"standard",
+										autoScroll:false,
+										anchor:"100% 30%",
+										minHeight:150,
+										items:[
+											{
+												xtype:"htmleditor",
+												id:"hwEditor1",
+												fieldLabel:"Html Editor",
+												height:150,
+												width:300,
+												enableAlignments:false,
+												enableColors:false,
+												enableFont:false,
+												enableFontSize:false,
+												enableFormat:false,
+												enableLinks:false,
+												enableLists:false,
+												enableSourceEdit:false,
+												region:"center",
+												afterrender:"hwEditor_afterrender",
+												style:"background-color: #fff;    border-left: 0px;    border-right: 0px;    margin-top: -5",
+												floatable:false,
+												margins:"-3",
+												split:false,
+												autoHide:false,
+												animFloat:false,
+												hidden:false,
+												minHeight:200,
+												listeners:{
+													vmdafterrender:hwEditor_afterrender
+												}
+											}
+										]
+									}
+								]
+							}
+						]
+					}
+				]
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+	}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MyViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

@@ -1,0 +1,1245 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>数据集配置</title>
+    <!--基本样式-->
+    <link href="/css/common.css?ver=vmd2.0.5.200306" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=vmd2.0.5.200306" rel="stylesheet" />
+    <link href="/design/css/icons.css?ver=vmd2.0.5.200306" rel="stylesheet" />
+    <link href="/lib/dhtmlx/skins/material/dhtmlx.css?ver=vmd2.0.5.200306" rel="stylesheet" />
+    <!--样式快捷索引表-->
+    <link href="/css/shortcut.css?ver=vmd2.0.5.200306" rel="stylesheet" />
+    <script src="/lib/labjs/LAB.min.js?ver=vmd2.0.5.200306"></script>
+    <script src="/config.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=vmd2.0.5.200306"></script>
+    <script src="/js/util.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/dhtmlx/codebase/dhtmlx.js?ver=vmd2.0.5.200306"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=vmd2.0.5.200306"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=vmd2.0.5.200306"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=vmd2.0.5.200306"></script>
+    <script src="/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=vmd2.0.5.200306"></script>
+    <script src="/js/hwdas.js?ver=vmd2.0.5.200306"></script>
+    <script src="/js/vmdcore.js?ver=vmd2.0.5.200306"></script>
+    <script src="/js/vmdcomps.js?ver=vmd2.0.5.200306"></script>
+    <script src="/js/publicMethods.js?ver=vmd2.0.5.200306"></script>
+    <script src="/js/vmdreport.js?ver=vmd2.0.5.200306"></script>
+    <script src="/system/modules/eQ9ULgcVb1/project.config.js"></script>
+    <script src="/lib/ace/ace.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ace/mode-base.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ace/theme-xcode.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ace/ext-language_tools.js?ver=vmd2.0.5.200306"></script>
+    <style> </style>
+    <style type="text/css" id="vmdcss"> </style>
+    <script>
+        vmd.previewMode = true;
+        vmd.virtualPath = '';
+        vmd.workspace = {
+            "workspaceid": "ea0b6bff-f5fc-4db5-b72b-5753eb4201d2",
+            "workflowIp": "",
+            "dataServiceIp": "",
+            "msgIp": "",
+            "projectid": "eQ9ULgcVb1"
+        }
+        vmd.resourceSettings = {
+            "资源中心&&资源中心服务器": "http://www.hanweikeji.com:10050/resource"
+        }
+        vmd.projectInfo = {
+            "projectId": "eQ9ULgcVb1",
+            "workflowIp": "",
+            "dataServiceIp": "",
+            "msgIp": "",
+            "todoIp": "",
+            "authIp": "",
+            "docIp": "",
+            "reoprtIp": "",
+            "reportIp": "",
+            "logIp": ""
+        }
+        Ext.define("vmd.module.MyViewport", {
+            extend: "vmd.comp.viewport",
+            requires: vmd.getCmpDeps([]),
+            xtype: "vmd.module.MyViewport",
+            layout: "border",
+            afterrender: "MyViewport_afterrender",
+            beforerender: "MyViewport_beforerender",
+            initComponent: function() {
+                var DicFields = [];
+                var dsId = "";
+                //初始化处理ace的api
+                if (parent.init_def_platformControlData) {
+                    parent.init_def_platformControlData();
+                    def_platformControl = parent.def_platformControl;
+                }
+                if (parent.allPublicMethods)
+                    window.allPublicMethods = parent.allPublicMethods;
+                else
+                    window.allPublicMethods = {};
+                if (parent.publicMethodsType)
+                    window.publicMethodsType = parent.publicMethodsType;
+                else
+                    window.publicMethodsType = {};
+                if (parent.init_def_platformFun) {
+                    parent.init_def_platformFun({
+                        vmd: allPublicMethods
+                    });
+                    parent.init_def_platformVmd();
+                    def_platformWidget = parent.def_platformWidget;
+                }
+                //ext框架类自动识别
+                def_platformExtjs = parent.def_platformExtjs;
+                //初始化获取工区等信息
+                var workspaceid;
+                var projectid;
+                var workspaceworkflowIp;
+                var workspacedataServiceIp;
+                if (parent.vmd && parent.vmd.workspace) {
+                    workspaceid = parent.vmd.workspace.workspaceid || "";
+                    workspaceworkflowIp = parent.vmd.workspace.workflowIp || "";
+                    workspacedataServiceIp = parent.vmd.workspace.dataServiceIp || "";
+                    projectid = parent.vmd.workspace.projectid || "";
+                }
+                if (parent.init_def_platformControlData) {
+                    parent.init_def_platformControlData();
+                    def_platformControl = parent.def_platformControl;
+                }
+                myobj = {};
+                var saveobj = {}
+                var treeloderover = false;
+                var myMask = new Ext.LoadMask(Ext.getBody(), {
+                    msg: "数据加载中,请稍后...",
+                    msgCls: 'z-index:10000;'
+                });
+
+                function hwTree_afterrender(sender) {
+                    //进度提示
+                    myMask = new Ext.LoadMask(Ext.getCmp("hwTree").el, {
+                        msg: "数据加载中,请稍后...",
+                        msgCls: 'z-index:10000;'
+                    });
+                    myMask.show();
+                    var mytree = hwTree;
+                    mytree.deleteChildItems(0);
+                    mytree.loadJSONObject({
+                        id: 0,
+                        text: "我的服务",
+                        item: []
+                    });
+                    mytree.enableRadioButtons(true)
+                    mytree.enableSingleRadioMode(true)
+                    mytree.itemObj = {};
+                    mytree.newnode = false;
+                    hwDas.appinfo.callCode = "vmdCode";
+                    var firstNode = "";
+                    hwDas.get("DataServiceWorkSpace/projectInfo/ProjcetServiceCategory", {}, {
+                        projectid: projectid || "",
+                        type: 1
+                    }, function(selresult) {
+                        var idarray = [];
+                        if (selresult.data && selresult.data.length > 0 && selresult.data[0].datas && selresult.data[0].datas.length > 0) {
+                            var datajson = selresult.data[0].datas;
+                            var treeDataJson = [];
+                            var toopenid = ""
+                            for (var i = 0; i < datajson.length; i++) {
+                                idarray.push(datajson[i].service_category_id)
+                            }
+                        }
+                        var urlparam;
+                        if (workspacedataServiceIp) {
+                            urlparam = {
+                                host: workspacedataServiceIp,
+                                url: "DataService/Service/Project"
+                            }
+                        } else
+                            urlparam = "DataService/Service/Project"
+                        hwDas.get(urlparam, {
+                                Ecylogin: Ext.util.Cookies.get('EcyLogin') || Ext.util.Cookies.get('ecyLogin')
+                            }, {
+                                develop: "true"
+                            }, function(result) {
+                                var datajson = result.data[0].datas;
+                                var treeDataJson = [];
+                                var toopenid = ""
+                                for (var i = 0; i < datajson.length; i++) {
+                                    if (list.indexOf(datajson[i].code) >= 0) {
+                                        toopenid = datajson[i].id
+                                    }
+                                    if (idarray.indexOf(datajson[i].id) >= 0 || !projectid) {
+                                        mytree.insertNewChild(0, datajson[i].id, datajson[i].name);
+                                        mytree.setItemImage2(datajson[i].id, "tree/projectclose.png", "tree/projectopen.png", "tree/projectclose.png");
+                                        mytree.showItemCheckbox(datajson[i].id, false)
+                                        mytree.insertNewChild(datajson[i].id, datajson[i].id + "-0", "");
+                                        mytree.closeItem(datajson[i].id);
+                                        var treenode = mytree.item(datajson[i].id);
+                                        treenode.path = datajson[i].code;
+                                        if (treenode) {
+                                            treenode.isProject = true;
+                                            treenode.loadChild = false;
+                                        }
+                                        mytree.itemObj[datajson[i].id] = treenode;
+                                        if (firstNode == "")
+                                            firstNode = datajson[i].id;
+                                    }
+                                }
+                                treeloderover = true;
+                                //默认选中首项 
+                                if (firstNode != "")
+                                    mytree.selectItem(firstNode);
+                                if (toopenid != "")
+                                    hwTree.openItem(toopenid);
+                                myMask.hide();
+                                if (datajson.length <= 0)
+                                    Ext.Msg.alert("提示", "未获取到数据服务分类信息，请从项目配置中进行添加。", function() {})
+                            },
+                            function(msg) {
+                                myMask.hide();
+                                Ext.Msg.alert("提示", "获取项目所选服务失败!请核实工区或环境配置中数据服务是否正确!", function() {})
+                            })
+                    }, function(msg) {
+                        myMask.hide();
+                        Ext.Msg.alert("提示", "获取数据服务失败，请检查工区和环境配置是否配置了正确的数据服务地址。", function() {})
+                    })
+                }
+                var selNodeId = "";
+
+                function hwTree_nodeClick(sender, id) {
+                    //20171118 将所有页签隐藏 只显示查询的页签内容，操作其他页签的操作均屏蔽
+                    var proId = id;
+                    var mytree = hwTree;
+                    var selnode = mytree.itemObj[proId];
+                    var gridarray = [];
+                    if (selNodeId != id) {
+                        if (selnode.isModel) {
+                            if (!mytree.isItemChecked(id)) {
+                                if (mytree.getAllChecked() != "")
+                                    mytree.setSubChecked(mytree.getAllChecked(), false)
+                                mytree.setSubChecked(id, true)
+                            }
+                            clearAllGrid();
+                            var urlparam;
+                            if (workspacedataServiceIp)
+                                urlparam = {
+                                    host: workspacedataServiceIp,
+                                    url: "DataService/Service/Method"
+                                }
+                            else
+                                urlparam = "DataService/Service/Method"
+                            hwDas.get(urlparam, {}, {
+                                    resourceid: proId
+                                },
+                                function(result) {
+                                    var datajson = result.data[0].datas;
+                                    var treeDataJson = [];
+                                    for (var i = 0; i < datajson.length; i++) {
+                                        if (datajson[i].name == "get") {
+                                            MyTabs.unhideTabStripItem(MyPanel4);
+                                            hwGrid.methodsId = datajson[i].id;
+                                            hwGrid.methodsType = datajson[i].name;
+                                            bindparams(hwGrid);
+                                            gridarray.push(hwGrid)
+                                        }
+                                    }
+                                    var bindover = false;
+                                    while (!bindover) {
+                                        bindover = true;
+                                        for (var v in gridarray) {
+                                            if (gridarray[v].bindData && gridarray[v].bindData == false)
+                                                bindover = false
+                                        }
+                                    }
+                                },
+                                function(msg) {
+                                    Ext.Msg.alert("提示", "获取服务方法信息失败", function() {})
+                                })
+                        } else {}
+                    }
+                    bselNodeId = id;
+                }
+
+                function fillMethods() {}
+                //点击模块节点时，清空所有网格数据
+                function clearAllGrid() {
+                    if (hwGrid.loder) {
+                        hwGrid.clearAll();
+                        hwGrid.bindData = false;
+                    }
+                }
+
+                function bindparams(grid) {
+                    if (!grid.loder)
+                        return;
+                    var urlparam;
+                    if (workspacedataServiceIp) {
+                        urlparam = {
+                            host: workspacedataServiceIp,
+                            url: "DataService/Service/Parameter"
+                        }
+                    } else
+                        urlparam = "DataService/Service/Parameter"
+                    hwDas.get(urlparam, {}, {
+                        methodid: grid.methodsId
+                    }, function(result) {
+                        var datajson = result.data[0].datas;
+                        grid.bindData = true;
+                        var rows = [];
+                        for (var i = 0; i < datajson.length; i++) {
+                            var row = {};
+                            row.id = i + 1;
+                            row.data = [];
+                            row.data.push(i + 1);
+                            row.data.push(datajson[i].code);
+                            row.data.push(datajson[i].name);
+                            row.data.push(datajson[i].type);
+                            var getparams = [];
+                            if (myobj.id == hwTree.getSelectedItemId()) {
+                                if (grid.methodsType == "get") {
+                                    getparams = myobj.getMethods;
+                                }
+                            }
+                            row.data.push("")
+                            row.data.push("")
+                            for (var v = 0; v < getparams.length; v++) {
+                                if (datajson[i].code == getparams[v].id) {
+                                    row.data[4] = getparams[v].value1;
+                                    row.data[5] = getparams[v].value2;
+                                    row.data[6] = getparams[v].testValue;
+                                    break;
+                                }
+                            }
+                            row.data.push(datajson[i].defaultvalue);
+                            rows.push(row);
+                        }
+                        grid.parse({
+                            rows: rows
+                        }, "json");
+                        //绑定参数到网格中
+                    }, function(msg) {
+                        Ext.Msg.alert("提示", "获取服务方法参数失败", function() {})
+                    })
+                }
+
+                function bindSelTabParams(b) {
+                    if (b.id == MyPanel4.id && !hwGrid.bindData) {
+                        bindparams(hwGrid)
+                    }
+                    if (b.id == MyPanel5.id && !hwGrid1.bindData) {
+                        bindparams(hwGrid1)
+                    }
+                    if (b.id == MyPanel6.id && !hwGrid2.bindData) {
+                        bindparams(hwGrid2)
+                    }
+                    if (b.id == MyPanel7.id && !hwGrid3.bindData) {
+                        bindparams(hwGrid3)
+                    }
+                    if (b.id == MyPanel8.id && !hwGrid4.bindData) {
+                        bindparams(hwGrid4)
+                    }
+                }
+
+                function MyTabs_afterrender(sender) {}
+
+                function GetSaveObj(fun) {
+                    var mytree = hwTree;
+                    var selId = mytree.getSelectedItemId();
+                    var selnode = mytree.itemObj[selId];
+                    saveobj = {};
+                    saveobj.id = selId;
+                    saveobj.callcode = "vmdCode";
+                    saveobj.url = selnode.path;
+                    saveobj.host = "";
+                    saveobj.isHwRest = true;
+                    saveobj.name = selnode.text;
+                    saveobj.getMethods = getGridObj(hwGrid); // [];
+                    saveobj.postMethods = getGridObj(hwGrid1);
+                    saveobj.putMethods = getGridObj(hwGrid2);
+                    saveobj.deleteMethods = getGridObj(hwGrid3);
+                    saveobj.saveMethods = getGridObj(hwGrid4);
+                    getFields(function(fields, tableName, foreign) {
+                        saveobj.fields = fields;
+                        saveobj.tableName = tableName;
+                        saveobj.foreign = foreign;
+                        fun(saveobj)
+                    });
+                }
+
+                function getFields(fun) {
+                    var mytree = hwTree;
+                    var selId = mytree.getSelectedItemId();
+                    var selnode = mytree.itemObj[selId];
+                    var selnodepath = selnode.path;
+                    hwDas.appinfo.callCode = "vmdCode"
+                    var urlparam;
+                    if (workspacedataServiceIp) {
+                        urlparam = {
+                            host: workspacedataServiceIp,
+                            url: selnodepath
+                        }
+                    } else
+                        urlparam = selnodepath
+                    var params = {};
+                    for (var i = 0; i < saveobj.getMethods.length; i++) {
+                        var testValue = "";
+                        try {
+                            var testValueExp = saveobj.getMethods[i].testValue || 'return ""'
+                            testValue = new Function("value", testValueExp + ';\nreturn value')("") //eval("(function(){" + testValueExp + "\r\n})()");
+                        } catch (error) {}
+                        params[saveobj.getMethods[i].id] = testValue;
+                    }
+                    hwDas.get(urlparam, {
+                        startIndex: 0,
+                        pageSize: 1
+                    }, params, function(result) { //获取数据集的字段信息
+                        if (fun) {
+                            if (result.data.length <= 0) {
+                                Ext.Msg.alert("提示", "未获取到该服务的字段信息，请检查服务是否能够执行并能查询到数据！", function() {})
+                                return
+                            }
+                            var dicTable = result.data[0].tableName || result.data[0].tableNnme
+                            var dicId = result.data[0].system_id
+                            if (dicTable) {
+                                var dicUrlparam;
+                                if (workspacedataServiceIp) {
+                                    dicUrlparam = {
+                                        host: workspacedataServiceIp,
+                                        url: "DataService/Source/getdict"
+                                    }
+                                } else
+                                    dicUrlparam = "DataService/Source/getdict"
+                                hwDas.get(dicUrlparam, {}, {
+                                    c_tablename: dicTable,
+                                    c_systemid: dicId
+                                }, function(dicResult) {
+                                    //根据字典字段与数据字段进行匹配
+                                    resultDataFields = result.data[0].fields
+                                    var dataFields = [];
+                                    var pattern = new RegExp("[`~!#$^&*()=|{}':;',\\[\\].<>/?~！#￥……&*（）——|{}【】‘；：”“'。，、？]");
+                                    //new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？]");
+                                    var errorFile = "";
+                                    var dirForeignDatas = (dicResult.data[1] && dicResult.data[1].datas) || [];
+                                    //遍历数据字段
+                                    for (var p in resultDataFields) { //
+                                        if (typeof(resultDataFields[p]) == "function") {} else {
+                                            var dirDatas = dicResult.data[0].datas;
+                                            if (pattern.test(p)) {
+                                                errorFile = p;
+                                                break;
+                                            } else {
+                                                var fields = {
+                                                    name: p,
+                                                    cname: "",
+                                                    dname: "",
+                                                    dtype: resultDataFields[p].toLowerCase(),
+                                                    type: resultDataFields[p].toLowerCase(),
+                                                    primary: '',
+                                                    nullable: 'Y',
+                                                    length: "",
+                                                    precision: "",
+                                                    unit: "",
+                                                    dunit: "",
+                                                    rule: {}
+                                                }
+                                                var hasField = false;
+                                                for (var ii = 0; ii < dirDatas.length; ii++) {
+                                                    var dirDataRow = dirDatas[ii];
+                                                    if (dirDataRow.column_name.toLowerCase() == p) {
+                                                        fields = {
+                                                            name: p,
+                                                            cname: dirDataRow.column_comment.replace(/[\r\n]/g, ''),
+                                                            dname: dirDataRow.column_comment.replace(/[\r\n]/g, ''),
+                                                            type: dirDataRow.data_type,
+                                                            dtype: dirDataRow.data_type.toLowerCase(),
+                                                            primary: dirDataRow.primary_key_ind == "Y" ? "Y" : "",
+                                                            nullable: dirDataRow.nullable_ind == "Y" ? "Y" : "",
+                                                            length: dirDataRow.column_size,
+                                                            precision: dirDataRow.column_scale,
+                                                            unit: dirDataRow.uom_column_name,
+                                                            dunit: dirDataRow.uom_column_name,
+                                                            rule: {}
+                                                        }
+                                                        //dataFields.push(fields);
+                                                        break;
+                                                    }
+                                                }
+                                                //首先从上一数据集中配置的字段信息中取判断是否存在字段信息
+                                                if (dsId == selId) //如果选择的数据集与之前的一致，则先从修改过的字典信息匹配（历史）
+                                                    for (var ii = 0; ii < DicFields.length; ii++) {
+                                                        if (p == DicFields[ii].name.toLowerCase()) { //找到匹配项并添加到数组
+                                                            //fields.cname = DicFields[ii].cname.replace(/[\r\n]/g, '');
+                                                            //fields.type = DicFields[ii].type;
+                                                            //fields.dtype = DicFields[ii].type.toLowerCase();
+                                                            fields.defaultValue = DicFields[ii].defaultValue;
+                                                            fields.dname = DicFields[ii].dname;
+                                                            //fields.primary = DicFields[ii].primary == "Y" ? "Y" : "";
+                                                            //fields.nullable = DicFields[ii].nullable == "Y" ? "Y" : "";
+                                                            //fields.length = DicFields[ii].length;
+                                                            //fields.precision = DicFields[ii].precision;
+                                                            fields.rule = DicFields[ii].rule;
+                                                            fields.dunit = DicFields[ii].dunit;
+                                                            //fields.unit = DicFields[ii].unit;
+                                                            hasField = true
+                                                            break;
+                                                        }
+                                                    }
+                                                dataFields.push(fields);
+                                            }
+                                        }
+                                    }
+                                    if (errorFile)
+                                        Ext.Msg.alert("提示", "字段" + errorFile + "中存在特殊字符，请核实修改！", function() {})
+                                    else
+                                        fun(dataFields, dicTable, dirForeignDatas)
+                                })
+                            } else {
+                                resultDataFields = result.data[0].fields
+                                var dataFields = [];
+                                var pattern = new RegExp("[`~!#$^&*()=|{}':;',\\[\\].<>/?~！#￥……&*（）——|{}【】‘；：”“'。，、？]");
+                                //new RegExp("[`~!@#$^&*()=|{}':;',\\[\\].<>/?~！@#￥……&*（）——|{}【】‘；：”“'。，、？]");
+                                var errorFile = "";
+                                //遍历数据字段
+                                for (var p in resultDataFields) { //
+                                    if (typeof(resultDataFields[p]) == "function") {} else {
+                                        if (pattern.test(p)) {
+                                            errorFile = p;
+                                            break;
+                                        } else {
+                                            var fields = {
+                                                name: p,
+                                                cname: "",
+                                                dname: "",
+                                                dtype: resultDataFields[p].toLowerCase(),
+                                                type: resultDataFields[p].toLowerCase(),
+                                                primary: '',
+                                                nullable: 'Y',
+                                                length: "",
+                                                precision: "",
+                                                unit: "",
+                                                dunit: "",
+                                                rule: {}
+                                            }
+                                            var hasField = false;
+                                            //首先从上一数据集中配置的字段信息中取判断是否存在字段信息
+                                            if (dsId == selId) //如果选择的数据集与之前的一致，则先从修改过的字典信息匹配（历史）
+                                                for (var ii = 0; ii < DicFields.length; ii++) {
+                                                    if (p == DicFields[ii].name.toLowerCase()) { //找到匹配项并添加到数组
+                                                        fields.defaultValue = DicFields[ii].defaultValue;
+                                                        fields.dname = DicFields[ii].dname;
+                                                        fields.rule = DicFields[ii].rule;
+                                                        fields.dunit = DicFields[ii].dunit;
+                                                        hasField = true
+                                                        break;
+                                                    }
+                                                }
+                                            dataFields.push(fields);
+                                            // var fields = {
+                                            //     name: p,
+                                            //     cname: "",
+                                            //     type: resultDataFields[p].toLowerCase(),
+                                            //     primary: '',
+                                            //     nullable: 'Y',
+                                            //     length: "",
+                                            //     precision: "",
+                                            //     unit: "",
+                                            //     rule: {}
+                                            // }
+                                            // dataFields.push(fields);
+                                        }
+                                    }
+                                }
+                                if (errorFile)
+                                    Ext.Msg.alert("提示", "字段" + errorFile + "中存在特殊字符，请核实修改！", function() {})
+                                else
+                                    fun(dataFields)
+                            }
+                        }
+                    }, function(msg) {
+                        Ext.Msg.alert("提示", "获取字段信息失败!<br> 1、请检查数据服务是否正确！<br> 2、输入测试参数再尝试！<br> 3、测试参数输入格式与数据服务格式是否一致!", function() {})
+                    })
+                }
+
+                function getGridObj(grid) {
+                    var params = [];
+                    if (grid.loder && grid.bindData) {
+                        grid.editStop(true);
+                        for (var i = 0; i < grid.getRowsNum(); i++) {
+                            params.push({
+                                id: grid.cells2(i, 1).getValue(),
+                                name: grid.cells2(i, 2).getValue(),
+                                type: grid.cells2(i, 3).getValue(),
+                                value1: grid.cells2(i, 4).getValue(),
+                                value2: grid.cells2(i, 5).getValue(),
+                                testValue: grid.cells2(i, 6).getValue(),
+                                defaultvalue: grid.getRowById(grid.getRowId(i))._attrs.data[7]
+                            });
+                        }
+                    }
+                    return params;
+                }
+
+                function button_click(sender) {
+                    GetSaveObj(function(obj) {
+                        window.vmdReturnValue = Ext.encode(obj);
+                        var data = [];
+                        for (var i = 0; i < obj.fields.length; i++) {
+                            data.push({
+                                cid: 'datafield',
+                                name: obj.fields[i].name
+                            })
+                        }
+                        parent.xds.vmd.deleteChildNodeById(parent.edValue.id)
+                        parent.xds.vmd.addNode(data, parent.edValue.id)
+                        parent.edClose(true);
+                    })
+                }
+
+                function button1_click(sender) {
+                    window.vmdReturnValue = ""
+                    parent.edClose();
+                }
+                var list = [];
+
+                function MyViewport_afterrender(sender) {
+                    // myMask.hide();
+                }
+
+                function hwGrid_beforerender(sender) {
+                    initgrid(sender)
+                    hwGrid.loder = true;
+                }
+
+                function hwGrid2_beforerender(sender) {
+                    initgrid(sender)
+                    hwGrid2.loder = true;
+                }
+
+                function hwGrid1_beforerender(sender) {
+                    initgrid(sender)
+                    hwGrid1.loder = true;
+                }
+
+                function hwGrid3_beforerender(sender) {
+                    initgrid(sender)
+                    hwGrid3.loder = true;
+                }
+
+                function hwGrid4_beforerender(sender) {
+                    initgrid(sender)
+                    hwGrid4.loder = true;
+                }
+
+                function initgrid(sender) {
+                    sender.headstr = "序号,编码,名称,类型,值,默认值,测试值";
+                    sender.colType = "ro,ro,ro,ro,txt,txt,txt";
+                    var headerWidth = "50,60,100,80,120,120,100"
+                    sender.headerWidth = headerWidth;
+                }
+
+                function hwGrid_afterrender(sender) {
+                    sender.clearAll()
+                }
+
+                function hwTree_onOpenEnd(sender, id, state) {
+                    var proId = id;
+                    var mytree = hwTree;
+                    mytree.newnode = false;
+                    var selnode = mytree.itemObj[proId];
+                    if (!selnode.loadChild) {
+                        if (selnode.isProject) {
+                            fillFord(proId, {
+                                projectid: proId,
+                                parentid: "0"
+                            });
+                        } else {
+                            fillFord(proId, {
+                                parentid: proId
+                            });
+                            fillMode(proId, {
+                                categoryid: proId
+                            });
+                        }
+                        if (!selnode.loadChild) {
+                            mytree.deleteItem(id + "-0", false);
+                        }
+                    }
+                    selnode.loadChild = true;
+                }
+
+                function fillFord(id, params) {
+                    myMask.show();
+                    var proId = id;
+                    var mytree = hwTree;
+                    var selnode = mytree.itemObj[proId];
+                    var selnodepath = selnode.path;
+                    var urlparam;
+                    if (workspacedataServiceIp) {
+                        urlparam = {
+                            host: workspacedataServiceIp,
+                            url: "DataService/Service/Category"
+                        }
+                    } else
+                        urlparam = "DataService/Service/Category"
+                    hwDas.get(urlparam, {}, params, function(result) {
+                        var mytree = hwTree;
+                        var datajson = result.data[0].datas;
+                        var treeDataJson = [];
+                        var toopenid = "";
+                        for (var i = 0; i < datajson.length; i++) {
+                            if (list.indexOf(datajson[i].code) >= 0 && list.indexOf(datajson[i].code) < list.length - 1) {
+                                toopenid = datajson[i].id
+                            }
+                            mytree.insertNewChild(proId, datajson[i].id, datajson[i].name);
+                            mytree.setItemImage2(datajson[i].id, "tree/folderClosed.gif", "tree/folderOpen.gif", "tree/folderClosed.gif")
+                            mytree.showItemCheckbox(datajson[i].id, false)
+                            mytree.insertNewChild(datajson[i].id, datajson[i].id + "-0", "");
+                            mytree.closeItem(datajson[i].id);
+                            var treenode = mytree.item(datajson[i].id);
+                            treenode.path = selnodepath + "/" + datajson[i].code;
+                            if (treenode) {
+                                treenode.isFord = true;
+                                treenode.loadChild = false;
+                            }
+                            mytree.itemObj[datajson[i].id] = treenode;
+                        }
+                        if (toopenid != "") {
+                            mytree.openItem(toopenid)
+                        }
+                        myMask.hide();
+                    }, function(msg) {
+                        myMask.hide();
+                        Ext.Msg.alert("提示", "获取项目所选服务失败!请核实工区或环境配置中数据服务是否正确!", function() {})
+                    })
+                }
+
+                function fillMode(id, params) {
+                    myMask.show();
+                    var proId = id;
+                    var mytree = hwTree;
+                    var selnode = mytree.itemObj[proId];
+                    var selnodepath = selnode.path;
+                    var urlparam;
+                    if (workspacedataServiceIp) {
+                        urlparam = {
+                            host: workspacedataServiceIp,
+                            url: "DataService/Service/Resource"
+                        }
+                    } else
+                        urlparam = "DataService/Service/Resource"
+                    hwDas.get(urlparam, {}, params, function(result) {
+                        var datajson = result.data[0].datas;
+                        var treeDataJson = [];
+                        var toselectid = "";
+                        for (var i = 0; i < datajson.length; i++) {
+                            if (list.indexOf(datajson[i].code) >= 0 && myobj) {
+                                if (myobj.id && datajson[i].id == myobj.id)
+                                    toselectid = datajson[i].id
+                                if (myobj.id == "")
+                                    toselectid = datajson[i].id
+                            }
+                            var mytree = hwTree;
+                            mytree.insertNewChild(proId, datajson[i].id, datajson[i].name);
+                            mytree.setItemImage2(datajson[i].id, "tree/model.png", "tree/model.png", "tree/model.png")
+                            var treenode = mytree.item(datajson[i].id);
+                            treenode.path = selnodepath + "/" + datajson[i].code;
+                            if (treenode) {
+                                treenode.isModel = true;
+                            }
+                            mytree.itemObj[datajson[i].id] = treenode;
+                        }
+                        if (toselectid != "") {
+                            mytree.selectItem(toselectid, true)
+                        }
+                        //数据操作   
+                        myMask.hide();
+                    }, function(msg) {
+                        myMask.hide();
+                        Ext.Msg.alert("提示", "获取项目所选服务失败!请核实工区或环境配置中数据服务是否正确!")
+                    })
+                }
+
+                function hwGrid1_afterrender(sender) {
+                    sender.clearAll()
+                }
+
+                function hwGrid2_afterrender(sender) {
+                    sender.clearAll()
+                }
+
+                function hwGrid3_afterrender(sender) {
+                    sender.clearAll()
+                }
+
+                function hwGrid4_afterrender(sender) {
+                    sender.clearAll()
+                }
+
+                function MyViewport_beforerender(sender) {
+                    // myMask.show();
+                    MyTabs.hideTabHeader = true;
+                    if (!parent.edValue || !parent.edValue.storeConfig)
+                        return
+                    myobj = Ext.decode(parent.edValue.storeConfig)
+                    DicFields = myobj.fields || []; //记录目前已编辑过的字段信息
+                    dsId = myobj.id; //记录当前的数据集id
+                    if (myobj.url)
+                        list = myobj.url.split("/"); //字符分割 
+                }
+
+                function hwGrid1_beforeSelect(sender, stage, rowId, cellInd) {
+                    var mygrid = sender;
+                    valueEditFrm(mygrid, new_row, new_col_index);
+                }
+
+                function hwGrid2_beforeSelect(sender, stage, rowId, cellInd) {
+                    var mygrid = sender;
+                    valueEditFrm(mygrid, new_row, new_col_index);
+                }
+
+                function hwGrid3_beforeSelect(sender, stage, rowId, cellInd) {
+                    var mygrid = sender;
+                    valueEditFrm(mygrid, new_row, new_col_index);
+                }
+
+                function hwGrid4_beforeSelect(sender, stage, rowId, cellInd) {
+                    var mygrid = sender;
+                    valueEditFrm(mygrid, new_row, new_col_index);
+                }
+
+                function hwGrid_beforeSelect(sender, new_row, old_row, new_col_index) {
+                    var mygrid = sender;
+                    valueEditFrm(hwGrid, new_row, new_col_index);
+                }
+
+                function valueEditFrm(grid, rowId, cellInd) {
+                    if (cellInd == "4" || cellInd == "5" || cellInd == "6") {
+                        var mygrid = grid;
+                        var win = new Ext.Window({
+                            title: "参数值代码编辑",
+                            modal: true,
+                            maximized: false,
+                            height: 400,
+                            width: 500,
+                            maximizable: true,
+                            resizable: true,
+                            bodyStyle: "background-color:#fff",
+                            closeAction: 'close'
+                        })
+                        win.editor = new vmd.comp.Ace({
+                            language: 'javascript'
+                        })
+                        win.add(win.editor);
+                        //关闭
+                        win.hidefn = function() {
+                            var value = win.editor.getValue()
+                            mygrid.cells(rowId, cellInd).setValue(value)
+                        }
+                        win.on('hide', win.hidefn);
+                        var dValue = mygrid.cells(rowId, cellInd).getValue();
+                        if (dValue == "")
+                            dValue = "//返回值 \r\n return \"\""
+                        win.editor.value = dValue;
+                        win.show();
+                        Ext.defer(function() {
+                            win.editor.focus();
+                            win.editor.el.dom.click()
+                        }, 100)
+                    }
+                }
+
+                function hwTree_Check(sender, id, state) {
+                    var mytree = hwTree;
+                    mytree.selectItem(id, true);
+                    mytree.setSubChecked(id, true)
+                }
+                this.MyViewport_afterrender = MyViewport_afterrender;
+                this.MyViewport_beforerender = MyViewport_beforerender;
+                this.items = [{
+                        xtype: "panel",
+                        id: "MyPanel1",
+                        title: "Panel",
+                        header: false,
+                        border: false,
+                        height: 350,
+                        x: 0,
+                        y: 10,
+                        layout: "border",
+                        maskDisabled: true,
+                        hideCollapseTool: false,
+                        collapsible: false,
+                        padding: "5",
+                        bodyStyle: "padding: 5px;    background-color: white;",
+                        style: "border:1px red;",
+                        bodyBorder: false,
+                        region: "center",
+                        width: 800,
+                        items: [{
+                                xtype: "panel",
+                                id: "MyPanel2",
+                                title: "Panel",
+                                header: false,
+                                border: true,
+                                height: 100,
+                                region: "west",
+                                width: 228,
+                                layout: "border",
+                                split: true,
+                                collapseMode: "mini",
+                                margins: "",
+                                style: "padding: 5px 0 5px 5px;",
+                                items: [{
+                                        xtype: "panel",
+                                        id: "MyPanel",
+                                        title: "Panel",
+                                        header: false,
+                                        border: false,
+                                        height: 100,
+                                        region: "center",
+                                        layout: "fit",
+                                        items: [{
+                                            xtype: "vmd.tree",
+                                            id: "hwTree",
+                                            skin: "material",
+                                            width: 300,
+                                            height: 200,
+                                            isdesign: false,
+                                            afterrender: "hwTree_afterrender",
+                                            nodeClick: "hwTree_nodeClick",
+                                            onOpenEnd: "hwTree_onOpenEnd",
+                                            Check: "hwTree_Check",
+                                            listeners: {
+                                                vmdafterrender: hwTree_afterrender,
+                                                nodeClick: hwTree_nodeClick,
+                                                onOpenEnd: hwTree_onOpenEnd,
+                                                Check: hwTree_Check
+                                            }
+                                        }]
+                                    },
+                                    {
+                                        xtype: "panel",
+                                        id: "MyPanel10",
+                                        title: "Panel",
+                                        header: false,
+                                        border: false,
+                                        height: 30,
+                                        region: "north",
+                                        layout: "absolute",
+                                        style: "border-bottom: 1px red;",
+                                        items: [{
+                                            xtype: "label",
+                                            id: "MyLabel",
+                                            text: "数据服务",
+                                            x: 5,
+                                            y: 5,
+                                            style: "font-size:14px;"
+                                        }]
+                                    }
+                                ]
+                            },
+                            {
+                                xtype: "panel",
+                                id: "MyPanel3",
+                                title: "Panel",
+                                header: false,
+                                border: false,
+                                height: 100,
+                                region: "center",
+                                layout: "border",
+                                style: "padding: 5px 5px 5px 0;",
+                                width: 800,
+                                items: [{
+                                        xtype: "panel",
+                                        id: "MyPanel11",
+                                        title: "Panel",
+                                        header: false,
+                                        border: true,
+                                        height: 40,
+                                        region: "north",
+                                        layout: "absolute",
+                                        items: [{
+                                                xtype: "label",
+                                                id: "MyLabel1",
+                                                text: "参数",
+                                                x: 5,
+                                                y: 5,
+                                                style: "font-size:14px;"
+                                            },
+                                            {
+                                                xtype: "label",
+                                                id: "label",
+                                                text: "(注：当值为空时，则取默认值；值和默认值的写法须提供返回值，写法如 return \"vmd\") 测试值为获取字段时，使用的模拟参数",
+                                                x: 50,
+                                                y: 5,
+                                                style: "color:red;",
+                                                width: 480
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        xtype: "panel",
+                                        id: "MyPanel12",
+                                        title: "Panel",
+                                        header: false,
+                                        border: false,
+                                        height: 100,
+                                        region: "center",
+                                        layout: "fit",
+                                        items: [{
+                                            xtype: "tabpanel",
+                                            id: "MyTabs",
+                                            activeTab: 0,
+                                            height: 150,
+                                            width: 500,
+                                            region: "center",
+                                            afterrender: "MyTabs_afterrender",
+                                            style: "background-color: #fff;    background-image: url()",
+                                            bodyStyle: "background-color: #fff;    background-image: url();",
+                                            hideBorders: false,
+                                            autoDestroy: false,
+                                            listeners: {
+                                                vmdafterrender: MyTabs_afterrender
+                                            },
+                                            items: [{
+                                                    xtype: "panel",
+                                                    id: "MyPanel4",
+                                                    title: "查询",
+                                                    header: false,
+                                                    border: false,
+                                                    height: 100,
+                                                    layout: "fit",
+                                                    items: [{
+                                                        xtype: "vmd.grid",
+                                                        id: "hwGrid",
+                                                        skin: "material",
+                                                        width: 300,
+                                                        height: 200,
+                                                        isdesign: true,
+                                                        beforerender: "hwGrid_beforerender",
+                                                        afterrender: "hwGrid_afterrender",
+                                                        beforeSelect: "hwGrid_beforeSelect",
+                                                        listeners: {
+                                                            beforerender: hwGrid_beforerender,
+                                                            vmdafterrender: hwGrid_afterrender,
+                                                            beforeSelect: hwGrid_beforeSelect
+                                                        }
+                                                    }]
+                                                },
+                                                {
+                                                    xtype: "panel",
+                                                    id: "MyPanel5",
+                                                    title: "添加",
+                                                    header: false,
+                                                    border: false,
+                                                    height: 100,
+                                                    layout: "fit",
+                                                    items: [{
+                                                        xtype: "vmd.grid",
+                                                        id: "hwGrid1",
+                                                        skin: "material",
+                                                        width: 300,
+                                                        height: 200,
+                                                        isdesign: true,
+                                                        beforerender: "hwGrid1_beforerender",
+                                                        afterrender: "hwGrid1_afterrender",
+                                                        beforeSelect: "hwGrid1_beforeSelect",
+                                                        listeners: {
+                                                            beforerender: hwGrid1_beforerender,
+                                                            vmdafterrender: hwGrid1_afterrender,
+                                                            beforeSelect: hwGrid1_beforeSelect
+                                                        }
+                                                    }]
+                                                },
+                                                {
+                                                    xtype: "panel",
+                                                    id: "MyPanel6",
+                                                    title: "修改",
+                                                    header: false,
+                                                    border: false,
+                                                    height: 100,
+                                                    layout: "fit",
+                                                    items: [{
+                                                        xtype: "vmd.grid",
+                                                        id: "hwGrid2",
+                                                        skin: "material",
+                                                        width: 300,
+                                                        height: 200,
+                                                        isdesign: true,
+                                                        beforerender: "hwGrid2_beforerender",
+                                                        afterrender: "hwGrid2_afterrender",
+                                                        beforeSelect: "hwGrid2_beforeSelect",
+                                                        listeners: {
+                                                            beforerender: hwGrid2_beforerender,
+                                                            vmdafterrender: hwGrid2_afterrender,
+                                                            beforeSelect: hwGrid2_beforeSelect
+                                                        }
+                                                    }]
+                                                },
+                                                {
+                                                    xtype: "panel",
+                                                    id: "MyPanel7",
+                                                    title: "删除",
+                                                    header: false,
+                                                    border: false,
+                                                    height: 100,
+                                                    layout: "fit",
+                                                    items: [{
+                                                        xtype: "vmd.grid",
+                                                        id: "hwGrid3",
+                                                        skin: "material",
+                                                        width: 300,
+                                                        height: 200,
+                                                        isdesign: true,
+                                                        beforerender: "hwGrid3_beforerender",
+                                                        afterrender: "hwGrid3_afterrender",
+                                                        beforeSelect: "hwGrid3_beforeSelect",
+                                                        listeners: {
+                                                            beforerender: hwGrid3_beforerender,
+                                                            vmdafterrender: hwGrid3_afterrender,
+                                                            beforeSelect: hwGrid3_beforeSelect
+                                                        }
+                                                    }]
+                                                },
+                                                {
+                                                    xtype: "panel",
+                                                    id: "MyPanel8",
+                                                    title: "保存",
+                                                    header: false,
+                                                    border: false,
+                                                    height: 100,
+                                                    layout: "fit",
+                                                    items: [{
+                                                        xtype: "vmd.grid",
+                                                        id: "hwGrid4",
+                                                        skin: "material",
+                                                        width: 300,
+                                                        height: 200,
+                                                        isdesign: true,
+                                                        beforerender: "hwGrid4_beforerender",
+                                                        afterrender: "hwGrid4_afterrender",
+                                                        beforeSelect: "hwGrid4_beforeSelect",
+                                                        listeners: {
+                                                            beforerender: hwGrid4_beforerender,
+                                                            vmdafterrender: hwGrid4_afterrender,
+                                                            beforeSelect: hwGrid4_beforeSelect
+                                                        }
+                                                    }]
+                                                }
+                                            ]
+                                        }]
+                                    }
+                                ]
+                            },
+                            {
+                                xtype: "vmd.ace",
+                                id: "MyAce",
+                                height: 300,
+                                width: 600,
+                                language: "javascript",
+                                region: "east",
+                                disabled: true,
+                                hidden: true
+                            }
+                        ]
+                    },
+                    {
+                        xtype: "panel",
+                        id: "MyPanel9",
+                        title: "Panel",
+                        header: false,
+                        border: false,
+                        height: 50,
+                        x: 0,
+                        y: 355,
+                        layout: "column",
+                        padding: "5",
+                        bodyStyle: "border-top: 1px solid lightblue",
+                        region: "south",
+                        items: [{
+                                xtype: "vmd.div",
+                                id: "div",
+                                autoEl: "div",
+                                border: false,
+                                backgroundRepeat: "no-repeat",
+                                backgroundPosition: "top left",
+                                width: 400,
+                                height: 50,
+                                columnWidth: 0.5
+                            },
+                            {
+                                xtype: "vmd.div",
+                                id: "div1",
+                                autoEl: "div",
+                                border: false,
+                                backgroundRepeat: "no-repeat",
+                                backgroundPosition: "top left",
+                                width: 200,
+                                height: 50,
+                                layout: "absolute",
+                                items: [{
+                                        xtype: "vmd.button",
+                                        id: "button",
+                                        text: "确定",
+                                        type: "info",
+                                        size: "small",
+                                        x: 50,
+                                        y: 10,
+                                        click: "button_click",
+                                        listeners: {
+                                            click: button_click
+                                        }
+                                    },
+                                    {
+                                        xtype: "vmd.button",
+                                        id: "button1",
+                                        text: "取消",
+                                        type: "(none)",
+                                        size: "small",
+                                        x: 150,
+                                        y: 10,
+                                        click: "button1_click",
+                                        listeners: {
+                                            click: button1_click
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                xtype: "vmd.div",
+                                id: "div2",
+                                autoEl: "div",
+                                border: false,
+                                backgroundRepeat: "no-repeat",
+                                backgroundPosition: "top left",
+                                width: 400,
+                                height: 50,
+                                columnWidth: 0.5
+                            }
+                        ]
+                    }
+                ]
+                this.callParent();
+                var me = this;
+                vmd.core.moduleInit(this.items, this);
+                me.on('beforerender', function() {
+                    MyViewport_beforerender.call(me, me)
+                })
+                me.on('afterrender', function() {
+                    MyViewport_afterrender.call(me, me)
+                })
+            }
+        })
+        Ext.onReady(function() {
+            Ext.create('vmd.module.MyViewport', {
+                renderTo: document.body
+            })
+        })
+    </script>
+</head>
+
+<body> </body>
+
+</html>

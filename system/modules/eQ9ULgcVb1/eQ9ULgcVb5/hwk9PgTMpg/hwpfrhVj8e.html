@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>下拉框选择框</title>
+    <!--基本样式-->
+    <link href="/css/common.css?ver=vmd2.0.5.190911" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=vmd2.0.5.190911" rel="stylesheet" />
+    <link href="/design/css/icons.css?ver=vmd2.0.5.190911" rel="stylesheet" />
+    <link href="/lib/dhtmlx/skins/material/dhtmlx.css?ver=vmd2.0.5.190911" rel="stylesheet" />
+    <!--样式快捷索引表-->
+    <link href="/css/shortcut.css?ver=vmd2.0.5.190911" rel="stylesheet" />
+    <script src="/lib/labjs/LAB.min.js?ver=vmd2.0.5.190911"></script>
+    <script src="/config.js?ver=vmd2.0.5.190911"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=vmd2.0.5.190911"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=vmd2.0.5.190911"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=vmd2.0.5.190911"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=vmd2.0.5.190911"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=vmd2.0.5.190911"></script>
+    <script src="/js/util.js?ver=vmd2.0.5.190911"></script>
+    <script src="/lib/dhtmlx/codebase/dhtmlx.js?ver=vmd2.0.5.190911"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=vmd2.0.5.190911"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=vmd2.0.5.190911"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=vmd2.0.5.190911"></script>
+    <script src="/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=vmd2.0.5.190911"></script>
+    <script src="/js/hwdas.js?ver=vmd2.0.5.190911"></script>
+    <script src="/js/vmdcore.js?ver=vmd2.0.5.190911"></script>
+    <script src="/js/vmdcomps.js?ver=vmd2.0.5.190911"></script>
+    <script src="/js/publicMethods.js?ver=vmd2.0.5.190911"></script>
+    <script src="/js/vmdreport.js?ver=vmd2.0.5.190911"></script>
+    <script src="/system/modules/eQ9ULgcVb1/project.config.js"></script>
+    <style> </style>
+    <style type="text/css" id="vmdcss">
+        .aaa .x-grid3-row {
+            border: 0;
+        }
+
+        .aaa .x-grid3-hd-row td {
+            border-right: 0;
+        }
+
+        .bbb .x-grid3-hd-row td {
+            border-right: 0;
+        }
+    </style>
+    <script>
+        vmd.previewMode = true;
+        vmd.virtualPath = '';
+        vmd.workspace = {
+            "workspaceid": "e47d5ad1-b8c1-4d19-bb2b-b2373006ee4f",
+            "workflowIp": "",
+            "dataServiceIp": "",
+            "msgIp": "",
+            "projectid": "eQ9ULgcVb1"
+        }
+        vmd.resourceSettings = {
+            "资源中心&&资源中心服务器": "http://www.hanweikeji.com:10050/resource"
+        }
+        vmd.projectInfo = {
+            "projectId": "eQ9ULgcVb1",
+            "workflowIp": "",
+            "dataServiceIp": "",
+            "msgIp": "",
+            "todoIp": "",
+            "authIp": "",
+            "docIp": "",
+            "reoprtIp": "",
+            "logIp": ""
+        }
+        Ext.define("vmd.module.MyViewport", {
+            extend: "vmd.comp.viewport",
+            requires: vmd.getCmpDeps([]),
+            xtype: "vmd.module.MyViewport",
+            layout: "border",
+            initComponent: function() {
+                var page = this;
+                var data = parent.selectorWin.data;
+                var data1 = parent.selectorWin.data1
+                var urlCode = parent.selectorWin.type;
+                var selected = parent.selectorWin.selected;
+                var store = new Ext.data.JsonStore({
+                    proxy: new Ext.data.MemoryProxy(),
+                    fields: ['name', 'cname']
+                });
+                store.loadData(data)
+                var store1 = new Ext.data.JsonStore({
+                    proxy: new Ext.data.MemoryProxy(),
+                    fields: ['name', 'cname', 'cellid', 'width']
+                });
+                store1.loadData(data1)
+
+                function button4_click(sender, e) {
+                    debugger
+                    parent.selectorWin.close(data1, urlCode);
+                }
+
+                function button_click(sender, e) {
+                    var temp = [];
+                    for (var i = 0; i < data.length; i++) {
+                        temp.push({
+                            name: data[i].name,
+                            cname: data[i].cname,
+                            width: data[i].cname ? (data[i].cname.length * 13 + 12) : 120
+                        })
+                    }
+                    for (var n = 0; n < data1.length; n++) {
+                        temp.push({
+                            name: data1[n].name,
+                            cname: data1[n].cname,
+                            width: data1[n].cname ? (data1[n].cname.length * 13 + 12) : 120
+                        })
+                    }
+                    data1 = temp;
+                    data = []
+                    store.loadData(data)
+                    store1.loadData(data1);
+                }
+
+                function button3_click(sender, e) {
+                    var temp = [];
+                    for (var i = 0; i < data.length; i++) {
+                        temp.push({
+                            name: data[i].name,
+                            cname: data[i].cname,
+                            width: data[i].cname ? (data[i].cname.length * 13 + 12) : 120
+                        })
+                    }
+                    for (var n = 0; n < data1.length; n++) {
+                        temp.push({
+                            name: data1[n].name,
+                            cname: data1[n].cname,
+                            width: data1[n].cname ? (data1[n].cname.length * 13 + 12) : 120
+                        })
+                    }
+                    data = temp;
+                    data1 = []
+                    store.loadData(data)
+                    store1.loadData(data1);
+                }
+
+                function button1_click(sender, e) {
+                    var group = MyGrid.getSelectionModel().selections.items;
+                    var temp = []
+                    for (var i = 0; i < group.length; i++) {
+                        temp.push({
+                            name: group[i].data.name,
+                            cname: group[i].data.cname
+                        })
+                        for (var n = data.length - 1; n >= 0; n--) {
+                            if (temp[i].name == data[n].name) {
+                                data.splice(n, 1);
+                            }
+                        }
+                    }
+                    for (var n = 0; n < temp.length; n++) {
+                        data1.push({
+                            name: temp[n].name,
+                            cname: temp[n].cname,
+                            width: temp[n].cname ? (temp[n].cname.length * 13 + 12) : 120
+                        })
+                    }
+                    store.loadData(data)
+                    store1.loadData(data1)
+                }
+
+                function button2_click(sender, e) {
+                    var group = MyGrid1.getSelectionModel().selections.items;
+                    var temp = []
+                    for (var i = 0; i < group.length; i++) {
+                        temp.push({
+                            name: group[i].data.name,
+                            cname: group[i].data.cname
+                        })
+                        for (var n = data1.length - 1; n >= 0; n--) {
+                            if (temp[i].name == data1[n].name) {
+                                data1.splice(n, 1);
+                            }
+                        }
+                    }
+                    for (var n = 0; n < temp.length; n++) {
+                        data.push({
+                            name: temp[n].name,
+                            cname: temp[n].cname
+                        })
+                    }
+                    store.loadData(data)
+                    store1.loadData(data1)
+                }
+
+                function button5_click(sender, e) {
+                    parent.selectorWin.close();
+                }
+
+                function MyGrid_beforerender(sender) {
+                    sender.enableColumnHide = true;
+                    sender.enableHdMenu = false;
+                    sender.store = store;
+                }
+
+                function MyGrid1_beforerender(sender) {
+                    sender.enableColumnHide = true;
+                    sender.enableHdMenu = false;
+                    var listCol = this.colModel.config;
+                    listCol[1].renderer = function(value, cellmeta, record) { //可以根据行字段的某个类型进行转换设置显示值
+                        var options = '<option>无</option>'
+                        var temp = selected;
+                        for (var i = 0; i < temp.length; i++) {
+                            if (value == temp[i].dictionary.name) {
+                                options += '<option selected="selected">' + temp[i].dictionary.name + '</option>'
+                            } else {
+                                options += '<option>' + temp[i].dictionary.name + '</option>'
+                            }
+                        }
+                        return "<div><select id = 'cellid' value = '" + value + "' onchange = 'gridGetCell(this,this.value," + "\"" + record.id + "\" " + ")'>" + options + "</select></div>"
+                    }
+                    listCol[2].renderer = function(value, cellmeta, record) { //可以根据行字段的某个类型进行转换设置显示值
+                        return '<input type="text" style="border:none;width:100%;height:100%;background: none;" value="' + value + '" onchange="grid1cname(this,this.value,\'' + record.id + '\')">'
+                    }
+                    listCol[3].renderer = function(value, cellmeta, record) { //可以根据行字段的某个类型进行转换设置显示值
+                        return '<input type="text" style="border:none;width:100%;height:100%;background: none;" value="' + value + '" onchange="grid1Width(this,this.value,\'' + record.id + '\')">'
+                    }
+                    sender.store = store1;
+                }
+
+                function button6_click(sender, e) {
+                    //上移
+                    var group = MyGrid1.getSelectionModel().selections.items;
+                    var name = group[0].data.name;
+                    for (var i = 0; i < data1.length; i++) {
+                        if (data1[i].name == name && i != 0) {
+                            var temp = data1[i - 1];
+                            data1[i - 1] = data1[i];
+                            data1[i] = temp;
+                            break;
+                        }
+                    }
+                    store1.loadData(data1)
+                }
+
+                function button7_click(sender, e) {
+                    //下移
+                    var group = MyGrid1.getSelectionModel().selections.items;
+                    var name = group[0].data.name;
+                    for (var i = 0; i < data1.length; i++) {
+                        if (data1[i].name == name && i != data1.length - 1) {
+                            var temp = data1[i + 1];
+                            data1[i + 1] = data1[i];
+                            data1[i] = temp;
+                            break;
+                        }
+                    }
+                    store1.loadData(data1)
+                }
+                window.grid1cname = function(sender, value, id) {
+                    for (var i = 0; i < MyGrid1.store.data.items.length; i++) {
+                        if (id == MyGrid1.store.data.items[i].id) {
+                            MyGrid1.store.data.items[i].set('cname', value)
+                            for (var n = 0; n < data1.length; n++) {
+                                if (data1[n].name == MyGrid1.store.data.items[i].get('name')) {
+                                    data1[n].cname = value
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                }
+                window.grid1Width = function(sender, value, id) {
+                    for (var i = 0; i < MyGrid1.store.data.items.length; i++) {
+                        if (id == MyGrid1.store.data.items[i].id) {
+                            MyGrid1.store.data.items[i].set('width', value)
+                            for (var n = 0; n < data1.length; n++) {
+                                if (data1[n].name == MyGrid1.store.data.items[i].get('name')) {
+                                    data1[n].width = value
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                }
+                window.gridGetCell = function(sender, value, id) {
+                    for (var i = 0; i < MyGrid1.store.data.items.length; i++) {
+                        if (id == MyGrid1.store.data.items[i].id) {
+                            // MyGrid1.store.data.items[i].set('search', value)
+                            for (var n = 0; n < data1.length; n++) {
+                                if (data1[n].name == MyGrid1.store.data.items[i].get('name')) {
+                                    data1[n].cellid = value
+                                    sender.value = value;
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                function button6_afterrender(sender) {
+                    vmd(button6.el.dom).attr('data-tooltip', '上移');
+                    vmd.utils.tooltip("[data-tooltip]");
+                }
+
+                function button7_afterrender(sender) {
+                    vmd(sender.el.dom).attr('data-tooltip', '下移');
+                    vmd.utils.tooltip("[data-tooltip]");
+                }
+
+                function button_afterrender(sender) {
+                    vmd(sender.el.dom).attr('data-tooltip', '全部选择');
+                    vmd.utils.tooltip("[data-tooltip]");
+                }
+
+                function button1_afterrender(sender) {
+                    vmd(sender.el.dom).attr('data-tooltip', '选择');
+                    vmd.utils.tooltip("[data-tooltip]");
+                }
+
+                function button2_afterrender(sender) {
+                    vmd(sender.el.dom).attr('data-tooltip', '取消');
+                    vmd.utils.tooltip("[data-tooltip]");
+                }
+
+                function button3_afterrender(sender) {
+                    vmd(sender.el.dom).attr('data-tooltip', '全部取消');
+                    vmd.utils.tooltip("[data-tooltip]");
+                }
+                this.items = [{
+                        xtype: "vmd.div",
+                        id: "div",
+                        autoEl: "div",
+                        border: true,
+                        backgroundRepeat: "no-repeat",
+                        backgroundPosition: "top left",
+                        width: 700,
+                        height: 528,
+                        region: "center",
+                        layout: "border",
+                        items: [{
+                                xtype: "vmd.div",
+                                id: "div1",
+                                layoutConfig: {
+                                    align: "center",
+                                    pack: "center"
+                                },
+                                autoEl: "div",
+                                border: true,
+                                backgroundRepeat: "no-repeat",
+                                backgroundPosition: "top left",
+                                width: 218,
+                                height: 50,
+                                region: "center",
+                                layout: "vbox",
+                                minWidth: 66,
+                                autoWidth: false,
+                                autoHeight: false,
+                                items: [{
+                                        xtype: "vmd.button",
+                                        id: "button6",
+                                        text: "↑",
+                                        type: "(none)",
+                                        size: "small",
+                                        region: "west",
+                                        x: 400,
+                                        y: 5,
+                                        width: 50,
+                                        click: "button6_click",
+                                        margins: "10 0",
+                                        afterrender: "button6_afterrender",
+                                        listeners: {
+                                            click: button6_click,
+                                            vmdafterrender: button6_afterrender
+                                        }
+                                    },
+                                    {
+                                        xtype: "vmd.button",
+                                        id: "button7",
+                                        text: "↓",
+                                        type: "(none)",
+                                        size: "small",
+                                        x: 470,
+                                        y: 5,
+                                        width: 50,
+                                        click: "button7_click",
+                                        region: "south",
+                                        margins: "10 0",
+                                        afterrender: "button7_afterrender",
+                                        listeners: {
+                                            click: button7_click,
+                                            vmdafterrender: button7_afterrender
+                                        }
+                                    },
+                                    {
+                                        xtype: "vmd.button",
+                                        id: "button",
+                                        text: ">>",
+                                        type: "(none)",
+                                        size: "small",
+                                        margins: "10 0",
+                                        width: 50,
+                                        click: "button_click",
+                                        afterrender: "button_afterrender",
+                                        listeners: {
+                                            click: button_click,
+                                            vmdafterrender: button_afterrender
+                                        }
+                                    },
+                                    {
+                                        xtype: "vmd.button",
+                                        id: "button1",
+                                        text: ">",
+                                        type: "(none)",
+                                        size: "small",
+                                        margins: "10 0",
+                                        width: 50,
+                                        click: "button1_click",
+                                        afterrender: "button1_afterrender",
+                                        listeners: {
+                                            click: button1_click,
+                                            vmdafterrender: button1_afterrender
+                                        }
+                                    },
+                                    {
+                                        xtype: "vmd.button",
+                                        id: "button2",
+                                        text: "<",
+                                        type: "(none)",
+                                        size: "small",
+                                        margins: "10 0",
+                                        width: 50,
+                                        click: "button2_click",
+                                        afterrender: "button2_afterrender",
+                                        listeners: {
+                                            click: button2_click,
+                                            vmdafterrender: button2_afterrender
+                                        }
+                                    },
+                                    {
+                                        xtype: "vmd.button",
+                                        id: "button3",
+                                        text: "<<",
+                                        type: "(none)",
+                                        size: "small",
+                                        margins: "10 0",
+                                        width: 50,
+                                        click: "button3_click",
+                                        afterrender: "button3_afterrender",
+                                        listeners: {
+                                            click: button3_click,
+                                            vmdafterrender: button3_afterrender
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                xtype: "grid",
+                                id: "MyGrid1",
+                                loadMask: true,
+                                width: 487,
+                                style: "/*border: 1px solid #ccc*/",
+                                beforerender: "MyGrid1_beforerender",
+                                hideHeaders: false,
+                                region: "east",
+                                enableHdMenu: false,
+                                border: true,
+                                cls: "bbb",
+                                listeners: {
+                                    beforerender: MyGrid1_beforerender
+                                },
+                                columns: [{
+                                        xtype: "gridcolumn",
+                                        header: "字段名称",
+                                        sortable: true,
+                                        resizable: true,
+                                        dataIndex: "name",
+                                        width: 158,
+                                        align: "left"
+                                    },
+                                    {
+                                        xtype: "templatecolumn",
+                                        header: "目标字段",
+                                        sortable: true,
+                                        resizable: true,
+                                        dataIndex: "cellid",
+                                        width: 100,
+                                        tpl: "<!--<input type=\"text\" style=\"border:none;width:100%;height:100%;background: none;\" value=\"\">--><div>    <label for=\"sex\">性别:</label>    <select id=\"sex\">        <option>男</option>        <option>女</option>    </select></div>"
+                                    },
+                                    {
+                                        xtype: "templatecolumn",
+                                        header: "汉字名称",
+                                        sortable: true,
+                                        resizable: true,
+                                        dataIndex: "cname",
+                                        width: 158,
+                                        tpl: "<input type=\"text\" style=\"border:none;width:100%;height:100%;background: none;\" value=\"\">",
+                                        align: "left"
+                                    },
+                                    {
+                                        xtype: "templatecolumn",
+                                        header: "宽度",
+                                        sortable: true,
+                                        resizable: true,
+                                        dataIndex: "width",
+                                        width: 146,
+                                        tpl: "<input type=\"text\" style=\"border:none;width:100%;height:100%;background: none;\" value=\"100\"><input type=\"text\" style=\"border:none;width:100%;height:100%;background: none;\" value=\"100\">",
+                                        align: "left"
+                                    }
+                                ]
+                            },
+                            {
+                                xtype: "grid",
+                                id: "MyGrid",
+                                title: "待选字段",
+                                loadMask: true,
+                                header: false,
+                                beforerender: "MyGrid_beforerender",
+                                height: 560,
+                                style: "width: 100%;    border:none;",
+                                region: "west",
+                                width: 179,
+                                hideHeaders: false,
+                                cls: "aaa",
+                                listeners: {
+                                    beforerender: MyGrid_beforerender
+                                },
+                                columns: [{
+                                    xtype: "gridcolumn",
+                                    header: "字段名称",
+                                    sortable: true,
+                                    resizable: true,
+                                    dataIndex: "name",
+                                    width: 160,
+                                    align: "left",
+                                    fixed: false
+                                }]
+                            }
+                        ]
+                    },
+                    {
+                        xtype: "vmd.div",
+                        id: "div4",
+                        layoutConfig: {
+                            align: "middle",
+                            pack: "end"
+                        },
+                        autoEl: "div",
+                        border: false,
+                        backgroundRepeat: "no-repeat",
+                        backgroundPosition: "top left",
+                        width: 400,
+                        height: 40,
+                        region: "south",
+                        layout: "hbox",
+                        items: [{
+                                xtype: "vmd.button",
+                                id: "button4",
+                                text: "确定",
+                                type: "(none)",
+                                size: "small",
+                                margins: "0 10 0 0 ",
+                                click: "button4_click",
+                                width: 80,
+                                style: "color: #fff;    background-color: #50bfff;    border-color: #50bfff;",
+                                listeners: {
+                                    click: button4_click
+                                }
+                            },
+                            {
+                                xtype: "vmd.button",
+                                id: "button5",
+                                text: "取消",
+                                type: "(none)",
+                                size: "small",
+                                margins: "0 90 0 10",
+                                click: "button5_click",
+                                width: 80,
+                                listeners: {
+                                    click: button5_click
+                                }
+                            }
+                        ]
+                    }
+                ]
+                this.callParent();
+                var me = this;
+                vmd.core.moduleInit(this.items, this);
+            }
+        })
+        Ext.onReady(function() {
+            Ext.create('vmd.module.MyViewport', {
+                renderTo: document.body
+            })
+        })
+    </script>
+</head>
+
+<body> </body>
+
+</html>

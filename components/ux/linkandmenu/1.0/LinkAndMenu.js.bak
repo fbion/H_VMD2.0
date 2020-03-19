@@ -1,0 +1,944 @@
+Ext.define('vmd.ux.linkAndMenu.Controller', {
+    xtype: 'vmd.ux.linkAndMenu.Controller',
+    constructor: function(options) {}
+})
+Ext.define("vmd.ux.LinkAndMenu", {
+    extend: "Ext.Panel",
+    requires: vmd.getCmpDeps([]),
+    version: "1.0",
+    xtype: "vmd.ux.LinkAndMenu",
+    title: "Panel",
+    header: false,
+    border: false,
+    width: 276,
+    height: 485,
+    layout: "absolute",
+    afterrender: "LinkAndMenu_afterrender",
+    autoScroll: true,
+    listeners: {
+        vmdafterrender: function() {
+            this.LinkAndMenu_afterrender(this)
+        }
+    },
+    initComponent: function() {
+        function resetCmpScope() {
+            var cmpList = me._reloadCmpList;
+            Ext.each(cmpList, function(name) {
+                var cmpObj = eval(name);
+                cmpObj && (cmpObj._beforeRender = function(_cmp) {
+                    var id = vmd.core.getCmpId(_cmp);
+                    id && eval(id + "= _cmp")
+                })
+            })
+        }
+        var page = this;
+        var store = new Ext.data.JsonStore({
+            proxy: new Ext.data.MemoryProxy(),
+            fields: ['name', 'display']
+        });
+        var store2 = new Ext.data.JsonStore({
+            proxy: new Ext.data.MemoryProxy(),
+            fields: ['name', 'value']
+        });
+        var store1 = new Ext.data.JsonStore({
+            proxy: new Ext.data.MemoryProxy(),
+            fields: ['name', 'value']
+        });
+        var hot = parent.sheetHot;
+        var ori = parent.xds.vmd.events;
+        // 设置属性信息
+        function setInfo(info) {
+            if (info && info.cellAttributeInfo && info.cellAttributeInfo.menu && info.cellAttributeInfo.leftLink) {
+                var menu = info.cellAttributeInfo.menu;
+                var link = info.cellAttributeInfo.leftLink;
+                if (menu.menuChoose.checked) {
+                    controlPanel(true);
+                } else {
+                    controlPanel(false);
+                }
+                linkParam.setValue(link.linkParam.value);
+                linkEvent.setValue(link.linkEvent.value);
+                menuChoose.setValue(menu.menuChoose.checked);
+                menuID.setValue(menu.menuID.value);
+                menuParam.setValue(menu.menuParam.value);
+                menuEvent.setValue(menu.menuEvent.value);
+                menuSource.setValue(1);
+                menuDataset.setValue(menu.menuDataset.value);
+                cmbMenuID.setValue(menu.cmbMenuID.value);
+                menuPID.setValue(menu.menuPID.value)
+                menuText.setValue(menu.menuText.value)
+            }
+        }
+
+        function controlPanel(boo) {
+            if (boo) {
+                menuID.disable();
+                menuIDExpEdit.disable();
+                menuParam.disable();
+                menuParamExpEdit.disable();
+                menuDataset.disable();
+                menuEvent.disable();
+                menuSource.disable()
+                menuPID.disable()
+                menuText.disable()
+            } else {
+                menuID.enable();
+                menuIDExpEdit.enable();
+                menuParam.enable();
+                menuParamExpEdit.enable();
+                menuDataset.enable();
+                menuEvent.enable();
+                menuSource.enable()
+                menuPID.enable();
+                menuText.enable();
+            }
+        }
+
+        function menuEvent_afterrender(sender) {
+            sender.el.on('dblclick', function() {
+                var canWrite = false;
+                var cell = sheetHot.dealInvert()[0];
+                var mArr = sheetHot.getPlugin('MergeCells').mergedCellsCollection.mergedCells;
+                var sel = sheetHot.dealInvert()[0];
+                var count = 0;
+                if (mArr.length > 0) {
+                    for (var x = 0; x < mArr.length; x++) {
+                        for (var i = sel.sr; i < sel.er + 1; i++) {
+                            for (var n = sel.sc; n < sel.ec + 1; n++) {
+                                if (mArr[x].row == i && mArr[x].col == n) {
+                                    count++;
+                                    if (count == 1) no = x;
+                                }
+                            }
+                        }
+                    }
+                    if (count == 1) {
+                        if (mArr[no].row + mArr[no].rowspan - 1 == sel.er && mArr[no].col + mArr[no].colspan - 1 == sel.ec) {
+                            canWrite = true;
+                        }
+                    }
+                }
+                if (canWrite || (cell.sr == cell.er && cell.sc == cell.ec)) {
+                    var editor = new vmd.comp.Ace({
+                        id: "ace_code"
+                    });
+                    parent.init_def_platformControlData();
+                    var aceWin = new vmd.window({
+                        title: "事件编辑",
+                        id: "aceWin",
+                        url: vmd.virtualPath + vmd.vmdCodePath + "?" + Date.parse(new Date()),
+                        offset: [100, 100],
+                        modal: true,
+                        maximizable: true,
+                        maskStyle: 'opacity:0.7',
+                        layout: 'border',
+                        draggable: false,
+                        listeners: {
+                            move: function(me, x, y) {
+                                this.moveZone(me, x, y);
+                            }
+                        }
+                    });
+                    aceWin.closeFn = function() {
+                        //修复ace tooltip还存在的问题
+                        Ext.select('.Ace-Tern-tooltip').remove();
+                        var val = aceWin.val;
+                        if (aceWin.script == val) {
+                            return;
+                        }
+                        Ext.Msg.confirm("提示", "脚本已改变是否保存?", function(btn) {
+                            if (btn == 'no') return;
+                            var click_label = sender;
+                            if (val.trim()) {
+                                parent.xds.vmd.events = val;
+                                var name = ('' + sheetHot.rootScope.viewerNode.id + '_' + sheetHot.numToEng(cell.sc) + (cell.sr + 1) + '_rightClick').toLowerCase();
+                                sender.setValue(name)
+                                sheetHot.changeAttributeInfo(cell.sr, cell.sc, 'menuEvent', name)
+                                if (ori.indexOf(name) == -1) {
+                                    parent.xds.vmd.addEventForDesignerCmp(parent.xds.active.component, name, name)
+                                }
+                            } else {
+                                click_label = undefined;
+                                delete parent.xds.vmd.events
+                            }
+                        })
+                    }
+                    //mafei 在ide-automachjs中
+                    parent.init_def_platformControlData();
+                    aceWin.on('close', aceWin.closeFn, this)
+                    //当前拖拽组件
+                    window.setTimeout(function() {
+                        window.setTimeout(function() {
+                            //代码编辑器初始化
+                            if (typeof rowIndex == "number") {
+                                aceWin.aceline = rowIndex;
+                            }
+                        }, 150)
+                        var code = parent.xds.vmd.events;
+                        var eventName = ('' + sheetHot.rootScope.viewerNode.id + '_' + sheetHot.numToEng(cell.sc) + (cell.sr + 1) + '_rightClick').toLowerCase();
+                        // var me = 
+                        var getdefaulteventname = function() {
+                            return "function(sender,grid,rowid,colid,params" + "){\n" + "\n} \n";
+                        }
+                        var m = getdefaulteventname(),
+                            code = code ? code : "",
+                            replaceStr = "function {0}{1}",
+                            regex = new RegExp("function\\s+" + eventName + "\\s*?\\(");
+                        if (eventName && code.search(regex) == -1) {
+                            var e = m.trim().replace("function", ""),
+                                i = String.format(replaceStr, eventName, e);
+                            code += (code ? "\n\n" : "") + i
+                        }
+                        aceWin.script = code;
+                        aceWin.val = code;
+                        aceWin.show();
+                        //进度提示
+                        var myMask = new Ext.LoadMask(aceWin.el, {
+                            msg: "数据加载中,请稍后...",
+                            msgCls: 'z-index:10000;'
+                        });
+                        myMask.show();
+                        aceWin.loading = myMask;
+                        var scriptArr = code.split("\n"),
+                            rowIndex = null;
+                        Ext.each(scriptArr,
+                            function(o, p) {
+                                if (o.search(regex) != -1) {
+                                    rowIndex = p + 2;
+                                    return false
+                                }
+                            });
+                    }, 50)
+                } else {
+                    alert('请选择单个单元格设置事件')
+                }
+            })
+        }
+
+        function linkEvent_afterrender(sender) {
+            sender.el.on('dblclick', function() {
+                var canWrite = false;
+                var cell = sheetHot.dealInvert()[0];
+                var mArr = sheetHot.getPlugin('MergeCells').mergedCellsCollection.mergedCells;
+                var sel = sheetHot.dealInvert()[0];
+                var count = 0;
+                if (mArr.length > 0) {
+                    for (var x = 0; x < mArr.length; x++) {
+                        for (var i = sel.sr; i < sel.er + 1; i++) {
+                            for (var n = sel.sc; n < sel.ec + 1; n++) {
+                                if (mArr[x].row == i && mArr[x].col == n) {
+                                    count++;
+                                    if (count == 1) no = x;
+                                }
+                            }
+                        }
+                    }
+                    if (count == 1) {
+                        if (mArr[no].row + mArr[no].rowspan - 1 == sel.er && mArr[no].col + mArr[no].colspan - 1 == sel.ec) {
+                            canWrite = true;
+                        }
+                    }
+                }
+                if (canWrite || (cell.sr == cell.er && cell.sc == cell.ec)) {
+                    var editor = new vmd.comp.Ace({
+                        id: "ace_code"
+                    });
+                    parent.init_def_platformControlData();
+                    var aceWin = new vmd.window({
+                        title: "事件编辑",
+                        id: "aceWin",
+                        url: vmd.virtualPath + vmd.vmdCodePath + "?" + Date.parse(new Date()),
+                        offset: [100, 100],
+                        modal: true,
+                        maximizable: true,
+                        maskStyle: 'opacity:0.7',
+                        layout: 'border',
+                        draggable: false,
+                        listeners: {
+                            move: function(me, x, y) {
+                                this.moveZone(me, x, y);
+                            }
+                        }
+                    });
+                    aceWin.closeFn = function() {
+                        //修复ace tooltip还存在的问题
+                        Ext.select('.Ace-Tern-tooltip').remove();
+                        var val = aceWin.val;
+                        if (aceWin.script == val) {
+                            return;
+                        }
+                        Ext.Msg.confirm("提示", "脚本已改变是否保存?", function(btn) {
+                            if (btn == 'no') return;
+                            var click_label = sender;
+                            if (val.trim()) {
+                                parent.xds.vmd.events = val;
+                                var name = ('' + sheetHot.rootScope.viewerNode.id + '_' + sheetHot.numToEng(cell.sc) + (cell.sr + 1) + '_click').toLowerCase();
+                                sender.setValue(name)
+                                sheetHot.changeAttributeInfo(cell.sr, cell.sc, 'linkEvent', name)
+                                if (ori.indexOf(name) == -1) {
+                                    parent.xds.vmd.addEventForDesignerCmp(parent.xds.active.component, name, name)
+                                }
+                            } else {
+                                click_label = undefined;
+                                delete parent.xds.vmd.events
+                            }
+                        })
+                    }
+                    //mafei 在ide-automachjs中
+                    parent.init_def_platformControlData();
+                    aceWin.on('close', aceWin.closeFn, this)
+                    //当前拖拽组件
+                    window.setTimeout(function() {
+                        window.setTimeout(function() {
+                            //代码编辑器初始化
+                            if (typeof rowIndex == "number") {
+                                aceWin.aceline = rowIndex;
+                            }
+                        }, 150)
+                        var code = parent.xds.vmd.events;
+                        var eventName = ('' + sheetHot.rootScope.viewerNode.id + '_' + sheetHot.numToEng(cell.sc) + (cell.sr + 1) + '_click').toLowerCase();
+                        // var me = 
+                        var getdefaulteventname = function() {
+                            return "function(sender,grid,cell,params" + "){\n" + "\n} \n";
+                        }
+                        var m = getdefaulteventname(),
+                            code = code ? code : "",
+                            replaceStr = "function {0}{1}",
+                            regex = new RegExp("function\\s+" + eventName + "\\s*?\\(");
+                        if (eventName && code.search(regex) == -1) {
+                            var e = m.trim().replace("function", ""),
+                                i = String.format(replaceStr, eventName, e);
+                            code += (code ? "\n\n" : "") + i
+                        }
+                        aceWin.script = code;
+                        aceWin.val = code;
+                        aceWin.show();
+                        //进度提示
+                        var myMask = new Ext.LoadMask(aceWin.el, {
+                            msg: "数据加载中,请稍后...",
+                            msgCls: 'z-index:10000;'
+                        });
+                        myMask.show();
+                        aceWin.loading = myMask;
+                        //  aceWin.update("<iframe  id='iframe_page' src='" + vmd.virtualPath + vmd.vmdCodePath + "?" + Date.parse(new Date()) + "' width=600 height=900 frameborder=0  ></iframe>")
+                        var scriptArr = code.split("\n"),
+                            rowIndex = null;
+                        Ext.each(scriptArr,
+                            function(o, p) {
+                                if (o.search(regex) != -1) {
+                                    rowIndex = p + 2;
+                                    return false
+                                }
+                            });
+                    }, 50)
+                } else {
+                    alert('请选择单个单元格设置事件')
+                }
+            })
+        }
+
+        function menuIDExpEdit_click(sender, e) {
+            parent.openVisualEditor('menuID', menuID.getValue());
+        }
+
+        function LinkParamExpEdit_click(sender, e) {
+            parent.openVisualEditor('linkParam', linkParam.getValue());
+        }
+
+        function menuParamExpEdit_click(sender, e) {
+            parent.openVisualEditor('menuParam', menuParam.getValue());
+        }
+
+        function clearMenuPanel() {
+            menuID.setValue('');
+            menuParam.setValue('');
+            menuEvent.setValue('');
+            menuPID.setValue('');
+            menuText.setValue('');
+            menuDataset.setValue('');
+            hot.handleMenus('id', '')
+            hot.handleMenus('params', '')
+            hot.handleMenus('event', '')
+            // hot.handleMenus('source', '')
+            hot.handleMenus('sets', '')
+            hot.handleMenus('pid', '')
+            hot.handleMenus('text', '')
+        }
+
+        function menuDataset_selectChanged(sender, combo, record, index) {
+            sender.setValue(record.data.name)
+            var temp = [];
+            var dataSets = parent.sheetHot.getDatasets();
+            for (var i = 0; i < dataSets.length; i++) {
+                if (dataSets[i].name == record.data.name) {
+                    for (var n = 0; n < dataSets[i].fields.length; n++) {
+                        temp.push({
+                            name: dataSets[i].fields[n],
+                            value: dataSets[i].fields[n]
+                        })
+                    }
+                }
+            }
+            store1.loadData(temp)
+            menuPID.setValue("");
+            menuText.setValue("");
+            parent.sheetHot.handleMenus('sets', record.data.name);
+        }
+
+        function menuID_keyup(sender, e) {
+            parent.sheetHot.handleMenus('id', menuID.getValue())
+        }
+
+        function menuParam_keyup(sender, e) {
+            parent.sheetHot.handleMenus('params', menuParam.getValue())
+        }
+
+        function menuSource_change(sender, checked) {
+            parent.sheetHot.handleMenus('source', menuSource.getValue())
+        }
+
+        function cmbMenuID_selectChanged(sender, combo, record, index) {
+            // var hot = parent.sheetHot;
+            hot.handleMenus('cellName', record.data.name)
+            if (hot.menus && hot.menus.length > 0) {
+                for (var i = 0; i < hot.menus.length; i++) {
+                    if (hot.menus[i].cellName == record.data.name) {
+                        menuID.setValue(hot.menus[i].id);
+                        menuParam.setValue(hot.menus[i].params);
+                        menuEvent.setValue(hot.menus[i].event);
+                        menuSource.setValue(hot.menus[i].source);
+                        menuDataset.setValue(hot.menus[i].sets)
+                        hot.handleMenus('id', hot.menus[i].id)
+                        hot.handleMenus('params', hot.menus[i].params)
+                        hot.handleMenus('event', hot.menus[i].event)
+                        hot.handleMenus('source', hot.menus[i].source)
+                        hot.handleMenus('sets', hot.menus[i].sets)
+                    }
+                }
+            }
+        }
+
+        function LinkAndMenu_afterrender(sender) {
+            var tempDom = document.getElementsByClassName('x-form-field-wrap x-form-field-trigger-wrap vmd-comlist x-hide-display x-abs-layout-item')
+            tempDom[0].onclick = function() {
+                var hot = parent.sheetHot;
+                if (hot && hot.menus && hot.menus.length > 0) {
+                    // if(hot.menus.length > 0) {
+                    var menuSet = [];
+                    for (var i = 0; i < hot.menus.length; i++) {
+                        menuSet.push({
+                            value: hot.menus[i].cellName,
+                            name: hot.menus[i].cellName
+                        })
+                    }
+                    // }
+                    if (menuSet) {
+                        store2.loadData(menuSet)
+                        cmbMenuID.store = store2;
+                        cmbMenuID.valueField = 'value';
+                        cmbMenuID.displayField = 'name'
+                    }
+                }
+            }
+            var tempDom2 = document.getElementsByClassName('x-form-field-wrap x-form-field-trigger-wrap vmd-comlist x-abs-layout-item')
+            tempDom2[0].onclick = function() {
+                var names = parent.sheetHot.getDatasets();
+                if (names && names.length > 0) {
+                    var nameSet = [];
+                    for (var i = 0; i < names.length; i++) {
+                        nameSet.push({
+                            name: names[i].name,
+                            display: names[i].name
+                        })
+                    }
+                }
+                if (nameSet) {
+                    store.loadData(nameSet);
+                }
+                menuDataset.store = store;
+                menuDataset.displayField = 'display';
+                menuDataset.valueField = 'name'
+            }
+        }
+
+        function menuDataset_beforerender(sender) {
+            menuDataset.store = store;
+            menuDataset.displayField = 'display';
+            menuDataset.valueField = 'name'
+        }
+
+        function cmbMenuID_beforerender(sender) {
+            cmbMenuID.store = store2;
+            cmbMenuID.valueField = 'value';
+            cmbMenuID.displayField = 'name'
+        }
+
+        function menuChoose_check(sender, checked) {
+            var hot = parent.sheetHot;
+            if (checked) {
+                cmbMenuID.show();
+                // 初始化下拉框，将已经定义的菜单都显示到下拉框中，以便选择已经定义好的右键菜单
+                // 如果有已经选择的则初始化上相应的信息
+                clearMenuPanel();
+                controlPanel(true)
+                hot.handleMenus('menuChoose', true)
+            } else {
+                cmbMenuID.hide();
+                controlPanel(false);
+                hot.handleMenus('menuChoose', false)
+            }
+        }
+
+        function comlist_beforerender(sender) {
+            sender.store = store1;
+            sender.valueField = 'value'
+            sender.displayField = 'name'
+        }
+
+        function comlist1_beforerender(sender) {
+            sender.store = store1;
+            sender.valueField = 'value'
+            sender.displayField = 'name'
+        }
+
+        function menuPID_selectChanged(sender, combo, record, index) {
+            parent.sheetHot.handleMenus('pid', record.data.name);
+        }
+
+        function menuText_selectChanged(sender, combo, record, index) {
+            parent.sheetHot.handleMenus('text', record.data.name);
+        }
+
+        function panel_beforerender(sender) {}
+
+        function button_afterrender(sender) {
+            vmd(sender.el.dom).attr('data-tooltip', '清空菜单项');
+            vmd.utils.tooltip("[data-tooltip]");
+        }
+
+        function button_click(sender, e) {
+            clearMenuPanel();
+        }
+
+        function menuPID_afterrender(sender) {
+            sender.el.dom.parentNode.onclick = function() {
+                var temp = [];
+                var dataSets = parent.sheetHot.getDatasets();
+                for (var i = 0; i < dataSets.length; i++) {
+                    if (dataSets[i].name == menuDataset.getValue()) {
+                        for (var n = 0; n < dataSets[i].fields.length; n++) {
+                            temp.push({
+                                name: dataSets[i].fields[n],
+                                value: dataSets[i].fields[n]
+                            })
+                        }
+                    }
+                }
+                store1.loadData(temp)
+            }
+        }
+
+        function menuText_afterrender(sender) {
+            sender.el.dom.parentNode.onclick = function() {
+                var temp = [];
+                var dataSets = parent.sheetHot.getDatasets();
+                for (var i = 0; i < dataSets.length; i++) {
+                    if (dataSets[i].name == menuDataset.getValue()) {
+                        for (var n = 0; n < dataSets[i].fields.length; n++) {
+                            temp.push({
+                                name: dataSets[i].fields[n],
+                                value: dataSets[i].fields[n]
+                            })
+                        }
+                    }
+                }
+                store1.loadData(temp)
+            }
+        }
+
+        function button1_click(sender, e) {
+            var hot = sheetHot;
+            var cell = hot.dealInvert()[0];
+            if (cell.sr == cell.er && cell.sc == cell.ec) {
+                linkEvent.setValue("")
+                hot.changeAttributeInfo(cell.sr, cell.sc, 'linkEvent', '')
+            } else {
+                alert('请选择单一单元格设置')
+            }
+        }
+
+        function button2_click(sender, e) {
+            var hot = sheetHot;
+            var cell = hot.dealInvert()[0];
+            if (cell.sr == cell.er && cell.sc == cell.ec) {
+                menuEvent.setValue("")
+                hot.changeAttributeInfo(cell.sr, cell.sc, 'menuEvent', '')
+            } else {
+                alert('请选择单一单元格设置')
+            }
+        }
+        this.LinkAndMenu_afterrender = LinkAndMenu_afterrender;
+        this.items = [{
+                xtype: "label",
+                id: "label",
+                text: "超链接",
+                x: 10,
+                y: 10
+            },
+            {
+                xtype: "label",
+                id: "label1",
+                text: "参数：",
+                x: 25,
+                y: 35,
+                height: 20
+            },
+            {
+                xtype: "textfield",
+                id: "linkParam",
+                allowBlank: true,
+                enableKeyEvents: true,
+                x: 70,
+                y: 30,
+                width: 145
+            },
+            {
+                xtype: "vmd.button",
+                id: "LinkParamExpEdit",
+                text: "...",
+                type: "(none)",
+                size: "small",
+                x: 225,
+                y: 30,
+                width: 30,
+                click: "LinkParamExpEdit_click",
+                listeners: {
+                    click: LinkParamExpEdit_click
+                }
+            },
+            {
+                xtype: "label",
+                id: "label2",
+                text: "事件：",
+                x: 25,
+                y: 60
+            },
+            {
+                xtype: "textfield",
+                id: "linkEvent",
+                allowBlank: true,
+                enableKeyEvents: true,
+                x: 70,
+                y: 60,
+                width: 145,
+                readOnly: true,
+                afterrender: "linkEvent_afterrender",
+                listeners: {
+                    vmdafterrender: linkEvent_afterrender
+                }
+            },
+            {
+                xtype: "label",
+                id: "label3",
+                text: "菜单",
+                x: 10,
+                y: 90
+            },
+            {
+                xtype: "checkbox",
+                id: "menuChoose",
+                fieldLabel: "Checkbox",
+                boxLabel: "选择已有菜单",
+                x: 20,
+                y: 105,
+                check: "menuChoose_check",
+                listeners: {
+                    check: menuChoose_check
+                }
+            },
+            {
+                xtype: "panel",
+                id: "panel",
+                title: "Panel",
+                header: false,
+                border: false,
+                height: 270,
+                x: 5,
+                y: 135,
+                layout: "absolute",
+                width: 270,
+                beforerender: "panel_beforerender",
+                listeners: {
+                    beforerender: panel_beforerender
+                },
+                items: [{
+                        xtype: "label",
+                        id: "label4",
+                        text: "菜单ID：",
+                        x: 10,
+                        y: 5
+                    },
+                    {
+                        xtype: "textfield",
+                        id: "menuID",
+                        allowBlank: true,
+                        enableKeyEvents: true,
+                        x: 65,
+                        y: -1,
+                        width: 145,
+                        keyup: "menuID_keyup",
+                        listeners: {
+                            keyup: menuID_keyup
+                        }
+                    },
+                    {
+                        xtype: "vmd.button",
+                        id: "menuIDExpEdit",
+                        text: "...",
+                        type: "(none)",
+                        size: "small",
+                        x: 220,
+                        y: 0,
+                        width: 30,
+                        click: "menuIDExpEdit_click",
+                        listeners: {
+                            click: menuIDExpEdit_click
+                        }
+                    },
+                    {
+                        xtype: "label",
+                        id: "label5",
+                        text: "参数：",
+                        x: 20,
+                        y: 40
+                    },
+                    {
+                        xtype: "textfield",
+                        id: "menuParam",
+                        allowBlank: true,
+                        enableKeyEvents: true,
+                        x: 70,
+                        y: 30,
+                        width: 140,
+                        keyup: "menuParam_keyup",
+                        listeners: {
+                            keyup: menuParam_keyup
+                        }
+                    },
+                    {
+                        xtype: "vmd.button",
+                        id: "menuParamExpEdit",
+                        text: "...",
+                        type: "(none)",
+                        size: "small",
+                        x: 220,
+                        y: 30,
+                        width: 30,
+                        click: "menuParamExpEdit_click",
+                        listeners: {
+                            click: menuParamExpEdit_click
+                        }
+                    },
+                    {
+                        xtype: "label",
+                        id: "label6",
+                        text: "数据来源：",
+                        x: 0,
+                        y: 70,
+                        hidden: false
+                    },
+                    {
+                        xtype: "label",
+                        id: "label7",
+                        text: "数据集：",
+                        x: 10,
+                        y: 100
+                    },
+                    {
+                        xtype: "label",
+                        id: "label8",
+                        text: "事件：",
+                        x: 20,
+                        y: 190
+                    },
+                    {
+                        xtype: "textfield",
+                        id: "menuEvent",
+                        allowBlank: true,
+                        enableKeyEvents: true,
+                        x: 70,
+                        y: 180,
+                        width: 130,
+                        readOnly: true,
+                        afterrender: "menuEvent_afterrender",
+                        listeners: {
+                            vmdafterrender: menuEvent_afterrender
+                        }
+                    },
+                    {
+                        xtype: "vmd.button",
+                        id: "button2",
+                        type: "(none)",
+                        size: "small",
+                        x: 215,
+                        y: 175,
+                        width: 30,
+                        icon: "delete",
+                        click: "button2_click",
+                        listeners: {
+                            click: button2_click
+                        }
+                    },
+                    {
+                        xtype: "radiostoregroup",
+                        id: "menuSource",
+                        width: 200,
+                        height: 30,
+                        labelField: "label",
+                        valueField: "value",
+                        checkedField: "1",
+                        boxFieldName: "myRadio",
+                        x: 70,
+                        y: 60,
+                        change: "menuSource_change",
+                        hidden: false,
+                        listeners: {
+                            change: menuSource_change
+                        },
+                        items: [{
+                                xtype: "radio",
+                                id: "menuDataSource",
+                                boxLabel: "数据源",
+                                checked: true,
+                                inputValue: "1"
+                            },
+                            {
+                                xtype: "radio",
+                                id: "menuCustom",
+                                boxLabel: "自定义",
+                                disabled: true,
+                                inputValue: "0"
+                            }
+                        ]
+                    },
+                    {
+                        xtype: "vmd.comlist",
+                        id: "menuDataset",
+                        width: 145,
+                        height: 270,
+                        x: 70,
+                        y: 90,
+                        beforerender: "menuDataset_beforerender",
+                        selectChanged: "menuDataset_selectChanged",
+                        listeners: {
+                            beforerender: menuDataset_beforerender,
+                            selectChanged: menuDataset_selectChanged
+                        }
+                    },
+                    {
+                        xtype: "label",
+                        id: "label9",
+                        text: "父节点：",
+                        x: 10,
+                        y: 130
+                    },
+                    {
+                        xtype: "label",
+                        id: "label10",
+                        text: "显示字段：",
+                        x: 0,
+                        y: 160
+                    },
+                    {
+                        xtype: "vmd.comlist",
+                        id: "menuPID",
+                        width: 145,
+                        height: 270,
+                        x: 70,
+                        y: 120,
+                        beforerender: "comlist_beforerender",
+                        selectChanged: "menuPID_selectChanged",
+                        afterrender: "menuPID_afterrender",
+                        listeners: {
+                            beforerender: comlist_beforerender,
+                            selectChanged: menuPID_selectChanged,
+                            vmdafterrender: menuPID_afterrender
+                        }
+                    },
+                    {
+                        xtype: "vmd.comlist",
+                        id: "menuText",
+                        width: 145,
+                        height: 270,
+                        x: 70,
+                        y: 150,
+                        beforerender: "comlist1_beforerender",
+                        selectChanged: "menuText_selectChanged",
+                        afterrender: "menuText_afterrender",
+                        listeners: {
+                            beforerender: comlist1_beforerender,
+                            selectChanged: menuText_selectChanged,
+                            vmdafterrender: menuText_afterrender
+                        }
+                    }
+                ]
+            },
+            {
+                xtype: "vmd.comlist",
+                id: "cmbMenuID",
+                width: 110,
+                height: 270,
+                x: 115,
+                y: 105,
+                hidden: true,
+                beforerender: "cmbMenuID_beforerender",
+                selectChanged: "cmbMenuID_selectChanged",
+                listeners: {
+                    beforerender: cmbMenuID_beforerender,
+                    selectChanged: cmbMenuID_selectChanged
+                }
+            },
+            {
+                xtype: "vmd.button",
+                id: "button",
+                type: "(none)",
+                size: "small",
+                x: 225,
+                y: 100,
+                icon: "delete",
+                width: 30,
+                afterrender: "button_afterrender",
+                click: "button_click",
+                listeners: {
+                    vmdafterrender: button_afterrender,
+                    click: button_click
+                }
+            },
+            {
+                xtype: "vmd.button",
+                id: "button1",
+                type: "(none)",
+                size: "small",
+                x: 225,
+                y: 60,
+                width: 30,
+                icon: "delete",
+                click: "button1_click",
+                listeners: {
+                    click: button1_click
+                }
+            }
+        ]
+        this.callParent();
+        vmd.core.compositeCmpInit(this.items, this);
+        var me = this;
+        eval(me.defineVars);
+        resetCmpScope();
+        this.setInfo = function(info) {
+            //直接填写方法内容
+            setInfo(info);
+        }
+        Ext.util.CSS.removeStyleSheet("vmd.ux.LinkAndMenu");
+        this.uxCss && Ext.util.CSS.createStyleSheet(vmd.replaceResVars(this.uxCss), "vmd.ux.LinkAndMenu");
+    }
+})

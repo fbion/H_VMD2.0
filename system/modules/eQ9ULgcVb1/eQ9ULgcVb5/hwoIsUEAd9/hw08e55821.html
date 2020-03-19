@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>规则定义</title>
+    <!--基本样式-->
+    <link href="/css/common.css?ver=2.0.4.20190331" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.4.20190331" rel="stylesheet" />
+    <link href="/design/css/icons.css?ver=2.0.4.20190331" rel="stylesheet" />
+    <link href="/lib/dhtmlx/dhtmlx.css?ver=2.0.4.20190331" rel="stylesheet" />
+    <!--样式快捷索引表-->
+    <link href="/css/shortcut.css?ver=2.0.4.20190331" rel="stylesheet" />
+    <script src="/lib/labjs/LAB.min.js?ver=2.0.4.20190331"></script>
+    <script src="/config.js?ver=2.0.4.20190331"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.4.20190331"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.4.20190331"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.4.20190331"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=2.0.4.20190331"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.4.20190331"></script>
+    <script src="/js/util.js?ver=2.0.4.20190331"></script>
+    <script src="/lib/dhtmlx/dhtmlx.js?ver=2.0.4.20190331"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.4.20190331"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.4.20190331"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.4.20190331"></script>
+    <script src="/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.4.20190331"></script>
+    <script src="/js/hwdas.js?ver=2.0.4.20190331"></script>
+    <script src="/js/vmdcore.js?ver=2.0.4.20190331"></script>
+    <script src="/js/vmdcomps.js?ver=2.0.4.20190331"></script>
+    <script src="/js/publicMethods.js?ver=2.0.4.20190331"></script>
+    <script src="/js/vmdreport.js?ver=2.0.4.20190331"></script>
+    <script src="/system/modules/eQ9ULgcVb1/project.config.js"></script>
+    <style> </style>
+    <style type="text/css" id="vmdcss">
+        .serverlist-info {
+            padding: 8px 17px;
+            margin: 2px;
+            line-height: 0.25em;
+            height: 5px;
+            width: 150px;
+            border-top: 5px solid transparent;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .btn-margin {
+            margin: 2px 3px 2px 3px;
+            width: 30px;
+        }
+    </style>
+    <script>
+        vmd.previewMode = true;
+        vmd.virtualPath = '';
+        vmd.workspace = {
+            "workspaceid": "254f1fb7-7079-48bf-bdd4-f7925e0eb4a3",
+            "workflowIp": "",
+            "dataServiceIp": "",
+            "msgIp": "",
+            "projectid": "eQ9ULgcVb1"
+        }
+        vmd.resourceSettings = {
+            "测试&&资源中心服务器": "http://www.hanweikeji.com:8050/resource",
+            "测试&&服务器2": "http://192.168.1.202:8050/resource",
+            "测试&&555": "http://www.hanweikeji.com:8050/resource"
+        }
+        vmd.projectInfo = {
+            "projectId": "eQ9ULgcVb1",
+            "workflowIp": "",
+            "dataServiceIp": "",
+            "msgIp": "",
+            "todoIp": "",
+            "authIp": "",
+            "docIp": "",
+            "reoprtIp": "",
+            "logIp": ""
+        }
+        Ext.define("vmd.module.MainViewport", {
+            extend: "vmd.comp.viewport",
+            requires: vmd.getCmpDeps([]),
+            xtype: "vmd.module.MainViewport",
+            layout: "border",
+            initComponent: function() {
+                this.items = [{
+                    xtype: "vmd.div",
+                    id: "div",
+                    autoEl: "div",
+                    border: true,
+                    backgroundRepeat: "no-repeat",
+                    backgroundPosition: "top left",
+                    width: 857,
+                    height: 50,
+                    x: 30,
+                    y: 10,
+                    region: "center",
+                    layout: "border",
+                    items: [{
+                            xtype: "vmd.div",
+                            id: "div3",
+                            autoEl: "div",
+                            border: false,
+                            backgroundRepeat: "no-repeat",
+                            backgroundPosition: "top left",
+                            width: 825,
+                            height: 50,
+                            region: "center",
+                            layout: "absolute",
+                            style: "font-size:14px;",
+                            items: [{
+                                    xtype: "label",
+                                    id: "label",
+                                    text: "名称：",
+                                    region: "center",
+                                    x: 10,
+                                    y: 15
+                                },
+                                {
+                                    xtype: "label",
+                                    id: "label1",
+                                    text: "说明：",
+                                    x: 10,
+                                    y: 45
+                                },
+                                {
+                                    xtype: "label",
+                                    id: "label2",
+                                    text: "规则：",
+                                    x: 10,
+                                    y: 80
+                                },
+                                {
+                                    xtype: "label",
+                                    id: "label3",
+                                    text: "提示：",
+                                    x: 10,
+                                    y: 180
+                                },
+                                {
+                                    xtype: "textarea",
+                                    id: "hwTextArea",
+                                    allowBlank: true,
+                                    x: 50,
+                                    y: 80,
+                                    width: 430,
+                                    height: 80,
+                                    blankText: "填写表达式，只能包含一个校验规则函数"
+                                },
+                                {
+                                    xtype: "textarea",
+                                    id: "hwTextArea1",
+                                    allowBlank: true,
+                                    x: 50,
+                                    y: 180,
+                                    width: 430,
+                                    height: 80,
+                                    blankText: "提示内容，支持表达式，不支持校验规则的使用"
+                                },
+                                {
+                                    xtype: "textfield",
+                                    id: "hwText",
+                                    allowBlank: true,
+                                    enableKeyEvents: true,
+                                    x: 50,
+                                    y: 10,
+                                    width: 430
+                                },
+                                {
+                                    xtype: "textfield",
+                                    id: "hwText1",
+                                    allowBlank: true,
+                                    enableKeyEvents: true,
+                                    x: 50,
+                                    y: 40,
+                                    width: 430
+                                },
+                                {
+                                    xtype: "label",
+                                    id: "label4",
+                                    text: "提示类型：",
+                                    x: 10,
+                                    y: 275
+                                },
+                                {
+                                    xtype: "radio",
+                                    id: "hwRadio",
+                                    fieldLabel: "Radio",
+                                    boxLabel: "警告",
+                                    x: 80,
+                                    y: 270,
+                                    checked: true
+                                },
+                                {
+                                    xtype: "radio",
+                                    id: "hwRadio1",
+                                    fieldLabel: "Radio",
+                                    boxLabel: "错误",
+                                    x: 140,
+                                    y: 270
+                                },
+                                {
+                                    xtype: "label",
+                                    id: "label5",
+                                    text: "校验规则函数：",
+                                    x: 150,
+                                    y: 330
+                                },
+                                {
+                                    xtype: "label",
+                                    id: "label6",
+                                    text: "通用函数：",
+                                    x: 420,
+                                    y: 330
+                                },
+                                {
+                                    xtype: "vmd.div",
+                                    id: "div2",
+                                    autoEl: "div",
+                                    border: true,
+                                    backgroundRepeat: "no-repeat",
+                                    backgroundPosition: "top left",
+                                    width: 250,
+                                    height: 250,
+                                    x: 150,
+                                    y: 350,
+                                    layout: "fit",
+                                    items: [{
+                                        xtype: "vmd.dataview",
+                                        id: "hwDataView",
+                                        width: 269,
+                                        height: 250,
+                                        itemSelector: "li.info",
+                                        overClass: "info-hover",
+                                        selectedClass: "x-view-selected",
+                                        singleSelect: true,
+                                        multiSelect: true,
+                                        autoScroll: true,
+                                        tpl: "<ul>    <tpl for=\".\">        <li class='info serverlist-info'>{name}</li>    </tpl></ul>",
+                                        data: "var data = [{    \"name\": \"betweenclosed（x,y）\"}, {        \"name\": \"betweenopend（x,y）\"}, {        \"name\": \"betweenLeftClosed（x,y）\"}, {        \"name\": \"betweenRightClosed（x,y）\"}, {        \"name\": \"lessclosed（x,y）\"}, {        \"name\": \"lessopened（x）\"}, {        \"name\": \"greateclosed（x,y）\"}, {        \"name\": \"greateopened（x）\"}, {        \"name\": \"DateTimeLimit（x,y）\"}];return data;",
+                                        x: 30,
+                                        y: 350
+                                    }]
+                                },
+                                {
+                                    xtype: "vmd.div",
+                                    id: "div4",
+                                    autoEl: "div",
+                                    border: true,
+                                    backgroundRepeat: "no-repeat",
+                                    backgroundPosition: "top left",
+                                    width: 250,
+                                    height: 250,
+                                    x: 420,
+                                    y: 350,
+                                    layout: "fit",
+                                    items: [{
+                                        xtype: "vmd.dataview",
+                                        id: "hwDataView1",
+                                        width: 300,
+                                        height: 270,
+                                        itemSelector: "li.info",
+                                        overClass: "info-hover",
+                                        selectedClass: "x-view-selected",
+                                        singleSelect: true,
+                                        multiSelect: true,
+                                        autoScroll: true,
+                                        tpl: "<ul>    <tpl for=\".\">        <li class='info serverlist-info'>{name}</li>    </tpl></ul>",
+                                        data: "var data = [{    \"name\": \"And(x,y)\"}, {    \"name\": \"Average(x,y,..)\"}, {    \"name\": \"Contains(x,y)\"}, {    \"name\": \"EndsWith(x,y)\"}, {    \"name\": \"If(x,y,z)\"}, {    \"name\": \"IsNull(x)\"}, {    \"name\": \"SubStr(x,y,z)\"}, {    \"name\": \"StartsWith(x,y)\"}, {    \"name\": \"ToString(x,y)\"}];return data;",
+                                        x: 360,
+                                        y: 340
+                                    }]
+                                },
+                                {
+                                    xtype: "vmd.div",
+                                    id: "div5",
+                                    autoEl: "div",
+                                    border: true,
+                                    backgroundRepeat: "no-repeat",
+                                    backgroundPosition: "top left",
+                                    width: 130,
+                                    height: 260,
+                                    x: 10,
+                                    y: 350,
+                                    items: [{
+                                            xtype: "vmd.button",
+                                            id: "button",
+                                            text: "+",
+                                            type: "(none)",
+                                            size: "small",
+                                            cls: "btn-margin"
+                                        },
+                                        {
+                                            xtype: "vmd.button",
+                                            id: "button1",
+                                            text: "-",
+                                            type: "(none)",
+                                            size: "small",
+                                            cls: "btn-margin"
+                                        },
+                                        {
+                                            xtype: "vmd.button",
+                                            id: "button2",
+                                            text: "*",
+                                            type: "(none)",
+                                            size: "small",
+                                            cls: "btn-margin"
+                                        },
+                                        {
+                                            xtype: "vmd.button",
+                                            id: "button3",
+                                            text: "/",
+                                            type: "(none)",
+                                            size: "small",
+                                            cls: "btn-margin"
+                                        },
+                                        {
+                                            xtype: "vmd.button",
+                                            id: "button4",
+                                            text: "%",
+                                            type: "(none)",
+                                            size: "small",
+                                            cls: "btn-margin"
+                                        },
+                                        {
+                                            xtype: "vmd.button",
+                                            id: "button5",
+                                            text: "=",
+                                            type: "(none)",
+                                            size: "small",
+                                            cls: "btn-margin"
+                                        },
+                                        {
+                                            xtype: "vmd.button",
+                                            id: "button6",
+                                            text: "!",
+                                            type: "(none)",
+                                            size: "small",
+                                            cls: "btn-margin"
+                                        },
+                                        {
+                                            xtype: "vmd.button",
+                                            id: "button7",
+                                            text: "!=",
+                                            type: "(none)",
+                                            size: "small",
+                                            cls: "btn-margin"
+                                        },
+                                        {
+                                            xtype: "vmd.button",
+                                            id: "button8",
+                                            text: "&&",
+                                            type: "(none)",
+                                            size: "small",
+                                            cls: "btn-margin"
+                                        },
+                                        {
+                                            xtype: "vmd.button",
+                                            id: "button9",
+                                            text: "||",
+                                            type: "(none)",
+                                            size: "small",
+                                            cls: "btn-margin"
+                                        },
+                                        {
+                                            xtype: "vmd.button",
+                                            id: "button10",
+                                            text: ">=",
+                                            type: "(none)",
+                                            size: "small",
+                                            cls: "btn-margin"
+                                        },
+                                        {
+                                            xtype: "vmd.button",
+                                            id: "button11",
+                                            text: "<=",
+                                            type: "(none)",
+                                            size: "small",
+                                            cls: "btn-margin"
+                                        },
+                                        {
+                                            xtype: "vmd.button",
+                                            id: "button12",
+                                            text: ">",
+                                            type: "(none)",
+                                            size: "small",
+                                            cls: "btn-margin"
+                                        },
+                                        {
+                                            xtype: "vmd.button",
+                                            id: "button13",
+                                            text: "<",
+                                            type: "(none)",
+                                            size: "small",
+                                            cls: "btn-margin"
+                                        },
+                                        {
+                                            xtype: "vmd.button",
+                                            id: "button14",
+                                            text: "(",
+                                            type: "(none)",
+                                            size: "small",
+                                            cls: "btn-margin"
+                                        },
+                                        {
+                                            xtype: "vmd.button",
+                                            id: "button15",
+                                            text: ")",
+                                            type: "(none)",
+                                            size: "small",
+                                            cls: "btn-margin"
+                                        }
+                                    ]
+                                },
+                                {
+                                    xtype: "label",
+                                    id: "label7",
+                                    text: "表达式运算符：",
+                                    x: 10,
+                                    y: 330
+                                }
+                            ]
+                        },
+                        {
+                            xtype: "vmd.div",
+                            id: "div1",
+                            autoEl: "div",
+                            border: true,
+                            backgroundRepeat: "no-repeat",
+                            backgroundPosition: "top left",
+                            width: 296,
+                            height: 50,
+                            region: "east"
+                        }
+                    ]
+                }]
+                this.callParent();
+                var me = this;
+                vmd.core.moduleInit(this.items, this);
+            }
+        })
+        Ext.onReady(function() {
+            Ext.create('vmd.module.MainViewport', {
+                renderTo: document.body
+            })
+        })
+    </script>
+</head>
+
+<body> </body>
+
+</html>

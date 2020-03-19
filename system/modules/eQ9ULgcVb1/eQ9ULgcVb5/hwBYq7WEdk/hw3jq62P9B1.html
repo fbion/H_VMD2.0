@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>服务配置</title>
+	<!--基本样式-->
+    <link href="/css/common.css?ver=2.0.3.1227" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.3.1227" rel="stylesheet" />
+   
+    <link href="/design/css/icons.css?ver=2.0.3.1227" rel="stylesheet" />
+
+	<link href="/lib/dhtmlx/dhtmlx.css?ver=2.0.3.1227" rel="stylesheet" />
+	  <!--样式快捷索引表-->
+    <link href="/css/shortcut.css?ver=2.0.3.1227" rel="stylesheet" />
+    
+    <script src="/lib/labjs/LAB.min.js?ver=2.0.3.1227"></script>
+    <script src="/config.js?ver=2.0.3.1227"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.3.1227"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.3.1227"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.3.1227"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=2.0.3.1227"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.3.1227"></script>
+    <script src="/js/util.js?ver=2.0.3.1227"></script>
+    <script src="/lib/dhtmlx/dhtmlx.js?ver=2.0.3.1227"></script>
+	<script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.3.1227"></script>
+	<script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.3.1227"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.3.1227"></script>
+	<script src="/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.3.1227"></script>
+    <script src="/js/hwdas.js?ver=2.0.3.1227"></script>
+	<script src="/js/hwMSC.js?ver=2.0.3.1227"></script>
+    <script src="/js/vmdcore.js?ver=2.0.3.1227"></script>
+    <script src="/js/vmdcomps.js?ver=2.0.3.1227"></script>
+    <script src="/js/publicMethods.js?ver=2.0.3.1227"></script>
+    <script src="/js/vmdreport.js?ver=2.0.3.1227"></script>
+    
+
+    <script src="/lib/ace/ace.js"></script>
+    <script src="/lib/ace/mode-base.js" type="text/javascript"></script>
+    <script src="/lib/ace/theme-xcode.js" type="text/javascript" ></script>
+    <script src="/lib/ace/ext-language_tools.js"></script>
+    
+
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        .aaaaa .x-tab-strip-top .x-tab-strip-active .x-tab-right
+{
+    background-color: rgb(32, 160, 255)
+}
+.aaaaa .x-tab-strip-active span.x-tab-strip-text {
+	color:white;
+    font-weight:bold;
+}
+.bbbbb .x-tab-strip-top .x-tab-strip-active .x-tab-right
+{
+    background-color: #fafafa
+}
+.bbbbb .x-tab-strip-active span.x-tab-strip-text {
+	color:#15428b;
+    font-weight:bold;
+}
+
+.ccccc .icon-refresh {
+    background-image: url("") !important;
+}
+    </style>
+    <script>
+	    vmd.preivewMode=true;
+        vmd.virtualPath = '';
+        vmd.workspace={"workspaceid":"254f1fb7-7079-48bf-bdd4-f7925e0eb4a3","projectid":"eQ9ULgcVb1","workflowIp":"","msgIp":"","dataServiceIp":""}
+	vmd.resourceSettings={"资源中心&&资源中心服务器":"http://www.hanweikeji.com:10050/resource","资源中心&&服务器2":"http://www.hanweikeji.com:10050/resource"}
+        Ext.define("vmd.module.MainViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps(["vmd.ux.PublishResource$1.0$PublishResource","vmd.ux.PublishServerInfo$1.0$PublishServerInfo","vmd.ux.DevelopServerInfo$1.0$DevelopServerInfo"]),
+	xtype:"vmd.module.MainViewport",
+	layout:"border",
+	autoScroll:true,
+	style:"background-color: #dddddd",
+	initComponent: function(){
+		
+	
+
+
+		this.items=[
+			{
+				xtype:"tabpanel",
+				id:"MyTabs",
+				activeTab:0,
+				height:150,
+				width:500,
+				x:170,
+				y:120,
+				region:"center",
+				margins:"10 20 10 20",
+				border:false,
+				unstyled:false,
+				collapsible:false,
+				collapseMode:"standard",
+				cls:"aaaaa",
+				items:[
+					{
+						xtype:"panel",
+						id:"panel",
+						title:"开发环境",
+						header:true,
+						border:false,
+						height:100,
+						layout:"border",
+						items:[
+							{
+								xtype:"tabpanel",
+								id:"MyTabs2",
+								activeTab:1,
+								height:150,
+								width:500,
+								region:"center",
+								margins:"5 10 0 10",
+								cls:"bbbbb",
+								bodyStyle:"border-bottom:0px;",
+								items:[
+									{
+										xtype:"panel",
+										id:"panel5",
+										title:"微服务配置",
+										header:true,
+										border:false,
+										height:100,
+										layout:"border",
+										items:[
+											{
+												xtype:"vmd.ux.DevelopServerInfo",
+												id:"hwDevelopServerInfo",
+												layout:"absolute",
+												width:646,
+												height:362,
+												region:"center"
+											},
+											{
+												xtype:"vmd.div",
+												id:"div10",
+												autoEl:"div",
+												border:true,
+												backgroundRepeat:"no-repeat",
+												backgroundPosition:"top left",
+												width:400,
+												height:50,
+												region:"south",
+												style:"border-top:0px;",
+												layout:"absolute",
+												items:[
+													{
+														xtype:"vmd.button",
+														id:"button",
+														text:"保存",
+														type:"(none)",
+														size:"small",
+														x:430,
+														y:10
+													}
+												]
+											}
+										]
+									},
+									{
+										xtype:"panel",
+										id:"panel6",
+										title:"资源配置",
+										header:true,
+										border:false,
+										height:100,
+										layout:"border",
+										items:[
+											{
+												xtype:"vmd.div",
+												id:"div6",
+												autoEl:"div",
+												border:false,
+												backgroundRepeat:"no-repeat",
+												backgroundPosition:"top left",
+												width:400,
+												height:50,
+												region:"center",
+												margins:"0 0 0 5",
+												style:"border-left: 1px solid #dddddd;    font-size:14px;",
+												layout:"border",
+												items:[
+													{
+														xtype:"vmd.div",
+														id:"div11",
+														autoEl:"div",
+														border:true,
+														backgroundRepeat:"no-repeat",
+														backgroundPosition:"top left",
+														width:400,
+														height:50,
+														region:"center",
+														layout:"absolute",
+														items:[
+															{
+																xtype:"label",
+																id:"label10",
+																text:"资源地址：",
+																x:20,
+																y:70
+															},
+															{
+																xtype:"textfield",
+																id:"hwText2",
+																allowBlank:true,
+																enableKeyEvents:true,
+																x:90,
+																y:25,
+																width:340
+															},
+															{
+																xtype:"textfield",
+																id:"hwText3",
+																allowBlank:true,
+																enableKeyEvents:true,
+																x:90,
+																y:65,
+																width:340
+															},
+															{
+																xtype:"label",
+																id:"label9",
+																text:"资源名称：",
+																x:20,
+																y:30
+															}
+														]
+													},
+													{
+														xtype:"vmd.div",
+														id:"div12",
+														autoEl:"div",
+														border:true,
+														backgroundRepeat:"no-repeat",
+														backgroundPosition:"top left",
+														width:400,
+														height:50,
+														region:"south"
+													}
+												]
+											},
+											{
+												xtype:"vmd.div",
+												id:"div7",
+												autoEl:"div",
+												border:false,
+												backgroundRepeat:"no-repeat",
+												backgroundPosition:"top left",
+												width:199,
+												height:50,
+												region:"west",
+												layout:"border",
+												style:"border-right: 1px solid #dddddd;    font-size: 14px",
+												items:[
+													{
+														xtype:"vmd.div",
+														id:"div8",
+														autoEl:"div",
+														border:false,
+														backgroundRepeat:"no-repeat",
+														backgroundPosition:"top left",
+														width:400,
+														height:35,
+														region:"north",
+														style:"border-bottom: 1px solid #dddddd",
+														layout:"hbox",
+														items:[
+															{
+																xtype:"vmd.button",
+																id:"button5",
+																text:"添加",
+																type:"text",
+																size:"small",
+																icon:"icon-plus",
+																margins:"5",
+																style:"font-size: 14px"
+															},
+															{
+																xtype:"vmd.button",
+																id:"button6",
+																text:"删除",
+																type:"text",
+																size:"small",
+																icon:"icon-minus",
+																margins:"5",
+																style:"font-size: 14px"
+															}
+														]
+													},
+													{
+														xtype:"vmd.div",
+														id:"div9",
+														autoEl:"div",
+														border:false,
+														backgroundRepeat:"no-repeat",
+														backgroundPosition:"top left",
+														width:400,
+														height:50,
+														region:"center",
+														layout:"vbox",
+														items:[
+															{
+																xtype:"label",
+																id:"label6",
+																text:"资源中心",
+																margins:"10"
+															},
+															{
+																xtype:"label",
+																id:"label7",
+																text:"研究院员资源中心",
+																margins:"10"
+															},
+															{
+																xtype:"label",
+																id:"label8",
+																text:"开发资源中心",
+																margins:"10"
+															}
+														]
+													}
+												]
+											}
+										]
+									}
+								]
+							}
+						]
+					},
+					{
+						xtype:"panel",
+						id:"panel1",
+						title:"发布环境",
+						header:true,
+						border:true,
+						height:666,
+						layout:"border",
+						autoScroll:true,
+						items:[
+							{
+								xtype:"vmd.div",
+								id:"div2",
+								autoEl:"div",
+								border:false,
+								backgroundRepeat:"no-repeat",
+								backgroundPosition:"top left",
+								width:400,
+								height:50,
+								region:"center",
+								layout:"border",
+								autoScroll:true,
+								margins:"5 10 5 0",
+								items:[
+									{
+										xtype:"tabpanel",
+										id:"MyTabs1",
+										activeTab:0,
+										height:150,
+										width:500,
+										cls:"bbbbb",
+										region:"center",
+										bodyStyle:"border-bottom: 0;",
+										items:[
+											{
+												xtype:"panel",
+												id:"panel4",
+												title:"平台配置",
+												header:true,
+												border:false,
+												height:372,
+												layout:"absolute",
+												style:"font-size: 14px;",
+												items:[
+													{
+														xtype:"label",
+														id:"label",
+														text:"平台服务地址：",
+														x:20,
+														y:20
+													},
+													{
+														xtype:"textfield",
+														id:"hwText",
+														allowBlank:true,
+														enableKeyEvents:true,
+														x:110,
+														y:20,
+														width:370
+													},
+													{
+														xtype:"label",
+														id:"label1",
+														text:"注册子系统选择：",
+														x:20,
+														y:60,
+														height:20
+													},
+													{
+														xtype:"vmd.div",
+														id:"div5",
+														autoEl:"div",
+														border:true,
+														backgroundRepeat:"no-repeat",
+														backgroundPosition:"top left",
+														width:450,
+														height:260,
+														x:30,
+														y:90,
+														layout:"fit",
+														items:[
+															{
+																xtype:"vmd.treeex",
+																id:"tree",
+																width:478,
+																height:270,
+																hideRoot:false
+															}
+														]
+													},
+													{
+														xtype:"label",
+														id:"label2",
+														text:"虚拟目录：",
+														x:30,
+														y:370
+													},
+													{
+														xtype:"textfield",
+														id:"hwText1",
+														allowBlank:true,
+														enableKeyEvents:true,
+														x:100,
+														y:370,
+														width:380
+													},
+													{
+														xtype:"vmd.button",
+														id:"button3",
+														text:"重新加载",
+														type:"text",
+														size:"small",
+														x:130,
+														y:55,
+														icon:"icon-refresh",
+														style:"font-size: 14px; background-image: url() !important;",
+														width:90,
+														height:30,
+														cls:"ccccc"
+													}
+												]
+											},
+											{
+												xtype:"panel",
+												id:"panel2",
+												title:"微服务配置",
+												header:true,
+												border:false,
+												height:100,
+												layout:"absolute",
+												items:[
+													{
+														xtype:"vmd.ux.PublishServerInfo",
+														id:"hwPublishServerInfo",
+														layout:"fit",
+														style:"mar",
+														width:480,
+														margins:"10 20 10 20"
+													}
+												]
+											},
+											{
+												xtype:"panel",
+												id:"panel3",
+												title:"资源配置",
+												header:true,
+												border:false,
+												height:100,
+												layout:"vbox",
+												items:[
+													{
+														xtype:"vmd.ux.PublishResource",
+														id:"PublishResource",
+														layout:"column",
+														margins:"10"
+													},
+													{
+														xtype:"vmd.ux.PublishResource",
+														id:"PublishResource1",
+														layout:"column",
+														margins:"10"
+													},
+													{
+														xtype:"vmd.ux.PublishResource",
+														id:"PublishResource2",
+														layout:"column",
+														margins:"10"
+													}
+												]
+											}
+										]
+									},
+									{
+										xtype:"vmd.div",
+										id:"div1",
+										autoEl:"div",
+										border:true,
+										backgroundRepeat:"no-repeat",
+										backgroundPosition:"top left",
+										width:400,
+										height:41,
+										region:"south",
+										style:"border-top:0;",
+										layout:"absolute",
+										items:[
+											{
+												xtype:"vmd.button",
+												id:"button7",
+												text:"保存",
+												type:"info",
+												size:"small",
+												x:420,
+												y:5,
+												height:30
+											}
+										]
+									}
+								]
+							},
+							{
+								xtype:"vmd.div",
+								id:"div3",
+								autoEl:"div",
+								border:true,
+								backgroundRepeat:"no-repeat",
+								backgroundPosition:"top left",
+								width:200,
+								height:50,
+								region:"west",
+								layout:"border",
+								margins:"5 5 5 10",
+								items:[
+									{
+										xtype:"vmd.div",
+										id:"div",
+										autoEl:"div",
+										border:false,
+										backgroundRepeat:"no-repeat",
+										backgroundPosition:"top left",
+										width:400,
+										height:34,
+										region:"north",
+										layout:"hbox",
+										style:"border-bottom: 1px solid #dddddd;",
+										items:[
+											{
+												xtype:"vmd.button",
+												id:"button2",
+												text:"添加",
+												type:"text",
+												size:"small",
+												margins:"5 0 0 10",
+												icon:"icon-plus",
+												style:"font-size: 14px;"
+											},
+											{
+												xtype:"vmd.button",
+												id:"button4",
+												text:"删除",
+												type:"text",
+												size:"small",
+												icon:"icon-minus",
+												margins:"5 0 0 10",
+												style:"font-size: 14px;"
+											}
+										]
+									},
+									{
+										xtype:"vmd.div",
+										id:"div4",
+										autoEl:"div",
+										border:false,
+										backgroundRepeat:"no-repeat",
+										backgroundPosition:"top left",
+										width:400,
+										height:50,
+										region:"center",
+										layout:"vbox",
+										style:"font-size: 14px;",
+										items:[
+											{
+												xtype:"label",
+												id:"label3",
+												text:"测试发布配置",
+												width:103,
+												margins:"10"
+											},
+											{
+												xtype:"label",
+												id:"label4",
+												text:"测试发布配置2",
+												width:119,
+												margins:"10"
+											},
+											{
+												xtype:"label",
+												id:"label5",
+												text:"正式发布配置",
+												width:106,
+												margins:"10"
+											}
+										]
+									}
+								]
+							}
+						]
+					}
+				]
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+	}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MainViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

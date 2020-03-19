@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>复合组件属性设置</title>
+	<!--基本样式-->
+    <link href="/css/common.css" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="/lib/ext-3.4/resources/css/ext-all.css" rel="stylesheet" />
+     <!--样式快捷索引表-->
+    <link href="/css/shortcut.css" rel="stylesheet" />
+	<link href="/lib/dhtmlx/dhtmlx.css" rel="stylesheet" />
+	
+    <script src="/lib/labjs/LAB.min.js"></script>
+    <script src="/config.js"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js"></script>
+
+    <script src="/lib/dhtmlx/dhtmlx.js"></script>
+	<script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js"></script>
+	 <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js"></script>
+   <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js"></script>
+	 <script src="/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js"></script>
+    <script src="/js/hwdas.js"></script>
+    <script src="/js/vmdcore.js"></script>
+    <script src="/js/vmdcomps.js"></script>
+    <script src="/js/publicMethods.js"></script>
+     <script src="/js/vmdreport.js"></script>
+	 
+    <script src="/lib/ace/ace.js"></script>
+    <script src="/lib/ace/mode-base.js" type="text/javascript"></script>
+    <script src="/lib/ace/theme-xcode.js" type="text/javascript" ></script>
+    <script src="/lib/ace/ext-language_tools.js"></script>
+
+
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        li.info h4 {
+    cursor: pointer
+}
+    </style>
+    <script>
+		vmd.virtualPath=''
+        Ext.define("vmd.module.MyViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps([]),
+	xtype:"vmd.module.MyViewport",
+	layout:"fit",
+	afterrender:"MyViewport_afterrender",
+	listeners:{
+		afterrender:function(){
+	this.MyViewport_afterrender(this)
+}
+	},
+	initComponent: function(){
+		//默认追加状态
+var editorStatus = 'new';
+
+var propStore = new Ext.data.JsonStore({
+    proxy: new Ext.data.MemoryProxy(),
+    fields: ['id', 'zhname', 'bindCmp', 'bindValue', 'isPublic', 'desc','uxcid']
+});
+var cmpStore = new Ext.data.JsonStore({
+    proxy: new Ext.data.MemoryProxy(),
+    fields: ['cmpId']
+});
+var cmpPropStore = new Ext.data.JsonStore({
+    proxy: new Ext.data.MemoryProxy(),
+    fields: ['name']
+});
+var reqPropId = getUrlParam('id');
+
+//获取属性节点的数据
+var data = parent.xds.vmd.getPropsData();
+propStore.loadData(data);
+
+//获取组件树
+var nodeList = [];
+var getAllCmpsByNode = function(node, nodeList) {
+
+    Ext.each(node.childNodes, function(item) {
+        var obj = {
+            cmpId: item.id
+        };
+        nodeList.push(obj);
+        getAllCmpsByNode(item, nodeList);
+    })
+
+}
+
+var viewRoot = parent.xds.inspector.root.childNodes[0];
+getAllCmpsByNode(viewRoot, nodeList)
+
+cmpStore.loadData(nodeList);
+var refreshPropNode = function() {
+
+    var data = Ext.pluck(propStore.data.items, 'data');
+    parent.xds.vmd.addPropNodes(data);
+
+}
+
+function button1_click(sender) {
+    
+    parent.propWin.close()
+}
+
+function hwDataView_afterrender(sender) {
+    //属性列表加载
+    sender.setStore(propStore)
+        //选中传来的属性
+
+    if(reqPropId) {
+        var num = propStore.find('id', reqPropId)
+        if(num != -1) {
+            // sender.select(num)
+            var node = this.getNode(num);
+            Ext.defer(function() {
+                node.click()
+            }, 50)
+
+        }
+
+    }
+}
+
+function button2_click(sender) {
+    //新建
+
+    editorStatus = 'new';
+    hwDataView.clearSelections()
+    var rec = new propStore.recordType({
+        id: '',
+        zhname: '',
+        bindCmp: '',
+        bindValue: '',
+        desc: '',
+        isPublic: true
+    });
+    MyForm.form.loadRecord(rec);
+}
+
+function button3_click(sender) {
+    //删除
+
+    var selectData = hwDataView.getSelectedRecords();
+    if(selectData.length == 0) {
+        Ext.Msg.alert('提示', '请选择要删除的属性！')
+        return
+    }
+    Ext.Msg.confirm('提示', '你确定要删除属性吗?', function(type) {
+
+        if(type == 'yes') {
+            propStore.remove(selectData)
+            refreshPropNode()
+            vmd.alert('提示', '删除成功！');
+
+        }
+    })
+}
+
+
+
+function MyViewport_afterrender(sender) {
+    //数据加载完成？
+    parent.propWin && parent.propWin.loading.hide();
+
+
+}
+
+
+function button_click(sender) {
+    //保存
+    
+    var form = MyForm.getForm();
+    var values = form.getValues();
+    var id = values.id;
+    var num;
+    
+    var getCmpCid=function(cmpId){
+        var cid="";
+        var cmp=parent.xds.inspector.nodeHash[cmpId];
+        if(cmp){
+            cid=cmp.component.cid;
+        }
+        return cid;
+    }
+    if(form.isValid()) {
+        values.bindCmp = Ext.getCmp('bindCmp').getValue();
+        values.bindValue = Ext.getCmp('bindValue').getValue();
+        values.uxcid=getCmpCid(values.bindCmp);
+        delete values.dhxcombo
+        delete values.dhxcombo_new_value
+
+        if(editorStatus == 'new') {
+            num = propStore.find('id', id)
+            var rec = new propStore.recordType(values);
+            if(num != -1) {
+                Ext.Msg.alert('提示', 'ID为' + id + '的属性已存在，请修改属性ID！');
+                return;
+            }
+            propStore.add(rec);
+            vmd.alert('提示', '添加成功！');
+
+        } else {
+            //编辑状态
+
+
+            num = propStore.find('id', hwDataView.activeId)
+                // rec.store=propStore;
+            var rec = propStore.getAt(num);
+
+            propStore.reader.update(rec, values)
+
+            //propStore.commitChanges()
+            vmd.alert('提示', '修改成功！');
+            //propStore.commitChanges()
+        }
+        refreshPropNode()
+
+
+
+    } else {
+        Ext.Msg.alert('提示', '请检查必填项！')
+
+    }
+}
+
+function hwDataView_click(sender, index, node, e) {
+
+    editorStatus = 'edit';
+    var data = sender.getRecord(node).data;
+    var rec = new propStore.recordType(data);
+    sender.activeId = data.id;
+    MyForm.form.loadRecord(rec);
+
+}
+
+function bindCmp_change(sender) {
+    //绑定组件的属性
+    
+    var val=sender.getValue();
+    var cmp=parent.xds.inspector.nodeHash[val];
+    if(!cmp) return;
+    var configs=cmp.component.configs.items;
+    //过滤事件
+    var propArr=[];
+    Ext.each(configs,function(item){
+        if(item.group!='事件'){
+            var obj={name:item.name}
+            propArr.push(obj);
+        }
+        
+        
+    })
+    cmpPropStore.loadData(propArr);
+    
+}
+			this.MyViewport_afterrender=MyViewport_afterrender;
+
+
+
+		this.items=[
+			{
+				xtype:"panel",
+				id:"panel",
+				title:"属性设置",
+				header:false,
+				border:false,
+				height:410,
+				x:0,
+				y:0,
+				width:760,
+				layout:"border",
+				unstyled:false,
+				items:[
+					{
+						xtype:"panel",
+						id:"panel1",
+						title:"Panel",
+						header:false,
+						border:true,
+						height:283,
+						region:"center",
+						layout:"fit",
+						cmargins:"",
+						padding:"10",
+						unstyled:false,
+						labelAlign:"left",
+						labelWidth:60,
+						items:[
+							{
+								xtype:"form",
+								id:"MyForm",
+								title:"Form Panel",
+								labelWidth:60,
+								labelAlign:"left",
+								layout:"form",
+								header:false,
+								border:false,
+								items:[
+									{
+										xtype:"textfield",
+										id:"id",
+										allowBlank:false,
+										anchor:"100%",
+										fieldLabel:"属性ID",
+										emptyText:"请输入属性ID，须英文"
+									},
+									{
+										xtype:"textfield",
+										id:"zhname",
+										allowBlank:true,
+										anchor:"100%",
+										fieldLabel:"属性名称",
+										emptyText:"请输入属性中文名称（汉化用）"
+									},
+									{
+										xtype:"vmd.combo",
+										id:"bindCmp",
+										width:500,
+										fieldLabel:"绑定组件",
+										anchor:"100%",
+										store:cmpStore,
+										displayField:"cmpId",
+										valueField:"cmpId",
+										change:"bindCmp_change",
+										listeners:{
+											change:bindCmp_change
+										}
+									},
+									{
+										xtype:"vmd.combo",
+										id:"bindValue",
+										width:500,
+										fieldLabel:"绑定属性",
+										anchor:"100%",
+										displayField:"name",
+										store:cmpPropStore,
+										valueField:"name"
+									},
+									{
+										xtype:"textarea",
+										id:"desc",
+										allowBlank:true,
+										anchor:"100%",
+										fieldLabel:"属性说明",
+										emptyText:"请输入属性描述，便于代码编辑自动提示用"
+									},
+									{
+										xtype:"checkbox",
+										id:"isPublic",
+										fieldLabel:"公共属性",
+										anchor:"100%",
+										checked:true
+									}
+								]
+							}
+						]
+					},
+					{
+						xtype:"panel",
+						id:"panel2",
+						title:"Panel",
+						header:false,
+						border:true,
+						height:100,
+						region:"west",
+						width:179,
+						split:true,
+						animFloat:false,
+						collapsible:false,
+						frame:false,
+						hideCollapseTool:false,
+						floatable:true,
+						collapseMode:"mini",
+						hidden:false,
+						cmargins:"",
+						layout:"border",
+						items:[
+							{
+								xtype:"panel",
+								id:"panel4",
+								title:"Panel",
+								header:false,
+								border:false,
+								height:100,
+								region:"center",
+								layout:"fit",
+								items:[
+									{
+										xtype:"vmd.dataview",
+										id:"hwDataView",
+										height:270,
+										itemSelector:"li.info",
+										overClass:"info-hover",
+										selectedClass:"x-view-selected",
+										singleSelect:true,
+										multiSelect:true,
+										autoScroll:true,
+										tpl:"<ul>    <tpl for=\".\">        <li class=\"info\" style=\"line-height:30px;padding-left:5px\">            <h4>{id}{[values.zhname?('('+values.zhname+')'):'']}</h4> </li>    </tpl></ul>",
+										data:"var data = [{    \"id\": 'ksrq',    \"zhname\": \"开始日期\",}, {    \"id\": 'jsrq',    \"zhname\": \"结束日期\"}];return data;",
+										afterrender:"hwDataView_afterrender",
+										click:"hwDataView_click",
+										listeners:{
+											afterrender:hwDataView_afterrender,
+											click:hwDataView_click
+										}
+									}
+								]
+							},
+							{
+								xtype:"panel",
+								id:"panel5",
+								layoutConfig:{
+									align:"middle",
+									pack:"center"
+								},
+								title:"Panel",
+								header:false,
+								border:false,
+								height:43,
+								region:"north",
+								unstyled:false,
+								frame:false,
+								layout:"hbox",
+								bodyStyle:"border-bottom: 1px solid #99bbe8",
+								items:[
+									{
+										xtype:"vmd.button",
+										id:"button2",
+										text:"新建",
+										type:"(none)",
+										size:"small",
+										margins:"0 10",
+										icon:"edit-outline",
+										click:"button2_click",
+										listeners:{
+											click:button2_click
+										}
+									},
+									{
+										xtype:"vmd.button",
+										id:"button3",
+										text:"删除",
+										type:"(none)",
+										size:"small",
+										icon:"delete",
+										click:"button3_click",
+										listeners:{
+											click:button3_click
+										}
+									}
+								]
+							}
+						]
+					},
+					{
+						xtype:"panel",
+						id:"panel3",
+						layoutConfig:{
+							align:"middle",
+							pack:"center"
+						},
+						title:"Panel",
+						header:false,
+						border:false,
+						height:40,
+						region:"south",
+						layout:"hbox",
+						collapseMode:"standard",
+						frame:false,
+						items:[
+							{
+								xtype:"vmd.button",
+								id:"button",
+								text:"保存",
+								type:"primary",
+								size:"small",
+								margins:"0 10",
+								width:80,
+								click:"button_click",
+								listeners:{
+									click:button_click
+								}
+							},
+							{
+								xtype:"vmd.button",
+								id:"button1",
+								text:"关闭",
+								type:"(none)",
+								size:"small",
+								width:80,
+								click:"button1_click",
+								listeners:{
+									click:button1_click
+								}
+							}
+						]
+					}
+				]
+			}
+		]
+		this.callParent();
+		vmd.core.moduleInit(this.items, this);
+	}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MyViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

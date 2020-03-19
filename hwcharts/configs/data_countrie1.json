@@ -1,0 +1,8 @@
+{
+	options: [
+		{value: "1", img: "cloumn.jpg", selected: "1", text: ""},
+		{value: "2", img: "cloumn.jpg",  text: ""},
+		{value: "3", img: "cloumn.jpg",  text: ""},
+		{value: "4", img: "cloumn.jpg", text: ""}
+	]
+}

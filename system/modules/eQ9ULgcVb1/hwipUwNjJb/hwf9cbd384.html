@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>新建项目（报表）</title>
+    <!--基本样式-->
+    <link href="/css/common.css?ver=2.0.4.190514" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.4.190514" rel="stylesheet" />
+    <link href="/lib/dhtmlx/skins/material/dhtmlx.css?ver=2.0.4.190514" rel="stylesheet" />
+    <script src="/lib/dhtmlx/codebase/dhtmlx.js?ver=2.0.4.190514"></script>
+    <!--样式快捷索引表-->
+    <link href="/css/shortcut.css?ver=2.0.4.190514" rel="stylesheet" />
+    <script src="/lib/labjs/LAB.min.js?ver=2.0.4.190514"></script>
+    <script src="/config.js?ver=2.0.4.190514"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.4.190514"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.4.190514"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.4.190514"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=2.0.4.190514"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.4.190514"></script>
+    <script src="/js/util.js?ver=2.0.4.190514"></script>
+    <script src="/js/hwdas.js?ver=2.0.4.190514"></script>
+    <script src="/js/vmdcore.js?ver=2.0.4.190514"></script>
+    <script src="/js/vmdcomps.js?ver=2.0.4.190514"></script>
+    <script src="/js/vmdreport.js?ver=2.0.4.190514"></script>
+    <script src="/js/publicMethods.js?ver=2.0.4.190514"></script>
+    <script src="/lib/express/complete.js?ver=2.0.4.190514"></script>
+    <script src="/report/js/hwreport_core.js?ver=2.0.4.190514"></script>
+    <style> </style>
+    <style type="text/css" id="vmdcss"> </style>
+    <script>
+        vmd.previewMode = true;
+        vmd.virtualPath = '';
+        vmd.workspace = {
+            "workspaceid": "b87fb04c-8f21-47a8-8e7d-852e0a9d2089",
+            "workflowIp": "",
+            "dataServiceIp": "",
+            "msgIp": "",
+            "projectid": "eQ9ULgcVb1"
+        }
+        vmd.resourceSettings = {
+            "test&&资源中心服务器": "http://www.hanweikeji.com:10050/resource"
+        }
+        vmd.projectInfo = {
+            "projectId": "eQ9ULgcVb1",
+            "workflowIp": "",
+            "dataServiceIp": "",
+            "msgIp": "",
+            "todoIp": "",
+            "authIp": "",
+            "docIp": "",
+            "reoprtIp": "",
+            "logIp": ""
+        }
+        Ext.define("vmd.module.MyViewport", {
+            extend: "vmd.comp.viewport",
+            requires: vmd.getCmpDeps([]),
+            xtype: "vmd.module.MyViewport",
+            layout: "border",
+            initComponent: function() {
+                function report_afterrender(sender) {
+                    //设置报表内变量的值
+                    //report.setParamValue("var1", var1.getValue());
+                    report.query(function() {});
+                }
+
+                function sub_click(sender, e) {
+                    debugger
+                    report.params = report.params || {};
+                    report.params["loginname"] = Ext.util.Cookies.get('userName');
+                    report.params["workspaceid"] = workspaceid.getValue();
+                    if (hwCheckbox.getValue()) {
+                        report.params["isin"] = '1';
+                    } else {
+                        report.params["isin"] = '0';
+                    }
+                    report.myMask.show();
+                    report.save(function() {
+                        report.myMask.hide();
+                        console.log(parent)
+                        parent.getProject(workspaceid.getValue());
+                        Ext.Msg.alert("提示", "提交成功", function() {
+                            parent.formNewProject.close();
+                        })
+                    })
+                }
+
+                function canal_click(sender, e) {
+                    parent.formNewProject.close();
+                }
+
+                function report_c6_combo_change(sender) {
+                    /*freshds(ds9)*/
+                }
+                workspaceid = new vmd.Variable({
+                    value: "return getUrlParam(\"workspaceid\")"
+                });
+                区域信息 = new vmd.store.jsonStore({
+                    "xtype": "vmd.jsonStore",
+                    "id": "区域信息",
+                    "autoLoad": false,
+                    "cid": "vmdJsonStore",
+                    "storeConfig": "{\"id\":\"l1nIkt29Cv\",\"callcode\":\"vmdCode\",\"url\":\"DataServiceWorkSpace/projectInfo/otherinfo/regionInfo\",\"host\":\"\",\"isHwRest\":true,\"name\":\"区域信息\",\"getMethods\":[],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"alias\",\"type\":\"string\"}]}",
+                    "dsName": "report_ds1"
+                });
+                部门信息查询 = new vmd.store.jsonStore({
+                    "xtype": "vmd.jsonStore",
+                    "id": "部门信息查询",
+                    "autoLoad": false,
+                    "cid": "vmdJsonStore",
+                    "storeConfig": "{\"id\":\"TG0ZNlw8LG\",\"callcode\":\"vmdCode\",\"url\":\"DataServiceWorkSpace/projectInfo/otherinfo/department\",\"host\":\"\",\"isHwRest\":true,\"name\":\"部门信息查询\",\"getMethods\":[],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"name\",\"type\":\"string\"}]}",
+                    "dsName": "report_ds2"
+                });
+                查询主管老总 = new vmd.store.jsonStore({
+                    "xtype": "vmd.jsonStore",
+                    "id": "查询主管老总",
+                    "autoLoad": false,
+                    "cid": "vmdJsonStore",
+                    "storeConfig": "{\"id\":\"l0Jyl1nMHH\",\"callcode\":\"vmdCode\",\"url\":\"DataServiceWorkSpace/BUSINESSASSOCIATE/mister\",\"host\":\"\",\"isHwRest\":true,\"name\":\"查询主管老总\",\"getMethods\":[],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"business_associate_id\",\"type\":\"string\"},{\"name\":\"first_name\",\"type\":\"string\"}]}",
+                    "dsName": "report_ds3"
+                });
+                查询员工 = new vmd.store.jsonStore({
+                    "xtype": "vmd.jsonStore",
+                    "id": "查询员工",
+                    "autoLoad": false,
+                    "cid": "vmdJsonStore",
+                    "storeConfig": "{\"id\":\"l0JzcNr6GW\",\"callcode\":\"vmdCode\",\"url\":\"DataServiceWorkSpace/BUSINESSASSOCIATE/employee\",\"host\":\"\",\"isHwRest\":true,\"name\":\"查询员工\",\"getMethods\":[],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"business_associate_id\",\"type\":\"string\"},{\"name\":\"first_name\",\"type\":\"string\"}]}",
+                    "dsName": "report_ds4"
+                });
+                项目状态 = new vmd.store.jsonStore({
+                    "xtype": "vmd.jsonStore",
+                    "id": "项目状态",
+                    "autoLoad": false,
+                    "cid": "vmdJsonStore",
+                    "storeConfig": "{\"id\":\"l0H6K0clt5\",\"callcode\":\"vmdCode\",\"url\":\"DataServiceWorkSpace/projectInfo/otherinfo/projectstate\",\"host\":\"\",\"isHwRest\":true,\"name\":\"项目状态\",\"getMethods\":[],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"name\",\"type\":\"string\"}]}",
+                    "dsName": "report_ds5"
+                });
+                技术类型 = new vmd.store.jsonStore({
+                    "xtype": "vmd.jsonStore",
+                    "id": "技术类型",
+                    "autoLoad": false,
+                    "cid": "vmdJsonStore",
+                    "storeConfig": "{\"id\":\"l0ILo6JFjJ\",\"callcode\":\"vmdCode\",\"url\":\"DataServiceWorkSpace/projectInfo/otherinfo/technologytype\",\"host\":\"\",\"isHwRest\":true,\"name\":\"技术类型\",\"getMethods\":[],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"name\",\"type\":\"string\"}]}",
+                    "dsName": "report_ds6"
+                });
+                所有项目1 = new vmd.store.jsonStore({
+                    "xtype": "vmd.jsonStore",
+                    "id": "所有项目1",
+                    "autoLoad": false,
+                    "cid": "vmdJsonStore",
+                    "storeConfig": "{\"id\":\"l0HJ6ZysTf\",\"callcode\":\"vmdCode\",\"url\":\"DataServiceWorkSpace/projectInfo/projectallnew\",\"host\":\"\",\"isHwRest\":true,\"name\":\"所有项目1\",\"getMethods\":[],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"project_id\",\"type\":\"string\"},{\"name\":\"project_name\",\"type\":\"string\"}]}",
+                    "dsName": "report_ds7"
+                });
+                甲方单位查询 = new vmd.store.jsonStore({
+                    "xtype": "vmd.jsonStore",
+                    "id": "甲方单位查询",
+                    "autoLoad": false,
+                    "cid": "vmdJsonStore",
+                    "storeConfig": "{\"id\":\"TG044M5AVm\",\"callcode\":\"vmdCode\",\"url\":\"DataServiceWorkSpace/projectInfo/otherinfo/firstparty\",\"host\":\"\",\"isHwRest\":true,\"name\":\"甲方单位查询\",\"getMethods\":[],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"abbreviation\",\"type\":\"string\"}]}",
+                    "dsName": "report_ds8"
+                });
+                甲方联系人 = new vmd.store.jsonStore({
+                    "xtype": "vmd.jsonStore",
+                    "id": "甲方联系人",
+                    "autoLoad": false,
+                    "cid": "vmdJsonStore",
+                    "storeConfig": "{\"id\":\"l0IXx6bJGC\",\"callcode\":\"vmdCode\",\"url\":\"DataServiceWorkSpace/projectInfo/otherinfo/firstpartycontact\",\"host\":\"\",\"isHwRest\":true,\"name\":\"甲方联系人\",\"getMethods\":[{\"id\":\"firstpartyid\",\"value1\":\"return report.getValue(\\\"C6\\\")\",\"value2\":\"\"}],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"name\",\"type\":\"string\"}]}",
+                    "dsName": "report_ds9"
+                });
+                项目基本信息 = new vmd.store.jsonStore({
+                    "xtype": "vmd.jsonStore",
+                    "id": "项目基本信息",
+                    "autoLoad": false,
+                    "cid": "vmdJsonStore",
+                    "storeConfig": "{\"id\":\"TzrHz75bnY\",\"callcode\":\"vmdCode\",\"url\":\"DataServiceWorkSpace/projectInfo/ProjectBaseInfo\",\"host\":\"\",\"isHwRest\":true,\"name\":\"项目基本信息\",\"getMethods\":[{\"id\":\"projectid\",\"value1\":\"\",\"value2\":\"\"}],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"project_id\",\"type\":\"string\"},{\"name\":\"project_name\",\"type\":\"string\"},{\"name\":\"row_changed_by\",\"type\":\"string\"},{\"name\":\"row_changed_date\",\"type\":\"datetime\"},{\"name\":\"row_created_by\",\"type\":\"string\"},{\"name\":\"row_created_date\",\"type\":\"datetime\"},{\"name\":\"description\",\"type\":\"string\"},{\"name\":\"region\",\"type\":\"string\"},{\"name\":\"department\",\"type\":\"string\"},{\"name\":\"year\",\"type\":\"string\"},{\"name\":\"manager\",\"type\":\"string\"},{\"name\":\"manager2\",\"type\":\"string\"},{\"name\":\"mister\",\"type\":\"string\"},{\"name\":\"parentprojectid\",\"type\":\"string\"},{\"name\":\"continueprojectid\",\"type\":\"string\"},{\"name\":\"state\",\"type\":\"string\"},{\"name\":\"bonus\",\"type\":\"string\"},{\"name\":\"technology\",\"type\":\"string\"},{\"name\":\"eststartdate\",\"type\":\"datetime\"},{\"name\":\"estenddate\",\"type\":\"datetime\"},{\"name\":\"esttime\",\"type\":\"string\"},{\"name\":\"firstcustomerid\",\"type\":\"string\"},{\"name\":\"firstcontractuser\",\"type\":\"string\"},{\"name\":\"alias_short_name\",\"type\":\"string\"},{\"name\":\"alias_id\",\"type\":\"string\"}]}"
+                });
+                新建项目 = new vmd.store.jsonStore({
+                    "xtype": "vmd.jsonStore",
+                    "id": "新建项目",
+                    "autoLoad": false,
+                    "cid": "vmdJsonStore",
+                    "storeConfig": "{\"id\":\"l1VzIZrkgS\",\"callcode\":\"vmdCode\",\"url\":\"DataServiceWorkSpace/projectInfo/newproject\",\"host\":\"\",\"isHwRest\":true,\"name\":\"新建项目\",\"getMethods\":[{\"id\":\"project_id\",\"value1\":\"\",\"value2\":\"\"}],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"project_id\",\"type\":\"string\"},{\"name\":\"project_name\",\"type\":\"string\"},{\"name\":\"row_changed_by\",\"type\":\"string\"},{\"name\":\"row_changed_date\",\"type\":\"datetime\"},{\"name\":\"row_created_by\",\"type\":\"string\"},{\"name\":\"row_created_date\",\"type\":\"datetime\"},{\"name\":\"description\",\"type\":\"string\"},{\"name\":\"region\",\"type\":\"string\"},{\"name\":\"department\",\"type\":\"string\"},{\"name\":\"year\",\"type\":\"string\"},{\"name\":\"manager\",\"type\":\"string\"},{\"name\":\"manager2\",\"type\":\"string\"},{\"name\":\"mister\",\"type\":\"string\"},{\"name\":\"parentprojectid\",\"type\":\"string\"},{\"name\":\"continueprojectid\",\"type\":\"string\"},{\"name\":\"state\",\"type\":\"string\"},{\"name\":\"bonus\",\"type\":\"string\"},{\"name\":\"technology\",\"type\":\"string\"},{\"name\":\"eststartdate\",\"type\":\"datetime\"},{\"name\":\"estenddate\",\"type\":\"datetime\"},{\"name\":\"esttime\",\"type\":\"string\"},{\"name\":\"firstcustomerid\",\"type\":\"string\"},{\"name\":\"firstcontractuser\",\"type\":\"string\"},{\"name\":\"start_date\",\"type\":\"datetime\"},{\"name\":\"complete_date\",\"type\":\"datetime\"},{\"name\":\"alias_short_name\",\"type\":\"string\"},{\"name\":\"alias_id\",\"type\":\"string\"},{\"name\":\"workspace_id\",\"type\":\"string\"}]}",
+                    "dsName": "report_ds10"
+                });
+                项目文档 = new vmd.store.jsonStore({
+                    "xtype": "vmd.jsonStore",
+                    "id": "项目文档",
+                    "autoLoad": false,
+                    "cid": "vmdJsonStore",
+                    "storeConfig": "{\"id\":\"l3kcbCvUOl\",\"callcode\":\"vmdCode\",\"url\":\"DataServiceWorkSpace/projectInfo/pdocument\",\"host\":\"\",\"isHwRest\":true,\"name\":\"项目文档\",\"getMethods\":[],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"xh\",\"type\":\"decimal\"},{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"ppdm_guid\",\"type\":\"string\"},{\"name\":\"active_ind\",\"type\":\"string\"},{\"name\":\"row_changed_by\",\"type\":\"string\"},{\"name\":\"row_changed_date\",\"type\":\"datetime\"},{\"name\":\"row_created_by\",\"type\":\"string\"},{\"name\":\"row_created_date\",\"type\":\"datetime\"},{\"name\":\"row_effective_date\",\"type\":\"datetime\"},{\"name\":\"row_expiry_date\",\"type\":\"datetime\"},{\"name\":\"row_quality\",\"type\":\"string\"},{\"name\":\"effective_date\",\"type\":\"datetime\"},{\"name\":\"expiry_date\",\"type\":\"datetime\"},{\"name\":\"remark\",\"type\":\"string\"}]}",
+                    "dsName": "report_ds11"
+                });
+                this.items = [{
+                        xtype: "panel",
+                        id: "panel1",
+                        title: "Panel",
+                        header: false,
+                        border: false,
+                        height: 430,
+                        x: 0,
+                        y: 70,
+                        layout: "fit",
+                        autoScroll: true,
+                        region: "north",
+                        margins: "15 0 0 0 ",
+                        items: [{
+                            xtype: "vmd.report2_2",
+                            id: "report",
+                            text: "report",
+                            relativepath: "report/system/modules/eQ9ULgcVb1/hwipUwNjJb/hwf9cbd384",
+                            align: "center",
+                            fillReport: true,
+                            autoHeight: false,
+                            autoWidth: false,
+                            loadMode: "nomal",
+                            nousedataset: false,
+                            isServer: true,
+                            ocx_version: "1,2,2,0",
+                            rptVersion: "2.2",
+                            height: 430,
+                            afterrender: "report_afterrender",
+                            path: "新建项目（报表）_report.json",
+                            dsnames: "新建项目,区域信息,部门信息查询,查询主管老总,查询员工,项目状态,技术类型,所有项目1,甲方单位查询,甲方联系人,项目文档",
+                            isWebEdit: true,
+                            report_c6_combo_change: "report_c6_combo_change",
+                            listeners: {
+                                vmdafterrender: report_afterrender,
+                                report_c6_combo_change: report_c6_combo_change
+                            }
+                        }]
+                    },
+                    {
+                        xtype: "panel",
+                        id: "panel",
+                        title: "Panel",
+                        header: false,
+                        border: false,
+                        height: 70,
+                        x: -1,
+                        y: 0,
+                        layout: "auto",
+                        region: "center",
+                        items: [{
+                                xtype: "panel",
+                                id: "panel2",
+                                layoutConfig: {
+                                    align: "top",
+                                    pack: "end"
+                                },
+                                title: "Panel",
+                                header: false,
+                                border: false,
+                                height: 30,
+                                layout: "hbox",
+                                items: [{
+                                    xtype: "checkbox",
+                                    id: "hwCheckbox",
+                                    fieldLabel: "Checkbox",
+                                    boxLabel: "内部项目",
+                                    margins: "0 60 0 0 "
+                                }]
+                            },
+                            {
+                                xtype: "panel",
+                                id: "panel3",
+                                layoutConfig: {
+                                    align: "middle",
+                                    pack: "center"
+                                },
+                                title: "Panel",
+                                header: false,
+                                border: false,
+                                height: 40,
+                                layout: "hbox",
+                                items: [{
+                                        xtype: "vmd.button",
+                                        id: "sub",
+                                        text: "提交",
+                                        type: "(none)",
+                                        size: "small",
+                                        x: 720,
+                                        y: 20,
+                                        click: "sub_click",
+                                        margins: "",
+                                        listeners: {
+                                            click: sub_click
+                                        }
+                                    },
+                                    {
+                                        xtype: "vmd.button",
+                                        id: "canal",
+                                        text: "取消",
+                                        type: "(none)",
+                                        size: "small",
+                                        click: "canal_click",
+                                        margins: "0 50",
+                                        listeners: {
+                                            click: canal_click
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+                this.callParent();
+                var me = this;
+                vmd.core.moduleInit(this.items, this);
+            }
+        })
+        Ext.onReady(function() {
+            Ext.create('vmd.module.MyViewport', {
+                renderTo: document.body
+            })
+        })
+    </script>
+</head>
+
+<body> </body>
+
+</html>

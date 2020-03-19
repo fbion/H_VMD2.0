@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>字段规则选择</title>
+    <!--基本样式-->
+    <link href="/css/common.css?ver=2.0.4.190627" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.4.190627" rel="stylesheet" />
+    <link href="/design/css/icons.css?ver=2.0.4.190627" rel="stylesheet" />
+    <link href="/lib/dhtmlx/dhtmlx.css?ver=2.0.4.190627" rel="stylesheet" />
+    <!--样式快捷索引表-->
+    <link href="/css/shortcut.css?ver=2.0.4.190627" rel="stylesheet" />
+    <script src="/lib/labjs/LAB.min.js?ver=2.0.4.190627"></script>
+    <script src="/config.js?ver=2.0.4.190627"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.4.190627"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.4.190627"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.4.190627"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=2.0.4.190627"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.4.190627"></script>
+    <script src="/js/util.js?ver=2.0.4.190627"></script>
+    <script src="/lib/dhtmlx/dhtmlx.js?ver=2.0.4.190627"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.4.190627"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.4.190627"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.4.190627"></script>
+    <script src="/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.4.190627"></script>
+    <script src="/js/hwdas.js?ver=2.0.4.190627"></script>
+    <script src="/js/vmdcore.js?ver=2.0.4.190627"></script>
+    <script src="/js/vmdcomps.js?ver=2.0.4.190627"></script>
+    <script src="/js/publicMethods.js?ver=2.0.4.190627"></script>
+    <script src="/js/vmdreport.js?ver=2.0.4.190627"></script>
+    <script src="/system/modules/eQ9ULgcVb1/project.config.js"></script>
+    <style> </style>
+    <style type="text/css" id="vmdcss">
+        .x-grid3-hd-row td {
+            font: normal 14px arial, tahoma, helvetica, sans-serif;
+        }
+
+        .x-grid3-row td,
+        .x-grid3-summary-row td {
+            font: normal 14px arial, tahoma, helvetica, sans-serif;
+        }
+    </style>
+    <script>
+        vmd.previewMode = true;
+        vmd.virtualPath = '';
+        vmd.workspace = {
+            "workspaceid": "b87fb04c-8f21-47a8-8e7d-852e0a9d2089",
+            "workflowIp": "",
+            "dataServiceIp": "",
+            "msgIp": "",
+            "projectid": "eQ9ULgcVb1"
+        }
+        vmd.resourceSettings = {
+            "10055&&资源中心服务器": "http://www.hanweikeji.com:10050/resource",
+            "test&&资源中心服务器": "http://www.hanweikeji.com:8050/resource",
+            "test&&服务器2": "http://192.168.1.202:8050/resource",
+            "test&&555": "http://www.hanweikeji.com:8050/resource"
+        }
+        vmd.projectInfo = {
+            "projectId": "eQ9ULgcVb1",
+            "workflowIp": "",
+            "dataServiceIp": "",
+            "msgIp": "",
+            "todoIp": "",
+            "authIp": "",
+            "docIp": "",
+            "reoprtIp": "",
+            "logIp": ""
+        }
+        Ext.define("vmd.module.MainViewport", {
+            extend: "vmd.comp.viewport",
+            requires: vmd.getCmpDeps([]),
+            xtype: "vmd.module.MainViewport",
+            layout: "border",
+            afterrender: "MainViewport_afterrender",
+            initComponent: function() {
+                var selNodeId = ""
+                var storename = getUrlParam("storename")
+                var fieldname = getUrlParam("fieldname")
+                var storeConfigStr = parent.rules_storeFileInfo;
+                var storeConfig = JSON.parse(storeConfigStr);
+                var fileDic = storeConfig.fields;
+                //构建树数据集
+                var comData = []
+                comData.push({
+                    pid: "0",
+                    id: storename,
+                    name: storename + "(" + storeConfig.name + ")"
+                })
+                for (var i = 0; i < fileDic.length; i++) {
+                    comData.push({
+                        pid: storename,
+                        id: fileDic[i].name,
+                        name: fileDic[i].name + "(" + fileDic[i].cname + ")"
+                    })
+                }
+                var treestore = new vmd.data.Store({
+                    data: comData,
+                    fields: ['pid', 'id', 'name']
+                })
+                //构建规则数据集
+                var ruleStore = new vmd.data.Store({
+                    data: [],
+                    fields: ['xh', 'name', 'remark', 'code', 'xml']
+                })
+
+                function MainViewport_afterrender(sender) {
+                    if (fieldname) {
+                        var node = tree.getNodeById(fieldname)
+                        node.select()
+                        tree_nodeclick(tree, node)
+                        selNodeId = fieldname;
+                    } else {
+                        var node = tree.getNodeById(storename)
+                        node.select()
+                        tree_nodeclick(tree, node)
+                        selNodeId = storename;
+                    }
+                }
+
+                function tree_afterrender(sender) {
+                    tree.expandAll()
+                }
+
+                function tree_beforerender(sender) {
+                    tree.store = treestore;
+                }
+
+                function tree_afterBindData(sender) {}
+
+                function addRules(code, xml, name, remark) {
+                    var xh = ruleStore.getCount() + 1;
+                    var records = vmd.data.Record.create({
+                        "xh": xh,
+                        "name": name,
+                        "remark": remark,
+                        "code": code,
+                        "xml": xml
+                    });
+                    ruleStore.add(records)
+                    if (storename == selNodeId) {
+                        if (!storeConfig.rules) storeConfig.rules = []
+                        storeConfig.rules.push({
+                            "name": name,
+                            "remark": remark,
+                            "code": code,
+                            "xml": xml,
+                        })
+                    } else {
+                        for (var i = 0; i < storeConfig.fields.length; i++) {
+                            if (selNodeId == storeConfig.fields[i].name) {
+                                if (!storeConfig.fields[i].rules) storeConfig.fields[i].rules = []
+                                storeConfig.fields[i].rules.push({
+                                    "name": name,
+                                    "remark": remark,
+                                    "code": code,
+                                    "xml": xml
+                                });
+                            }
+                        }
+                    }
+                }
+
+                function parserule() {
+                    if (storename == selNodeId) {
+                        storeConfig.rules = [];
+                        for (var j = 0; j < ruleStore.getCount(); j++) {
+                            storeConfig.rules.push({
+                                "name": ruleStore.getAt(j).get("name"),
+                                "remark": ruleStore.getAt(j).get("remark"),
+                                "code": ruleStore.getAt(j).get("code"),
+                                "xml": ruleStore.getAt(j).get("xml")
+                            })
+                        }
+                    } else {
+                        for (var i = 0; i < storeConfig.fields.length; i++) {
+                            if (selNodeId == storeConfig.fields[i].name) {
+                                storeConfig.fields[i].rules = []
+                                for (var j = 0; j < ruleStore.getCount(); j++) {
+                                    storeConfig.fields[i].rules.push({
+                                        "name": ruleStore.getAt(j).get("name"),
+                                        "remark": ruleStore.getAt(j).get("remark"),
+                                        "code": ruleStore.getAt(j).get("code"),
+                                        "xml": ruleStore.getAt(j).get("xml")
+                                    })
+                                }
+                            }
+                        }
+                    }
+                }
+
+                function edifRules(code, xml, name, remark) {
+                    var selrecords = MyGrid.getSelectionModel().selections;
+                    var selrecord = selrecords.items[0];
+                    var editrecord = ruleStore.getById(selrecord.id)
+                    editrecord.set("name", name);
+                    editrecord.set("xml", xml);
+                    editrecord.set("code", code);
+                    editrecord.set("remark", remark);
+                    if (storename == selNodeId) {
+                        ;
+                        storeConfig.rules = [];
+                        for (var j = 0; j < ruleStore.getCount(); j++) {
+                            storeConfig.rules.push({
+                                "name": ruleStore.getAt(j).get("name"),
+                                "remark": ruleStore.getAt(j).get("remark"),
+                                "code": ruleStore.getAt(j).get("code"),
+                                "xml": ruleStore.getAt(j).get("xml")
+                            })
+                        }
+                    } else {
+                        for (var i = 0; i < storeConfig.fields.length; i++) {
+                            if (selNodeId == storeConfig.fields[i].name) {
+                                storeConfig.fields[i].rules = []
+                                for (var j = 0; j < ruleStore.getCount(); j++) {
+                                    storeConfig.fields[i].rules.push({
+                                        "name": ruleStore.getAt(j).get("name"),
+                                        "remark": ruleStore.getAt(j).get("remark"),
+                                        "code": ruleStore.getAt(j).get("code"),
+                                        "xml": ruleStore.getAt(j).get("xml")
+                                    })
+                                }
+                            }
+                        }
+                    }
+                }
+
+                function button1_click(sender, e) {
+                    if (parent && parent.rules_editWin) {
+                        var selrecords = MyGrid.getSelectionModel().selections;
+                        if (selrecords.items.length <= 0) return
+                        var selrecord = selrecords.items[0];
+                        parent.rules_editWin(tree.getSelNodeId(), {
+                            name: selrecord.data.name,
+                            remark: selrecord.data.remark,
+                            code: selrecord.data.code,
+                            xml: selrecord.data.xml
+                        }, edifRules)
+                    }
+                }
+
+                function button_click(sender, e) {
+                    if (parent && parent.rules_editWin) {
+                        parent.rules_editWin(tree.getSelNodeId(), "", addRules)
+                    }
+                }
+
+                function ruleStoreorder(ruleStore) {
+                    for (var i = 0; i < ruleStore.getCount(); i++) {
+                        ruleStore.getAt(i).set("xh", i + 1)
+                    }
+                }
+
+                function button2_click(sender, e) {
+                    var selrecords = MyGrid.getSelectionModel().selections;
+                    if (selrecords.items.length <= 0) return
+                    var selrecord = selrecords.items[0];
+                    ruleStore.remove(ruleStore.getById(selrecord.id));
+                    ruleStoreorder(ruleStore);
+                    parserule()
+                }
+
+                function tree_nodeclick(sender, node, e) {
+                    selNodeId = node.id;
+                    ruleStore.removeAll();
+                    var rules = [];
+                    if (storename == selNodeId) {
+                        rules = storeConfig.rules || [];
+                        label1.setText("数据集 " + node.text + " 的规则定义")
+                    } else {
+                        for (var i = 0; i < storeConfig.fields.length; i++) {
+                            if (selNodeId == storeConfig.fields[i].name) {
+                                {
+                                    rules = storeConfig.fields[i].rules || [];
+                                    label1.setText("数据集 " + node.text + " 的规则定义")
+                                }
+                            }
+                        }
+                    }
+                    var ruleData = [];
+                    for (var i = 0; i < rules.length; i++) {
+                        var record = vmd.data.Record.create({
+                            xh: i + 1,
+                            name: rules[i].name,
+                            remark: rules[i].remark,
+                            code: rules[i].code,
+                            xml: rules[i].xml
+                        });
+                        ruleStore.add(record)
+                    }
+                }
+
+                function MyGrid_beforerender(sender) {
+                    MyGrid.store = ruleStore
+                }
+
+                function button5_click(sender, e) {
+                    if (parent && parent.rules_changeFileInfo) {
+                        parent.rules_changeFileInfo(JSON.stringify(storeConfig))
+                    }
+                }
+
+                function button3_click(sender, e) {
+                    var selrecords = MyGrid.getSelectionModel().selections;
+                    if (selrecords.items.length <= 0) return
+                    var selrecord = selrecords.items[0];
+                    var insertindex = ruleStore.indexOf(selrecord) - 1;
+                    if (insertindex < 0) return
+                    ruleStore.remove(ruleStore.getById(selrecord.id));
+                    ruleStore.insert(insertindex, selrecord)
+                    ruleStoreorder(ruleStore);
+                    parserule()
+                }
+
+                function button4_click(sender, e) {
+                    var selrecords = MyGrid.getSelectionModel().selections;
+                    if (selrecords.items.length <= 0) return
+                    var selrecord = selrecords.items[0];
+                    var insertindex = ruleStore.indexOf(selrecord) + 1;
+                    if (insertindex >= ruleStore.getCount())
+                        return
+                    ruleStore.remove(ruleStore.getById(selrecord.id));
+                    if (insertindex)
+                        ruleStore.insert(insertindex, selrecord)
+                    ruleStoreorder(ruleStore);
+                    parserule()
+                }
+                this.MainViewport_afterrender = MainViewport_afterrender;
+                this.items = [{
+                        xtype: "vmd.div",
+                        id: "div",
+                        autoEl: "div",
+                        border: true,
+                        backgroundRepeat: "no-repeat",
+                        backgroundPosition: "top left",
+                        width: 400,
+                        height: 50,
+                        x: 100,
+                        y: 110,
+                        region: "center",
+                        layout: "border",
+                        items: [{
+                                xtype: "vmd.div",
+                                id: "div5",
+                                autoEl: "div",
+                                border: false,
+                                backgroundRepeat: "no-repeat",
+                                backgroundPosition: "top left",
+                                width: 400,
+                                height: 50,
+                                region: "center",
+                                layout: "border",
+                                items: [{
+                                        xtype: "vmd.div",
+                                        id: "div7",
+                                        autoEl: "div",
+                                        border: false,
+                                        backgroundRepeat: "no-repeat",
+                                        backgroundPosition: "top left",
+                                        width: 400,
+                                        height: 50,
+                                        region: "center",
+                                        layout: "fit",
+                                        margins: "0 20 0 20",
+                                        style: "overflow-x: hidden",
+                                        items: [{
+                                            xtype: "grid",
+                                            id: "MyGrid",
+                                            title: "Grid Panel",
+                                            loadMask: true,
+                                            border: true,
+                                            header: false,
+                                            style: "font-size: 14px;",
+                                            beforerender: "MyGrid_beforerender",
+                                            enableHdMenu: false,
+                                            disableHeaderClick: false,
+                                            hideHeaders: false,
+                                            listeners: {
+                                                beforerender: MyGrid_beforerender
+                                            },
+                                            columns: [{
+                                                    xtype: "gridcolumn",
+                                                    header: "序号",
+                                                    sortable: true,
+                                                    resizable: true,
+                                                    dataIndex: "xh",
+                                                    width: 50,
+                                                    align: "center"
+                                                },
+                                                {
+                                                    xtype: "gridcolumn",
+                                                    header: "名称",
+                                                    sortable: true,
+                                                    resizable: true,
+                                                    dataIndex: "name",
+                                                    width: 150,
+                                                    align: "center"
+                                                },
+                                                {
+                                                    xtype: "gridcolumn",
+                                                    header: "规则说明",
+                                                    sortable: true,
+                                                    resizable: true,
+                                                    dataIndex: "remark",
+                                                    width: 330,
+                                                    align: "center",
+                                                    fixed: false
+                                                },
+                                                {
+                                                    xtype: "gridcolumn",
+                                                    header: "column",
+                                                    sortable: true,
+                                                    resizable: true,
+                                                    dataIndex: "code",
+                                                    width: 100,
+                                                    hidden: true
+                                                },
+                                                {
+                                                    xtype: "gridcolumn",
+                                                    header: "column",
+                                                    sortable: true,
+                                                    resizable: true,
+                                                    dataIndex: "xml",
+                                                    width: 100,
+                                                    hidden: true
+                                                }
+                                            ]
+                                        }]
+                                    },
+                                    {
+                                        xtype: "vmd.div",
+                                        id: "div8",
+                                        layoutConfig: {
+                                            align: "middle"
+                                        },
+                                        autoEl: "div",
+                                        border: false,
+                                        backgroundRepeat: "no-repeat",
+                                        backgroundPosition: "top left",
+                                        width: 400,
+                                        height: 44,
+                                        region: "north",
+                                        layout: "hbox",
+                                        style: "font-size: 14px;",
+                                        items: [{
+                                                xtype: "vmd.button",
+                                                id: "button",
+                                                text: "添加",
+                                                type: "text",
+                                                size: "small",
+                                                icon: "plus",
+                                                margins: "0 0 0 20",
+                                                style: "font-size: 14px;",
+                                                click: "button_click",
+                                                listeners: {
+                                                    click: button_click
+                                                }
+                                            },
+                                            {
+                                                xtype: "vmd.button",
+                                                id: "button1",
+                                                text: "编辑",
+                                                type: "text",
+                                                size: "small",
+                                                icon: "edit",
+                                                margins: "0 0 0 20",
+                                                style: "font-size: 14px;",
+                                                click: "button1_click",
+                                                listeners: {
+                                                    click: button1_click
+                                                }
+                                            },
+                                            {
+                                                xtype: "vmd.button",
+                                                id: "button2",
+                                                text: "删除",
+                                                type: "text",
+                                                size: "small",
+                                                icon: "delete",
+                                                margins: "0 0 0 20",
+                                                style: "font-size: 14px;",
+                                                click: "button2_click",
+                                                listeners: {
+                                                    click: button2_click
+                                                }
+                                            },
+                                            {
+                                                xtype: "vmd.button",
+                                                id: "button3",
+                                                text: "上移",
+                                                type: "text",
+                                                size: "small",
+                                                icon: "icon-arrow-up",
+                                                margins: "0 0 0 20",
+                                                style: "font-size: 14px;",
+                                                click: "button3_click",
+                                                listeners: {
+                                                    click: button3_click
+                                                }
+                                            },
+                                            {
+                                                xtype: "vmd.button",
+                                                id: "button4",
+                                                text: "下移",
+                                                type: "text",
+                                                size: "small",
+                                                icon: "icon-arrow-down",
+                                                margins: "0 0 0 20",
+                                                style: "font-size: 14px;",
+                                                click: "button4_click",
+                                                listeners: {
+                                                    click: button4_click
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                xtype: "vmd.div",
+                                id: "div6",
+                                layoutConfig: {
+                                    align: "middle"
+                                },
+                                autoEl: "div",
+                                border: false,
+                                backgroundRepeat: "no-repeat",
+                                backgroundPosition: "top left",
+                                width: 400,
+                                height: 39,
+                                region: "north",
+                                layout: "hbox",
+                                items: [{
+                                    xtype: "label",
+                                    id: "label1",
+                                    text: "规则定义：",
+                                    margins: "0 0 0 20",
+                                    style: "font-size: 14px;    font-weight: bold;    color: #5e5e5e;"
+                                }]
+                            }
+                        ]
+                    },
+                    {
+                        xtype: "vmd.div",
+                        id: "div1",
+                        autoEl: "div",
+                        border: true,
+                        backgroundRepeat: "no-repeat",
+                        backgroundPosition: "top left",
+                        width: 200,
+                        height: 50,
+                        x: 660,
+                        y: 140,
+                        region: "west",
+                        layout: "border",
+                        items: [{
+                                xtype: "vmd.div",
+                                id: "div2",
+                                autoEl: "div",
+                                border: false,
+                                backgroundRepeat: "no-repeat",
+                                backgroundPosition: "top left",
+                                width: 230,
+                                height: 50,
+                                region: "center",
+                                layout: "fit",
+                                items: [{
+                                    xtype: "vmd.treeex",
+                                    id: "tree",
+                                    width: 350,
+                                    height: 270,
+                                    hideRoot: true,
+                                    parentField: "pid",
+                                    valueField: "id",
+                                    textField: "name",
+                                    loadType: "全部加载",
+                                    rootValue: "0",
+                                    rootText: "数据集",
+                                    afterrender: "tree_afterrender",
+                                    beforerender: "tree_beforerender",
+                                    afterBindData: "tree_afterBindData",
+                                    nodeclick: "tree_nodeclick",
+                                    folderImg: "/system/modules/eQ9ULgcVb1/img/store.png",
+                                    leafImg: "/system/modules/eQ9ULgcVb1/img/column.png",
+                                    listeners: {
+                                        vmdafterrender: tree_afterrender,
+                                        beforerender: tree_beforerender,
+                                        afterBindData: tree_afterBindData,
+                                        nodeclick: tree_nodeclick
+                                    }
+                                }]
+                            },
+                            {
+                                xtype: "vmd.div",
+                                id: "div3",
+                                layoutConfig: {
+                                    align: "middle",
+                                    pack: "start"
+                                },
+                                autoEl: "div",
+                                border: false,
+                                backgroundRepeat: "no-repeat",
+                                backgroundPosition: "top left",
+                                width: 400,
+                                height: 39,
+                                region: "north",
+                                layout: "hbox",
+                                items: [{
+                                    xtype: "label",
+                                    id: "label",
+                                    text: " 字段列表：",
+                                    margins: "0 0 0 20",
+                                    style: "font-size: 14px;    font-weight: bold;    color: #5e5e5e;"
+                                }]
+                            }
+                        ]
+                    },
+                    {
+                        xtype: "vmd.div",
+                        id: "div4",
+                        layoutConfig: {
+                            align: "middle",
+                            pack: "end"
+                        },
+                        autoEl: "div",
+                        border: true,
+                        backgroundRepeat: "no-repeat",
+                        backgroundPosition: "top left",
+                        width: 400,
+                        height: 50,
+                        region: "south",
+                        layout: "hbox",
+                        items: [{
+                            xtype: "vmd.button",
+                            id: "button5",
+                            text: "确定",
+                            type: "primary",
+                            size: "small",
+                            icon: "icon-file-text",
+                            margins: "0 50 0 0",
+                            style: "font-size:14px;",
+                            click: "button5_click",
+                            listeners: {
+                                click: button5_click
+                            }
+                        }]
+                    }
+                ]
+                this.callParent();
+                var me = this;
+                vmd.core.moduleInit(this.items, this);
+                me.on('afterrender', function() {
+                    MainViewport_afterrender.call(me, me)
+                })
+            }
+        })
+        Ext.onReady(function() {
+            Ext.create('vmd.module.MainViewport', {
+                renderTo: document.body
+            })
+        })
+    </script>
+</head>
+
+<body> </body>
+
+</html>

@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>模块绑定流程和节点new</title>
+	<!--基本样式-->
+    <link href="{vmdvirtualPath}/css/common.css?ver=vmd2.0.5.191111" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="{vmdvirtualPath}/lib/ext-3.4/resources/css/ext-all.css?ver=vmd2.0.5.191111" rel="stylesheet" />
+   
+    <link href="{vmdvirtualPath}/design/css/icons.css?ver=vmd2.0.5.191111" rel="stylesheet" />
+
+	<link href="{vmdvirtualPath}/lib/dhtmlx/skins/material/dhtmlx.css?ver=vmd2.0.5.191111" rel="stylesheet" />
+	  <!--样式快捷索引表-->
+    <link href="{vmdvirtualPath}/css/shortcut.css?ver=vmd2.0.5.191111" rel="stylesheet" />
+    
+	{vmdprojectcssfiles}
+    
+    <script src="{vmdvirtualPath}/lib/labjs/LAB.min.js?ver=vmd2.0.5.191111"></script>
+    <script src="{vmdvirtualPath}/config.js?ver=vmd2.0.5.191111"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=vmd2.0.5.191111"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=vmd2.0.5.191111"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=vmd2.0.5.191111"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/ext-all-debug.js?ver=vmd2.0.5.191111"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=vmd2.0.5.191111"></script>
+    <script src="{vmdvirtualPath}/js/util.js?ver=vmd2.0.5.191111"></script>
+    <script src="{vmdvirtualPath}/lib/dhtmlx/codebase/dhtmlx.js?ver=vmd2.0.5.191111"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=vmd2.0.5.191111"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=vmd2.0.5.191111"></script>
+    <script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=vmd2.0.5.191111"></script>
+	<script src="{vmdvirtualPath}/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=vmd2.0.5.191111"></script>
+    <script src="{vmdvirtualPath}/js/hwdas.js?ver=vmd2.0.5.191111"></script>
+    <script src="{vmdvirtualPath}/js/vmdcore.js?ver=vmd2.0.5.191111"></script>
+    <script src="{vmdvirtualPath}/js/vmdcomps.js?ver=vmd2.0.5.191111"></script>
+    <script src="{vmdvirtualPath}/js/publicMethods.js?ver=vmd2.0.5.191111"></script>
+    <script src="{vmdvirtualPath}/js/vmdreport.js?ver=vmd2.0.5.191111"></script>
+    
+    {vmdworkspacePath}
+	{vmdprojectconfigjs}
+	
+	{vmdprojectjsfiles}
+    
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        .fltree .x-tree-node-icon {
+    margin-top: 3px;
+}
+
+.fltree .x-tree-ec-icon {
+    margin-top: 3px;
+}
+
+.fltree .x-tree-node-el {
+    line-height: 24px;
+}
+
+.fltree .vmd-tree-node {
+    font-size: 14px;
+}
+::-webkit-scrollbar-track {
+    background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar {
+    width: 6px;
+    height: 7px;
+    background-color: #F5F5F5;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #999; 
+    border-radius: 10px;
+}
+    </style>
+    <script>
+	    
+        vmd.virtualPath = '{vmdvirtualPath}';
+        
+        Ext.define("vmd.module.MyViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps([]),
+	xtype:"vmd.module.MyViewport",
+	layout:"anchor",
+	afterrender:"MyViewport_afterrender",
+	beforerender:"MyViewport_beforerender",
+	initComponent: function(){
+		var arrVisualSelectedNodes = [];
+
+//
+var myFlowInfo = {}; //记录流程基础信息
+var myConfigInfo = { //记录节点的基础信息
+    modelId: "",
+    modelName: "",
+    variantNode: []
+};
+//myConfigInfo = {};
+//记录打开时已经记录的节点信息，留作备份使用
+var defaultConfigInfo = {};
+var defalueFlowInfo = {}
+
+if(parent.vmd.workspace)
+    vmd.workspace = parent.vmd.workspace;
+
+var elogin = Ext.util.Cookies.get('ecyLogin');
+
+var myMask = new Ext.LoadMask(Ext.getBody(), {
+    msg: "数据加载中,请稍后...",
+    msgCls: 'z-index:10000;'
+});
+
+var comData = [{
+    name: '张三',
+    id: 12,
+    pid: "000",
+    type: "0"
+}]
+var treeStore = new vmd.data.Store({
+    data: comData,
+    fields: ['id', 'name', 'pid', 'type']
+})
+
+function button_click(sender) {
+    try {
+        var strSelNodeInfo = getVisualSelectedNodesInfo()
+        var selNodes = eval("(" + strSelNodeInfo + ")")
+        var strartid = ""
+        if(selNodes && selNodes.length > 0)
+            strartid = selNodes[0].variantProcess.taskNodeid
+        var remNodeIds = [] //记录需要移除的节点id  在流程图的节点信息中移除模块的信息。   
+        //设置界面的节点选择
+        ///---------------------------------------------------------------------------------------------------------
+        ///先移除多余的节点  模块中的节点信息
+        ///---------------------------------------------------------------------------------------------------------
+        for(var i = myConfigInfo.variantNode.length - 1; i >= 0; i--) {
+            var hasNode = false;
+            for(var k = 0; k < selNodes.length; k++) {
+                if(myConfigInfo.variantNode[i].taskNodeid == selNodes[k].variantNode.taskNodeid) {
+                    hasNode = true
+                    break;
+                }
+            }
+            if(!hasNode) {
+                remNodeIds.push(myConfigInfo.variantNode[i].taskNodeid)
+                vmd.Array.remove(myConfigInfo.variantNode, myConfigInfo.variantNode[i]);
+            }
+        }
+        ///---------------------------------------------------------------------------------------------------------
+        ///添加新节点   模块中的节点信息
+        ///---------------------------------------------------------------------------------------------------------
+        for(var k = 0; k < selNodes.length; k++) {
+            var hasNode = false;
+            for(var i = myConfigInfo.variantNode.length - 1; i >= 0; i--) {
+                if(myConfigInfo.variantNode[i].taskNodeid == selNodes[k].variantNode.taskNodeid) {
+                    hasNode = true
+                    break;
+                }
+            }
+            //提取工作流程图中的 节点规则定义
+            var strModule = selNodes[k].variantNode.formkeydefinition
+            var strrule = ""
+            if(strModule) {
+                try {
+                    obj = Ext.decode(strModule);
+                    strrule = obj.rule || ""
+                } catch (ex) {
+                    strrule = ""
+                }
+            } else strrule = ""
+            //如果不存在该节点，则添加
+            if(!hasNode) {
+                selNodes[k].variantNode.formProperties = selNodes[k].variantNode.formProperties || []
+                //添加 模块中的节点信息 需要将rule添加进来			
+                //添加规则变量
+                selNodes[k].variantNode.formProperties.push({
+                    name: "调用规则",
+                    id: "调用规则",
+                    value: strrule
+                })
+                myConfigInfo.variantNode.push(selNodes[k].variantNode);
+            } else { //如果已存在节点,则修改rule 规则
+                //递归当前节点变量
+                var cNode = myConfigInfo.variantNode[i]
+                if(cNode.formProperties) { //节点中是否存在变量
+                    //先循环设置调用规则的值
+                    for(var m = 0; m < cNode.formProperties.length; m++) {
+                        if(cNode.formProperties[m].id == "调用规则") {
+                            cNode.formProperties[m].value = strrule
+                            break;
+                        }
+                    }
+                    //遍历来判断节点中是否新增了变量，并添加到列表中
+                    var selnodevars = selNodes[k].variantNode.formProperties || []
+                    for(var j = 0; j < selnodevars.length; j++) {
+                        var hasVar = false;
+                        for(var m = 0; m < cNode.formProperties.length; m++) {
+                            if(selnodevars[j].id == cNode.formProperties[m].id) {
+                                hasVar = true;
+                                break;
+                            }
+                        }
+                        if(!hasVar) {
+                            cNode.formProperties.push(selnodevars[j])
+                        }
+                    }
+                    //遍历是否移除了变量
+                    for(var m = cNode.formProperties.length - 1; m >= 0; m--) {
+                        var hasVar = false;
+                        if(cNode.formProperties[m].id == "调用规则") {} else {
+                            for(var j = 0; j < selnodevars.length; j++) {
+                                if(selnodevars[j].id == cNode.formProperties[m].id) {
+                                    hasVar = true;
+                                    break;
+                                }
+                            }
+                            if(!hasVar)
+                                vmd.Array.remove(cNode.formProperties, cNode.formProperties[m]);
+                        }
+                    }
+                }
+            }
+            if(!myConfigInfo.variantProcess) {
+                myConfigInfo.variantProcess = selNodes[k].variantProcess.formProperties || [];
+            }
+        }
+        ///---------------------------------------------------------------------------------------------------------
+        ///保存工作流
+        ///添加工作流节点到工作留下,  更新流程的表单绑定信息
+        ///先组织节点表单的对应绑定关系
+        ///---------------------------------------------------------------------------------------------------------
+        var bindcount = 0;
+        var bindNodeList = [];
+        var isString = false //记录之前的模版信息是否为字符，如果为字符，则在保存后会变为对象存储
+        var moduleId = parent.getUrlParam("id");
+        var modulePath = parent.getUrlParam("path")
+        var moduleName = parent.getUrlParam("name")
+        var newmoduleinfo = {
+            moduleId: moduleId,
+            moduleName: moduleName,
+            modulePath: modulePath,
+            remark: ""
+        }
+        //添加当前模块到选择的流程图节点中
+        for(var i = 0; i < selNodes.length; i++) {
+            var strModule = selNodes[i].variantNode.formkeydefinition
+            var obj = {}
+            if(strModule) {
+                try {
+                    obj = Ext.decode(strModule);
+                } catch (ex) {
+                    obj = strModule
+                }
+            }
+            if(strModule=='undefined')
+            {obj ={}}
+            var newmodulesinfo = []
+            if(typeof(obj) == "string") {
+                isString = true
+                var oldmoduleinfo = {
+                    moduleId: obj,
+                    moduleName: "",
+                    modulePath: "",
+                    remark: ""
+                }
+                if(obj == parent.getUrlParam("id")) {
+                    newmodulesinfo.push(newmoduleinfo)
+                } else {
+                    newmodulesinfo.push(oldmoduleinfo)
+                    newmodulesinfo.push(newmoduleinfo)
+                }
+                bindNodeList.push({
+                    nodeId: selNodes[i].variantNode.taskNodeid,
+                    modulesInfo: Ext.encode({
+                        modulesInfo: newmodulesinfo,
+                        rule: ""
+                    })
+                })
+            } else { //先判断有没有绑定该模块
+                if(obj.modulesInfo) {
+                    var hasModule = false
+                    for(var k = 0; k < obj.modulesInfo.length; k++) {
+                        if(obj.modulesInfo[k].moduleId == moduleId)
+                            hasModule = true
+                    }
+                    if(!hasModule)
+                        obj.modulesInfo.push(newmoduleinfo)
+                }
+                bindNodeList.push({
+                    nodeId: selNodes[i].variantNode.taskNodeid,
+                    modulesInfo: Ext.encode(obj)
+                })
+            }
+        }
+        //移除取消的节点和模块绑定关系
+        for(var i = 0; i < remNodeIds.length; i++) {
+            var removeNodeinfo = []
+            var strModule = ""
+            if(getNodeModuleInfo)
+                strModule = getNodeModuleInfo(remNodeIds[i])
+            var obj = {}
+            try {
+                obj = Ext.decode(strModule);
+            } catch (ex) {
+                obj = strModule
+            }
+            if(strModule=='undefined')
+            {obj ={}}
+            if(typeof(obj) == "string") {
+                isString = true
+                var oldmoduleinfo = {
+                    moduleId: obj,
+                    moduleName: "",
+                    modulePath: "",
+                    remark: ""
+                }
+                if(obj == parent.getUrlParam("id")) {
+                    newmodulesinfo = []
+                } else {
+                    newmodulesinfo.push(oldmoduleinfo)
+                }
+                bindNodeList.push({
+                    nodeId: remNodeIds[i],
+                    modulesInfo: Ext.encode({
+                        modulesInfo: newmodulesinfo,
+                        rule: ""
+                    })
+                })
+            } else { //先判断有没有绑定该模块
+                if(obj.moduleInfo) {
+                    for(var k = 0; k < obj.modulesInfo.length; k++) {
+                        if(obj.modulesInfo[k].moduleId == moduleId) {
+                            vmd.Array.remove(obj.modulesInfo, obj.modulesInfo[k])
+                            break;
+                        }
+                    }
+                }
+                bindNodeList.push({
+                    nodeId: remNodeIds[i],
+                    modulesInfo: Ext.encode(obj)
+                })
+            }
+        }
+
+        //保存流程方法，更新流程和表单的绑定关系
+        var savemodulesInfo = function() {
+            if(bindNodesForm)
+                bindNodesForm(bindNodeList, function(aa) {
+                    var mytree = tree;
+                    var selnode = tree.getSelNode()
+                    var flowInfo = {
+                        modelId: selnode.id,
+                        modelName: selnode.text
+                    } //parent.xds.vmd.getTreeNodeById(parent.edValue.id).component.setConfig("modelName",mytree.getSelectedItemText())
+                    window.vmdReturnValue = selnode.text;
+                    //此处获取选择的节点，并把节点信息添加到节点属性里边
+                    //调用方法设置节点信息的属性值
+                    /////
+                    if(parent && parent.xds && parent.xds.active && parent.xds.active.component) {
+                        wfcomp = parent.xds.active.component
+                        myConfigInfo.modelId = selnode.id
+                        myConfigInfo.startNodeId = strartid
+                        wfcomp.setConfig("flowName", selnode.text)
+                        wfcomp.setConfig("flowInfo", Ext.encode(flowInfo))
+                        wfcomp.setConfig("configInfo", Ext.encode(myConfigInfo))
+                        parent.xds.props.refresh()
+                    }
+                    parent.edClose(true);
+                })
+        }
+        ///在保存信息前，先进行提示，
+        if(isString)
+            Ext.Msg.confirm("提示", "流程中模块信息记录的为模块ID，确定后将修改为模块对象，待办获取模块部分需要进行相应的调整。确定要修改么？", function(type) {
+                if(type == "yes") {
+                    savemodulesInfo();
+                } else
+                    return;
+            })
+        else
+            savemodulesInfo()
+    } catch (exc) {
+        vmd.alert("提示", "绑定节点时出错，请联系管理员。\n错误信息：" + exc)
+    }
+
+}
+
+function button1_click(sender) {
+    parent.edClose();
+}
+
+function MyViewport_afterrender(sender) {}
+
+function MyViewport_beforerender(sender) {
+    myFlowInfo = Ext.decode(parent.edValue.flowInfo) || {}
+    myConfigInfo = Ext.decode(parent.edValue.configInfo) || {
+        modelId: "",
+        modelName: "",
+        variantNode: []
+    }
+    //复制
+    defaultConfigInfo = Ext.clone(myConfigInfo) || {};
+    defaultFlowInfo = Ext.clone(myFlowInfo) || {};
+    //
+}
+
+function tree_beforerender(sender) {
+    tree.nodeMarkFiled = "type"
+    tree.store = treeStore;
+}
+
+var preSelNode; //记录选中流程。
+function tree_nodeclick(sender, node, e) {
+    if(node.nodeDataJson.type == "0" && preSelNode != node) {
+        preSelNode = node
+        if(myFlowInfo.modelId != node.id) { //当切换的节点不是初始化节点时处理
+            myConfigInfo = {
+                modelId: "",
+                modelName: "",
+                variantNode: []
+            }
+            window.arrVisualSelectedNodes = []; //切换节点后，设置默认选择项为空
+
+        } else { //当切换的节点为初始化节点时处理
+            myConfigInfo = Ext.decode(parent.edValue.configInfo) || {
+                modelId: "",
+                modelName: "",
+                variantNode: []
+            }
+            if(myConfigInfo && myConfigInfo.variantNode) {
+                for(var i = 0; i < myConfigInfo.variantNode.length; i++) {
+                    window.arrVisualSelectedNodes.push(myConfigInfo.variantNode[i].taskNodeid)
+                }
+            }
+        }
+        Ext.getDom("iframe_wf_page").src = "/activiti/modeler-visualnew.html?mode=visualmultiple&modelId=" + node.id + "&info=kermit";
+    }
+}
+
+function workflowModelSel(value) {}
+window.workflowModelSel = workflowModelSel
+
+function tree_afterrender(sender) {
+    var firstNode = "";
+    var elogin = Ext.util.Cookies.get('ecyLogin');
+    myMask.show();
+    var workflowIp = vmdSettings.workflowIp;
+    if(parent.vmd.workspace) {
+        workflowIp = parent.vmd.workspace.workflowIp || vmdSettings.workflowIp
+    } else if(parent.parent.vmd.workspace) {
+        workflowIp = parent.parent.vmd.workspace.workflowIp || vmdSettings.workflowIp
+    }
+    hwDas.ajax({
+        url: "http://" + workflowIp + "/activiti-rest/service/repository/categorys?info=kermit&size=100000",
+        type: 'get',
+        timeout: 5000,
+        params: {},
+        success: function(result) {
+            var storeData = [];
+            for(var i = 0; i < result.data.length; i++) {
+                storeData.push({
+                    id: result.data[i].id,
+                    name: result.data[i].name,
+                    pid: result.data[i].superid,
+                    type: "1"
+                })
+            }
+            hwDas.ajax({
+                url: "http://" + workflowIp + "/activiti-rest/service/repository/hwmodels?info=kermit&size=100000",
+                type: 'get',
+                timeout: 5000,
+                params: {},
+                success: function(result) {
+                    for(var i = 0; i < result.data[0].datas.length; i++) {
+                        storeData.push({
+                            id: result.data[0].datas[i].ID,
+                            name: result.data[0].datas[i].NAME,
+                            pid: result.data[0].datas[i].CATEGORYID,
+                            type: "0"
+                        })
+                    }
+                    treeStore = new vmd.data.Store({
+                        data: storeData,
+                        fields: ['id', 'name', 'pid', 'type']
+                    })
+                    tree.bindStore(treeStore, true);
+                    myMask.hide();
+                },
+                error: function(msg) {
+                    myMask.hide();
+                    Ext.Msg.alert("提示", "获取流程列表失败", function() {})
+                }
+            })
+        },
+        error: function(msg) {
+            myMask.hide();
+            Ext.Msg.alert("提示", "获取分类节点信息失败", function() {})
+        }
+    })
+}
+window.arrVisualSelectedNodes = []
+//数组件绑定数据集之后，并默认加载流程图
+function tree_afterBindData(sender) {
+    var modelId = myFlowInfo.modelId;
+    var snode = tree.getNodeById(modelId)
+    window.arrVisualSelectedNodes = []
+    if(myConfigInfo && myConfigInfo.variantNode) {
+        for(var i = 0; i < myConfigInfo.variantNode.length; i++) {
+            window.arrVisualSelectedNodes.push(myConfigInfo.variantNode[i].taskNodeid)
+        }
+        if(snode) {
+            tree.expandPath(snode.getPath())
+            snode.select()
+            Ext.getDom("iframe_wf_page").src = "/activiti/modeler-visualnew.html?mode=visualmultiple&modelId=" + modelId + "&info=kermit";
+            //div1.update("<iframe  id='iframe_page' src='" + "/activiti/modeler-visualnew.html?mode=visualmultiple&modelId=" + modelId + "&info=kermit' width=100% height=100% frameborder=0  ></iframe>");
+        }
+    }
+
+}
+//工作流点击时调用的方法，用于传递当前选中的节点
+function openConfig(a, state) {
+    return
+    //传递的当前节点的调用规则
+    var noderule = ""
+    //判断当前选中节点是否已经添加
+    var nodeinfo = Ext.decode(a)
+    var taskNodeName = nodeinfo.variantNode.taskNodeName;
+    var taskNodeId = nodeinfo.variantNode.taskNodeid;
+    var hasnode = false;
+    var nindex = -1
+    if(!myConfigInfo.variantNode)
+        myConfigInfo.variantNode = []
+    for(var i = 0; i < myConfigInfo.variantNode.length; i++) {
+        if(myConfigInfo.variantNode[i].taskNodeid == taskNodeId) {
+            hasnode = true
+            nindex = i
+            break;
+        }
+    }
+    myConfigInfo.startNodeId = nodeinfo.variantProcess.taskNodeid;
+    if(!hasnode) {
+        //if(state) 
+        if(!nodeinfo.variantNode.formProperties)
+            nodeinfo.variantNode.formProperties = []
+        nodeinfo.variantNode.formProperties.push({
+            name: "调用规则",
+            id: "调用规则"
+        })
+        myConfigInfo.variantNode.push(nodeinfo.variantNode);
+    } else {
+        //if(!state)
+        vmd.Array.remove(myConfigInfo.variantNode, myConfigInfo.variantNode[nindex]);
+    }
+    if(!myConfigInfo.variantProcess) {
+        myConfigInfo.variantProcess = nodeinfo.variantProcess.formProperties || [];
+    }
+}
+window["workflowNodeDblClick"] = openConfig;
+			this.MyViewport_afterrender=MyViewport_afterrender;
+		this.MyViewport_beforerender=MyViewport_beforerender;
+
+
+
+		this.items=[
+			{
+				xtype:"panel",
+				id:"panel",
+				title:"Panel",
+				header:false,
+				border:false,
+				height:100,
+				x:0,
+				y:10,
+				anchor:"100% -40",
+				layout:"border",
+				bodyStyle:"padding:10px",
+				items:[
+					{
+						xtype:"vmd.div",
+						id:"div2",
+						autoEl:"div",
+						border:true,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						width:234,
+						height:50,
+						region:"west",
+						layout:"border",
+						items:[
+							{
+								xtype:"vmd.treeex",
+								id:"tree",
+								width:350,
+								height:270,
+								hideRoot:true,
+								loadType:"全部加载",
+								region:"center",
+								parentField:"pid",
+								valueField:"id",
+								textField:"name",
+								rootValue:"00000000000000000000000000000000",
+								folderValue:"1",
+								leafValue:"0",
+								beforerender:"tree_beforerender",
+								nodeclick:"tree_nodeclick",
+								afterrender:"tree_afterrender",
+								folderImg:"/system/modules/eQ9ULgcVb1/img/folderClosed.gif",
+								leafImg:"/system/modules/eQ9ULgcVb1/img/flownode.png",
+								afterBindData:"tree_afterBindData",
+								style:"font-size: 16px",
+								cls:"fltree",
+								listeners:{
+									beforerender:tree_beforerender,
+									nodeclick:tree_nodeclick,
+									vmdafterrender:tree_afterrender,
+									afterBindData:tree_afterBindData
+								}
+							}
+						]
+					},
+					{
+						xtype:"vmd.div",
+						id:"div1",
+						autoEl:"div",
+						border:true,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						width:400,
+						height:50,
+						region:"center",
+						autoScroll:true,
+						disabled:false,
+						html:"<iframe id='iframe_wf_page' src='' width=100% height=100% frameborder=0></iframe>"
+					}
+				]
+			},
+			{
+				xtype:"panel",
+				id:"panel1",
+				layoutConfig:{
+					align:"middle",
+					pack:"center"
+				},
+				title:"Panel",
+				header:false,
+				border:true,
+				height:40,
+				x:-2,
+				y:110,
+				anchor:"100%",
+				layout:"hbox",
+				items:[
+					{
+						xtype:"vmd.button",
+						id:"button",
+						text:"确定",
+						type:"info",
+						size:"small",
+						click:"button_click",
+						listeners:{
+							click:button_click
+						}
+					},
+					{
+						xtype:"vmd.div",
+						id:"div",
+						autoEl:"div",
+						border:false,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						width:30,
+						height:50
+					},
+					{
+						xtype:"vmd.button",
+						id:"button1",
+						text:"取消",
+						type:"(none)",
+						size:"small",
+						click:"button1_click",
+						listeners:{
+							click:button1_click
+						}
+					}
+				]
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+			me.on('beforerender',function(){ MyViewport_beforerender.call(me,me)})
+		me.on('afterrender',function(){ MyViewport_afterrender.call(me,me)})
+}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MyViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

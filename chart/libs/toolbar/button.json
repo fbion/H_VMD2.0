@@ -1,0 +1,130 @@
+[
+  { "id": "copyChart", "type": "button", "img": "copy.gif", "title": "复制" },
+  {
+    "id": "saveChart",
+    "type": "button",
+    "img": "save_as.gif",
+    "title": "另存为"
+  },
+  { "id": "printChart", "type": "button", "img": "print.gif", "title": "打印" },
+
+  { "type": "separator" },
+
+  {
+    "id": "text",
+    "type": "buttonSelect",
+    "img": "wenzi.png",
+    "title": "文字",
+    "openAll": true,
+    "renderSelect": false,
+    "options": [
+      { "type": "button", "id": "addFontSize", "text": "字体 +" },
+      { "type": "button", "id": "delFontSize", "text": "字体 -" }
+    ]
+  },
+
+  {
+    "id": "lineWidth",
+    "type": "buttonSelect",
+    "img": "xiantiao.png",
+    "title": "线条",
+    "openAll": true,
+    "renderSelect": false,
+    "options": [
+      { "id": "addLine", "type": "button", "text": "线宽 +" },
+      { "id": "delLine", "type": "button", "text": "线宽 -" }
+    ]
+  },
+
+  { "type": "separator" },
+
+  {
+    "id": "lableShow",
+    "type": "button",
+    "img": "bqxsyc.png",
+    "title": "显示/隐藏"
+  },
+  {
+    "id": "lable",
+    "type": "buttonSelect",
+    "img": "bqsj.png",
+    "title": "标签数据",
+    "openAll": true,
+    "renderSelect": false,
+    "options": [
+      { "id": "delPoint", "type": "button", "text": "抽稀" },
+      { "id": "passPoint", "type": "button", "text": "加密" }
+    ]
+  },
+  {
+    "id": "decimals",
+    "type": "buttonSelect",
+    "img": "xsws.png",
+    "title": "小数位数",
+    "openAll": true,
+    "renderSelect": false,
+    "options": [
+      { "id": "delDecimals", "type": "button", "text": "小数点 -" },
+      { "id": "addDecimals", "type": "button", "text": "小数点 +" }
+    ]
+  },
+
+  { "type": "separator" },
+  {
+    "id": "padding",
+    "type": "buttonSelect",
+    "img": "bianju.png",
+    "title": "轴边距",
+    "openAll": true,
+    "renderSelect": false,
+    "options": [
+      { "id": "addPadding", "type": "button", "text": "轴边距 +" },
+      { "id": "delPadding", "type": "button", "text": "轴边距 -" }
+    ]
+  },
+
+  { "type": "separator" },
+  {
+    "id": "chartType",
+    "type": "buttonSelect",
+    "img": "line.png",
+    "title": "图表类型",
+    "openAll": true,
+    "renderSelect": false,
+    "options": [
+      { "id": "line", "type": "button", "text": "折线" },
+      { "id": "area", "type": "button", "text": "面积" },
+      { "id": "column", "type": "button", "text": "直方" },
+      { "id": "pie", "type": "button", "text": "饼状" },
+      { "id": "scatter", "type": "button", "text": "散点" }
+    ]
+  },
+
+  { "type": "separator" },
+
+  {
+    "id": "exportChartData",
+    "type": "button",
+    "img": "daochuexcel.png",
+    "title": "查看数据"
+  },
+  {
+    "id": "saveTemplate",
+    "img": "jzmb.png",
+    "title": "模板",
+    "type": "buttonSelect",
+    "openAll": true,
+    "renderSelect": false,
+    "options": [
+      { "id": "saveTemplate", "type": "button", "text": "导出模板" },
+      { "id": "loadTemplate", "type": "button", "text": "导入模板" }
+    ]
+  },
+  { "type": "separator" },
+  {
+    "id": "zoomOut",
+    "type": "button",
+    "img": "redo_dis.gif",
+    "title": "恢复"
+  }
+]

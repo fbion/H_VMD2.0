@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>下拉框显示图片</title>
+    <!--基本样式-->
+    <link href="{vmdvirtualPath}/css/common.css?ver=2.0.3.20190321" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="{vmdvirtualPath}/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.3.20190321" rel="stylesheet" />
+    <link href="{vmdvirtualPath}/design/css/icons.css?ver=2.0.3.20190321" rel="stylesheet" />
+    <link href="{vmdvirtualPath}/lib/dhtmlx/dhtmlx.css?ver=2.0.3.20190321" rel="stylesheet" />
+    <!--样式快捷索引表-->
+    <link href="{vmdvirtualPath}/css/shortcut.css?ver=2.0.3.20190321" rel="stylesheet" /> {vmdrescssfiles} <script src="{vmdvirtualPath}/lib/labjs/LAB.min.js?ver=2.0.3.20190321"></script>
+    <script src="{vmdvirtualPath}/config.js?ver=2.0.3.20190321"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.3.20190321"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.3.20190321"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.3.20190321"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/ext-all-debug.js?ver=2.0.3.20190321"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.3.20190321"></script>
+    <script src="{vmdvirtualPath}/js/util.js?ver=2.0.3.20190321"></script>
+    <script src="{vmdvirtualPath}/lib/dhtmlx/dhtmlx.js?ver=2.0.3.20190321"></script>
+    <script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.3.20190321"></script>
+    <script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.3.20190321"></script>
+    <script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.3.20190321"></script>
+    <script src="{vmdvirtualPath}/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.3.20190321"></script>
+    <script src="{vmdvirtualPath}/js/hwdas.js?ver=2.0.3.20190321"></script>
+    <script src="{vmdvirtualPath}/js/vmdcore.js?ver=2.0.3.20190321"></script>
+    <script src="{vmdvirtualPath}/js/vmdcomps.js?ver=2.0.3.20190321"></script>
+    <script src="{vmdvirtualPath}/js/publicMethods.js?ver=2.0.3.20190321"></script>
+    <script src="{vmdvirtualPath}/js/vmdreport.js?ver=2.0.3.20190321"></script>
+    <script src="{vmdvirtualPath}/lib/ace/ace.js?ver=2.0.3.20190321"></script>
+    <script src="{vmdvirtualPath}/lib/ace/mode-base.js?ver=2.0.3.20190321"></script>
+    <script src="{vmdvirtualPath}/lib/ace/theme-xcode.js?ver=2.0.3.20190321"></script>
+    <script src="{vmdvirtualPath}/lib/ace/ext-language_tools.js?ver=2.0.3.20190321"></script>
+    <script src="{vmdvirtualPath}/js/hwMSC_mqttws31.js?ver=2.0.3.20190321"></script>
+    <script src="{vmdvirtualPath}/js/hwMSC.js?ver=2.0.3.20190321"></script> {vmdresjsfiles} {vmdworkspacePath} <style> </style>
+    <style type="text/css" id="vmdcss"> </style>
+    <script>
+        vmd.virtualPath = '{vmdvirtualPath}';
+        Ext.define("vmd.module.MyViewport", {
+            extend: "vmd.comp.viewport",
+            requires: vmd.getCmpDeps([]),
+            xtype: "vmd.module.MyViewport",
+            layout: "absolute",
+            initComponent: function() {
+                function div_click(sender, e) {}
+                window.filechange = function() {
+                    
+                    var file = $("#imgForm")[0].files[0];
+                    //创建读取文件的对象   
+                    var reader = new FileReader();
+                    //创建文件读取相关的变量      
+                    var imgFile;
+                    reader.onload = function(e) {
+                        
+                        alert('文件读取完成');
+                        imgFile = e.target.result;
+                        console.log(imgFile);
+                        const imgURL = window.URL.createObjectURL(file)
+                        $("#imgContent").attr('src', imgFile);
+                    };
+                    //正式读取文件  
+                    reader.readAsDataURL(file);
+                }
+                hwvar = new vmd.Variable({});
+                hwMSC = new vmd.service.HwMSC();
+                this.items = [{
+                        xtype: "vmd.div",
+                        id: "div",
+                        autoEl: "div",
+                        border: true,
+                        backgroundRepeat: "no-repeat",
+                        backgroundPosition: "top left",
+                        width: 400,
+                        height: 140,
+                        x: 440,
+                        y: 370,
+                        html: "<body> <input type=\"file\" id=\"imgForm\" onchange=\"filechange()\" /> <img id=\"imgContent\" /></body>",
+                        click: "div_click",
+                        listeners: {
+                            click: div_click
+                        }
+                    },
+                    {
+                        xtype: "vmd.ace",
+                        id: "MyAce",
+                        height: 300,
+                        width: 910,
+                        language: "html",
+                        x: 10,
+                        y: 30,
+                        value: "<input type=\"file\" id=\"imgForm\" onchange=\"filechange()\" />     <img id=\"imgContent\" />"
+                    },
+                    {
+                        xtype: "vmd.dataview",
+                        id: "hwDataView",
+                        width: 350,
+                        height: 270,
+                        itemSelector: "li.info",
+                        overClass: "info-hover",
+                        selectedClass: "x-view-selected",
+                        singleSelect: true,
+                        multiSelect: true,
+                        autoScroll: true,
+                        tpl: "<ul> <tpl for=\".\">  <li class=\"info\" style=\"float:left;padding:8px 17px;margin:5px;text-align:center; line-height: 1.25em;  color: #333;height: 113px; width: 112px; overflow: hidden;border-top: 1px solid transparent;cursor: pointer;\">   <img src=\"/system/img/dataview/layout/{picname}\" />   <h4>{desc}</h4>  </li> </tpl></ul>",
+                        data: "var data=[{\"id\":1,\"picname\":\"border-layout.gif\",\"name\":\"Border Layout\",\"desc\":\"方位布局\"},{\"id\":2,\"picname\":\"layout-accordion.gif\",\"name\":\"Accordion Layout\",\"desc\":\"手风琴布局\"},{\"id\":3,\"picname\":\"layout-anchor.gif\",\"name\":\"Accordion Layout\",\"desc\":\"百分比布局\"},{\"id\":4,\"picname\":\"layout-form.gif\",\"name\":\"Absolute Layout\",\"desc\":\"绝对定位布局\"},{\"id\":5,\"picname\":\"layout-column.gif\",\"name\":\"Column Layout\",\"desc\":\"列布局\"},{\"id\":6,\"picname\":\"layout-table.gif\",\"name\":\"Table Layout\",\"desc\":\"表格布局\"}];return data;",
+                        x: 620,
+                        y: 610
+                    },
+                    {
+                        xtype: "vmd.ace",
+                        id: "MyAce1",
+                        height: 300,
+                        width: 600,
+                        language: "javascript",
+                        x: 150,
+                        y: 400
+                    }
+                ]
+                this.callParent();
+                var me = this;
+                vmd.core.moduleInit(this.items, this);
+            }
+        })
+        Ext.onReady(function() {
+            Ext.create('vmd.module.MyViewport', {
+                renderTo: document.body
+            })
+        })
+    </script>
+</head>
+
+<body> </body>
+
+</html>

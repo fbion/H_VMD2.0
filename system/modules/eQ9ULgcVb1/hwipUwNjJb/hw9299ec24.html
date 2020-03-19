@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>项目信息配置界面</title>
+    <!--基本样式-->
+    <link href="/css/common.css?ver=2.0.4.20190408" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.4.20190408" rel="stylesheet" />
+    <link href="/design/css/icons.css?ver=2.0.4.20190408" rel="stylesheet" />
+    <link href="/lib/dhtmlx/dhtmlx.css?ver=2.0.4.20190408" rel="stylesheet" />
+    <!--样式快捷索引表-->
+    <link href="/css/shortcut.css?ver=2.0.4.20190408" rel="stylesheet" />
+    <script src="/lib/labjs/LAB.min.js?ver=2.0.4.20190408"></script>
+    <script src="/config.js?ver=2.0.4.20190408"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.4.20190408"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.4.20190408"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.4.20190408"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=2.0.4.20190408"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.4.20190408"></script>
+    <script src="/js/util.js?ver=2.0.4.20190408"></script>
+    <script src="/lib/dhtmlx/dhtmlx.js?ver=2.0.4.20190408"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.4.20190408"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.4.20190408"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.4.20190408"></script>
+    <script src="/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.4.20190408"></script>
+    <script src="/js/hwdas.js?ver=2.0.4.20190408"></script>
+    <script src="/js/vmdcore.js?ver=2.0.4.20190408"></script>
+    <script src="/js/vmdcomps.js?ver=2.0.4.20190408"></script>
+    <script src="/js/publicMethods.js?ver=2.0.4.20190408"></script>
+    <script src="/js/vmdreport.js?ver=2.0.4.20190408"></script>
+    <style> </style>
+    <style type="text/css" id="vmdcss"> </style>
+    <script>
+        vmd.preivewMode = true;
+        vmd.virtualPath = '';
+        vmd.workspace = {
+            "workspaceid": "254f1fb7-7079-48bf-bdd4-f7925e0eb4a3",
+            "workflowIp": "",
+            "dataServiceIp": "",
+            "msgIp": "",
+            "projectid": "eQ9ULgcVb1"
+        }
+        vmd.resourceSettings = {
+            "test&&资源中心服务器": "http://www.hanweikeji.com:10050/resource"
+        }
+        vmd.projectInfo = {
+            "projectId": "eQ9ULgcVb1",
+            "workflowIp": "",
+            "dataServiceIp": "",
+            "msgIp": "",
+            "todoIp": "",
+            "authIp": "",
+            "docIp": "",
+            "reoprtIp": "",
+            "logIp": ""
+        }
+        Ext.define("vmd.module.MyViewport", {
+            extend: "vmd.comp.viewport",
+            requires: vmd.getCmpDeps(["vmd.ux.TabProjectInfo$1.0$TabProjectInfo"]),
+            xtype: "vmd.module.MyViewport",
+            layout: "absolute",
+            beforerender: "MyViewport_beforerender",
+            initComponent: function() {
+                var objId = "",
+                    workspaceId = '';
+                if (parent && parent.projectInfo)
+                    vmd.projectInfo = parent.vmd.projectInfo
+                if (parent && parent.workspace)
+                    vmd.workspace = parent.vmd.workspace
+
+                function btnSave_click(sender, e) {
+                    // 修改的工区名称需要同步到树节点中
+                    var projectName = TabProjectInfo.iGetName();
+                    // 设置当前选中树节点的项目名称
+                    // parent.treeProjects.projectConfig(projectName);
+                    parent.btnProjectName.setText(projectName);
+                    TabProjectInfo.iSaveData(function(tabIndex) {
+                        if (parent) {
+                            if (0 == tabIndex) {
+                                // parent.getProject(workspaceId);
+                            } else if (1 == tabIndex) {
+                                parent.reloadWorkflowCategory();
+                            } else if (2 == tabIndex) {
+                                parent.reloadDataServiceCategory();
+                            }
+                        }
+                        // if(0 == tabIndex) {
+                        //     parent.getProject(workspaceId);
+                        // }
+                        // else if(1 == tabIndex) {
+                        //      parent.getWorkflowCategory();
+                        // } else if(2 == tabIndex) {
+                        //     parent.getDataServiceCategory();
+                        // }
+                    });
+                }
+
+                function btnClose_click(sender, e) {
+                    // parent.getWorkflowCategory();
+                    // parent.getDataServiceCategory();
+                    parent.formProConfig.close();
+                }
+
+                function MyViewport_beforerender(sender) {
+                    objId = getUrlParam("id");
+                    workspaceId = getUrlParam("workId");
+                    TabProjectInfo.iSetId(objId);
+                    TabProjectInfo.iSetWorkSpaceId(workspaceId);
+                    TabProjectInfo.iSetIfDataLoaded(false);
+                    // TabProjectInfo.iSetApplyType(1);
+                }
+
+                function ptcomlist_load(sender, records, options) {}
+                this.MyViewport_beforerender = MyViewport_beforerender;
+                this.items = [{
+                        xtype: "vmd.ux.TabProjectInfo",
+                        id: "TabProjectInfo",
+                        layout: "absolute",
+                        x: 0,
+                        y: 0,
+                        reginfo_store: "store",
+                        reginfo_combostore: "ptcomlist"
+                    },
+                    {
+                        xtype: "vmd.button",
+                        id: "btnSave",
+                        text: "保存",
+                        type: "(none)",
+                        size: "small",
+                        x: 460,
+                        y: 430,
+                        width: 70,
+                        style: "background-color: rgb(64, 158, 255);    color: rgb(255, 255, 255);    font-size: 14px;",
+                        click: "btnSave_click",
+                        listeners: {
+                            click: btnSave_click
+                        }
+                    },
+                    {
+                        xtype: "vmd.button",
+                        id: "btnClose",
+                        text: "关闭",
+                        type: "(none)",
+                        size: "small",
+                        x: 540,
+                        y: 430,
+                        width: 70,
+                        style: "background-color: rgb(201, 201, 201);    color: rgb(0, 0, 0);    font-size: 14px;",
+                        click: "btnClose_click",
+                        listeners: {
+                            click: btnClose_click
+                        }
+                    }
+                ]
+                this.callParent();
+                var me = this;
+                vmd.core.moduleInit(this.items, this);
+                me.on('beforerender', function() {
+                    MyViewport_beforerender.call(me, me)
+                })
+            }
+        })
+        Ext.onReady(function() {
+            Ext.create('vmd.module.MyViewport', {
+                renderTo: document.body
+            })
+        })
+    </script>
+</head>
+
+<body> </body>
+
+</html>

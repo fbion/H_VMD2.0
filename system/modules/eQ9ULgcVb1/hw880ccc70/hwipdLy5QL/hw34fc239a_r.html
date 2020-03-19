@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>曲线类型模版</title>
+    
+    <!--基本样式-->
+    <link href="{vmdvirtualPath}/css/common.css?ver=2.0.4.0508" rel="stylesheet" />
+
+    <link href="{vmdvirtualPath}/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.4.0508" rel="stylesheet" />
+    <link href="{vmdvirtualPath}/design/css/icons.css?ver=2.0.4.0508" rel="stylesheet" />
+
+	<link href="{vmdvirtualPath}/lib/dhtmlx/dhtmlx.css?ver=2.0.4.0508" rel="stylesheet" />
+	  <!--样式快捷索引表-->
+    <link href="{vmdvirtualPath}/css/shortcut.css?ver=2.0.4.0508" rel="stylesheet" />
+    
+    
+     <script src="{vmdvirtualPath}/lib/labjs/LAB.min.js?ver=2.0.4.0508"></script>
+    <script src="{vmdvirtualPath}/config.js?ver=2.0.4.0508"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.4.0508"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.4.0508"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.4.0508"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/ext-all-debug.js?ver=2.0.4.0508"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.4.0508"></script>
+	<script src="{vmdvirtualPath}/js/util.js?ver=2.0.4.0508"></script>
+	 <script src="{vmdvirtualPath}/lib/dhtmlx/dhtmlx.js?ver=2.0.4.0508"></script>
+    <script src="{vmdvirtualPath}/chart/libs/jquery/jquery-1.10.2.js?ver=2.0.4.0508"></script>
+    <script src="{vmdvirtualPath}/chart/js/hwAPI.js?ver=2.0.4.0508"></script>
+
+    <script src="{vmdvirtualPath}/js/hwdas.js?ver=2.0.4.0508"></script>
+    <script src="{vmdvirtualPath}/js/vmdcore.js?ver=2.0.4.0508"></script>
+    <script src="{vmdvirtualPath}/js/vmdcomps.js?ver=2.0.4.0508"></script>
+    <script src="{vmdvirtualPath}/js/vmdchart.js?ver=2.0.4.0508"></script>
+	<script src="{vmdvirtualPath}/js/publicMethods.js?ver=2.0.4.0508"></script>
+    
+    
+    {vmdworkspacePath}
+
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        
+    </style>
+    <script>
+        vmd.virtualPath = '{vmdvirtualPath}';
+        
+        Ext.define("vmd.module.MyViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps([]),
+	xtype:"vmd.module.MyViewport",
+	layout:"column",
+	initComponent: function(){
+		
+	
+
+
+		this.items=[
+			{
+				xtype:"panel",
+				id:"panel",
+				title:"Panel",
+				header:false,
+				border:true,
+				height:600,
+				x:30,
+				y:130,
+				width:1320,
+				layout:"fit",
+				columnWidth:1,
+				items:[
+					{
+						xtype:"vmd.chart",
+						id:"chart",
+						text:"chart",
+						relativepath:"Resources//Report",
+						size:"small",
+						nousedataset:false,
+						tplJSON:{
+							credits:{
+								enabled:false
+							},
+							chart:{
+								type:"line",
+								zoomType:"none",
+								alignTicks:true,
+								polar:false,
+								inverted:false,
+								backgroundColor:"#ffffff",
+								backgroundOpacity:"1",
+								borderColor:"#335cad",
+								borderRadius:0,
+								borderWidth:0,
+								plotBorderColor:"#cccccc",
+								plotBorderWidth:0,
+								plotBackgroundColor:"#ffffff",
+								plotBackgroundOpacity:"1",
+								plotBorderEnabled:false,
+								borderEnabled:false
+							},
+							data:{
+								json:[
+									
+								],
+								seriesCountsByOptions:true,
+								seriesMapping:[
+									{
+										x:0,
+										y:1
+									}
+								]
+							},
+							plotOptions:{
+								series:{
+									marker:{
+										enabled:true
+									}
+								}
+							},
+							tooltip:{
+								xDateFormat:"%Y-%m"
+							},
+							series:[
+								{
+									id:"series-1",
+									type:"line",
+									lineWidth:2,
+									xAxis:"x-0",
+									yAxis:"y-0"
+								}
+							],
+							xAxis:[
+								{
+									id:"x-0",
+									visible:true,
+									minPadding:0,
+									allowDecimals:true,
+									lineColor:"#ccd6eb",
+									labels:{
+										align:"center",
+										enabled:true,
+										format:"{value}",
+										rotation:0,
+										x:0,
+										style:{
+											fontSize:"12px",
+											fontFamily:"SimSun",
+											color:"#666666",
+											fontStyle:"normal",
+											fontWeight:"normal"
+										}
+									},
+									dateTimeLabelFormats:{
+										day:""
+									},
+									lineWidth:1,
+									offset:0,
+									opposite:false,
+									reversed:false,
+									tickColor:"#ccd6eb",
+									tickLength:5,
+									tickPosition:"outside",
+									tickWidth:1,
+									title:{
+										text:"横轴",
+										rotation:0,
+										align:"middle",
+										style:{
+											fontSize:"12px",
+											fontFamily:"SimSun",
+											color:"#666666",
+											fontStyle:"normal",
+											fontWeight:"normal"
+										},
+										x:0
+									},
+									type:"linear",
+									gridLineColor:"#e6e6e",
+									gridLineWidth:0,
+									gridLineDashStyle:"Solid",
+									minorTickInterval:"auto",
+									minorTickWidth:0,
+									minorGridLineColor:"#E0E0E0",
+									minorGridLineWidth:0,
+									minorTickLength:0,
+									minorGridLineDashStyle:"Solid"
+								}
+							],
+							yAxis:[
+								{
+									id:"y-0",
+									minPadding:0,
+									allowDecimals:true,
+									lineColor:"#ccd6eb",
+									labels:{
+										align:"center",
+										enabled:true,
+										format:"{value}",
+										rotation:0,
+										x:-15,
+										style:{
+											fontSize:"12px",
+											fontFamily:"SimSun",
+											color:"#666666",
+											fontStyle:"normal",
+											fontWeight:"normal"
+										}
+									},
+									dateTimeLabelFormats:{
+										day:""
+									},
+									lineWidth:1,
+									offset:0,
+									opposite:false,
+									reversed:false,
+									tickColor:"#ccd6eb",
+									tickLength:5,
+									tickPosition:"outside",
+									tickWidth:0,
+									title:{
+										text:"竖<br>轴",
+										rotation:0,
+										align:"middle",
+										offset:40,
+										style:{
+											fontSize:"12px",
+											fontFamily:"SimSun",
+											color:"#666666",
+											fontStyle:"normal",
+											fontWeight:"normal"
+										},
+										x:0
+									},
+									type:"linear",
+									visible:true,
+									gridLineColor:"#e6e6e",
+									gridLineWidth:1,
+									gridLineDashStyle:"Solid",
+									minorTickInterval:"auto",
+									minorTickWidth:0,
+									minorGridLineColor:"#E0E0E0",
+									minorGridLineWidth:0,
+									minorTickLength:0,
+									minorGridLineDashStyle:"Solid"
+								}
+							],
+							title:{
+								text:"Chart title",
+								x:0,
+								y:15,
+								align:"center",
+								verticalAlign:{
+									
+								},
+								floating:false,
+								style:{
+									fontSize:"16px",
+									fontFamily:"Microsoft YaHei",
+									color:"#333333",
+									fontStyle:"normal",
+									fontWeight:"normal"
+								}
+							},
+							legend:{
+								enabled:true,
+								layout:"horizontal",
+								margin:12,
+								padding:8,
+								x:0,
+								y:0,
+								align:"center",
+								verticalAlign:"bottom",
+								floating:false,
+								reversed:false,
+								draging:false,
+								width:"",
+								itemWidth:""
+							}
+						}
+					}
+				]
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+	}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MyViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<!--<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />-->
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>领导岗工作台</title>
+    
+    <!--基本样式-->
+    <link href="/css/common.css?ver=2.0.3.0920" rel="stylesheet" />
+
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.3.0920" rel="stylesheet" />
+    <link href="/design/css/icons.css?ver=2.0.3.0920" rel="stylesheet" />
+
+	<link href="/lib/dhtmlx/dhtmlx.css?ver=2.0.3.0920" rel="stylesheet" />
+	  <!--样式快捷索引表-->
+    <link href="/css/shortcut.css?ver=2.0.3.0920" rel="stylesheet" />
+    
+     <script src="/lib/labjs/LAB.min.js?ver=2.0.3.0920"></script>
+    <script src="/config.js?ver=2.0.3.0920"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.3.0920"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.3.0920"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.3.0920"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=2.0.3.0920"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.3.0920"></script>
+	<script src="/js/util.js?ver=2.0.3.0920"></script>
+	 <script src="/lib/dhtmlx/dhtmlx.js?ver=2.0.3.0920"></script>
+    <script src="/chart/libs/jquery/jquery-1.10.2.js?ver=2.0.3.0920"></script>
+    <script src="/chart/js/hwAPI.js?ver=2.0.3.0920"></script>
+
+    <script src="/js/hwdas.js?ver=2.0.3.0920"></script>
+	<script src="/js/hwMSC.js?ver=2.0.3.0920"></script>
+    <script src="/js/vmdcore.js?ver=2.0.3.0920"></script>
+    <script src="/js/vmdcomps.js?ver=2.0.3.0920"></script>
+    <script src="/js/vmdchart.js?ver=2.0.3.0920"></script>
+	 <script src="/js/publicMethods.js?ver=2.0.3.0920"></script>
+    <script src="/release/12efebd0-5bd2-4d64-8582-fe88888e55ac/config.js"></script>
+    
+
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        body{
+    overflow: hidden !important;
+    font-size: 14px !important;
+}
+.x-grid3-row td, .x-grid3-summary-row td{
+    font-size: 14px !important;
+}
+
+a{
+   text-decoration:none; 
+}
+a:link {
+    color: blue; text-decoration:none;
+    
+}
+a:active:{
+    color: red;
+    } 
+/*a:visited {
+    color:purple;text-decoration:none;
+    
+} */
+a:hover {
+    color: red; text-decoration:underline;
+    
+} 
+.magin-down{
+   margin-bottom: 20px !important; 
+}
+    </style>
+    <script>
+        vmd.virtualPath = '';
+        
+        Ext.define("vmd.module.MyViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps(["vmd.ux.ComponentsTab$1.0$ComponentsTab","vmd.ux.NoticeBulletinSn$1.0$NoticeBulletinSn","vmd.ux.DetailsofUnitsSn$1.0$DetailsofUnitsSn"]),
+	xtype:"vmd.module.MyViewport",
+	layoutConfig:{
+		align:"center",
+		pack:"center",
+		scrollOffset:10
+	},
+	layout:"vbox",
+	height:800,
+	width:1100,
+	autoScroll:true,
+	style:"overflow: hidden;",
+	initComponent: function(){
+		function chart_afterrender(sender){
+chart.query();
+}
+
+function chart1_afterrender(sender){
+chart1.query();
+}
+			startDate=new vmd.var.variable({});
+		endDate=new vmd.var.variable({});
+
+		班组任务构成分析=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"班组任务构成分析","autoLoad":false,"cid":"vmdJsonStore","storeConfig":"{\"id\":\"mc8JvKJuZZ\",\"callcode\":\"vmdCode\",\"url\":\"XXHTS/schedule/taskmanager/workbench/crewschedule\",\"host\":\"\",\"isHwRest\":true,\"name\":\"班组任务构成分析\",\"getMethods\":[{\"id\":\"ksrq\",\"value1\":\"\",\"value2\":\"\",\"defaultvalue\":\"\"},{\"id\":\"jsrq\",\"value1\":\"\",\"value2\":\"\",\"defaultvalue\":\"\"},{\"id\":\"crewid\",\"value1\":\"\",\"value2\":\"\",\"defaultvalue\":\"\"}],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"team_name\",\"type\":\"string\"},{\"name\":\"team_code\",\"type\":\"string\"},{\"name\":\"sched_type_name\",\"type\":\"string\"},{\"name\":\"sched_type_code\",\"type\":\"string\"},{\"name\":\"zs\",\"type\":\"decimal\"},{\"name\":\"wks\",\"type\":\"decimal\"},{\"name\":\"jxz\",\"type\":\"decimal\"},{\"name\":\"dsh\",\"type\":\"decimal\"},{\"name\":\"zcwc\",\"type\":\"decimal\"},{\"name\":\"cswc\",\"type\":\"decimal\"},{\"name\":\"yc\",\"type\":\"decimal\"}]}"});
+		人员任务统计=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"人员任务统计","autoLoad":false,"cid":"vmdJsonStore","storeConfig":"{\"id\":\"mc4re9BMdn\",\"callcode\":\"vmdCode\",\"url\":\"XXHTS/schedule/taskmanager/workbench/userschecount\",\"host\":\"\",\"isHwRest\":true,\"name\":\"人员任务统计\",\"getMethods\":[{\"id\":\"userlogin\",\"value1\":\"\",\"value2\":\"\",\"defaultvalue\":\"\"},{\"id\":\"ksrq\",\"value1\":\"\",\"value2\":\"\",\"defaultvalue\":\"\"},{\"id\":\"jsrq\",\"value1\":\"\",\"value2\":\"\",\"defaultvalue\":\"\"}],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"rq\",\"type\":\"string\"},{\"name\":\"zs\",\"type\":\"decimal\"},{\"name\":\"zcwc\",\"type\":\"decimal\"}]}"});
+		班组任务完成统计=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"班组任务完成统计","autoLoad":false,"cid":"vmdJsonStore","storeConfig":"{\"id\":\"meVjlJvE6k\",\"callcode\":\"snqtscdd\",\"url\":\"XXHTS/schedule/taskmanager/workbench/schecount\",\"host\":\"\",\"isHwRest\":true,\"name\":\"班组任务完成统计\",\"fields\":[],\"getMethods\":[],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[]}"});
+
+
+		this.items=[
+			{
+				xtype:"panel",
+				id:"panel",
+				title:"Panel",
+				header:false,
+				border:true,
+				height:333,
+				width:1160,
+				margins:"10px 0 10px 0",
+				layout:"border",
+				items:[
+					{
+						xtype:"panel",
+						id:"panel3",
+						title:"Panel",
+						header:false,
+						border:true,
+						region:"west",
+						width:580,
+						margins:"0 0 0 0",
+						layout:"fit",
+						items:[
+							{
+								xtype:"vmd.ux.ComponentsTab",
+								id:"ComponentsTab",
+								layout:"fit"
+							}
+						]
+					},
+					{
+						xtype:"panel",
+						id:"panel4",
+						title:"Panel",
+						header:false,
+						border:true,
+						height:355,
+						region:"center",
+						width:560,
+						margins:"0 0 0 10px",
+						layout:"fit",
+						items:[
+							{
+								xtype:"vmd.ux.NoticeBulletinSn",
+								id:"NoticeBulletinSn",
+								layout:"fit",
+								callcode:"snqtscdd",
+								orgschecount:"XXHTS/schedule/taskmanager/workbench/orgschecount"
+							}
+						]
+					}
+				]
+			},
+			{
+				xtype:"panel",
+				id:"panel2",
+				title:"Panel",
+				header:false,
+				border:true,
+				height:300,
+				width:1160,
+				layout:"border",
+				margins:"0 0 10px 0",
+				padding:"5",
+				ctCls:"magin-down",
+				cls:"magin-down",
+				items:[
+					{
+						xtype:"panel",
+						id:"panel5",
+						title:"本班任务完成情况",
+						header:true,
+						border:true,
+						height:100,
+						region:"west",
+						width:502,
+						layout:"fit",
+						margins:"0 10px 0 0",
+						items:[
+							{
+								xtype:"vmd.chart",
+								id:"chart",
+								text:"chart",
+								relativepath:"Resources//Report",
+								size:"small",
+								nousedataset:false,
+								path:"饼图.xml",
+								dsnames:"班组任务完成统计",
+								afterrender:"chart_afterrender",
+								listeners:{
+									vmdafterrender:chart_afterrender
+								}
+							}
+						]
+					},
+					{
+						xtype:"panel",
+						id:"panel6",
+						title:"单位任务分布",
+						header:true,
+						border:true,
+						height:302,
+						region:"center",
+						layout:"fit",
+						items:[
+							{
+								xtype:"vmd.chart",
+								id:"chart1",
+								text:"chart",
+								relativepath:"Resources//Report",
+								size:"small",
+								nousedataset:false,
+								path:"单位任务分布.xml",
+								dsnames:"班组任务构成分析",
+								afterrender:"chart1_afterrender",
+								listeners:{
+									vmdafterrender:chart1_afterrender
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				xtype:"panel",
+				id:"panel1",
+				title:"各单位详细情况",
+				header:false,
+				border:true,
+				height:400,
+				layout:"fit",
+				width:1160,
+				autoScroll:false,
+				margins:"0 0 20px 0",
+				items:[
+					{
+						xtype:"vmd.ux.DetailsofUnitsSn",
+						id:"DetailsofUnitsSn",
+						layout:"fit",
+						orgschecount:"XXHTS/schedule/taskmanager/workbench/orgschecount",
+						userInfo:"platform/v1/UserManage",
+						callcode:"snqtscdd"
+					}
+				]
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+	}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MyViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>复合组件管理</title>
+	<!--基本样式-->
+    <link href="/css/common.css" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="/lib/ext-3.4/resources/css/ext-all.css" rel="stylesheet" />
+     <!--样式快捷索引表-->
+    <link href="/css/shortcut.css" rel="stylesheet" />
+    <link href="/design/css/icons.css" rel="stylesheet" />
+
+	<link href="/lib/dhtmlx/dhtmlx.css" rel="stylesheet" />
+	
+    <script src="/lib/labjs/LAB.min.js"></script>
+    <script src="/config.js"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js"></script>
+    <script src="/js/util.js"></script>
+    <script src="/lib/dhtmlx/dhtmlx.js"></script>
+	<script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js"></script>
+	 <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js"></script>
+   <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js"></script>
+	 <script src="/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js"></script>
+    <script src="/js/hwdas.js"></script>
+    <script src="/js/vmdcore.js"></script>
+    <script src="/js/vmdcomps.js"></script>
+    <script src="/js/publicMethods.js"></script>
+     <script src="/js/vmdreport.js"></script>
+	 
+    <script src="/lib/ace/ace.js"></script>
+    <script src="/lib/ace/mode-base.js" type="text/javascript"></script>
+    <script src="/lib/ace/theme-xcode.js" type="text/javascript" ></script>
+    <script src="/lib/ace/ext-language_tools.js"></script>
+
+
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        
+    </style>
+    <script>
+		vmd.virtualPath=''
+        Ext.define("vmd.module.MyViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps([]),
+	xtype:"vmd.module.MyViewport",
+	layout:"border",
+	afterrender:"MyViewport_afterrender",
+	listeners:{
+		afterrender:function(){
+	this.MyViewport_afterrender(this)
+}
+	},
+	initComponent: function(){
+		//上次点击的节点
+var bselNodeId = "";
+//获取传递的设计模式
+var allowedDesigner = false;
+
+//进度提示
+var myMask = new Ext.LoadMask(Ext.getBody(), {
+    msg: "数据加载中,请稍后...",
+    msgCls: 'z-index:10000;'
+});
+
+//初始化数据
+function hwTree_afterrender(sender) {
+    myMask = new Ext.LoadMask(Ext.getCmp("hwTree").el, {
+        msg: "数据加载中,请稍后...",
+        msgCls: 'z-index:10000;'
+    });
+    myMask.show();
+    var mytree = hwTree;
+    var firstNode = "";
+    mytree.deleteChildItems(0);
+    mytree.loadJSONObject({
+        id: 0,
+        text: "我的复合组件",
+        item: []
+    });
+    mytree.itemObj = {};
+    mytree.newnode = false;
+
+    hwDas.ajax({
+        das: {
+            idedas: true
+        },
+        url: "CDEServcie/resource/category",
+        type: 'get',
+        timeout: 50000,
+        params: {
+            parent_id: "0",
+            type: "4"
+        },
+        success: function(result) {
+            var datajson = result.data[0].datas;
+            var treeDataJson = [];
+            for(var i = 0; i < datajson.length; i++) {
+                mytree.insertNewChild("0", datajson[i].id, datajson[i].name);
+                mytree.setItemImage2(datajson[i].id, "tree/folderClosed.gif", "tree/folderOpen.gif", "tree/folderClosed.gif")
+                mytree.insertNewChild(datajson[i].id, datajson[i].id + "-0", "");
+                mytree.closeItem(datajson[i].id);
+                var treenode = mytree.item(datajson[i].id);
+                if(treenode) {
+                    treenode.isFord = true;
+                    treenode.loadChild = false;
+                }
+                mytree.itemObj[datajson[i].id] = treenode;
+            }
+            myMask.hide();
+        },
+        error: function(msg) {
+            myMask.hide();
+            Ext.Msg.alert("提示", "获取模块信息失败", function() {})
+        }
+    })
+
+    //绑定右键菜单
+    var menu = new dhtmlXMenuObject();
+    menu.renderAsContextMenu();
+    menu.attachEvent("onClick", onMenuClick);
+    menu.addNewChild(menu.topId, 1, "newFord", "新建分类", false);
+    menu.addNewChild(menu.topId, 2, "newMode", "新建复合组件", false);
+    menu.addNewChild(menu.topId, 3, "copy", "复制", false);
+    menu.addNewChild(menu.topId, 5, "paste", "粘帖", false);
+    menu.addNewChild(menu.topId, 6, "delete", "删除", false);
+    mytree.enableDragAndDrop("temporary_disabled");
+    mytree.enableContextMenu(menu);
+
+    mytree.attachEvent("onBeforeContextMenu", function(itemId) {
+        var mytree = hwTree;
+        var selId = mytree.getSelectedItemId();
+        var selnode = mytree.itemObj[selId];
+        if(selnode.isProject) {
+            menu.showItem('newFord');
+            menu.hideItem('newMode');
+            menu.hideItem('copy');
+            menu.hideItem('paste');
+            menu.hideItem('delete');
+        } else if(selnode.isFord) {
+            menu.showItem('newFord');
+            menu.showItem('newMode');
+            menu.hideItem('copy');
+            menu.showItem('paste');
+            menu.showItem('delete');
+        } else if(selnode.isModel) {
+            menu.hideItem('newFord');
+            menu.hideItem('newMode');
+            menu.showItem('copy');
+            menu.hideItem('paste');
+            menu.showItem('delete');
+        }
+        return true
+    })
+
+    //绑定右键事件 设置右键选中节点
+    mytree.attachEvent('onRightClick', function(id) {
+        mytree.selectItem(id);
+    })
+    
+    var menu1 = new dhtmlXMenuObject();
+    menu1.renderAsContextMenu();
+    menu1.attachEvent("onClick", onMenuClick);
+    menu1.addNewChild(menu1.topId, 1, "newFord", "新建分类", false);
+    menu1.addContextZone(mytree.allTree);
+    menu1.attachEvent("onShow", function(id) {
+        mytree.clearSelection();
+    });
+}
+
+function hwTree_onOpenEnd(sender, id) {
+    myMask.show();
+    var proId = id;
+    var mytree = hwTree;
+    mytree.newnode = false;
+    var hasChild = mytree.hasChildren(proId);
+    var selnode = mytree.itemObj[proId];
+    var selnodepath = selnode.path;
+    var projectId = "";
+    var childParentId = "0";
+    childParentId = proId
+    if(!selnode.loadChild && !selnode.isModel) {
+        //绑定项目下的资源目录
+        hwDas.ajax({
+            das: {
+                idedas: true
+            },
+            url: "CDEServcie/resource/category",
+            type: 'get',
+            timeout: 50000,
+            params: {
+                //project_id: projectId,
+                parent_id: childParentId,
+                type: "4"
+            },
+            success: function(result) {
+                var datajson = result.data[0].datas;
+                var treeDataJson = [];
+                for(var i = 0; i < datajson.length; i++) {
+                    mytree.insertNewChild(proId, datajson[i].id, datajson[i].name);
+                    mytree.setItemImage2(datajson[i].id, "tree/folderClosed.gif", "tree/folderOpen.gif", "tree/folderClosed.gif")
+                    mytree.insertNewChild(datajson[i].id, datajson[i].id + "-0", "");
+                    mytree.closeItem(datajson[i].id);
+                    var treenode = mytree.item(datajson[i].id);
+                    treenode.path = selnodepath + "/" + datajson[i].id;
+                    //treenode.projectId = projectId;
+                    if(treenode) {
+                        treenode.isFord = true;
+                        treenode.loadChild = false;
+                    }
+                    mytree.itemObj[datajson[i].id] = treenode;
+                }
+                myMask.hide();
+            },
+            error: function(msg) {
+                myMask.hide();
+                Ext.Msg.alert("提示", "获取模块信息失败", function() {})
+            }
+        })
+        if(!selnode.loadChild) {
+            mytree.deleteItem(id + "-0", false);
+        }
+        selnode.loadChild = true;
+        //获取项目下的资源
+        hwDas.ajax({
+            das: {
+                idedas: true
+            },
+            url: "CDEServcie/resource/zygl",
+            type: 'get',
+            timeout: 50000,
+            params: {
+                category_id: childParentId,
+                //project_id: projectId,
+                type: "4"
+            },
+            success: function(result) {
+                var datajson = result.data[0].datas;
+                var treeDataJson = [];
+                for(var i = 0; i < datajson.length; i++) {
+                    mytree.insertNewChild(proId, datajson[i].id, datajson[i].name);
+                    mytree.setItemImage2(datajson[i].id, "tree/model.png", "tree/model.png", "tree/model.png")
+                    var treenode = mytree.item(datajson[i].id);
+                    treenode.path = selnodepath + "/" + datajson[i].id;
+                    //treenode.projectId = projectId;
+                    if(treenode) {
+                        treenode.isModel = true;
+                        treenode.createuser = datajson[i].row_created_by;
+                        treenode.createtime = datajson[i].row_created_date;
+                        treenode.changetime = datajson[i].row_changed_date;
+                        treenode.changeuser = datajson[i].row_changed_by;
+                        treenode.code = datajson[i].code;
+                        treenode.version = datajson[i].version;
+                        treenode.type = datajson[i].type;
+                        treenode.shared = datajson[i].shared;
+                        treenode.remark = datajson[i].remark;
+                    }
+                    mytree.itemObj[datajson[i].id] = treenode;
+                }
+                //数据操作  
+                myMask.hide();
+            },
+            error: function(msg) {
+                myMask.hide();
+                Ext.Msg.alert("提示", "获取复合组件信息失败")
+            }
+        })
+    } else {
+        myMask.hide();
+    }
+}
+//////////////////////////////////////////点击树节点操作
+function hwTree_nodeClick(sender, id) {
+    myMask.show();
+    var proId = id;
+    var mytree = hwTree;
+    mytree.newnode = false;
+    var hasChild = mytree.hasChildren(proId);
+    var selnode = mytree.itemObj[proId];
+    var selnodepath = selnode.path;
+    var projectId = "";
+    var childParentId = "0";
+    if(bselNodeId != id) {
+        if(selnode.isModel) {
+            document.getElementById("iframe_page").src = '/modules/eQ9ULgcVb1/hw61499a5d/hw6000f88a.html';
+        }
+        else {
+            document.getElementById("iframe_page").src = '/modules/eQ9ULgcVb1/eQ9ULgcVb5/hw03cb4931.html';
+        }
+    }
+    bselNodeId = id;
+    myMask.hide();
+}
+//创建分类按钮操作
+function creatFord() {
+    var addford = function(fordname) {
+        var mytree = hwTree;
+        var selId = mytree.getSelectedItemId() || 0;
+        var selnode = mytree.itemObj[selId];
+        var selnodepath = selnode ? selnode.path || "" : "";
+        var nodename = fordname;
+        var newnodeid = newGuid(10);
+        var newcode = newGuid(10);
+        var xh = 10;
+        hwDas.ajax({
+            das: {
+                idedas: true
+            },
+            url: "CDEServcie/resource/category",
+            type: 'post',
+            timeout: 50000,
+            data: [{
+                parent_id: selId,
+                name: nodename,
+                code: newcode,
+                //project_id: projectId,
+                id: newnodeid,
+                xh: xh,
+                type: "4"
+            }],
+            success: function(result) {
+                mytree.insertNewChild(selId, newnodeid, nodename);
+                mytree.setItemImage2(newnodeid, "tree/folderClosed.gif", "tree/folderOpen.gif", "tree/folderClosed.gif")
+                var treenode = mytree.item(newnodeid);
+                treenode.path = selnodepath + "/" + newnodeid;
+                //treenode.projectId = projectId;
+                if(treenode) {
+                    treenode.isFord = true;
+                }
+                mytree.itemObj[newnodeid] = treenode;
+            },
+            error: function(msg) {
+                Ext.Msg.alert("提示", "新建分类失败")
+            }
+        })
+    }
+    var fordname = new Ext.MyFordWin(addford);
+    fordname.show();
+}
+
+//删除目录 模块信息
+function button1_click(sender) {
+    var mytree = hwTree;
+    var selId = mytree.getSelectedItemId();
+    var selnode = mytree.itemObj[selId];
+    var haschild = mytree.hasChildren(selId);
+    deleteNode();
+}
+
+function deleteNode() {
+    var mytree = hwTree;
+    var selId = mytree.getSelectedItemId();
+    var selnode = mytree.itemObj[selId];
+    var haschild = mytree.hasChildren(selId);
+    //删除文件夹
+    if(selnode.isFord) {
+        if(haschild > 0) {
+            Ext.Msg.alert("提示", "存在子分类或资源，请删除子分类或资源后再删除该目录")
+            return
+        }
+        Ext.Msg.confirm("提示", "确认要删除分类吗！", function(type) {
+            if(type == "yes") {
+                hwDas.ajax({
+                    das: {
+                        idedas: true
+                    },
+                    url: "CDEServcie/resource/category",
+                    type: 'delete',
+                    timeout: 50000,
+                    params: {
+                        id: selId
+                    },
+                    success: function(result) {
+                        mytree.deleteItem(selId, true);
+                    },
+                    error: function(msg) {
+                        Ext.Msg.alert("提示", "删除分类失败")
+                    }
+                })
+            }
+        })
+        return;
+    }
+    //删除模块
+    if(selnode.isModel) {
+        Ext.Msg.confirm("提示", "组件删除后将不可恢复,确认要删除该复合组件?", function(type) {
+            if(type == "yes") {
+                //先删除模块信息
+                var runtype = [];
+                myMask.show();
+                hwDas.ajax({
+                        das: {
+                            idedas: true
+                        },
+                        url: "CDEServcie/resource/info",
+                        type: 'delete',
+                        timeout: 50000,
+                        params: {
+                            id: selId
+                        },
+                        success: function(result) {
+                            mytree.deleteItem(selId); //, true);   
+                            runtype.push(true)
+                            if(runtype.length >= 3)
+                                myMask.hide()
+                            vmd.core.removeCmpFromList(selnode.text);
+                        },
+                        error: function(msg) {
+                            runtype.push(false)
+                            if(runtype.length >= 3)
+                                myMask.hide()
+                            Ext.Msg.alert("提示", "删除复合组件失败")
+                            return
+                        }
+                    })
+                    //删除模块文件对应关系
+                hwDas.ajax({
+                        das: {
+                            idedas: true
+                        },
+                        url: "CDEServcie/resource/file",
+                        type: 'delete',
+                        timeout: 50000,
+                        params: {
+                            resource_id: selId
+                        },
+                        success: function(result) {
+                            runtype.push(true)
+                            if(runtype.length >= 3)
+                                myMask.hide()
+                        },
+                        error: function(msg) {
+                            runtype.push(false)
+                            if(runtype.length >= 3)
+                                myMask.hide()
+                            Ext.Msg.alert("提示", "删除模块文件信息失败")
+                        }
+                    })
+                    //删除复合组件文件  删除js vmd
+                hwDas.ajax({
+                    das: {
+                        idedas: false
+                    },
+                    url: 'FileService',
+                    type: 'delete',
+                    timeout: 50000,
+                    params: {
+                        FileName: 'components/ide/' + selnode.text + '.js,components/ux/' + selnode.text + ',components/vmd/' + selnode.text + '.vmd'
+                    },
+                    success: function(result) {
+                        runtype.push(true)
+                        if(runtype.length >= 3)
+                            myMask.hide()
+                    },
+                    error: function(msg) {
+                        runtype.push(false)
+                        if(runtype.length >= 3)
+                            myMask.hide()
+                        Ext.Msg.alert("提示", "删除复合组件模块文件失败")
+                    }
+                })
+            }
+        })
+        return;
+    }
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//自定义自定义方法
+function newGuid(len) {
+    var length = 32;
+    if(len)
+        length = len - 2
+    var guid = "";
+    arr = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+    for(var i = 0; i < length; i++) {
+        pos = Math.round(Math.random() * (arr.length - 1));
+        guid += arr[pos];
+    }
+    return "hw" + guid;
+}
+
+//文件夹名称录入框
+Ext.MyFordWin = Ext.extend(Ext.Window, {
+        xtype: "window",
+        title: "分类对话框",
+        width: 300,
+        height: 130,
+        layout: "form",
+        bodyStyle: 'padding:15px',
+        labelAlign: "left",
+        labelWidth: 40,
+        constructor: function(callback) {
+            this.callback = callback;
+            this.callParent();
+        },
+        initComponent: function() {
+            var me = this;
+            this.fbar = [{
+                text: "确定",
+                handler: function() {
+                    me.callback(Ext.getCmp('filename').getValue())
+                    me.close()
+                }
+            }, {
+                text: "取消",
+                handler: function() {
+                    me.close()
+                }
+            }];
+
+            this.items = [{
+                id: 'filename',
+                xtype: "textfield",
+                fieldLabel: "名称",
+                anchor: "100%"
+            }]
+            Ext.MyFordWin.superclass.initComponent.call(this);
+        }
+    })
+    //右键菜单事件
+function onMenuClick(menuitemId) {
+    if(menuitemId == "newFord") {
+        creatFord();
+    } else if(menuitemId == "newMode") {
+        hwTree.newnode = true;
+        document.getElementById("iframe_page").src = '/modules/eQ9ULgcVb1/hw61499a5d/hw6000f88a.html';
+    } else if(menuitemId == "delete") {
+        button1_click();
+    } else if(menuitemId == "copy") {
+        nodeCopy();
+    } else if(menuitemId == "cut") {
+        // nodeCut();
+    } else if(menuitemId == "paste") {
+        nodePaste();
+    }
+}
+
+///记录赋值或剪切的节点id
+var copyNodeId = "";
+///复制节点
+function nodeCopy() {
+    var mytree = hwTree;
+    var selId = mytree.getSelectedItemId();
+    copyNodeId = selId;
+}
+//粘帖节点
+function nodePaste() {
+    if(copyNodeId == "") {
+        return;
+    }
+
+    //创建一个form，填写name，备注
+    var copyNode = hwTree.itemObj[copyNodeId];
+    var form = new Ext.form.FormPanel({
+        labelAlign: "top",
+        bodyStyle: "padding: 10px",
+        border: false,
+        items: [{
+            xtype: "textfield",
+            allowBlank: false,
+            anchor: "100%",
+            name: 'name',
+            height: 30,
+            regex: /^[A-Z][a-zA-Z0-9_]*$/,
+            regexText: "名称须以大写字母开头，且只能包含数字、字母、下划线",
+            fieldLabel: '将<span style="color:red;font-weight:bold">' + copyNode.text + '</span>复制为',
+            emptyText: "请输入复合组件名称"
+        }, {
+            xtype: "textarea",
+            allowBlank: true,
+            name: 'remark',
+            anchor: "100%",
+            fieldLabel: "备注",
+            emptyText: "请输入组件说明"
+        }]
+    })
+
+    var win = new Ext.Window({
+        width: 440,
+        height: 260,
+        title: '复合组件粘贴',
+        hidden: false,
+        layout: "fit",
+        border: false,
+        modal: true,
+        items: form,
+        fbar: [{
+            text: '确定',
+            handler: function() {
+                if(form.getForm().isValid()) {
+                    var values = form.form.getValues()
+                        /*保存前校验*/
+                    if(values.name == "" || values.remark == "") {
+                        Ext.Msg.alert("提示", "组件名和备注不能为空")
+                        return false;
+                    }
+                    saveModelInfo(copyNode.text, values.name, values.remark, function() {
+                        copyNodeId = "";
+                        win.close()
+                    })
+                }
+            }
+        }, {
+            text: '取消',
+            handler: function() {
+                win.close()
+            }
+        }]
+    });
+    win.show()
+    form.form.setValues({
+        name: copyNode.text + '1'
+    })
+}
+
+//页面加载完后事件
+function MyViewport_afterrender(sender) {
+    MyP_jcxx.body.update("<iframe  id='iframe_page' src='/modules/eQ9ULgcVb1/eQ9ULgcVb5/hw03cb4931.html' width=100% height=100% frameborder=0  ></iframe>");
+}
+
+function saveModelInfo(oldname, name, remark, callback) {
+    var mytree = parent.hwTree;
+    var newnode = mytree.newnode;
+    var selId = mytree.getSelectedItemId();
+    var selnode = mytree.itemObj[selId];
+    var id = newGuid(10);
+    var category_id = selId;
+    //var Project_id = selnode.projectId;
+    var codeid = newGuid(32);
+    var name = name;
+    var remark = remark;
+    var type = "0";
+    //编辑
+    checkName(name, function() {
+        //保存模块基础信息
+        var version = "1.0";
+        hwDas.ajax({
+            das: {
+                idedas: true
+            },
+            url: "CDEServcie/resource/zygl",
+            type: 'post',
+            timeout: 50000,
+            params: {},
+            headers: {
+                Ecylogin: Ext.util.Cookies.get('EcyLogin') || Ext.util.Cookies.get('ecyLogin')
+            },
+            data: [{
+                editid: newGuid(10),
+                id: id,
+                code: codeid,
+                type: '4',
+                name: name,
+                edit_reason: remark,
+                category_id: category_id,
+                //project_id: Project_id,
+                shared: "1",
+                version: version,
+                readdate: Ext.Date.dateFormat(new Date(), 'Y-m-d H:i:s'),
+                filepath: '/components/vmd/' + name + '.vmd',
+                row_created_by: Ext.util.Cookies.get('userName'),
+                row_created_date: Ext.Date.dateFormat(new Date(), 'Y-m-d H:i:s'),
+                remark: remark
+            }],
+            success: function(result) {
+                mytree.insertNewChild(selId, id, name);
+                mytree.setItemImage2(id, "tree/model.png", "tree/model.png", "tree/model.png")
+                var treenode = mytree.item(id);
+                //treenode.projectId = Project_id;
+                if(treenode) {
+                    treenode.isModel = true;
+                    treenode.text = name;
+                    treenode.createuser = Ext.util.Cookies.get('userName');
+                    treenode.createtime = Ext.Date.dateFormat(new Date(), 'Y-m-d H:i:s');
+                    treenode.changetime = Ext.Date.dateFormat(new Date(), 'Y-m-d H:i:s');
+                    treenode.changeuser = Ext.util.Cookies.get('userName');
+                    treenode.remark = remark;
+                    treenode.version = version;
+                    treenode.code = codeid;
+                    treenode.type = '4';
+                    treenode.shared = "1";
+                    treenode.newnode = false;
+                }
+                mytree.itemObj[id] = treenode;
+                mytree.selectItem(id, false, false);
+                mytree.newnode = false;
+                vmd.core.saveAsCmp(oldname, version, name, function() {
+                    callback();
+                })
+            },
+            error: function(msg) {
+                Ext.Msg.alert("提示", "复制复合组件信息失败")
+                return;
+            }
+        })
+    })
+}
+
+function checkName(name, callback) {
+    hwDas.ajax({
+        das: {
+            idedas: true
+        },
+        url: "CDEServcie/resource/info",
+        type: 'get',
+        timeout: 50000,
+        params: {
+            name: name
+        },
+        success: function(result) {
+            if(result.data[0].datas.length <= 0) {
+                if(callback)
+                    callback()
+            } else {
+                Ext.Msg.alert("提示", "该组件已存在，请重新命名组件！")
+                return;
+            }
+        },
+        error: function(msg) {
+            Ext.Msg.alert("提示", "保存模块版本信息失败")
+            return;
+        }
+    })
+}
+			this.MyViewport_afterrender=MyViewport_afterrender;
+
+
+
+		this.items=[
+			{
+				xtype:"panel",
+				id:"MyPanel_head",
+				title:"Panel",
+				header:false,
+				border:true,
+				height:60,
+				x:0,
+				y:0,
+				layout:"border",
+				bodyStyle:"background-color:skyblue;",
+				region:"north",
+				items:[
+					{
+						xtype:"panel",
+						id:"MyPanel_logo",
+						title:"Panel",
+						header:false,
+						border:false,
+						height:100,
+						region:"west",
+						layout:"border",
+						width:500,
+						maskDisabled:true,
+						bodyStyle:"background-color: #409EFF;",
+						items:[
+							{
+								xtype:"vmd.div",
+								id:"MyC_Logoimg",
+								autoEl:"div",
+								border:false,
+								backgroundRepeat:"no-repeat",
+								backgroundPosition:"top left",
+								width:58,
+								height:30,
+								style:"margin-left: 20px;    margin-top: 5px;",
+								x:0,
+								y:0,
+								region:"west",
+								backgroundImage:"/system/modules/eQ9ULgcVb1/img/复合组件1.png"
+							},
+							{
+								xtype:"label",
+								id:"MyLb_name",
+								text:"复合组件管理",
+								x:70,
+								y:10,
+								style:"font-size: 26px;    color: #ffffff;    margin-left: 20px;    margin-top: 4px;",
+								region:"center",
+								split:false,
+								cls:"lineHeight200"
+							}
+						]
+					},
+					{
+						xtype:"panel",
+						id:"MyPanel7",
+						title:"Panel",
+						header:false,
+						border:false,
+						height:100,
+						region:"center",
+						style:"background-color: #1e7fff;",
+						bodyStyle:"background-color: #409EFF"
+					}
+				]
+			},
+			{
+				xtype:"panel",
+				id:"MyP_info",
+				title:"Panel",
+				header:false,
+				border:true,
+				height:640,
+				x:0,
+				y:60,
+				layout:"border",
+				region:"center",
+				items:[
+					{
+						xtype:"panel",
+						id:"MyP_ModelTree",
+						title:"Panel",
+						header:false,
+						border:true,
+						height:639,
+						width:220,
+						layout:"border",
+						x:0,
+						y:0,
+						region:"west",
+						style:"background-color: white;",
+						bodyStyle:" background-color: white;",
+						split:true,
+						floatable:false,
+						collapseMode:"mini",
+						collapsible:true,
+						items:[
+							{
+								xtype:"panel",
+								id:"MyPanel",
+								title:"Panel",
+								header:false,
+								border:false,
+								height:22,
+								x:60,
+								y:110,
+								layout:"border",
+								width:220,
+								region:"north",
+								style:"margin-left: 5px;    margin-top: 5px;    padding-right: 10px;",
+								items:[
+									{
+										xtype:"textfield",
+										id:"MyF_searchtext",
+										allowBlank:true,
+										x:0,
+										y:0,
+										width:200,
+										region:"center"
+									},
+									{
+										xtype:"vmd.button",
+										id:"btn_search",
+										type:"(none)",
+										size:"mini",
+										x:190,
+										y:0,
+										icon:"search",
+										width:23,
+										region:"east",
+										style:"border-radius: 0px;",
+										margins:""
+									}
+								]
+							},
+							{
+								xtype:"panel",
+								id:"MyPanel1",
+								title:"Panel",
+								header:false,
+								border:false,
+								height:300,
+								x:70,
+								y:130,
+								region:"center",
+								layout:"fit",
+								style:"margin-left: 5px;    margin-top: 10px;    padding-right: 5px;    padding-bottom:  10px;",
+								items:[
+									{
+										xtype:"vmd.tree",
+										id:"hwTree",
+										skin:"material",
+										width:220,
+										height:580,
+										isdesign:false,
+										x:0,
+										y:0,
+										afterrender:"hwTree_afterrender",
+										onOpenEnd:"hwTree_onOpenEnd",
+										nodeClick:"hwTree_nodeClick",
+										region:"center",
+										onOpenStart:"hwTree_onOpenStart",
+										onDblClick:"hwTree_onDblClick",
+										listeners:{
+											afterrender:hwTree_afterrender,
+											onOpenEnd:hwTree_onOpenEnd,
+											nodeClick:hwTree_nodeClick
+										}
+									}
+								]
+							}
+						]
+					},
+					{
+						xtype:"panel",
+						id:"MyP_jcxx",
+						title:"Panel",
+						header:false,
+						border:true,
+						height:640,
+						width:900,
+						x:220,
+						y:0,
+						layout:"absolute",
+						region:"center"
+					}
+				]
+			}
+		]
+		this.callParent();
+		vmd.core.moduleInit(this.items, this);
+	}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MyViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

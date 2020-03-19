@@ -1,0 +1,31 @@
+/*表头边框线*/
+div.gridbox_material.gridbox table.hdr td {
+    border-width: 1px 1px 1px 1px;
+    border-right: 1px solid #dfdfdf;
+}
+
+div.gridbox_material.gridbox table.hdr  {
+    height:30;
+}
+
+/*单元格边框*/
+div.gridbox_material.gridbox table.obj.row20px tr td {
+    padding-top: 0;
+    padding-bottom: 0;
+    height: 32px;
+    line-height: 32px;
+    border-bottom: 1px solid #dfdfdf;
+    border-right: 1px solid #dfdfdf;
+}
+
+/*最后一列的右边框 修改为灰色默认是白色*/
+div.gridbox_material.gridbox table.obj.row20px tr td:last-child {
+    border-right: 1px solid #dfdfdf;
+}
+
+
+.Div_Search {
+    overflow: hidden;
+    /*text-align: right;*/
+    line-height: 30px;
+}

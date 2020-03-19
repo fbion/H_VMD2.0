@@ -1,0 +1,756 @@
+Ext.define("vmd.ux.Console" ,{
+	extend:"Ext.Panel",
+	requires:vmd.getCmpDeps(["vmd.ux.Checkbox$1.0$Checkbox"]),
+	version:"1.0",
+	xtype:"vmd.ux.Console",
+	title:"Panel",
+	header:false,
+	border:false,
+	width:220,
+	height:700,
+	layout:"fit",
+	autoHeight:false,
+	autoScroll:false,
+	uxCss:".propcontrol>div {    padding-left: 10px;    font-size: 14px;    height: 30px }.propcontrol .title label {    font-size: 16px}.divider-horizontal {    display: block;    height: 1px;    width: 100%;    min-width: 100%;    margin: 5px 0;    clear: both;    background: #e8e8e8}",
+	initComponent: function(){
+		function resetCmpScope() {
+                    var cmpList = me._reloadCmpList;
+                    Ext.each(cmpList, function (name) {
+                        var cmpObj = eval(name);
+                        cmpObj && (cmpObj._beforeRender = function (_cmp) {
+                            var id = vmd.core.getCmpId(_cmp);
+                            id&&eval(id + "= _cmp")
+                        })
+                    })
+                }
+			var page = this;
+
+function Checkbox2_onChecked(sender) {
+    page.fireEvent('onChange', page, true, 'global_banner');
+}
+
+function Checkbox2_onUnchecked(sender) {
+    page.fireEvent('onChange', page, false, 'global_banner');
+}
+
+function Checkbox_onChecked(sender) {
+    page.fireEvent('onChange', page, true, 'global_nav');
+}
+
+function Checkbox_onUnchecked(sender) {
+    page.fireEvent('onChange', page, false, 'global_nav');
+}
+
+function Checkbox1_onChecked(sender) {
+    page.fireEvent('onChange', page, true, 'global_search');
+}
+
+function Checkbox1_onUnchecked(sender) {
+    page.fireEvent('onChange', page, false, 'global_search');
+}
+
+function Checkbox3_onChecked(sender) {
+    page.fireEvent('onChange', page, true, 'global_tree');
+}
+
+function Checkbox3_onUnchecked(sender) {
+    page.fireEvent('onChange', page, false, 'global_tree');
+}
+
+function Checkbox4_onChecked(sender) {
+    page.fireEvent('onChange', page, true, 'global_list');
+}
+
+function Checkbox4_onUnchecked(sender) {
+    page.fireEvent('onChange', page, false, 'global_list');
+}
+			this.items=[
+			{
+				xtype:"vmd.div",
+				id:"div",
+				autoEl:"div",
+				border:false,
+				backgroundRepeat:"no-repeat",
+				backgroundPosition:"top left",
+				layout:"auto",
+				cls:"propcontrol",
+				autoScroll:false,
+				items:[
+					{
+						xtype:"vmd.div",
+						id:"div3",
+						layoutConfig:{
+							align:"middle"
+						},
+						autoEl:"div",
+						border:false,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						width:199,
+						height:31,
+						x:2,
+						y:129,
+						layout:"hbox",
+						cls:"title",
+						items:[
+							{
+								xtype:"label",
+								id:"label1",
+								text:"整体设置"
+							}
+						]
+					},
+					{
+						xtype:"vmd.div",
+						id:"div1",
+						layoutConfig:{
+							align:"middle",
+							pack:"start"
+						},
+						autoEl:"div",
+						border:false,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						height:30,
+						layout:"hbox",
+						items:[
+							{
+								xtype:"label",
+								id:"label3",
+								text:"banner区",
+								x:23,
+								y:101,
+								columnWidth:0.7,
+								flex:4
+							},
+							{
+								xtype:"vmd.ux.Checkbox",
+								id:"Checkbox2",
+								layout:"fit",
+								x:138,
+								y:98,
+								ischecked:true,
+								onChecked:"Checkbox2_onChecked",
+								onUnchecked:"Checkbox2_onUnchecked",
+								listeners:{
+									onChecked:Checkbox2_onChecked,
+									onUnchecked:Checkbox2_onUnchecked
+								}
+							}
+						]
+					},
+					{
+						xtype:"vmd.div",
+						id:"div2",
+						layoutConfig:{
+							align:"middle"
+						},
+						autoEl:"div",
+						border:false,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						height:30,
+						layout:"hbox",
+						items:[
+							{
+								xtype:"label",
+								id:"label",
+								text:"导航栏",
+								x:23,
+								y:101,
+								columnWidth:0.7,
+								flex:4
+							},
+							{
+								xtype:"vmd.ux.Checkbox",
+								id:"Checkbox",
+								layout:"fit",
+								x:138,
+								y:98,
+								ischecked:true,
+								onChecked:"Checkbox_onChecked",
+								onUnchecked:"Checkbox_onUnchecked",
+								listeners:{
+									onChecked:Checkbox_onChecked,
+									onUnchecked:Checkbox_onUnchecked
+								}
+							}
+						]
+					},
+					{
+						xtype:"vmd.div",
+						id:"div4",
+						layoutConfig:{
+							align:"middle"
+						},
+						autoEl:"div",
+						border:false,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						height:30,
+						layout:"hbox",
+						items:[
+							{
+								xtype:"label",
+								id:"label2",
+								text:"搜索栏",
+								x:23,
+								y:101,
+								columnWidth:0.7,
+								flex:4
+							},
+							{
+								xtype:"vmd.ux.Checkbox",
+								id:"Checkbox1",
+								layout:"fit",
+								x:138,
+								y:98,
+								ischecked:true,
+								onChecked:"Checkbox1_onChecked",
+								onUnchecked:"Checkbox1_onUnchecked",
+								listeners:{
+									onChecked:Checkbox1_onChecked,
+									onUnchecked:Checkbox1_onUnchecked
+								}
+							}
+						]
+					},
+					{
+						xtype:"vmd.div",
+						id:"div5",
+						layoutConfig:{
+							align:"middle"
+						},
+						autoEl:"div",
+						border:false,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						height:30,
+						layout:"hbox",
+						items:[
+							{
+								xtype:"label",
+								id:"label4",
+								text:"目录工具栏",
+								columnWidth:0.7,
+								flex:4
+							},
+							{
+								xtype:"vmd.ux.Checkbox",
+								id:"Checkbox3",
+								layout:"fit",
+								x:138,
+								y:98,
+								ischecked:true,
+								onChecked:"Checkbox3_onChecked",
+								onUnchecked:"Checkbox3_onUnchecked",
+								listeners:{
+									onChecked:Checkbox3_onChecked,
+									onUnchecked:Checkbox3_onUnchecked
+								}
+							}
+						]
+					},
+					{
+						xtype:"vmd.div",
+						id:"div6",
+						layoutConfig:{
+							align:"middle"
+						},
+						autoEl:"div",
+						border:false,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						height:30,
+						layout:"hbox",
+						items:[
+							{
+								xtype:"label",
+								id:"label5",
+								text:"列表工具栏",
+								x:23,
+								y:101,
+								columnWidth:0.7,
+								flex:4
+							},
+							{
+								xtype:"vmd.ux.Checkbox",
+								id:"Checkbox4",
+								layout:"fit",
+								x:138,
+								y:98,
+								ischecked:true,
+								onChecked:"Checkbox4_onChecked",
+								onUnchecked:"Checkbox4_onUnchecked",
+								listeners:{
+									onChecked:Checkbox4_onChecked,
+									onUnchecked:Checkbox4_onUnchecked
+								}
+							}
+						]
+					},
+					{
+						xtype:"vmd.div",
+						id:"div7",
+						autoEl:"div",
+						border:false,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						width:198,
+						height:1,
+						cls:"divider-horizontal"
+					},
+					{
+						xtype:"vmd.div",
+						id:"div21",
+						layoutConfig:{
+							align:"middle"
+						},
+						autoEl:"div",
+						border:false,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						width:199,
+						height:31,
+						x:2,
+						y:129,
+						layout:"hbox",
+						cls:"title",
+						items:[
+							{
+								xtype:"label",
+								id:"label18",
+								text:"目录树工具栏按钮"
+							}
+						]
+					},
+					{
+						xtype:"vmd.div",
+						id:"div8",
+						layoutConfig:{
+							align:"middle"
+						},
+						autoEl:"div",
+						border:false,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						height:30,
+						layout:"hbox",
+						items:[
+							{
+								xtype:"label",
+								id:"label6",
+								text:"新建分类",
+								x:23,
+								y:101,
+								columnWidth:0.7,
+								flex:4
+							},
+							{
+								xtype:"vmd.ux.Checkbox",
+								id:"Checkbox5",
+								layout:"fit",
+								x:138,
+								y:98,
+								ischecked:true
+							}
+						]
+					},
+					{
+						xtype:"vmd.div",
+						id:"div9",
+						layoutConfig:{
+							align:"middle"
+						},
+						autoEl:"div",
+						border:false,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						height:30,
+						layout:"hbox",
+						items:[
+							{
+								xtype:"label",
+								id:"label7",
+								text:"新建应用",
+								x:23,
+								y:101,
+								columnWidth:0.7,
+								flex:4
+							},
+							{
+								xtype:"vmd.ux.Checkbox",
+								id:"Checkbox6",
+								layout:"fit",
+								x:138,
+								y:98,
+								ischecked:true
+							}
+						]
+					},
+					{
+						xtype:"vmd.div",
+						id:"div10",
+						layoutConfig:{
+							align:"middle"
+						},
+						autoEl:"div",
+						border:false,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						height:30,
+						layout:"hbox",
+						items:[
+							{
+								xtype:"label",
+								id:"label8",
+								text:"编辑",
+								x:23,
+								y:101,
+								columnWidth:0.7,
+								flex:4
+							},
+							{
+								xtype:"vmd.ux.Checkbox",
+								id:"Checkbox7",
+								layout:"fit",
+								x:138,
+								y:98,
+								ischecked:true
+							}
+						]
+					},
+					{
+						xtype:"vmd.div",
+						id:"div11",
+						layoutConfig:{
+							align:"middle"
+						},
+						autoEl:"div",
+						border:false,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						height:30,
+						layout:"hbox",
+						items:[
+							{
+								xtype:"label",
+								id:"label9",
+								text:"删除",
+								x:23,
+								y:101,
+								columnWidth:0.7,
+								flex:4
+							},
+							{
+								xtype:"vmd.ux.Checkbox",
+								id:"Checkbox8",
+								layout:"fit",
+								x:138,
+								y:98,
+								ischecked:true
+							}
+						]
+					},
+					{
+						xtype:"vmd.div",
+						id:"div12",
+						layoutConfig:{
+							align:"middle"
+						},
+						autoEl:"div",
+						border:false,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						height:30,
+						layout:"hbox",
+						items:[
+							{
+								xtype:"label",
+								id:"label10",
+								text:"上移",
+								x:23,
+								y:101,
+								columnWidth:0.7,
+								flex:4
+							},
+							{
+								xtype:"vmd.ux.Checkbox",
+								id:"Checkbox9",
+								layout:"fit",
+								x:138,
+								y:98,
+								ischecked:true
+							}
+						]
+					},
+					{
+						xtype:"vmd.div",
+						id:"div13",
+						layoutConfig:{
+							align:"middle"
+						},
+						autoEl:"div",
+						border:false,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						height:30,
+						layout:"hbox",
+						items:[
+							{
+								xtype:"label",
+								id:"label11",
+								text:"下移",
+								x:23,
+								y:101,
+								columnWidth:0.7,
+								flex:4
+							},
+							{
+								xtype:"vmd.ux.Checkbox",
+								id:"Checkbox10",
+								layout:"fit",
+								x:138,
+								y:98,
+								ischecked:true
+							}
+						]
+					},
+					{
+						xtype:"vmd.div",
+						id:"div22",
+						autoEl:"div",
+						border:false,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						width:198,
+						height:1,
+						cls:"divider-horizontal"
+					},
+					{
+						xtype:"vmd.div",
+						id:"div14",
+						layoutConfig:{
+							align:"middle"
+						},
+						autoEl:"div",
+						border:false,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						width:199,
+						height:31,
+						x:2,
+						y:129,
+						layout:"hbox",
+						cls:"title",
+						items:[
+							{
+								xtype:"label",
+								id:"label12",
+								text:"模块列表工具栏按钮"
+							}
+						]
+					},
+					{
+						xtype:"vmd.div",
+						id:"div15",
+						layoutConfig:{
+							align:"middle"
+						},
+						autoEl:"div",
+						border:false,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						height:30,
+						layout:"hbox",
+						items:[
+							{
+								xtype:"label",
+								id:"label13",
+								text:"新建分类",
+								x:23,
+								y:101,
+								columnWidth:0.7,
+								flex:4
+							},
+							{
+								xtype:"vmd.ux.Checkbox",
+								id:"Checkbox11",
+								layout:"fit",
+								x:138,
+								y:98,
+								ischecked:false
+							}
+						]
+					},
+					{
+						xtype:"vmd.div",
+						id:"div16",
+						layoutConfig:{
+							align:"middle"
+						},
+						autoEl:"div",
+						border:false,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						height:30,
+						layout:"hbox",
+						items:[
+							{
+								xtype:"label",
+								id:"label14",
+								text:"新建应用",
+								x:23,
+								y:101,
+								columnWidth:0.7,
+								flex:4
+							},
+							{
+								xtype:"vmd.ux.Checkbox",
+								id:"Checkbox12",
+								layout:"fit",
+								x:138,
+								y:98,
+								ischecked:false
+							}
+						]
+					},
+					{
+						xtype:"vmd.div",
+						id:"div17",
+						layoutConfig:{
+							align:"middle"
+						},
+						autoEl:"div",
+						border:false,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						height:30,
+						layout:"hbox",
+						items:[
+							{
+								xtype:"label",
+								id:"label15",
+								text:"编辑",
+								x:23,
+								y:101,
+								columnWidth:0.7,
+								flex:4
+							},
+							{
+								xtype:"vmd.ux.Checkbox",
+								id:"Checkbox13",
+								layout:"fit",
+								x:138,
+								y:98,
+								ischecked:false
+							}
+						]
+					},
+					{
+						xtype:"vmd.div",
+						id:"div18",
+						layoutConfig:{
+							align:"middle"
+						},
+						autoEl:"div",
+						border:false,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						height:30,
+						layout:"hbox",
+						items:[
+							{
+								xtype:"label",
+								id:"label16",
+								text:"删除",
+								x:23,
+								y:101,
+								columnWidth:0.7,
+								flex:4
+							},
+							{
+								xtype:"vmd.ux.Checkbox",
+								id:"Checkbox14",
+								layout:"fit",
+								x:138,
+								y:98,
+								ischecked:false
+							}
+						]
+					},
+					{
+						xtype:"vmd.div",
+						id:"div19",
+						layoutConfig:{
+							align:"middle"
+						},
+						autoEl:"div",
+						border:false,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						height:30,
+						layout:"hbox",
+						items:[
+							{
+								xtype:"label",
+								id:"label17",
+								text:"上移",
+								x:23,
+								y:101,
+								columnWidth:0.7,
+								flex:4
+							},
+							{
+								xtype:"vmd.ux.Checkbox",
+								id:"Checkbox15",
+								layout:"fit",
+								x:138,
+								y:98,
+								ischecked:false
+							}
+						]
+					},
+					{
+						xtype:"vmd.div",
+						id:"div20",
+						layoutConfig:{
+							align:"middle"
+						},
+						autoEl:"div",
+						border:false,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						height:30,
+						layout:"hbox",
+						items:[
+							{
+								xtype:"label",
+								id:"label19",
+								text:"下移",
+								x:23,
+								y:101,
+								columnWidth:0.7,
+								flex:4
+							},
+							{
+								xtype:"vmd.ux.Checkbox",
+								id:"Checkbox16",
+								layout:"fit",
+								x:138,
+								y:98,
+								ischecked:false
+							}
+						]
+					}
+				]
+			}
+		]
+		this.callParent();
+		vmd.core.compositeCmpInit(this.items, this);
+		var me = this;eval(me.defineVars);
+		resetCmpScope();
+		Ext.util.CSS.removeStyleSheet("vmd.ux.Console");
+		this.uxCss&&Ext.util.CSS.createStyleSheet(vmd.replaceResVars(this.uxCss), "vmd.ux.Console");
+	}
+})

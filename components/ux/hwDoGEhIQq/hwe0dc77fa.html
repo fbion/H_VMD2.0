@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<!--<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />-->
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>本周</title>
+    
+    <!--基本样式-->
+    <link href="/css/common.css?ver=2.0.3.0920" rel="stylesheet" />
+
+    <!--加载dhx组件-->
+    
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.3.0920" rel="stylesheet" />
+    
+    <link href="/lib/dhtmlx/dhtmlx.css?ver=2.0.3.0920" rel="stylesheet" />
+	<link href="/report/dhtmlx/dhtmlxGrid/codebase/skins/dhtmlxgrid_dhx_skyblue.css?ver=2.0.3.0920" rel="stylesheet" />
+	<link href="/report/dhtmlx/dhtmlxGrid/codebase/skins/dhtmlxgrid_default.css?ver=2.0.3.0920" rel="stylesheet" />
+	<link href="/report/dhtmlx/dhtmlxCheckBox/codebase/skins/dhtmlxcheckbox_dhx_skyblue.css?ver=2.0.3.0920" rel="stylesheet" />
+	<link href="/report/FillReport2.2/js/Adjustment.css?ver=2.0.3.0920" rel="stylesheet" />
+    <!--样式快捷索引表-->
+    <link href="/css/shortcut.css?ver=2.0.3.0920" rel="stylesheet" />
+	 
+    <script src="/lib/labjs/LAB.min.js?ver=2.0.3.0920"></script>
+    <script src="/config.js?ver=2.0.3.0920"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.3.0920"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.3.0920"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.3.0920"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=2.0.3.0920"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.3.0920"></script>
+	<script src="/js/util.js?ver=2.0.3.0920"></script>
+    <script src="/lib/dhtmlx/dhtmlx.js?ver=2.0.3.0920"></script>
+	
+    
+   <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.3.0920"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon_old.js?ver=2.0.3.0920"></script>
+   <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.3.0920"></script>
+   <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.3.0920"></script>
+   <script src="/report/dhtmlx/dhtmlxLayout/codebase/dhtmlxlayout.js?ver=2.0.3.0920"></script>
+   <script src="/report/dhtmlx/dhtmlxWindows/codebase/dhtmlxwindows.js?ver=2.0.3.0920"></script>
+   <script src="/report/dhtmlx/dhtmlxGrid/codebase/dhtmlxgrid.js?ver=2.0.3.0920"></script>
+   <script src="/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_rowspan.js?ver=2.0.3.0920"></script>
+   <script src="/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_splt.js?ver=2.0.3.0920"></script>
+   <script src="/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_srnd.js?ver=2.0.3.0920"></script>
+   <script src="/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_selection.js?ver=2.0.3.0920"></script>
+	<script src="/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_nxml.js?ver=2.0.3.0920"></script>
+	<script src="/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_mcol.js?ver=2.0.3.0920"></script>
+	<script src="/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_undo.js?ver=2.0.3.0920"></script>
+   <script src="/report/dhtmlx/dhtmlxGrid/codebase/excells/dhtmlxgrid_excell_link_OverLoad.js?ver=2.0.3.0920"></script>
+    <script src="/report/dhtmlx/dhtmlxGrid/codebase/excells/dhtmlxgrid_excell_menu.js?ver=2.0.3.0920"></script>
+   <script src="/report/dhtmlx/dhtmlxGrid/codebase/dhtmlxtreegrid.js?ver=2.0.3.0920"></script>
+   <script src="/report/dhtmlx/dhtmlxMenu/codebase/dhtmlxmenu.js?ver=2.0.3.0920"></script>
+   <script src="/report/dhtmlx/dhtmlxGrid/codebase/Base64.js?ver=2.0.3.0920"></script>
+   <script src="/report/FillReport2.2/js/libs/hwvmain.js?ver=2.0.3.0920"></script>
+    <script src="/report/FillReport2.2/js/hw/FillReport.js?ver=2.0.3.0920"></script>
+	<script src="/report/dhtmlx/dhtmlxToolbar/codebase/dhtmlxtoolbar.js?ver=2.0.3.0920"></script>
+	<script src="/report/dhtmlx/dhtmlxWindows/codebase/ext/dhtmlxwindows_dnd.js?ver=2.0.3.0920"></script>
+	<script src="/report/dhtmlx/dhtmlxWindows/codebase/ext/dhtmlxwindows_resize.js?ver=2.0.3.0920"></script>
+	<script src="/report/dhtmlx/dhtmlxWindows/codebase/ext/dhtmlxwindows_dnd.js?ver=2.0.3.0920"></script>
+	<script src="/report/dhtmlx/dhtmlxWindows/codebase/ext/dhtmlxwindows_resize.js?ver=2.0.3.0920"></script>
+	<script src="/report/dhtmlx/dhtmlxMessage/codebase/dhtmlxmessage.js?ver=2.0.3.0920"></script>
+	<script src="/report/dhtmlx/dhtmlxGrid/codebase/dhtmlxgrid_ext.js?ver=2.0.3.0920"></script>
+	<script src="/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_validation.js?ver=2.0.3.0920"></script>
+	<script src="/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_markers.js?ver=2.0.3.0920"></script>
+	<script src="/report/dhtmlx/dhtmlxCheckBox/codebase/dhtmlxcheckbox.js?ver=2.0.3.0920"></script>
+	<script src="/report/dhtmlx/dhtmlxCombo/codebase/dhtmlxcombo.js?ver=2.0.3.0920"></script>
+	<script src="/report/dhtmlx/dhtmlxGrid/codebase/excells/dhtmlxgrid_excell_combo.js?ver=2.0.3.0920"></script>
+	<script src="/report/dhtmlx/dhtmlxTree/codebase/dhtmlxtree.js?ver=2.0.3.0920"></script>
+	<script src="/report/dhtmlx/dhtmlxTree/codebase/ext/dhtmlxtree_ed.js?ver=2.0.3.0920"></script>
+	<script src="/report/dhtmlx/dhtmlxTree/codebase/ext/dhtmlxtree_json.js?ver=2.0.3.0920"></script>
+	<script src="/report/dhtmlx/dhtmlxTree/codebase/ext/dhtmlxtree_kn.js?ver=2.0.3.0920"></script>
+	<script src="/report/dhtmlx/dhtmlxCalendar/codebase/dhtmlxcalendar.js?ver=2.0.3.0920"></script>
+	<script src="/report/dhtmlx/dhtmlxForm/codebase/ext/swfobject.js?ver=2.0.3.0920"></script>
+	<script src="/report/dhtmlx/dhtmlxEditor/codebase/dhtmlxeditor.js?ver=2.0.3.0920"></script>
+	<script src="/report/dhtmlx/dhtmlxEditor/codebase/ext/dhtmlxeditor_ext.js?ver=2.0.3.0920"></script>
+	<script src="/report/dhtmlx/dhtmlxDataStore/codebase/ext/datastore_grid.js?ver=2.0.3.0920"></script>
+	<script src="/report/dhtmlx/dhtmlxDataStore/codebase/ext/datastore_combo.js?ver=2.0.3.0920"></script>
+	<script src="/report/dhtmlx/dhtmlxDataStore/codebase/ext/datastore_tree.js?ver=2.0.3.0920"></script>
+	<script src="/report/dhtmlx/dhtmlxDataStore/codebase/datastore_ext.js?ver=2.0.3.0920"></script>
+	<script src="/report/dhtmlx/dhtmlxDataStore/codebase/ext/datastore_checkbox.js?ver=2.0.3.0920"></script>
+	<script src="/report/FillReport2.2/js/libs/HwPrint.js?ver=2.0.3.0920"></script>
+	
+    <script src="/js/hwdas.js?ver=2.0.3.0920"></script>
+	<script src="/js/hwMSC.js?ver=2.0.3.0920"></script>
+    <script src="/js/vmdcore.js?ver=2.0.3.0920"></script>
+    <script src="/js/vmdcomps.js?ver=2.0.3.0920"></script>
+    <script src="/js/vmdreport.js?ver=2.0.3.0920"></script>
+	<script src="/js/publicMethods.js?ver=2.0.3.0920"></script>
+    <script src="/release/12efebd0-5bd2-4d64-8582-fe88888e55ac/config.js"></script>
+    
+
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        .marin{
+    margin-top: 10px;
+    margin-bottom: 20px;
+}
+td.x-grid3-hd-over .x-grid3-hd-inner, td.sort-desc .x-grid3-hd-inner, td.sort-asc .x-grid3-hd-inner, td.x-grid3-hd-menu-open .x-grid3-hd-inner{
+    text-align: center;
+}
+input[type="radio"] + label::before {
+    content: "\a0"; /*不换行空格*/
+    display: inline-block;
+    vertical-align: middle;
+    /*font-size: 14px;*/
+    width: 1em;
+    height: 1em;
+    margin-right: .4em;
+    border-radius: 50%;
+    border: 1px solid blue;
+    text-indent: .15em;
+    line-height: 1; 
+}
+input[type="radio"]:checked + label::before {
+    background-color: blue;
+    background-clip: content-box;
+    /*padding: .2em;*/
+}
+input[type="radio"] {
+    position: absolute;
+    clip: rect(0, 0, 0, 0);
+}
+    </style>
+    <script>
+	    
+        vmd.virtualPath = '';
+        
+        Ext.define("vmd.module.MainViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps([]),
+	xtype:"vmd.module.MainViewport",
+	layoutConfig:{
+		align:"middle",
+		pack:"center"
+	},
+	layout:"hbox",
+	autoScroll:true,
+	afterrender:"MainViewport_afterrender",
+	listeners:{
+		vmdafterrender:function(){
+	this.MainViewport_afterrender(this)
+}
+	},
+	initComponent: function(){
+		var page = this;
+var ptServer = {
+    ip: '192.168.1.180:6602',
+    callcode: 'snqtscdd',
+    schedule: 'XXHTS/schedule/taskmanager/schedandwo/schedule'
+};
+var dataList = [];
+var dateList = [];
+
+var weektody = "";
+
+function MainViewport_afterrender(sender) {
+    loadData();
+}
+
+function loadData() {
+    dataList = [];
+    var hwDao = new HwDao(ptServer.ip, ptServer.callcode); //地址:端口和授权码(服务管理员分配)
+    var url = ptServer.schedule;
+    hwDao.get(url, {}, {
+        queryflag: '1',
+        flownode: 'rwlcjd2'
+    }, function(res) {
+        if(res.isSucceed) {
+            if(res.data && res.data[0].datas.length > 0) {
+                var data = res.data[0].datas;
+                for(var i = 0; i < data.length; i++) {
+                    var itemObj = {
+                        xh: i + 1,
+                        name: data[i].planning_start_date + data[i].schedule_name,
+                        id: data[i].schedule_id,
+                        createddate: data[i].planning_start_date.substring(0, 10),
+                    }
+                    dataList.push(itemObj);
+                }
+                loadDx();
+            }
+        } else {
+            alert(res.errMsg);
+        }
+    }, function(res) {
+        alert(res);
+    });
+}
+//获取本周日期
+function loadDx() {
+    var now = new Date;
+    var day = now.getDay();
+    var week = "1234567";
+    var years = now.getFullYear();
+    var months = (now.getMonth() + 1).toString();
+    var days = now.getDate().toString();
+    if(months.length == 1) {
+        months = "0" + months;
+    }
+    if(days.length == 1) {
+        days = "0" + days;
+    }
+    var translateDate = years + "-" + months + "-" + days;
+    for(var i = 0; i < week.length; i++) {
+        var date = (week[i] - 1) - week.indexOf(day);
+        var dateString = "",
+            monthString = "",
+            dayString = "";
+        translateDate = translateDate.replace("-", "/").replace("-", "/");;
+        var newDate = new Date(translateDate);
+        newDate = newDate.valueOf();
+        if(date < 0) {
+            newDate = newDate - (-date) * 24 * 60 * 60 * 1000; //备注 如果是往前计算日期则为减号 否则为加号
+        } else {
+            newDate = newDate + date * 24 * 60 * 60 * 1000; //备注 如果是往前计算日期则为减号 否则为加号
+        }
+        newDate = new Date(newDate);
+        //如果月份长度少于2，则前加 0 补位
+        if((newDate.getMonth() + 1).toString().length == 1) {
+            monthString = 0 + "" + (newDate.getMonth() + 1).toString();
+        } else {
+            monthString = (newDate.getMonth() + 1).toString();
+        }
+        //如果天数长度少于2，则前加 0 补位
+        if(newDate.getDate().toString().length == 1) {
+            dayString = 0 + "" + newDate.getDate().toString();
+        } else {
+            dayString = newDate.getDate().toString();
+        }
+        dateString = newDate.getFullYear() + "-" + monthString + "-" + dayString;
+        dateList.push(dateString);
+    }
+
+    for(var i = 0; i < dateList.length; i++) {
+        if(i == 0) {
+            weektody = "星期一";
+        } else if(i == 1) {
+            weektody = "星期二"
+        } else if(i == 2) {
+            weektody = "星期三"
+        } else if(i == 3) {
+            weektody = "星期四"
+        } else if(i == 4) {
+            weektody = "星期五"
+        } else if(i == 5) {
+            weektody = "星期六"
+        } else if(i == 6) {
+            weektody = "星期日"
+        }
+        var pan = 'pan' + i;
+        var grid = 'grid' + i;
+        var store = 'store' + i;
+        var time = dateList[i];
+        setDx(pan, grid, store, time);
+    }
+    loadbeforferReport();
+}
+
+//动态创建对象
+var storList = [];
+
+function setDx(pans, grids, stores, time) {
+    storList = [];
+    var stores = new Ext.data.Store({ //Ext.data.Store创建一个存储对象，store负责把各种各样的数据(array,json)转换成Ext.data.Record
+        proxy: new Ext.data.MemoryProxy(), //定义代理
+        reader: new Ext.data.JsonReader({}, [ //Ext.data.ArrayReader用来解析数组
+            {
+                name: 'id'
+            }, //这里可以使用mapping来指定数据的位置，如果想把数组中的第2个元素映射成id，mapping：1
+            {
+                name: 'name'
+            }
+        ]),
+        sortInfo: {
+            field: 'name',
+            direction: 'ASC'
+        } //解决中文排序
+    });
+
+    for(var n = 0; n < dataList.length; n++) {
+        if(dataList[n].createddate == time) {
+            if(n == 0) {
+                var itemObj = {
+                    xh: n + 1,
+                    name: "<input type='radio' onclick='radioLink(this);' style='text-align:center;margin-right:10px;' name='rw'  id='man" + n + "' checked/><label for='man" + n + "'>" + dataList[n].name + "</label>",
+                    id: dataList[n].id,
+                    createddate: dataList[n].createddate,
+                }
+            } else {
+                var itemObj = {
+                    xh: n + 1,
+                    name: "<input type='radio' onclick='radioLink(this);' style='text-align:center;margin-right:10px;' name='rw'  id='man" + n + "' /><label for='man" + n + "'>" + dataList[n].name + "</label>",
+                    id: dataList[n].id,
+                    createddate: dataList[n].createddate,
+                }
+            }
+            storList.push(itemObj)
+        }
+    }
+
+    var pans = new Ext.Panel({
+        margins: {
+            top: 10,
+            right: 10,
+            bottom: 10,
+            left: 10
+        },
+        flex: 1,
+        style: 'border: 1px solid #e4e4e4;margin:0px 0px 5px 7px;',
+        height: 210,
+        width: 280,
+        layout: 'fit'
+    });
+    var sm = new Ext.grid.RowSelectionModel({
+        //singleSelect: true
+    }) //设置单选
+    var cm = new Ext.grid.ColumnModel([
+        // new Ext.grid.RowNumberer(), //显示行号  
+        //sm,
+        {
+            header: '',
+            hidden: true,
+            dataIndex: 'id',
+        },
+        {
+            header: "<span style='font-size:14px;'>" + weektody + "</span>" + "<span style='font-size:14px;margin-left:5px;'>" + time + "</span>" + "<span style='font-size:14px;margin-left:5px;'>(共" + storList.length + "个)</span>",
+            dataIndex: "name"
+        }
+    ])
+    var grids = new Ext.grid.GridPanel({
+        height: 500,
+        enableColumnMove: false,
+        enableColumnResize: false, //是否允许调整列宽
+        stripeRows: true, //是否显示斑马纹
+        renderTo: Ext.getBody(),
+        store: stores,
+        cm: cm,
+        //sm: sm,
+        viewConfig: {
+            forceFit: true
+        }, //列宽自适应
+        // autoExpandColumn: 'name' //让指定的列自动伸展，如果宽度不够用，那么自动加宽
+    });
+
+    pans.add(grids);
+    panel2.add(pans);
+    panel2.doLayout();
+    stores.loadData(storList);
+}
+
+function panel_beforerender(sender) {
+    var today = new Date();
+    var years = today.getFullYear();
+    var firstDay = new Date(today.getFullYear(), 0, 1);
+    var dayOfWeek = firstDay.getDay(); 
+    var spendDay = 1;
+    if(dayOfWeek != 0) {
+        spendDay = 7 - dayOfWeek + 1;
+    }
+    firstDay = new Date(today.getFullYear(), 0, 1 + spendDay);
+    var d = Math.ceil((today.valueOf() - firstDay.valueOf()) / 86400000);
+    var result = Math.ceil(d / 7);
+    panel.title = "当前是" + years + "年第" + (result + 1) + "周，您的工作安排如下：";
+}
+window.radioLink = function(ob) {
+    var tr = $(ob).closest('tr'),
+        id = tr.find('td')[0].innerText;
+    rwid.setValue(id);
+    loadReport();
+}
+
+function loadReport(sender) {
+    report.query();
+}
+function loadbeforferReport(sender) {
+    //获取默认值
+    vmd('input:radio:checked').click();
+}
+			this.MainViewport_afterrender=MainViewport_afterrender;
+		rwid=new vmd.var.variable({});
+
+		任务信息=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"任务信息","autoLoad":false,"cid":"vmdJsonStore","storeConfig":"{\"id\":\"l714sAx0eh\",\"callcode\":\"vmdCode\",\"url\":\"XXHTS/schedule/taskmanager/schedandwo/schedule\",\"host\":\"\",\"isHwRest\":true,\"name\":\"任务信息\",\"getMethods\":[{\"id\":\"queryflag\",\"value1\":\"\",\"value2\":\"\",\"defaultvalue\":\"\"},{\"id\":\"userlogin\",\"value1\":\"\",\"value2\":\"\",\"defaultvalue\":\"@login\"},{\"id\":\"dwdm\",\"value1\":\"\",\"value2\":\"\",\"defaultvalue\":\"\"},{\"id\":\"schetype\",\"value1\":\"\",\"value2\":\"\",\"defaultvalue\":\"\"},{\"id\":\"createdate\",\"value1\":\"\",\"value2\":\"\",\"defaultvalue\":\"\"},{\"id\":\"datestart\",\"value1\":\"\",\"value2\":\"\",\"defaultvalue\":\"\"},{\"id\":\"dateend\",\"value1\":\"\",\"value2\":\"\",\"defaultvalue\":\"\"},{\"id\":\"execteam\",\"value1\":\"\",\"value2\":\"\",\"defaultvalue\":\"\"},{\"id\":\"scheid\",\"value1\":\"return  rwid.getValue();\",\"value2\":\"\",\"defaultvalue\":\"\"},{\"id\":\"flownode\",\"value1\":\"\",\"value2\":\"\",\"defaultvalue\":\"\"},{\"id\":\"state\",\"value1\":\"\",\"value2\":\"\",\"defaultvalue\":\"\"},{\"id\":\"applicationid\",\"value1\":\"\",\"value2\":\"\",\"defaultvalue\":\"\"},{\"id\":\"adminflag\",\"value1\":\"\",\"value2\":\"\",\"defaultvalue\":\"\"},{\"id\":\"login\",\"value1\":\"\",\"value2\":\"\",\"defaultvalue\":\"@login\"}],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"schedule_id\",\"type\":\"string\"},{\"name\":\"schedule_name\",\"type\":\"string\"},{\"name\":\"schedule_no\",\"type\":\"string\"},{\"name\":\"schedule_type\",\"type\":\"string\"},{\"name\":\"schedule_type_name\",\"type\":\"string\"},{\"name\":\"schedule_time_limit\",\"type\":\"int16\"},{\"name\":\"sched_time_limit_unit\",\"type\":\"string\"},{\"name\":\"schedule_time\",\"type\":\"string\"},{\"name\":\"work_order_count\",\"type\":\"decimal\"},{\"name\":\"work_order_complete_count\",\"type\":\"decimal\"},{\"name\":\"exec_org\",\"type\":\"string\"},{\"name\":\"exec_org_name\",\"type\":\"string\"},{\"name\":\"distribute_person\",\"type\":\"string\"},{\"name\":\"distribute_date\",\"type\":\"string\"},{\"name\":\"exec_team\",\"type\":\"string\"},{\"name\":\"exec_class\",\"type\":\"string\"},{\"name\":\"exec_user\",\"type\":\"string\"},{\"name\":\"planning_start_date\",\"type\":\"string\"},{\"name\":\"planning_end_date\",\"type\":\"string\"},{\"name\":\"schedule_status\",\"type\":\"string\"},{\"name\":\"schedule_status_code\",\"type\":\"string\"},{\"name\":\"schedule_requirement\",\"type\":\"string\"},{\"name\":\"schedule_feedback\",\"type\":\"string\"},{\"name\":\"actual_start_date\",\"type\":\"string\"},{\"name\":\"actual_end_date\",\"type\":\"string\"},{\"name\":\"active_ind\",\"type\":\"string\"},{\"name\":\"create_user\",\"type\":\"string\"},{\"name\":\"create_user_name\",\"type\":\"string\"},{\"name\":\"create_org\",\"type\":\"string\"},{\"name\":\"create_org_name\",\"type\":\"string\"},{\"name\":\"create_date\",\"type\":\"string\"},{\"name\":\"terminate_reason\",\"type\":\"string\"},{\"name\":\"terminate_date\",\"type\":\"string\"},{\"name\":\"sche_distr_reason\",\"type\":\"string\"},{\"name\":\"sche_distr_date\",\"type\":\"string\"},{\"name\":\"audit_person\",\"type\":\"string\"},{\"name\":\"audit_date\",\"type\":\"string\"},{\"name\":\"flowtask_id\",\"type\":\"string\"},{\"name\":\"applicationid\",\"type\":\"string\"}]}"});
+		工单信息=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"工单信息","autoLoad":false,"cid":"vmdJsonStore","storeConfig":"{\"id\":\"l789dqW8ts\",\"callcode\":\"vmdCode\",\"url\":\"XXHTS/schedule/taskmanager/schedandwo/workorder\",\"host\":\"\",\"isHwRest\":true,\"name\":\"工单信息\",\"getMethods\":[{\"id\":\"scheid\",\"value1\":\"\",\"value2\":\"\",\"defaultvalue\":\"\"},{\"id\":\"woid\",\"value1\":\"return  rwid.getValue();\",\"value2\":\"\",\"defaultvalue\":\"\"},{\"id\":\"wostatus\",\"value1\":\"\",\"value2\":\"\",\"defaultvalue\":\"\"}],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"work_order_id\",\"type\":\"string\"},{\"name\":\"work_order_name\",\"type\":\"string\"},{\"name\":\"schedule_no\",\"type\":\"string\"},{\"name\":\"work_order_number\",\"type\":\"string\"},{\"name\":\"wo_obj\",\"type\":\"string\"},{\"name\":\"executive_org\",\"type\":\"string\"},{\"name\":\"executive_org_name\",\"type\":\"string\"},{\"name\":\"executive_team\",\"type\":\"string\"},{\"name\":\"executive_class\",\"type\":\"string\"},{\"name\":\"executive_person\",\"type\":\"string\"},{\"name\":\"work_order_status\",\"type\":\"string\"},{\"name\":\"all_count\",\"type\":\"decimal\"},{\"name\":\"abnormal_count\",\"type\":\"decimal\"},{\"name\":\"risk_prompt\",\"type\":\"string\"},{\"name\":\"schedule_requirement\",\"type\":\"string\"},{\"name\":\"planning_start_date\",\"type\":\"string\"},{\"name\":\"planning_end_date\",\"type\":\"string\"},{\"name\":\"schedule_time_limit\",\"type\":\"int16\"},{\"name\":\"sched_time_limit_unit\",\"type\":\"string\"},{\"name\":\"actual_start_date\",\"type\":\"string\"},{\"name\":\"actual_end_date\",\"type\":\"string\"},{\"name\":\"audit_person\",\"type\":\"string\"},{\"name\":\"audit_date\",\"type\":\"string\"}]}"});
+
+
+		this.items=[
+			{
+				xtype:"panel",
+				id:"panel",
+				title:"Panel",
+				header:true,
+				border:true,
+				height:900,
+				x:0,
+				y:0,
+				autoHeight:false,
+				width:1160,
+				layout:"border",
+				autoScroll:true,
+				beforerender:"panel_beforerender",
+				cls:"marin",
+				listeners:{
+					beforerender:panel_beforerender
+				},
+				items:[
+					{
+						xtype:"panel",
+						id:"panel1",
+						title:"Panel",
+						header:false,
+						border:true,
+						region:"center",
+						layout:"fit",
+						style:"padding: 0px 0px 5px 0px;",
+						items:[
+							{
+								xtype:"vmd.report2_2",
+								id:"report",
+								text:"report",
+								relativepath:"Resources//Report",
+								align:"center",
+								fillReport:false,
+								nousedataset:false,
+								rptVersion:"2.3",
+								path:"周任务.xml",
+								dsnames:"任务信息,工单信息"
+							}
+						]
+					},
+					{
+						xtype:"panel",
+						id:"panel2",
+						layoutConfig:{
+							columns:2
+						},
+						title:"Panel",
+						header:false,
+						border:true,
+						height:500,
+						x:460,
+						y:40,
+						region:"west",
+						width:580,
+						layout:"table"
+					}
+				]
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+	}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MainViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

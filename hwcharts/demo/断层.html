@@ -1,0 +1,81 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>line示例</title>
+    <!--<script src="../js/core/base.js"></script>-->
+    <script src="../js/core/base.min.js"></script>
+
+    <script src="../js/core/base-ext.js"></script>
+    <!--zrender-->
+    <script src="../lib/zrender/dist/zrender.js"></script>
+    <!--hwchart-->
+    <script src="../js/hwcharts.js"></script>
+    <!-- hwDas -->
+    <script src="../js/hwDas.js"></script>
+    <!-- dhtml -->
+    <script src="../lib/dhtmlx/codebase/dhtmlx.js"></script>
+    <link rel="stylesheet" href="../lib/dhtmlx/codebase/dhtmlx.css">
+    <link rel="stylesheet" href="../lib/dhtmlx/skins/terrace/dhtmlx.css">
+    <link rel="stylesheet" href="../lib/dhtmlx/skins/skyblue/dhtmlx.css">
+    <style>
+    html,
+    body,
+    #main {
+        width: 100%;
+        height: 100%;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="info"></div>
+    <div id="main"></div>
+   
+    <script>
+        Vmd.onReady(function () {
+           
+           Vmd.require([
+                'hwchart.component.Geo',
+                'hwchart.component.Frame',
+                'hwchart.chart.WellGroup',
+                'hwchart.component.Legend',
+                'hwchart.chart.WellSymbol',
+                'hwchart.chart.WellTrace',
+                'hwchart.chart.WellLabel',
+                'hwchart.chart.IsoLine',
+                'hwchart.chart.FaultLine',
+                'hwchart.chart.SymbolLine',
+                'hwchart.component.Title',
+                'hwchart.component.MapInfo',
+                'hwchart.chart.MiningIndex',
+                'hwchart.chart.IsoArea',
+                'hwchart.component.VisualMap',
+                'hwchart.component.Graphic'
+           ], function () {
+                var chart=hwcharts.init(document.getElementById('main'));
+                var path = hwchartsPATH + '/templates/defaults/断层.json';
+                chart.loadTemplate(path,{
+                    host:'www.hanweikeji.com:8050',
+                    GeologyAlgorithmHost:'192.168.1.186:5015/GeologyAlgorithm',
+                    callCode:'txwebh',
+                    timeout:60*1000 ,
+                    params:{
+                        dwdm:'J_154_14'
+                    }
+                })
+                //window.onresize = chart.resize
+                // var dataParse = new hwchart.util.DataParse();
+                // setTimeout(function(){
+                //     console.log(chart.getOption())
+                // },3000)
+                
+                // dataParse.parse(path, {}, chart)
+                
+          })
+        });
+    </script>
+</body>
+
+</html>

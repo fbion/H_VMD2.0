@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>日期有效期组件与报表的使用</title>
+    
+    <!--基本样式-->
+    <link href="{virtualPath}/css/common.css?ver=2.0.3.20190124" rel="stylesheet" />
+
+    <!--加载dhx组件-->
+    
+    <link href="{virtualPath}/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.3.20190124" rel="stylesheet" />
+    
+    <link href="{virtualPath}/lib/dhtmlx/dhtmlx.css?ver=2.0.3.20190124" rel="stylesheet" />
+	<link href="{virtualPath}/report/dhtmlx/dhtmlxGrid/codebase/skins/dhtmlxgrid_dhx_skyblue.css?ver=2.0.3.20190124" rel="stylesheet" />
+	<link href="{virtualPath}/report/dhtmlx/dhtmlxGrid/codebase/skins/dhtmlxgrid_default.css?ver=2.0.3.20190124" rel="stylesheet" />
+	<link href="{virtualPath}/report/dhtmlx/dhtmlxCheckBox/codebase/skins/dhtmlxcheckbox_dhx_skyblue.css?ver=2.0.3.20190124" rel="stylesheet" />
+	<link href="{virtualPath}/report/FillReport2.2/js/Adjustment.css?ver=2.0.3.20190124" rel="stylesheet" />
+    <!--样式快捷索引表-->
+    <link href="{virtualPath}/css/shortcut.css?ver=2.0.3.20190124" rel="stylesheet" />
+	 
+    <script src="{virtualPath}/lib/labjs/LAB.min.js?ver=2.0.3.20190124"></script>
+    <script src="{virtualPath}/config.js?ver=2.0.3.20190124"></script>
+    <script src="{virtualPath}/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.3.20190124"></script>
+    <script src="{virtualPath}/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.3.20190124"></script>
+    <script src="{virtualPath}/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.3.20190124"></script>
+    <script src="{virtualPath}/lib/ext-3.4/ext-all-debug.js?ver=2.0.3.20190124"></script>
+    <script src="{virtualPath}/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.3.20190124"></script>
+	<script src="{virtualPath}/js/util.js?ver=2.0.3.20190124"></script>
+    <script src="{virtualPath}/lib/dhtmlx/dhtmlx.js?ver=2.0.3.20190124"></script>
+	
+    
+   <script src="{virtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.3.20190124"></script>
+    <script src="{virtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon_old.js?ver=2.0.3.20190124"></script>
+   <script src="{virtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.3.20190124"></script>
+   <script src="{virtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.3.20190124"></script>
+   <script src="{virtualPath}/report/dhtmlx/dhtmlxLayout/codebase/dhtmlxlayout.js?ver=2.0.3.20190124"></script>
+   <script src="{virtualPath}/report/dhtmlx/dhtmlxWindows/codebase/dhtmlxwindows.js?ver=2.0.3.20190124"></script>
+   <script src="{virtualPath}/report/dhtmlx/dhtmlxGrid/codebase/dhtmlxgrid.js?ver=2.0.3.20190124"></script>
+   <script src="{virtualPath}/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_rowspan.js?ver=2.0.3.20190124"></script>
+   <script src="{virtualPath}/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_splt.js?ver=2.0.3.20190124"></script>
+   <script src="{virtualPath}/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_srnd.js?ver=2.0.3.20190124"></script>
+   <script src="{virtualPath}/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_selection.js?ver=2.0.3.20190124"></script>
+	<script src="{virtualPath}/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_nxml.js?ver=2.0.3.20190124"></script>
+	<script src="{virtualPath}/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_mcol.js?ver=2.0.3.20190124"></script>
+	<script src="{virtualPath}/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_undo.js?ver=2.0.3.20190124"></script>
+   <script src="{virtualPath}/report/dhtmlx/dhtmlxGrid/codebase/excells/dhtmlxgrid_excell_link_OverLoad.js?ver=2.0.3.20190124"></script>
+    <script src="{virtualPath}/report/dhtmlx/dhtmlxGrid/codebase/excells/dhtmlxgrid_excell_menu.js?ver=2.0.3.20190124"></script>
+   <script src="{virtualPath}/report/dhtmlx/dhtmlxGrid/codebase/dhtmlxtreegrid.js?ver=2.0.3.20190124"></script>
+   <script src="{virtualPath}/report/dhtmlx/dhtmlxMenu/codebase/dhtmlxmenu.js?ver=2.0.3.20190124"></script>
+   <script src="{virtualPath}/report/dhtmlx/dhtmlxGrid/codebase/Base64.js?ver=2.0.3.20190124"></script>
+   <script src="{virtualPath}/report/FillReport2.2/js/libs/hwvmain.js?ver=2.0.3.20190124"></script>
+    <script src="{virtualPath}/report/FillReport2.2/js/hw/FillReport.js?ver=2.0.3.20190124"></script>
+	<script src="{virtualPath}/report/dhtmlx/dhtmlxToolbar/codebase/dhtmlxtoolbar.js?ver=2.0.3.20190124"></script>
+	<script src="{virtualPath}/report/dhtmlx/dhtmlxWindows/codebase/ext/dhtmlxwindows_dnd.js?ver=2.0.3.20190124"></script>
+	<script src="{virtualPath}/report/dhtmlx/dhtmlxWindows/codebase/ext/dhtmlxwindows_resize.js?ver=2.0.3.20190124"></script>
+	<script src="{virtualPath}/report/dhtmlx/dhtmlxWindows/codebase/ext/dhtmlxwindows_dnd.js?ver=2.0.3.20190124"></script>
+	<script src="{virtualPath}/report/dhtmlx/dhtmlxWindows/codebase/ext/dhtmlxwindows_resize.js?ver=2.0.3.20190124"></script>
+	<script src="{virtualPath}/report/dhtmlx/dhtmlxMessage/codebase/dhtmlxmessage.js?ver=2.0.3.20190124"></script>
+	<script src="{virtualPath}/report/dhtmlx/dhtmlxGrid/codebase/dhtmlxgrid_ext.js?ver=2.0.3.20190124"></script>
+	<script src="{virtualPath}/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_validation.js?ver=2.0.3.20190124"></script>
+	<script src="{virtualPath}/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_markers.js?ver=2.0.3.20190124"></script>
+	<script src="{virtualPath}/report/dhtmlx/dhtmlxCheckBox/codebase/dhtmlxcheckbox.js?ver=2.0.3.20190124"></script>
+	<script src="{virtualPath}/report/dhtmlx/dhtmlxCombo/codebase/dhtmlxcombo.js?ver=2.0.3.20190124"></script>
+	<script src="{virtualPath}/report/dhtmlx/dhtmlxGrid/codebase/excells/dhtmlxgrid_excell_combo.js?ver=2.0.3.20190124"></script>
+	<script src="{virtualPath}/report/dhtmlx/dhtmlxTree/codebase/dhtmlxtree.js?ver=2.0.3.20190124"></script>
+	<script src="{virtualPath}/report/dhtmlx/dhtmlxTree/codebase/ext/dhtmlxtree_ed.js?ver=2.0.3.20190124"></script>
+	<script src="{virtualPath}/report/dhtmlx/dhtmlxTree/codebase/ext/dhtmlxtree_json.js?ver=2.0.3.20190124"></script>
+	<script src="{virtualPath}/report/dhtmlx/dhtmlxTree/codebase/ext/dhtmlxtree_kn.js?ver=2.0.3.20190124"></script>
+	<script src="{virtualPath}/report/dhtmlx/dhtmlxCalendar/codebase/dhtmlxcalendar.js?ver=2.0.3.20190124"></script>
+	<script src="{virtualPath}/report/dhtmlx/dhtmlxForm/codebase/ext/swfobject.js?ver=2.0.3.20190124"></script>
+	<script src="{virtualPath}/report/dhtmlx/dhtmlxEditor/codebase/dhtmlxeditor.js?ver=2.0.3.20190124"></script>
+	<script src="{virtualPath}/report/dhtmlx/dhtmlxEditor/codebase/ext/dhtmlxeditor_ext.js?ver=2.0.3.20190124"></script>
+	<script src="{virtualPath}/report/dhtmlx/dhtmlxDataStore/codebase/ext/datastore_grid.js?ver=2.0.3.20190124"></script>
+	<script src="{virtualPath}/report/dhtmlx/dhtmlxDataStore/codebase/ext/datastore_combo.js?ver=2.0.3.20190124"></script>
+	<script src="{virtualPath}/report/dhtmlx/dhtmlxDataStore/codebase/ext/datastore_tree.js?ver=2.0.3.20190124"></script>
+	<script src="{virtualPath}/report/dhtmlx/dhtmlxDataStore/codebase/datastore_ext.js?ver=2.0.3.20190124"></script>
+	<script src="{virtualPath}/report/dhtmlx/dhtmlxDataStore/codebase/ext/datastore_checkbox.js?ver=2.0.3.20190124"></script>
+	<script src="{virtualPath}/report/FillReport2.2/js/libs/HwPrint.js?ver=2.0.3.20190124"></script>
+	
+    <script src="{virtualPath}/js/hwdas.js?ver=2.0.3.20190124"></script>
+	<script src="{virtualPath}/js/hwMSC.js?ver=2.0.3.20190124"></script>
+    <script src="{virtualPath}/js/vmdcore.js?ver=2.0.3.20190124"></script>
+    <script src="{virtualPath}/js/vmdcomps.js?ver=2.0.3.20190124"></script>
+    <script src="{virtualPath}/js/vmdreport.js?ver=2.0.3.20190124"></script>
+	<script src="{virtualPath}/js/publicMethods.js?ver=2.0.3.20190124"></script>
+    {workspacePath}
+    
+
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        
+    </style>
+    <script>
+	    
+        vmd.virtualPath = '{virtualPath}';
+        
+        Ext.define("vmd.module.MainViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps(["vmd.ux.DatePicker$1.0$DatePicker"]),
+	xtype:"vmd.module.MainViewport",
+	layout:"absolute",
+	initComponent: function(){
+		function report_afterrender(sender) {
+    report.query(function() {
+        div.doLayout()
+    })
+}
+	
+
+
+		this.items=[
+			{
+				xtype:"vmd.ux.DatePicker",
+				id:"hwDatePicker",
+				layout:"auto",
+				x:190,
+				y:120,
+				width:420
+			},
+			{
+				xtype:"vmd.div",
+				id:"div",
+				autoEl:"div",
+				border:true,
+				backgroundRepeat:"no-repeat",
+				backgroundPosition:"top left",
+				width:400,
+				height:400,
+				layout:"fit",
+				items:[
+					{
+						xtype:"vmd.report2_2",
+						id:"report",
+						text:"report",
+						relativepath:"Resources//Report",
+						align:"center",
+						fillReport:false,
+						nousedataset:false,
+						isServer:true,
+						ocx_version:"1,1,5,16",
+						rptVersion:"2.2",
+						x:190,
+						y:270,
+						isWebEdit:false,
+						afterrender:"report_afterrender",
+						listeners:{
+							vmdafterrender:report_afterrender
+						}
+					}
+				]
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+	}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MainViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

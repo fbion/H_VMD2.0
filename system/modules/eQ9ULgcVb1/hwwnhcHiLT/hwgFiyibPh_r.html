@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>消息推送测试1</title>
+	<!--基本样式-->
+    <link href="{virtualPath}/css/common.css?ver=2.0.3.09152" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="{virtualPath}/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.3.09152" rel="stylesheet" />
+   
+    <link href="{virtualPath}/design/css/icons.css?ver=2.0.3.09152" rel="stylesheet" />
+
+	<link href="{virtualPath}/lib/dhtmlx/dhtmlx.css?ver=2.0.3.09152" rel="stylesheet" />
+	  <!--样式快捷索引表-->
+    <link href="{virtualPath}/css/shortcut.css?ver=2.0.3.09152" rel="stylesheet" />
+    
+    <script src="{virtualPath}/lib/labjs/LAB.min.js?ver=2.0.3.09152"></script>
+    <script src="{virtualPath}/config.js?ver=2.0.3.09152"></script>
+    <script src="{virtualPath}/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.3.09152"></script>
+    <script src="{virtualPath}/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.3.09152"></script>
+    <script src="{virtualPath}/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.3.09152"></script>
+    <script src="{virtualPath}/lib/ext-3.4/ext-all-debug.js?ver=2.0.3.09152"></script>
+    <script src="{virtualPath}/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.3.09152"></script>
+    <script src="{virtualPath}/js/util.js?ver=2.0.3.09152"></script>
+    <script src="{virtualPath}/lib/dhtmlx/dhtmlx.js?ver=2.0.3.09152"></script>
+	<script src="{virtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.3.09152"></script>
+	<script src="{virtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.3.09152"></script>
+    <script src="{virtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.3.09152"></script>
+	<script src="{virtualPath}/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.3.09152"></script>
+    <script src="{virtualPath}/js/hwdas.js?ver=2.0.3.09152"></script>
+	<script src="{virtualPath}/js/hwMSC.js?ver=2.0.3.09152"></script>
+    <script src="{virtualPath}/js/vmdcore.js?ver=2.0.3.09152"></script>
+    <script src="{virtualPath}/js/vmdcomps.js?ver=2.0.3.09152"></script>
+    <script src="{virtualPath}/js/publicMethods.js?ver=2.0.3.09152"></script>
+    <script src="{virtualPath}/js/vmdreport.js?ver=2.0.3.09152"></script>
+    {workspacePath}
+
+    <script src="{virtualPath}/lib/ace/ace.js"></script>
+    <script src="{virtualPath}/lib/ace/mode-base.js" type="text/javascript"></script>
+    <script src="{virtualPath}/lib/ace/theme-xcode.js" type="text/javascript" ></script>
+    <script src="{virtualPath}/lib/ace/ext-language_tools.js"></script>
+    
+
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        
+    </style>
+    <script>
+	    
+        vmd.virtualPath = '{virtualPath}';
+        
+        Ext.define("vmd.module.MainViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps([]),
+	xtype:"vmd.module.MainViewport",
+	layout:"absolute",
+	beforerender:"MainViewport_beforerender",
+	afterrender:"MainViewport_afterrender",
+	initComponent: function(){
+		var isConnect = false;
+var tt;
+var client = 'huangnanan'; // 终端id
+var destination = "lsj"; // 主题id
+var isConnecting = false; 
+var hwMqttClient;
+var num = 0;
+// 客户端初始化
+hwMqttClient = hwMSC.MQTTInit(client);
+ // 连接
+function button_click(sender, e) {
+
+    hwMSC.MQTTConnect(hwMqttClient, 30, 10, onConnect, onFailure, onMessageArrived, onConnectionLost);
+
+}
+
+// 订阅
+function button1_click(sender, e) {
+
+    hwMSC.MQTTSubscribe(hwMqttClient, destination, 2, onSubSuccess, onSubError)
+
+}
+
+// 推送
+function button2_click(sender, e) {
+    num++;
+    hwMSC.MQTTSendMsg(hwMqttClient, destination, "web send" + num)
+}
+
+// 断开连接
+function button3_click(sender, e) {
+    
+    hwMSC.MQTTDisconnect(hwMqttClient)
+}
+
+
+
+
+var onSubSuccess = function(result) {
+    console.log(result);
+}
+
+var onSubError = function(result) {
+    console.log('===sub error==')
+}
+
+
+var onConnect = function(frame) {
+    console.log("connected to MQTT");
+    isConnect = true;
+};
+
+function onFailure(failure) {
+
+    //          isConnect = false;
+    //首先判断是否是连接状态   连接状态不作处理
+    if(!isConnect) {
+        //如果连接中 不提示
+        if(!isConnecting) {
+            //此处提醒用户是否重连 可以确认后 手动执行重连方法
+            console.log(failure.errorMessage);
+        } else {
+            console.log("重连中...");
+        }
+
+    }
+}
+
+function onMessageArrived(message) {
+    alert("onMessageArrived:" + message.payloadString);
+    
+
+}
+
+function onConnectionLost(responseObject) {
+    console.log("connectionLost");
+    isConnect = false;
+    //判断断开状态码   0位正常断开   不做重连
+    if(responseObject.errorCode !== 0) {
+        console.log(client.clientId + ": " + responseObject.errorCode + "\n");
+        //断线重连
+        reconnect()
+
+    }
+}
+//封装重连事件
+function reconnect() {
+    //重连计数
+    var i = 0;
+    // 开启重连定时器    没连接上会一直重连，设置延迟避免请求过多
+    tt = setInterval(function() {
+        if(!isConnect) {
+            i++;
+            console.log("连接失败,正在第" + i + "次尝试" + "\n");
+            hwMSC.MQTTConnect(hwMqttClient, 30, 10, onConnect, onFailure, onMessageArrived, onConnectionLost);
+            //连接中状态  方便连接失败提示
+            isConnecting = true;
+        } else {
+            //清除定时器
+            clearInterval(tt);
+            isConnecting = false;
+        }
+    }, 3000);
+}
+
+	
+
+
+		this.items=[
+			{
+				xtype:"vmd.button",
+				id:"button",
+				text:"连接",
+				type:"(none)",
+				size:"small",
+				x:70,
+				y:90,
+				click:"button_click",
+				listeners:{
+					click:button_click
+				}
+			},
+			{
+				xtype:"vmd.button",
+				id:"button1",
+				text:"订阅",
+				type:"(none)",
+				size:"small",
+				x:70,
+				y:150,
+				click:"button1_click",
+				listeners:{
+					click:button1_click
+				}
+			},
+			{
+				xtype:"vmd.button",
+				id:"button2",
+				text:"推送",
+				type:"(none)",
+				size:"small",
+				x:70,
+				y:200,
+				click:"button2_click",
+				listeners:{
+					click:button2_click
+				}
+			},
+			{
+				xtype:"vmd.button",
+				id:"button3",
+				text:"断开连接",
+				type:"(none)",
+				size:"small",
+				x:60,
+				y:250,
+				click:"button3_click",
+				listeners:{
+					click:button3_click
+				}
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+	}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MainViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

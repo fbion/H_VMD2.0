@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>项目注册发布</title>
+	<!--基本样式-->
+    <link href="/css/common.css?ver=2.0.3.092701" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.3.092701" rel="stylesheet" />
+   
+    <link href="/design/css/icons.css?ver=2.0.3.092701" rel="stylesheet" />
+
+	<link href="/lib/dhtmlx/dhtmlx.css?ver=2.0.3.092701" rel="stylesheet" />
+	  <!--样式快捷索引表-->
+    <link href="/css/shortcut.css?ver=2.0.3.092701" rel="stylesheet" />
+    
+    <script src="/lib/labjs/LAB.min.js?ver=2.0.3.092701"></script>
+    <script src="/config.js?ver=2.0.3.092701"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.3.092701"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.3.092701"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.3.092701"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=2.0.3.092701"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.3.092701"></script>
+    <script src="/js/util.js?ver=2.0.3.092701"></script>
+    <script src="/lib/dhtmlx/dhtmlx.js?ver=2.0.3.092701"></script>
+	<script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.3.092701"></script>
+	<script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.3.092701"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.3.092701"></script>
+	<script src="/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.3.092701"></script>
+    <script src="/js/hwdas.js?ver=2.0.3.092701"></script>
+	<script src="/js/hwMSC.js?ver=2.0.3.092701"></script>
+    <script src="/js/vmdcore.js?ver=2.0.3.092701"></script>
+    <script src="/js/vmdcomps.js?ver=2.0.3.092701"></script>
+    <script src="/js/publicMethods.js?ver=2.0.3.092701"></script>
+    <script src="/js/vmdreport.js?ver=2.0.3.092701"></script>
+    
+
+    <script src="/lib/ace/ace.js"></script>
+    <script src="/lib/ace/mode-base.js" type="text/javascript"></script>
+    <script src="/lib/ace/theme-xcode.js" type="text/javascript" ></script>
+    <script src="/lib/ace/ext-language_tools.js"></script>
+    
+
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        .title{
+    font-size: 14px;
+}
+    </style>
+    <script>
+	    vmd.preivewMode=true;
+        vmd.virtualPath = '';
+        vmd.workspace={"workspaceid":"290c7de6-2922-4ffe-81c4-18ee7b97d168","projectid":"eQ9ULgcVb1","workflowIp":"","dataServiceIp":""}
+	vmd.resourceSettings={"资源中心&&资源中心服务器":"http://www.hanweikeji.com:10050/resource","资源中心&&服务器2":"http://www.hanweikeji.com:10050/resource"}
+        Ext.define("vmd.module.MyViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps([]),
+	xtype:"vmd.module.MyViewport",
+	layout:"border",
+	beforerender:"MyViewport_beforerender",
+	afterrender:"MyViewport_afterrender",
+	listeners:{
+		beforerender:function(){
+	this.MyViewport_beforerender(this)
+},
+		vmdafterrender:function(){
+	this.MyViewport_afterrender(this)
+}
+	},
+	initComponent: function(){
+		var project_id, project_name, myMask;
+// 项目注册信息
+var subsysid, pttype, ptdb, virtualPath, resourceserver, objlistResourceNameIP = {};
+
+function MyViewport_beforerender(sender) {
+    project_id = vmd.getUrlParam('project_id');
+    project_name = parent.projectName;
+    subsysid = parent.subsysid;
+    pttype = parent.pttype;
+    ptdb = parent.ptdb;
+    virtualPath = parent.virtualPath;
+    resourceserver = JSON.parse(parent.resourceserver);
+    resourceserver.forEach(function(item, index) {
+        objlistResourceNameIP[item.name] = "http://" + item.newip + "/resource";
+    })
+}
+
+function MyViewport_afterrender(sender) {
+    // 根据项目id获取注册配置信息
+    // hwDas.get("DataServiceWorkSpace/projectInfo/projectreginfo", {}, {
+    //     projectid: project_id
+    // }, function(result) {
+    //     console.log(result)
+    //     if(result.data && result.data.length > 0 && result.data[0].datas && result.data[0].datas.length > 0) {
+    //         subsysid = result.data[0].datas[0].subsysid;
+    //         pttype = result.data[0].datas[0].pttype;
+    //         ptdb = result.data[0].datas[0].ptdb;
+    //         virtualPath = result.data[0].datas[0].virtualdir;
+    //     } else {
+    //         vmd.alert('提示', '请先对该项目进行注册信息配置',function(){
+    //             parent.porjectRegister.hide();
+    //         });
+    //     }
+    // })
+}
+
+function projectTree_afterrender(sender) {
+    projectTree.enableThreeStateCheckboxes(true);
+    changeData()
+}
+
+// 获取项目模块
+function changeData() {
+    var mytree = projectTree;
+    var firstNode = "";
+    mytree.deleteChildItems(0);
+    mytree.loadJSONObject({
+        id: 0,
+        text: "我的项目",
+        item: []
+    });
+    mytree.itemObj = {};
+    mytree.newnode = false;
+    if(project_id != '') {
+        mytree.insertNewChild(0, project_id, unescape(project_name));
+        mytree.setItemImage2(project_id, "tree/folderClosed.gif", "tree/folderOpen.gif", "tree/folderClosed.gif")
+        var treenode = mytree.item(project_id);
+        treenode.path = "/" + project_id;
+        treenode.projectId = project_id;
+        // 默认选中全部项目
+        mytree.setCheck(project_id, true);
+        if(treenode) {
+            treenode.isFord = true;
+            treenode.loadChild = false;
+            treenode.isProject = false;
+        }
+        mytree.itemObj[project_id] = treenode;
+
+        hwDas.ajax({
+            das: {
+                idedas: true
+            },
+            url: "CDEServcie/module/category",
+            type: 'get',
+            timeout: 10000,
+            params: {
+                project_id: project_id,
+                parent_id: 0
+            },
+            success: function(result) {
+                var datajson = result.data[0].datas;
+                var treeDataJson = [];
+                for(var i = 0; i < datajson.length; i++) {
+                    mytree.insertNewChild(project_id, datajson[i].id, datajson[i].name);
+                    mytree.setItemImage2(datajson[i].id, "tree/folderClosed.gif", "tree/folderOpen.gif", "tree/folderClosed.gif")
+                    var treenode = mytree.item(datajson[i].id);
+                    treenode.path = "/" + project_id + "/" + datajson[i].id;
+                    treenode.projectId = project_id;
+                    mytree.setCheck(datajson[i].id, true);
+                    if(treenode) {
+                        treenode.isFord = true;
+                        treenode.loadChild = false;
+                        treenode.isProject = false;
+                        treenode.isCheacked = true;
+                    }
+                    mytree.itemObj[datajson[i].id] = treenode;
+                    addNode(datajson[i].id);
+                    mytree.closeItem(datajson[i].id);
+                }
+            },
+            error: function(msg) {
+                Ext.Msg.alert("提示", "获取模块信息失败", function() {})
+            }
+        })
+        hwDas.ajax({
+            das: {
+                idedas: true
+            },
+            url: "CDEServcie/module/info",
+            type: 'get',
+            timeout: 10000,
+            params: {
+                project_id: project_id,
+                category_id: '0'
+            },
+            success: function(result) {
+                var datajson = result.data[0].datas;
+                var treeDataJson = [];
+                for(var i = 0; i < datajson.length; i++) {
+                    mytree.insertNewChild(project_id, datajson[i].id, datajson[i].name);
+                    mytree.setItemImage2(datajson[i].id, "tree/model.png", "tree/model.png", "tree/model.png")
+                    var treenode = mytree.item(datajson[i].id);
+                    treenode.path = "/" + project_id + "/" + datajson[i].id;
+                    treenode.projectId = project_id;
+                    mytree.setCheck(datajson[i].id, true);
+                    if(treenode) {
+                        treenode.isModel = true;
+                        treenode.createuser = datajson[i].row_created_by;
+                        treenode.createtime = datajson[i].row_created_date;
+                        treenode.changetime = datajson[i].row_changed_date;
+                        treenode.changeuser = datajson[i].row_changed_by;
+                        treenode.remark = datajson[i].remark;
+                        treenode.code = datajson[i].code;
+                    }
+                    mytree.itemObj[datajson[i].id] = treenode;
+                }
+            },
+            error: function(msg) {
+                Ext.Msg.alert("提示", "获取模块信息失败")
+            }
+        })
+    }
+}
+// 添加子节点
+function addNode(id) {
+    var proId = id;
+    var mytree = projectTree;
+    mytree.newnode = false;
+    var hasChild = mytree.hasChildren(proId);
+    var selnode = mytree.itemObj[proId];
+    var selnodepath = selnode.path;
+    var projectId = project_id;
+    var childParentId = id;
+    if(!selnode.loadChild && !selnode.isModel) {
+        hwDas.ajax({
+            das: {
+                idedas: true
+            },
+            url: "CDEServcie/module/category",
+            type: 'get',
+            timeout: 50000,
+            params: {
+                project_id: projectId,
+                parent_id: childParentId
+            },
+            success: function(result) {
+                var datajson = result.data[0].datas;
+                var treeDataJson = [];
+                for(var i = 0; i < datajson.length; i++) {
+                    mytree.insertNewChild(proId, datajson[i].id, datajson[i].name);
+                    mytree.setItemImage2(datajson[i].id, "tree/folderClosed.gif", "tree/folderOpen.gif", "tree/folderClosed.gif")
+                    var treenode = mytree.item(datajson[i].id);
+                    treenode.path = selnodepath + "/" + datajson[i].id;
+                    treenode.projectId = projectId;
+                    if(treenode) {
+                        treenode.isFord = true;
+                        treenode.loadChild = false;
+                    }
+                    mytree.itemObj[datajson[i].id] = treenode;
+                    mytree.setCheck(datajson[i].id, true);
+                    addNode(datajson[i].id);
+                    mytree.closeItem(datajson[i].id);
+                }
+                mytree.closeAllItems(id);
+            },
+            error: function(msg) {
+                Ext.Msg.alert("提示", "获取模块信息失败", function() {})
+            }
+        })
+        hwDas.ajax({
+            das: {
+                idedas: true
+            },
+            url: "CDEServcie/module/info",
+            type: 'get',
+            timeout: 50000,
+            params: {
+                category_id: childParentId,
+                project_id: projectId
+            },
+            success: function(result) {
+                var datajson = result.data[0].datas;
+                var treeDataJson = [];
+                for(var i = 0; i < datajson.length; i++) {
+                    mytree.insertNewChild(proId, datajson[i].id, datajson[i].name);
+                    mytree.setItemImage2(datajson[i].id, "tree/model.png", "tree/model.png", "tree/model.png")
+                    var treenode = mytree.item(datajson[i].id);
+                    treenode.path = selnodepath + "/" + datajson[i].id;
+                    treenode.projectId = projectId;
+                    if(treenode) {
+                        treenode.isModel = true;
+                        treenode.createuser = datajson[i].row_created_by;
+                        treenode.createtime = datajson[i].row_created_date;
+                        treenode.changetime = datajson[i].row_changed_date;
+                        treenode.changeuser = datajson[i].row_changed_by;
+                        treenode.remark = datajson[i].remark;
+                        treenode.code = datajson[i].code;
+                    }
+                    mytree.itemObj[datajson[i].id] = treenode;
+                    mytree.setCheck(datajson[i].id, true);
+                    addNode(datajson[i].id)
+                }
+                mytree.closeAllItems(id);
+            },
+            error: function(msg) {
+                Ext.Msg.alert("提示", "获取模块信息失败")
+            }
+        })
+    }
+}
+// 注册
+function register_click(sender, e) {
+    var checkStr = projectTree.getAllChecked();
+    if(checkStr == '') {
+        vmd.alert('提示', '请选择要注册的模块');
+    } else {
+        var zcurl = "CDEServcie/pt/zcmk";
+        if(pttype == '5') {
+            zcurl = "CDEServcie/pt/ptfivezcmk";
+        }
+        var checkData = checkStr.split(',');
+        var data = [];
+        checkData.forEach(function(item, index) {
+            var selNode = projectTree.itemObj[item];
+            if(selNode.isModel) {
+                data.push({
+                    projectId:selNode.projectId,
+                    subsysid: subsysid,
+                    moduleguid: selNode.id,
+                    modulename: selNode.text,
+                    moudelinfo: selNode.remark,
+                    moduletype: 1,
+                    ptdb: ptdb,
+                    startname: "/release" + selNode.path + ".html",
+                    enable: 1,
+                    args: ""
+                })
+            }
+
+        })
+        console.log(data)
+        // hwDas.ajax({
+        //     das: {
+        //         idedas: true
+        //     },
+        //     url: zcurl,
+        //     type: "save",
+        //     timeout: 50000,
+        //     data: data,
+        //     success: function(result) {
+        //         // var path = vmd.core.getVirtualPath() + "modules" + selNode.path + "_r.html";
+        //         // var releasePath = "release" + selNode.path + ".html";
+        //         // vmd.core.createReleaseHtml(path, releasePath, virtualPath, function() {
+        //         //     Ext.Msg.alert("提示", "注册模块信息成功", function() {
+
+        //         //     })
+        //         // }, objlistResourceNameIP, project_id);
+        //         // hwDas.copy("vmd", "modules/" + project_id + "/img", "release/" + project_id + "/img", function() {}, function() {});
+        //         // hwDas.copy("vmd", "modules/" + project_id + "/css", "release/" + project_id + "/css", function() {}, function() {});
+        //         // hwDas.copy("vmd", "modules/" + project_id + "/js", "release/" + project_id + "/js", function() {}, function() {});
+        //     },
+        //     error: function(msg) {
+        //         Ext.Msg.alert("提示", "注册模块信息失败", function() {})
+        //     }
+        // })
+    }
+}
+// 取消
+function cancel_click(sender, e) {
+    parent.porjectRegister.hide();
+}
+			this.MyViewport_afterrender=MyViewport_afterrender;
+		this.MyViewport_beforerender=MyViewport_beforerender;
+
+
+
+		this.items=[
+			{
+				xtype:"panel",
+				id:"panel6",
+				title:"Panel",
+				header:false,
+				border:false,
+				height:100,
+				region:"center",
+				layout:"border",
+				items:[
+					{
+						xtype:"panel",
+						id:"panel2",
+						title:"Panel",
+						header:false,
+						border:false,
+						height:27,
+						region:"north",
+						layout:"absolute",
+						items:[
+							{
+								xtype:"label",
+								id:"label2",
+								text:"请选择要注册的模块：",
+								x:10,
+								y:8,
+								cls:"title"
+							}
+						]
+					},
+					{
+						xtype:"panel",
+						id:"panel",
+						title:"Panel",
+						header:false,
+						border:false,
+						height:100,
+						region:"center",
+						layout:"border",
+						items:[
+							{
+								xtype:"panel",
+								id:"panel3",
+								title:"Panel",
+								header:false,
+								border:false,
+								height:619,
+								region:"center",
+								layout:"fit",
+								margins:"10",
+								items:[
+									{
+										xtype:"vmd.tree",
+										id:"projectTree",
+										skin:"material",
+										width:280,
+										height:200,
+										isdesign:false,
+										style:"margin-left:  5px;    margin-top:  5px;    margin-bottom: 10px;    margin-right: 10px;",
+										afterrender:"projectTree_afterrender",
+										region:"center",
+										CheckBox:true,
+										listeners:{
+											vmdafterrender:projectTree_afterrender
+										}
+									}
+								]
+							},
+							{
+								xtype:"panel",
+								id:"panel4",
+								title:"Panel",
+								header:false,
+								border:false,
+								height:50,
+								region:"south",
+								layout:"absolute",
+								hidden:true,
+								items:[
+									{
+										xtype:"label",
+										id:"label1",
+										text:"虚拟目录：",
+										x:10,
+										y:10
+									},
+									{
+										xtype:"textfield",
+										id:"MyField",
+										allowBlank:true,
+										x:80,
+										y:10,
+										width:240
+									}
+								]
+							}
+						]
+					},
+					{
+						xtype:"panel",
+						id:"panel1",
+						layoutConfig:{
+							align:"top",
+							pack:"center"
+						},
+						title:"Panel",
+						header:false,
+						border:false,
+						height:40,
+						region:"south",
+						layout:"hbox",
+						items:[
+							{
+								xtype:"vmd.button",
+								id:"register",
+								text:"注册",
+								type:"info",
+								size:"small",
+								region:"west",
+								width:60,
+								height:30,
+								click:"register_click",
+								listeners:{
+									click:register_click
+								}
+							},
+							{
+								xtype:"vmd.div",
+								id:"div",
+								autoEl:"div",
+								border:false,
+								backgroundRepeat:"no-repeat",
+								backgroundPosition:"top left",
+								width:71,
+								height:50
+							},
+							{
+								xtype:"vmd.button",
+								id:"cancel",
+								text:"取消",
+								type:"(none)",
+								size:"small",
+								width:60,
+								height:30,
+								click:"cancel_click",
+								listeners:{
+									click:cancel_click
+								}
+							}
+						]
+					}
+				]
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+	}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MyViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

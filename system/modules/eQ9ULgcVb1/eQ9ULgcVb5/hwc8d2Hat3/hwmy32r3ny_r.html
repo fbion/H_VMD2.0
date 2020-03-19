@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>登录页1</title>
+	<!--基本样式-->
+    <link href="{virtualPath}/css/common.css?ver=2.0.3.1108" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="{virtualPath}/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.3.1108" rel="stylesheet" />
+   
+    <link href="{virtualPath}/design/css/icons.css?ver=2.0.3.1108" rel="stylesheet" />
+
+	<link href="{virtualPath}/lib/dhtmlx/dhtmlx.css?ver=2.0.3.1108" rel="stylesheet" />
+	  <!--样式快捷索引表-->
+    <link href="{virtualPath}/css/shortcut.css?ver=2.0.3.1108" rel="stylesheet" />
+    
+    <script src="{virtualPath}/lib/labjs/LAB.min.js?ver=2.0.3.1108"></script>
+    <script src="{virtualPath}/config.js?ver=2.0.3.1108"></script>
+    <script src="{virtualPath}/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.3.1108"></script>
+    <script src="{virtualPath}/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.3.1108"></script>
+    <script src="{virtualPath}/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.3.1108"></script>
+    <script src="{virtualPath}/lib/ext-3.4/ext-all-debug.js?ver=2.0.3.1108"></script>
+    <script src="{virtualPath}/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.3.1108"></script>
+    <script src="{virtualPath}/js/util.js?ver=2.0.3.1108"></script>
+    <script src="{virtualPath}/lib/dhtmlx/dhtmlx.js?ver=2.0.3.1108"></script>
+	<script src="{virtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.3.1108"></script>
+	<script src="{virtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.3.1108"></script>
+    <script src="{virtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.3.1108"></script>
+	<script src="{virtualPath}/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.3.1108"></script>
+    <script src="{virtualPath}/js/hwdas.js?ver=2.0.3.1108"></script>
+	<script src="{virtualPath}/js/hwMSC.js?ver=2.0.3.1108"></script>
+    <script src="{virtualPath}/js/vmdcore.js?ver=2.0.3.1108"></script>
+    <script src="{virtualPath}/js/vmdcomps.js?ver=2.0.3.1108"></script>
+    <script src="{virtualPath}/js/publicMethods.js?ver=2.0.3.1108"></script>
+    <script src="{virtualPath}/js/vmdreport.js?ver=2.0.3.1108"></script>
+    {workspacePath}
+
+    <script src="{virtualPath}/lib/ace/ace.js"></script>
+    <script src="{virtualPath}/lib/ace/mode-base.js" type="text/javascript"></script>
+    <script src="{virtualPath}/lib/ace/theme-xcode.js" type="text/javascript" ></script>
+    <script src="{virtualPath}/lib/ace/ext-language_tools.js"></script>
+    
+
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        .browser a{
+    
+    text-decoration: none;
+    color: blue
+}
+    </style>
+    <script>
+	    
+        vmd.virtualPath = '{virtualPath}';
+        
+        Ext.define("vmd.module.MainViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps([]),
+	xtype:"vmd.module.MainViewport",
+	layout:"absolute",
+	afterrender:"MyViewport_afterrender",
+	autoScroll:true,
+	listeners:{
+		vmdafterrender:function(){
+	this.MyViewport_afterrender(this)
+}
+	},
+	initComponent: function(){
+		var Login = (function() {
+    var isRememberPwd = function() {
+
+        return Cookie.get('rememberpwd');
+    };
+    var modifyRememberState = function(state) {
+        //取消记住密码
+        if(!state) {
+
+            rememberpwd.el.setStyle('background-position-x', '0px');
+
+        } else {
+            //记住状态
+            rememberpwd.el.setStyle('background-position-x', '-27px');
+        }
+
+    }
+    var delPwd = function() {
+
+        Cookie.del('rememberpwd');
+
+    };
+    var remembePwd = function() {
+
+        Cookie.set('rememberpwd', true, 30);
+
+
+    };
+    var rememberState = function() {
+        //默认记住密码
+        username.focus();
+        if(isRememberPwd()) {
+            modifyRememberState(true)
+            //rememberpwd.el.setStyle('background-position-x', '-27px');
+            var login = Cookie.get('hwLogin');
+            var pwd = Cookie.get('_userpwd');
+            username.setValue(login);
+            userpwd.setValue(pwd);
+        }
+
+
+    }
+
+    var setCookie = function(info) {
+        info = info || {};
+
+        hwDas.token = info.token;
+        if(Login.state) {
+            remembePwd();
+            Cookie.set('hwLogin', info.user.login, 30);
+            Cookie.set('_userpwd', userpwd.getValue(), 30);
+        } else {
+            delPwd();
+            Cookie.set('hwLogin', info.user.login);
+            Cookie.del('_userpwd')
+        }
+        Cookie.set('userName', info.user.name);
+        Cookie.set('hwToken', info.token);
+        Cookie.set('hwEcyLogin', info.user.ecyLogin || "");
+        //记录 登录用户是否拥有编辑主页面的权限
+        Cookie.set('userType', "vmdDesigner");
+
+    }
+
+    return {
+        state: isRememberPwd(),
+        isRememberPwd: isRememberPwd,
+        setCookie: setCookie,
+        rememberState: rememberState,
+        modifyRememberState:modifyRememberState
+
+    }
+
+
+})();
+
+function button_click(sender, e) {
+
+    if(!username.getValue()) {
+        // Ext.Msg.alert('提示', '用户名不能为空！', function() {
+        //     username.focus();
+        // })
+        username.focus();
+        vmd.tip('用户名不能为空！', 'info')
+
+        return
+    }
+    if(!userpwd.getValue()) {
+        // Ext.Msg.alert('提示', '密码不能为空！', function() {
+        //     userpwd.focus();
+        // })
+        userpwd.focus();
+        vmd.tip('密码不能为空！', 'info')
+        return
+    }
+    //加载服务
+
+    var myMask = new Ext.LoadMask(Ext.getBody(), {
+        msg: "正在登录,请稍后...",
+        msgCls: 'z-index:10000;'
+    });
+    myMask.show();
+    // hwDas.login(username.getValue(), userpwd.getValue(), successback, errorback, "unity");
+    /////////////////////////////////////////////////////////////
+    hwDas.login(
+        username.getValue(), userpwd.getValue(),
+        function(result) {
+
+            Login.setCookie(result);
+            myMask.hide();
+            // 新的
+            window.location.href = vmd.virtualPath + "/system/modules/eQ9ULgcVb1/hwipUwNjJb/hwZ8jCmRKR.html?r=" + new Date().getTime();
+
+            //原来的
+            //window.location.href = vmd.virtualPath + "/modules/eQ9ULgcVb1/eQ9ULgcVb5/hwBgORDLpV.html?r=" + new Date().getTime();
+        },
+        function(msg) {
+            Tips.tips("验证失败！", "error");
+            myMask.hide();
+            // Ext.Msg.alert("提示", "保存服务地址信息失败！");
+        },
+        "unity"
+    );
+
+
+}
+
+function rememberpwd_afterrender(sender) {
+
+    Login.state = Login.isRememberPwd();
+
+    rememberpwd.el.on('click', function(e) {
+
+        if(!Login.state) {
+            //记住密码
+            Login.modifyRememberState(true);
+
+        } else {
+             Login.modifyRememberState(false);
+        }
+
+        Login.state = !Login.state;
+
+    })
+}
+
+
+
+
+//增加页面回车登录快捷操作
+function MyViewport_afterrender(sender) {
+
+    var map = new Ext.KeyMap(document, {
+        key: 13, // or Ext.EventObject.ENTER
+        fn: button_click,
+        scope: button
+    })
+    Login.rememberState();
+    if(Ext.isIE)
+		vmd.tip( '为达到更好的用户体验，建议采用谷歌浏览器、360极速浏览器等webkit内核的浏览器进行操作。','info',3000);
+
+}
+
+
+
+function qq_afterrender(sender) {
+    qq.el.on('click', function() {
+
+        Ext.Msg.alert('提示', '功能研发中！')
+    })
+}
+	
+
+
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+	}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MainViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

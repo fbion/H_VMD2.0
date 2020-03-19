@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>手风琴布局（accordion layout）</title>
+    
+    <!--基本样式-->
+    <link href="/css/common.css" rel="stylesheet" />
+
+    <!--加载dhx组件-->
+    
+    <link href="/lib/ext-3.4/resources/css/ext-all.css" rel="stylesheet" />
+     <!--样式快捷索引表-->
+    <link href="/css/shortcut.css" rel="stylesheet" />
+    <link href="/lib/dhtmlx/dhtmlx.css" rel="stylesheet" />
+
+    <script src="/lib/labjs/LAB.min.js"></script>
+    <script src="/config.js"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js"></script>
+
+    <script src="/lib/dhtmlx/dhtmlx.js"></script>
+    <script src="/js/hwdas.js"></script>
+    <script src="/js/vmdcore.js"></script>
+    <script src="/js/vmdcomps.js"></script>
+    <style>
+        .x-viewport, .x-viewport body {
+            overflow:auto !important
+        }
+    </style>
+    <script>
+
+        Ext.define("vmd.module.MyViewport" ,{
+	extend:"Ext.Viewport",
+	xtype:"vmd.module.MyViewport",
+	layout:"border",
+	initComponent: function(){
+		this.items=[
+			{
+				xtype:"panel",
+				id:"MyPanel",
+				title:"Panel",
+				header:false,
+				border:true,
+				height:100,
+				x:50,
+				y:50,
+				layout:"accordion",
+				region:"west",
+				width:230,
+				split:true,
+				items:[
+					{
+						xtype:"panel",
+						id:"MyPanel1",
+						title:"Accordion Item1",
+						header:true,
+						border:true,
+						height:100,
+						width:228
+					},
+					{
+						xtype:"panel",
+						id:"MyPanel2",
+						title:"Accordion Item2",
+						header:true,
+						border:true,
+						height:100
+					},
+					{
+						xtype:"panel",
+						id:"MyPanel3",
+						title:"Accordion Item3",
+						header:true,
+						border:true,
+						height:100
+					},
+					{
+						xtype:"panel",
+						id:"MyPanel4",
+						title:"Accordion Item4",
+						header:true,
+						border:true,
+						height:100
+					},
+					{
+						xtype:"panel",
+						id:"MyPanel6",
+						title:"Accordion Item5",
+						header:true,
+						border:true,
+						height:100
+					}
+				]
+			},
+			{
+				xtype:"panel",
+				id:"MyPanel5",
+				title:"Panel",
+				header:false,
+				border:true,
+				height:100,
+				region:"center",
+				split:true
+			}
+		]
+		this.callParent();
+		vmd.core.moduleInit(this.items, this);
+			undefined
+	}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MyViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<!--<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />-->
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>{2}</title>
+    
+    <!--基本样式-->
+    <link href="/css/common.css?ver=2.0.3" rel="stylesheet" />
+
+    <!--加载dhx组件-->
+    
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.3" rel="stylesheet" />
+    
+    <link href="/lib/dhtmlx/dhtmlx.css?ver=2.0.3" rel="stylesheet" />
+	<link href="/report/dhtmlx/dhtmlxGrid/codebase/skins/dhtmlxgrid_dhx_skyblue.css?ver=2.0.3" rel="stylesheet" />
+	<link href="/report/dhtmlx/dhtmlxGrid/codebase/skins/dhtmlxgrid_default.css?ver=2.0.3" rel="stylesheet" />
+	<link href="/report/dhtmlx/dhtmlxCheckBox/codebase/skins/dhtmlxcheckbox_dhx_skyblue.css?ver=2.0.3" rel="stylesheet" />
+	<link href="/report/FillReport2.2/js/Adjustment.css?ver=2.0.3" rel="stylesheet" />
+    <!--样式快捷索引表-->
+    <link href="/css/shortcut.css?ver=2.0.3" rel="stylesheet" />
+	 
+    <script src="/lib/labjs/LAB.min.js?ver=2.0.3"></script>
+    <script src="/config.js?ver=2.0.3"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.3"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.3"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.3"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=2.0.3"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.3"></script>
+	<script src="/js/util.js?ver=2.0.3"></script>
+    <script src="/lib/dhtmlx/dhtmlx.js?ver=2.0.3"></script>
+	
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.3"></script>
+   <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.3"></script>
+   <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.3"></script>
+   <script src="/report/dhtmlx/dhtmlxLayout/codebase/dhtmlxlayout.js?ver=2.0.3"></script>
+   <script src="/report/dhtmlx/dhtmlxWindows/codebase/dhtmlxwindows.js?ver=2.0.3"></script>
+   <script src="/report/dhtmlx/dhtmlxGrid/codebase/dhtmlxgrid.js?ver=2.0.3"></script>
+   <script src="/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_rowspan.js?ver=2.0.3"></script>
+   <script src="/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_splt.js?ver=2.0.3"></script>
+   <script src="/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_srnd.js?ver=2.0.3"></script>
+   <script src="/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_selection.js?ver=2.0.3"></script>
+   <script src="/report/dhtmlx/dhtmlxGrid/codebase/excells/dhtmlxgrid_excell_link_OverLoad.js?ver=2.0.3"></script>
+    <script src="/report/dhtmlx/dhtmlxGrid/codebase/excells/dhtmlxgrid_excell_menu.js?ver=2.0.3"></script>
+   <script src="/report/dhtmlx/dhtmlxGrid/codebase/dhtmlxtreegrid.js?ver=2.0.3"></script>
+   <script src="/report/dhtmlx/dhtmlxMenu/codebase/dhtmlxmenu.js?ver=2.0.3"></script>
+   <script src="/report/dhtmlx/dhtmlxGrid/codebase/Base64.js?ver=2.0.3"></script>
+    <script src="/report/FillReport2.2/js/libs/hwvmain.js?ver=2.0.3"></script>
+    <script src="/report/FillReport2.2/js/hw/hw_form.js?ver=2.0.3"></script>
+	<script src="/report/dhtmlx/dhtmlxToolbar/codebase/dhtmlxtoolbar.js?ver=2.0.3"></script>
+	<script src="/report/dhtmlx/dhtmlxWindows/codebase/ext/dhtmlxwindows_dnd.js?ver=2.0.3"></script>
+	<script src="/report/dhtmlx/dhtmlxWindows/codebase/ext/dhtmlxwindows_resize.js?ver=2.0.3"></script>
+	<script src="/report/dhtmlx/dhtmlxWindows/codebase/ext/dhtmlxwindows_dnd.js?ver=2.0.3"></script>
+	<script src="/report/dhtmlx/dhtmlxWindows/codebase/ext/dhtmlxwindows_resize.js?ver=2.0.3"></script>
+	<script src="/report/dhtmlx/dhtmlxMessage/codebase/dhtmlxmessage.js?ver=2.0.3"></script>
+	<script src="/report/dhtmlx/dhtmlxGrid/codebase/dhtmlxgrid_ext.js?ver=2.0.3"></script>
+	<script src="/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_validation.js?ver=2.0.3"></script>
+	<script src="/report/dhtmlx/dhtmlxGrid/codebase/excells/dhtmlxgrid_excell_combo.js?ver=2.0.3"></script>
+	<script src="/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_markers.js?ver=2.0.3"></script>
+	<script src="/report/dhtmlx/dhtmlxCheckBox/codebase/dhtmlxcheckbox.js?ver=2.0.3"></script>
+	<script src="/report/dhtmlx/dhtmlxCombo/codebase/dhtmlxcombo.js?ver=2.0.3"></script>
+	<script src="/report/dhtmlx/dhtmlxTree/codebase/dhtmlxtree.js?ver=2.0.3"></script>
+	<script src="/report/dhtmlx/dhtmlxTree/codebase/ext/dhtmlxtree_ed.js?ver=2.0.3"></script>
+	<script src="/report/dhtmlx/dhtmlxTree/codebase/ext/dhtmlxtree_json.js?ver=2.0.3"></script>
+	<script src="/report/dhtmlx/dhtmlxTree/codebase/ext/dhtmlxtree_kn.js?ver=2.0.3"></script>
+	<script src="/report/dhtmlx/dhtmlxCalendar/codebase/dhtmlxcalendar.js?ver=2.0.3"></script>
+	<script src="/report/dhtmlx/dhtmlxForm/codebase/ext/swfobject.js?ver=2.0.3"></script>
+	<script src="/report/dhtmlx/dhtmlxEditor/codebase/dhtmlxeditor.js?ver=2.0.3"></script>
+	<script src="/report/dhtmlx/dhtmlxEditor/codebase/ext/dhtmlxeditor_ext.js?ver=2.0.3"></script>
+	<script src="/report/dhtmlx/dhtmlxDataStore/codebase/ext/datastore_grid.js?ver=2.0.3"></script>
+	<script src="/report/dhtmlx/dhtmlxDataStore/codebase/ext/datastore_combo.js?ver=2.0.3"></script>
+	<script src="/report/dhtmlx/dhtmlxDataStore/codebase/ext/datastore_tree.js?ver=2.0.3"></script>
+	<script src="/report/dhtmlx/dhtmlxDataStore/codebase/datastore_ext.js?ver=2.0.3"></script>
+	<script src="/report/dhtmlx/dhtmlxDataStore/codebase/ext/datastore_checkbox.js?ver=2.0.3"></script>
+	<script src="/report/FillReport2.2/js/libs/json2.js?ver=2.0.3"></script>
+	<script src="/report/FillReport2.2/js/libs/hwvjsExp.js?ver=2.0.3"></script>
+	<script src="/report/FillReport2.2/js/libs/HwPrint.js?ver=2.0.3"></script>
+	<script src="/report/FillReport2.2/js/hw/fr_datastore.js?ver=2.0.3"></script>
+	<script src="/report/FillReport2.2/js/dhtmlx/dhtmlxGrid/dhtmlxgrid_ext_tb.js?ver=2.0.3"></script>
+	<script src="/report/FillReport2.2/js/dhtmlx/dhtmlxGrid/excells/dhtmlxgrid_excell_ro_tb.js?ver=2.0.3"></script>
+	<script src="/report/FillReport2.2/js/dhtmlx/dhtmlxGrid/excells/dhtmlxgrid_excell_ed_tb.js?ver=2.0.3"></script>
+	<script src="/report/FillReport2.2/js/dhtmlx/dhtmlxGrid/excells/dhtmlxgrid_excell_checkbox_tb.js?ver=2.0.3"></script>
+	<script src="/report/FillReport2.2/js/dhtmlx/dhtmlxGrid/excells/dhtmlxgrid_excell_combo_tb.js?ver=2.0.3"></script>
+	<script src="/report/FillReport2.2/js/dhtmlx/dhtmlxGrid/excells/dhtmlxgrid_excell_number_tb.js?ver=2.0.3"></script>
+	<script src="/report/FillReport2.2/js/dhtmlx/dhtmlxGrid/excells/dhtmlxgrid_excell_dhxcalendar_ext_tb.js?ver=2.0.3"></script>
+	<script src="/report/FillReport2.2/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.3"></script>
+	<script src="/report/FillReport2.2/js/dhtmlx/dhtmlxGrid/excells/dhtmlxgrid_excell_hwupload.js?ver=2.0.3"></script>
+	<script src="/report/FillReport2.2/js/dhtmlx/dhtmlxGrid/excells/dhtmlxgrid_excell_button_tb.js?ver=2.0.3"></script>
+	<script src="/report/FillReport2.2/js/dhtmlx/dhtmlxGrid/excells/dhtmlxgrid_excell_link_tb.js?ver=2.0.3"></script>
+	<script src="/report/FillReport2.2/js/dhtmlx/dhtmlxGrid/excells/dhtmlxgrid_excell_kindeditor.js?ver=2.0.3"></script>
+	<script src="/report/FillReport2.2/js/dhtmlx/dhtmlxGrid/excells/dhtmlxgrid_excell_order_tb.js?ver=2.0.3"></script>
+	<script src="/report/FillReport2.2/js/dhtmlx/dhtmlxGrid/excells/dhtmlxgrid_excell_guid.js?ver=2.0.3"></script>
+	<script src="/report/FillReport2.2/js/dhtmlx/dhtmlxGrid/excells/dhtmlxgrid_excell_img_tb.js?ver=2.0.3"></script>
+	<script src="/report/FillReport2.2/js/dhtmlx/dhtmlxGrid/excells/dhtmlxgrid_excell_sub_fillreport.js?ver=2.0.3"></script>
+	<script src="/report/FillReport2.2/js/dhtmlx/dhtmlxGrid/excells/dhtmlxgrid_excell_hwapprove.js?ver=2.0.3"></script>
+	<script src="/report/FillReport2.2/js/dhtmlx/dhtmlxGrid/ext/dhtmlxgrid_template.js?ver=2.0.3"></script>
+	<script src="/report/FillReport2.2/js/dhtmlx/dhtmlxGrid/ext/dhtmlxgrid_evaluation.js?ver=2.0.3"></script>
+	<script src="/report/FillReport2.2/js/dhtmlx/dhtmlxGrid/ext/dhtmlxgrid_formula.js?ver=2.0.3"></script>
+	<script src="/report/FillReport2.2/js/dhtmlx/dhtmlxGrid/excells/dhtmlxgrid_excell_edext.js?ver=2.0.3"></script>
+	<script src="/report/FillReport2.2/js/dhtmlx/dhtmlxGrid/excells/dhtmlxgrid_excell_sub_fillreport.js?ver=2.0.3"></script>
+    <script src="/js/hwdas.js?ver=2.0.3"></script>
+    <script src="/js/vmdcore.js?ver=2.0.3"></script>
+    <script src="/js/vmdcomps.js?ver=2.0.3"></script>
+     <script src="/js/vmdreport.js?ver=2.0.3"></script>
+    
+
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        
+    </style>
+    <script>
+		vmd.virtualPath=''
+        Ext.define("vmd.module.MyViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps([]),
+	xtype:"vmd.module.MyViewport",
+	layout:"border",
+	initComponent: function(){
+		function report_afterrender(sender) {
+    //设置报表内变量的值
+    //report.setParamValue("var1", var1.getValue());
+    report.query();
+}
+
+
+//查询按钮 
+function button_click(sender) {
+     report.myMask.show();
+     //条件区组件值获取方法
+     // dwmc.getValue(); 
+    // 报表查询
+    report.query(function (){
+        report.myMask.hide();
+    });
+   
+}
+	
+
+
+		this.items=[
+			{
+				xtype:"panel",
+				id:"panel",
+				layoutConfig:{
+					pack:"center",
+					align:"middle"
+				},
+				title:"Panel",
+				header:false,
+				border:false,
+				height:40,
+				x:-1,
+				y:0,
+				layout:"hbox",
+				region:"north",
+				items:[
+					{
+						xtype:"label",
+						id:"label",
+						text:"单位名称：",
+						cls:"font-bold"
+					},
+					{
+						xtype:"vmd.combo",
+						id:"dwmc",
+						width:150
+					},
+					{
+						xtype:"label",
+						id:"label1",
+						text:"井号：",
+						margins:"0 0 0 10",
+						cls:"font-bold"
+					},
+					{
+						xtype:"vmd.combo",
+						id:"jh",
+						width:150
+					},
+					{
+						xtype:"label",
+						id:"label2",
+						text:"日期：",
+						margins:"0 0 0 10",
+						cls:"font-bold"
+					},
+					{
+						xtype:"datefield",
+						id:"rq",
+						format:"Y-m-d",
+						showToday:true,
+						allowBlank:true
+					},
+					{
+						xtype:"vmd.button",
+						id:"button",
+						text:"查询",
+						type:"(none)",
+						size:"small",
+						x:720,
+						y:20,
+						click:"button_click",
+						margins:"0 0 0 10",
+						cls:"font-bold",
+						listeners:{
+							click:button_click
+						}
+					}
+				]
+			},
+			{
+				xtype:"panel",
+				id:"panel1",
+				layoutConfig:{
+					pack:"center"
+				},
+				title:"Panel",
+				header:false,
+				border:false,
+				x:0,
+				y:70,
+				layout:"hbox",
+				autoScroll:true,
+				region:"center",
+				items:[
+					{
+						xtype:"vmd.report2_2",
+						id:"report",
+						text:"report",
+						relativepath:"Resources//Report",
+						size:"small",
+						fillReport:false,
+						nousedataset:false,
+						afterrender:"report_afterrender",
+						listeners:{
+							vmdafterrender:report_afterrender
+						}
+					}
+				]
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+	}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MyViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

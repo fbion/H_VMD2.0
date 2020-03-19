@@ -1,0 +1,55 @@
+﻿{
+    "runInfos": [],
+    "errMsg": "",
+    "isSucceed": true,
+    "data": [{
+        "start": 0,
+        "size": 103,
+        "datas": [{
+            "jh": "新沙21-17H",
+            "jm": "新沙21-17H",
+            "jb": "11",
+            "y": 3460913.09,
+            "x": 18437234.8
+        }, {
+            "jh": "新沙21-9H",
+            "jm": "新沙21-9H",
+            "jb": "11",
+            "y": 3462432.07,
+            "x": 18437456.75
+        }, {
+            "jh": "新沙21-36H",
+            "jm": "新沙21-36H",
+            "jb": "11",
+            "y": 3459391.24,
+            "x": 18439241.82
+        }, {
+            "jh": "新沙21-14H",
+            "jm": "新沙21-14H",
+            "jb": "11",
+            "y": 3460773.67,
+            "x": 18441363.39
+        }],
+        "fields": {
+            "jh": "String",
+            "jm": "String",
+            "jb": "String",
+            "y": "Double",
+            "x": "Double"
+        },
+        "attrs": "jh,jm,jb,y,x",
+        "total": 103,
+        "tableName": "",
+        "system_id": "R5Un9jFGoQ7TYcgemA18sxb7isR34CzP",
+        "sort": "",
+        "pageSize": -1,
+        "id": "",
+        "name": "select1",
+        "format": "Table",
+        "isSuccess": ""
+    }],
+    "errCode": 0,
+    "errMark": "",
+    "errContent": "",
+    "solutionMsg": ""
+}

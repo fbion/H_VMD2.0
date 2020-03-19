@@ -1,0 +1,176 @@
+﻿
+<!--
+Licensed to the Apache Software Foundation (ASF) under one
+or more contributor license agreements.  See the NOTICE file
+distributed with this work for additional information
+regarding copyright ownership.  The ASF licenses this file
+to you under the Apache License, Version 2.0 (the
+"License"); you may not use this file except in compliance
+with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing,
+software distributed under the License is distributed on an
+"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+KIND, either express or implied.  See the License for the
+specific language governing permissions and limitations
+under the License.
+-->
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <!--<script src="../js/core/base.js"></script>-->
+    <script src="../js/core/base.min.js"></script>
+
+    <script src="../js/core/base-ext.js"></script>
+    <!--zrender-->
+    <script src="../lib/zrender/dist/zrender.js"></script>
+    <script src="../lib/jquery.min.js"></script>
+    <!--hwchart-->
+    <script src="../js/hwcharts.js"></script>
+</head>
+<body>
+<style>
+    html, body, #main {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+    }
+</style>
+testMap
+<div id="main"></div>
+<script>
+
+
+    var chart;
+    Vmd.onReady(function () {
+
+        Vmd.require([
+            'hwchart.component.Geo',
+            //'hwchart.chart.Map',
+            'hwchart.component.Legend',
+            'hwchart.chart.WellSymbol',
+            'hwchart.chart.WellTrace',
+            //'hwchart.component.Tooltip',
+            //'hwchart.component.Title',
+            //'hwchart.component.VisualMap',
+            //'hwchart.component.MarkPoint'
+        ], function () {
+
+            $.get('../lib/map/rectJson.json', function (rectJson) {
+                if (typeof rectJson === 'string') {
+                    rectJson = eval('(' + rectJson + ')');
+                }
+                hwcharts.registerMap('testMap', rectJson);
+                chart = hwcharts.init(document.getElementById('main'), null, {});
+                chart.on('fetchData', function (opt) {
+                    debugger
+                })
+                chart.setOption({
+                    geo: [{
+                        map: 'testMap',
+                        roam: true,
+                        left: 400,
+                        width: 600,
+                        itemStyle: {
+                            normal: {
+                                borderColor: 'rgba(26,82,231, 1)',
+                                borderWidth: 1,
+                                areaColor: "#FFFFFF",
+                                shadowColor: 'rgba(255, 255, 255, 0)',
+                                shadowOffsetX: -2,
+                                shadowOffsetY: 2,
+                                shadowBlur: 10
+                            },
+                            emphasis: {
+                                areaColor: "#FFFFFF"
+                            }
+                        }
+                    }],
+                    series: [{
+                        type: 'wellSymbol',
+                        name: 'wellTop',
+                        symbol: 'TJLB-31C',
+                        coordinateSystem: 'geo',
+                        data: [{
+                            wellId: 'Gd010',
+                            wellName: '孤东010',
+                            symbol: 'TJLB-31C',
+                            value:[102.9199,30.4663]
+                        },{
+                            wellId: 'Gd011',
+                            wellName: '孤东011',
+                            symbol: 'TJLB-30C',
+                            value:[112.9199,40.4663]
+                        }],
+                        symbolSize: 20
+                    }, {
+                        type: 'wellSymbol',
+                        name: 'wellBottom',
+                        coordinateSystem: 'geo',
+                        symbol: 'TJLB-32C',
+                        data: [{
+                            wellId: 'Gd010',
+                            value:[102.9199,28.4663]
+                        } ,{
+                            wellId: 'Gd010',
+                            value:[104.9199,28.4663]
+                        }, {
+                            wellId: 'Gd011',
+                            value:[113.9199,38.4663]
+                        }],
+                        symbolSize: 20
+                    }
+                    , {
+                        type: 'wellTrace',
+                        name: 'wellTrace',
+                        coordinateSystem: 'geo',
+                        data: [],
+                        polyline: true,
+                        lineStyle: {
+                            normal: {
+                                color: 'red',
+                                width: 3,
+                                opacity: 0.3
+                            }
+                           
+                        }
+                    }
+                    ]
+                });
+            });
+
+
+            window.setTimeout(function () {
+                chart.setOption({
+                    series: [{
+                        name: 'wellTrace',
+                        data: [{
+                            wellId: 'Gd010',
+                            wellMasterId: '',
+                            wellMasterName: '',
+                            coords: [[102.9199, 30.4663], [101.9199, 29.4663], [102.9199, 28.4663]]
+                        }, {
+                            wellId: 'Gd010',
+                            wellMasterId: '',
+                            wellMasterName: '',
+                            coords: [[102.9199, 30.4663], [104.9199, 28.4663]]
+                        }, {
+                            wellId: 'Gd011',
+                            wellMasterId: '',
+                            wellMasterName: '',
+                            coords: [[112.9199, 40.4663], [113.9199, 38.4663]]
+                        }]
+                    }]
+                })
+            }, 500)
+        })
+    });
+
+  
+
+</script>
+</body>
+</html>

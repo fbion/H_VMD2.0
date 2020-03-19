@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>初始化页面</title>
+	<!--基本样式-->
+    <link href="{vmdvirtualPath}/css/common.css?ver=vmd2.0.5.191104" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="{vmdvirtualPath}/lib/ext-3.4/resources/css/ext-all.css?ver=vmd2.0.5.191104" rel="stylesheet" />
+   
+    <link href="{vmdvirtualPath}/design/css/icons.css?ver=vmd2.0.5.191104" rel="stylesheet" />
+
+	<link href="{vmdvirtualPath}/lib/dhtmlx/skins/material/dhtmlx.css?ver=vmd2.0.5.191104" rel="stylesheet" />
+	  <!--样式快捷索引表-->
+    <link href="{vmdvirtualPath}/css/shortcut.css?ver=vmd2.0.5.191104" rel="stylesheet" />
+    
+	{vmdprojectcssfiles}
+    
+    <script src="{vmdvirtualPath}/lib/labjs/LAB.min.js?ver=vmd2.0.5.191104"></script>
+    <script src="{vmdvirtualPath}/config.js?ver=vmd2.0.5.191104"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=vmd2.0.5.191104"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=vmd2.0.5.191104"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=vmd2.0.5.191104"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/ext-all-debug.js?ver=vmd2.0.5.191104"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=vmd2.0.5.191104"></script>
+    <script src="{vmdvirtualPath}/js/util.js?ver=vmd2.0.5.191104"></script>
+    <script src="{vmdvirtualPath}/lib/dhtmlx/codebase/dhtmlx.js?ver=vmd2.0.5.191104"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=vmd2.0.5.191104"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=vmd2.0.5.191104"></script>
+    <script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=vmd2.0.5.191104"></script>
+	<script src="{vmdvirtualPath}/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=vmd2.0.5.191104"></script>
+    <script src="{vmdvirtualPath}/js/hwdas.js?ver=vmd2.0.5.191104"></script>
+    <script src="{vmdvirtualPath}/js/vmdcore.js?ver=vmd2.0.5.191104"></script>
+    <script src="{vmdvirtualPath}/js/vmdcomps.js?ver=vmd2.0.5.191104"></script>
+    <script src="{vmdvirtualPath}/js/publicMethods.js?ver=vmd2.0.5.191104"></script>
+    <script src="{vmdvirtualPath}/js/vmdreport.js?ver=vmd2.0.5.191104"></script>
+    
+    {vmdworkspacePath}
+	{vmdprojectconfigjs}
+	
+	{vmdprojectjsfiles}
+    
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        /*字体*/
+
+@font-face {
+    font-family: "iconfont";
+    src: url('/modules/hw70e7c3c8/img/font/iconfont.eot?t=1512609895467');
+    /* IE9*/
+    src: url('/modules/hw70e7c3c8/img/font/iconfont.eot?t=1512609895467#iefix') format('embedded-opentype'), /* IE6-IE8 */
+    url('/modules/hw70e7c3c8/img/font/iconfont.ttf?t=1512609895467') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+    url('/modules/hw70e7c3c8/img/font/iconfont.svg?t=1512609895467#iconfont') format('svg');
+    /* iOS 4.1- */
+}
+
+.iconfont {
+    font-family: "iconfont" !important;
+    font-size: 18px;
+    font-style: normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    color: #1868b8;
+    padding-right: 15px;
+}
+
+.icon-bangzhu:before {
+    content: "\e616";
+}
+
+.icon-tongzhi:before {
+    content: "\e60e";
+}
+
+.icon-yiban:before {
+    content: "\e678";
+}
+
+.icon-daiban:before {
+    content: "\e67a";
+}
+
+.ct {
+    border: 0px solid #e4e4e4;
+}
+
+.viewct {
+    border: 1px solid #e4e4e4;
+}
+
+.header {
+    background: #fff;
+}
+
+.header label {
+    font-weight: bold;
+}
+
+.header .title {
+    color: #1868b8;
+}
+
+.header .more {
+    color: #9e9e9e;
+    font-family: 'Microsoft YaHei', sans-serif
+}
+
+.daibanct {
+    /*border:1px solid blue;*/
+}
+
+/*.info {*/
+/*    display: -webkit-box;*/
+    /* 老版本语法: Safari, iOS, Android browser, older WebKit browsers. */
+/*    display: -moz-box;*/
+    /* 老版本语法: Firefox (buggy) */
+/*    display: -ms-flexbox;*/
+    /* 混合版本语法: IE 10 */
+/*    display:table;*/
+    /*IE 9 */
+/*    display: -webkit-flex;*/
+    /* 新版本语法: Chrome 21+ */
+/*    display: flex;*/
+    /* 新版本语法: Opera 12.1, Firefox 22+ */
+/*    line-height: 31px;*/
+/*    margin: 0 10px;*/
+/*    position: relative;*/
+/*    border-bottom: 2px dotted #eee;*/
+/*    padding-left: 10px;*/
+/*    background: url('/modules/hw70e7c3c8/img/dot.png') center left no-repeat;*/
+/*}*/
+.info {
+    line-height: 31px;
+    margin: 0 10px;
+    position: relative;
+    border-bottom: 2px dotted #eee;
+    padding-left: 10px;
+    background: url('/modules/hw70e7c3c8/img/dot.png') center left no-repeat;
+}
+.info:after{
+  content: '';
+  display:block;
+  clear: both;
+}
+/*.info .title {*/
+    /*min-width: 120px;*/
+    /*width: 360px;*/
+/*    text-overflow: ellipsis;*/
+/*    white-space: nowrap;*/
+/*    overflow: hidden;*/
+/*    padding-right: 5px;*/
+/*    -webkit-flex: 1;*/
+    /* Chrome */
+/*    -ms-flex: 1;*/
+    /* IE 10 */
+/*    flex: 1;*/
+/*    display: table-cell;*/
+/*}*/
+.info .title {
+    float: left;
+    width: 65%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.info a {
+    text-decoration: none;
+    color: #333;
+}
+
+.info .rq {
+   float: left;
+    color: #333;
+    font-size: 13px;
+    width: 30%;
+    text-align: right;
+    padding-right: 5px;
+}
+
+li.info-hover {
+    cursor: pointer
+}
+
+li.info-hover a {
+    color: #1868b8
+}
+
+.d-info {
+    padding: 8px 0;
+}
+
+.header .more:hover {
+    color: #1868b8;
+}
+    </style>
+    <script>
+	    
+        vmd.virtualPath = '{vmdvirtualPath}';
+        
+        Ext.define("vmd.module.MyViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps([]),
+	xtype:"vmd.module.MyViewport",
+	layout:"border",
+	afterrender:"MyViewport_afterrender",
+	initComponent: function(){
+		function hwDataView2_click(sender, index, node, e) {
+    Ext.Msg.alert("提示", "正在编写中......", function() {})
+}
+
+function hwDataView3_click(sender, index, node, e) {
+
+    var path = vmd.virtualPath + node.getAttribute('path');
+    window.open(path, '_self')
+
+}
+
+function hwDataView1_click(sender, index, node, e) {
+    var path = vmd.virtualPath + node.getAttribute('path');
+    window.open(path, '_self')
+}
+
+function MyViewport_afterrender(sender) {
+    Ext.getBody().on('click', function() {
+        console.log(parent.menu)
+        if(!parent.hwMenuWorkSpaceList.hidden) {
+            parent.hwMenuWorkSpaceList.hide()
+        }
+        if(!parent.hwMenuWorkSpace.hidden) {
+            parent.hwMenuWorkSpace.hide()
+        }
+        if(!parent.hwMenuProject.hidden) {
+            parent.hwMenuProject.hide()
+        }
+        if(!parent.hwMenuProjectList.hidden) {
+            parent.hwMenuProjectList.hide()
+        }
+        if(!parent.hwMenuProjectConfig.hidden) {
+            parent.hwMenuProjectConfig.hide()
+        }
+        if(!parent.hwMenuProMange.hidden) {
+            parent.hwMenuProMange.hide()
+        }
+        if(!parent.hwMenuHelp.hidden) {
+            parent.hwMenuHelp.hide()
+        }
+    })
+}
+			this.MyViewport_afterrender=MyViewport_afterrender;
+
+
+
+		this.items=[
+			{
+				xtype:"panel",
+				id:"MyPanel",
+				header:false,
+				border:false,
+				height:100,
+				region:"center",
+				layout:"anchor",
+				items:[
+					{
+						xtype:"vmd.div",
+						id:"MyContainer",
+						layoutConfig:{
+							align:"stretch"
+						},
+						autoEl:"div",
+						border:false,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						width:400,
+						height:50,
+						anchor:"100% 50%",
+						layout:"hbox",
+						hideBorders:false,
+						items:[
+							{
+								xtype:"panel",
+								id:"MyPanel2",
+								title:"使用说明",
+								header:true,
+								border:true,
+								height:100,
+								flex:1,
+								margins:"30 30 30 50",
+								layout:"fit",
+								items:[
+									{
+										xtype:"vmd.dataview",
+										id:"hwDataView3",
+										width:350,
+										height:270,
+										itemSelector:"li.info",
+										overClass:"info-hover",
+										selectedClass:"x-view-selected",
+										singleSelect:true,
+										multiSelect:true,
+										autoScroll:false,
+										tpl:"<ul class=\"d-info\">    <tpl for=\".\">        <li class=\"info\" title='{document_name}' path='{path}'>            <div class=\"title\"> <a href=\"{path}\" target=\"_blank\">{document_name}</a></div>            <div class=\"rq\">{publish_date}</div>        </li>    </tpl></ul>",
+										data:"var data = [{    \"document_id\": 1,    \"document_name\": \"VMD2.0用户使用手册\",    path: '/system/用户手册/VMD2.0使用手册.doc',    publish_date: '2018-06-30'}, {    \"document_id\": 2,    \"document_name\": \"DDR4.5用户使用手册\",    path: '/system/用户手册/DDR 4.5用户操作手册.docx',    publish_date: '2018-06-30'}, {    \"document_id\": 3,    \"document_name\": \"数据访问服务运维用户手册\",    path: '/system/用户手册/数据访问服务运维用户手册.docx',    publish_date: '2018-07-01'}, {    \"document_id\": 4,    \"document_name\": \"VMD模块增加认证支持的使用方法\",    path: '/system/用户手册/VMD模块增加认证支持的使用方法.docx',    publish_date: '2018-07-01'}];return data;",
+										click:"hwDataView3_click",
+										listeners:{
+											click:hwDataView3_click
+										}
+									}
+								]
+							},
+							{
+								xtype:"panel",
+								id:"MyPanel3",
+								title:"定制视频",
+								header:true,
+								border:true,
+								height:100,
+								flex:1,
+								margins:"30 50 30 0",
+								layout:"fit",
+								items:[
+									{
+										xtype:"vmd.dataview",
+										id:"hwDataView1",
+										width:350,
+										height:270,
+										itemSelector:"li.info",
+										overClass:"info-hover",
+										selectedClass:"x-view-selected",
+										singleSelect:true,
+										multiSelect:true,
+										autoScroll:false,
+										tpl:"<ul class=\"d-info\">    <tpl for=\".\">        <li class=\"info\" title='{document_name}' path='{path}'>            <div class=\"title\"> <a href=\"{path}\" target=\"_blank\">{document_name}</a></div>            <div class=\"rq\">{publish_date}</div>        </li>    </tpl></ul>",
+										data:"var data = [{    \"document_id\": 1,    \"document_name\": \"报表定制视频\",    path: '/system/video/报表定制.exe',    publish_date: '2018-07-01'}, {    \"document_id\": 2,    \"document_name\": \"复合组件定制视频\",    path: '/system/video/复合组件定制.exe',    publish_date: '2018-07-01'}];return data;",
+										click:"hwDataView1_click",
+										listeners:{
+											click:hwDataView1_click
+										}
+									}
+								]
+							}
+						]
+					},
+					{
+						xtype:"vmd.div",
+						id:"MyContainer1",
+						layoutConfig:{
+							align:"stretch"
+						},
+						autoEl:"div",
+						border:false,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						width:400,
+						height:50,
+						anchor:"100% 50%",
+						layout:"hbox",
+						hideBorders:true,
+						items:[
+							{
+								xtype:"panel",
+								id:"MyPanel4",
+								title:"接口说明",
+								header:true,
+								border:true,
+								height:100,
+								flex:1,
+								margins:"0 30 30 50",
+								layout:"fit",
+								items:[
+									{
+										xtype:"vmd.dataview",
+										id:"hwDataView2",
+										width:350,
+										height:270,
+										itemSelector:"li.info",
+										overClass:"info-hover",
+										selectedClass:"x-view-selected",
+										singleSelect:true,
+										multiSelect:true,
+										autoScroll:false,
+										tpl:"<ul class=\"d-info\">    <tpl for=\".\">        <li class=\"info\" title='{document_name}'>            <div class=\"title\"> <a href=\"\" target=\"_blank\">{document_name}</a></div>            <div class=\"rq\">{publish_date}</div>        </li>    </tpl></ul>",
+										data:"var data = [{    \"document_id\": 1,    \"document_name\": \"组件接口使用说明\",    publish_date: '2017-11-11'}, {    \"document_id\": 2,    \"document_name\": \"复合组件接口使用说明\",    publish_date: '2017-11-11'}];return data;",
+										click:"hwDataView2_click",
+										listeners:{
+											click:hwDataView2_click
+										}
+									}
+								]
+							},
+							{
+								xtype:"panel",
+								id:"MyPanel5",
+								title:"扩展说明",
+								header:true,
+								border:true,
+								height:100,
+								flex:1,
+								margins:"0 50 30 0",
+								layout:"fit",
+								items:[
+									{
+										xtype:"vmd.dataview",
+										id:"hwDataView",
+										width:350,
+										height:270,
+										itemSelector:"li.info",
+										overClass:"info-hover",
+										selectedClass:"x-view-selected",
+										singleSelect:true,
+										multiSelect:true,
+										autoScroll:false,
+										tpl:"<ul class=\"d-info\">    <tpl for=\".\">        <li class=\"info\" title='{document_name}'>            <div class=\"title\"> <a href=\"\" target=\"_blank\">{document_name}</a></div>            <div class=\"rq\">{publish_date}</div>        </li>    </tpl></ul>",
+										data:"var data = [];return data;"
+									}
+								]
+							}
+						]
+					}
+				]
+			},
+			{
+				xtype:"panel",
+				id:"MyPanel1",
+				layoutConfig:{
+					pack:"center",
+					align:"middle"
+				},
+				title:"Panel",
+				header:false,
+				border:false,
+				height:55,
+				region:"north",
+				layout:"hbox",
+				items:[
+					{
+						xtype:"label",
+						id:"MyLabel",
+						text:"VMD2.0  使用资料",
+						style:"font-size: 30px;    color: #409eff;"
+					}
+				]
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+			me.on('afterrender',function(){ MyViewport_afterrender.call(me,me)})
+}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MyViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

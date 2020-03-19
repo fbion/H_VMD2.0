@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>test1</title>
+    
+    <!--基本样式-->
+    <link href="{vmdvirtualPath}/css/common.css?ver=2.0.4.190514" rel="stylesheet" />
+
+    <!--加载dhx组件-->
+    
+    <link href="{vmdvirtualPath}/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.4.190514" rel="stylesheet" />
+
+	<link href="{vmdvirtualPath}/lib/dhtmlx/skins/material/dhtmlx.css?ver=2.0.4.190514" rel="stylesheet" />
+    <script src="{vmdvirtualPath}/lib/dhtmlx/codebase/dhtmlx.js?ver=2.0.4.190514" ></script>
+    <!--样式快捷索引表-->
+    <link href="{vmdvirtualPath}/css/shortcut.css?ver=2.0.4.190514" rel="stylesheet" />
+	
+	{vmdprojectcssfiles}
+    
+    <script src="{vmdvirtualPath}/lib/labjs/LAB.min.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/config.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/ext-all-debug.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.4.190514"></script>
+	<script src="{vmdvirtualPath}/js/util.js?ver=2.0.4.190514"></script>
+	 <script src="{vmdvirtualPath}/report/buttons/vmdimportexcelbutton.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/report/buttons/vmdexportexcelbutton.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/report/buttons/vmdprintbutton.js??ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/report/buttons/vmdheadercustombutton.js??ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/js/hwdas.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/js/vmdcore.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/js/vmdcomps.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/js/vmdreport.js?ver=2.0.4.190514"></script>
+	<script src="{vmdvirtualPath}/js/publicMethods.js?ver=2.0.4.190514"></script>
+	 <script src="{vmdvirtualPath}/lib/express/complete.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/report/js/hwreport_core.js?ver=2.0.4.190514"></script>
+    
+	{vmdprojectjsfiles}
+    
+    {vmdworkspacePath}
+
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        
+    </style>
+    <script>
+	    
+        vmd.virtualPath = '{vmdvirtualPath}';
+        
+        Ext.define("vmd.module.MyViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps([]),
+	xtype:"vmd.module.MyViewport",
+	layout:"border",
+	initComponent: function(){
+		function report_afterrender(sender) {
+    //设置报表内变量的值
+    //report.setParamValue("var1", var1.getValue());
+    report.query();
+    
+}
+
+
+
+	
+		store=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"store","autoLoad":true,"cid":"vmdJsonStore","storeConfig":"{\"id\":\"eQ9TXjYMJR\",\"callcode\":\"vmdCode\",\"url\":\"CDEServcie/project/info\",\"host\":\"\",\"isHwRest\":true,\"name\":\"项目信息\",\"getMethods\":[],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"xh\",\"type\":\"int64\"},{\"name\":\"code\",\"type\":\"string\"},{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"row_created_by\",\"type\":\"string\"},{\"name\":\"row_created_date\",\"type\":\"datetime\"},{\"name\":\"row_changed_date\",\"type\":\"datetime\"},{\"name\":\"row_changed_by\",\"type\":\"string\"}]}"});
+
+
+		this.items=[
+			{
+				xtype:"panel",
+				id:"panel1",
+				title:"Panel",
+				header:false,
+				border:false,
+				x:0,
+				y:70,
+				layout:"fit",
+				autoScroll:true,
+				region:"center",
+				items:[
+					{
+						xtype:"vmd.report2_2",
+						id:"report",
+						text:"hwreport",
+						relativepath:"report/system/modules/eQ9ULgcVb1/hwB72m1spu/hwzE1wecVl/hwecab066e",
+						align:"center",
+						fillReport:false,
+						autoHeight:false,
+						autoWidth:false,
+						loadMode:"nomal",
+						nousedataset:false,
+						isServer:true,
+						ocx_version:"1,2,2,0",
+						rptVersion:"2.2",
+						afterrender:"report_afterrender",
+						isWebEdit:true,
+						path:"test1_report.json",
+						configPath:"report/system/modules/eQ9ULgcVb1/hwB72m1spu/hwzE1wecVl/hwecab066e/dbadmin_test1_report.json",
+						listeners:{
+							vmdafterrender:report_afterrender
+						}
+					}
+				]
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+	}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MyViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

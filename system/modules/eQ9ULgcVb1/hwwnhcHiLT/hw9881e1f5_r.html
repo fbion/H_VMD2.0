@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>testvreatrichtext</title>
+	<!--基本样式-->
+    <link href="{vmdvirtualPath}/css/common.css?ver=vmd2.0.5.200103" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="{vmdvirtualPath}/lib/ext-3.4/resources/css/ext-all.css?ver=vmd2.0.5.200103" rel="stylesheet" />
+   
+    <link href="{vmdvirtualPath}/design/css/icons.css?ver=vmd2.0.5.200103" rel="stylesheet" />
+
+	<link href="{vmdvirtualPath}/lib/dhtmlx/skins/material/dhtmlx.css?ver=vmd2.0.5.200103" rel="stylesheet" />
+	  <!--样式快捷索引表-->
+    <link href="{vmdvirtualPath}/css/shortcut.css?ver=vmd2.0.5.200103" rel="stylesheet" />
+    
+	{vmdprojectcssfiles}
+    
+    <script src="{vmdvirtualPath}/lib/labjs/LAB.min.js?ver=vmd2.0.5.200103"></script>
+    <script src="{vmdvirtualPath}/config.js?ver=vmd2.0.5.200103"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=vmd2.0.5.200103"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=vmd2.0.5.200103"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=vmd2.0.5.200103"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/ext-all-debug.js?ver=vmd2.0.5.200103"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=vmd2.0.5.200103"></script>
+    <script src="{vmdvirtualPath}/js/util.js?ver=vmd2.0.5.200103"></script>
+    <script src="{vmdvirtualPath}/lib/dhtmlx/codebase/dhtmlx.js?ver=vmd2.0.5.200103"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=vmd2.0.5.200103"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=vmd2.0.5.200103"></script>
+    <script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=vmd2.0.5.200103"></script>
+	<script src="{vmdvirtualPath}/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=vmd2.0.5.200103"></script>
+    <script src="{vmdvirtualPath}/js/hwdas.js?ver=vmd2.0.5.200103"></script>
+    <script src="{vmdvirtualPath}/js/vmdcore.js?ver=vmd2.0.5.200103"></script>
+    <script src="{vmdvirtualPath}/js/vmdcomps.js?ver=vmd2.0.5.200103"></script>
+    <script src="{vmdvirtualPath}/js/publicMethods.js?ver=vmd2.0.5.200103"></script>
+    <script src="{vmdvirtualPath}/js/vmdreport.js?ver=vmd2.0.5.200103"></script>
+    
+    {vmdworkspacePath}
+	{vmdprojectconfigjs}
+	<script src="{vmdvirtualPath}/lib/ace/ace.js?ver=vmd2.0.5.200103" ></script>
+	<script src="{vmdvirtualPath}/lib/ace/mode-base.js?ver=vmd2.0.5.200103" ></script>
+	<script src="{vmdvirtualPath}/lib/ace/theme-xcode.js?ver=vmd2.0.5.200103" ></script>
+	<script src="{vmdvirtualPath}/lib/ace/ext-language_tools.js?ver=vmd2.0.5.200103" ></script>
+	<script src="{vmdvirtualPath}/lib/ace/ace.js?ver=vmd2.0.5.200103" ></script>
+	<script src="{vmdvirtualPath}/lib/ace/mode-base.js?ver=vmd2.0.5.200103" ></script>
+	<script src="{vmdvirtualPath}/lib/ace/theme-xcode.js?ver=vmd2.0.5.200103" ></script>
+	<script src="{vmdvirtualPath}/lib/ace/ext-language_tools.js?ver=vmd2.0.5.200103" ></script>
+	{vmdprojectjsfiles}
+    
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        
+    </style>
+    <script>
+	    
+        vmd.virtualPath = '{vmdvirtualPath}';
+        
+        Ext.define("vmd.module.MainViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps([]),
+	xtype:"vmd.module.MainViewport",
+	layout:"absolute",
+	initComponent: function(){
+		
+	
+
+
+		this.items=[
+			{
+				xtype:"vmd.ace",
+				id:"MyAce",
+				height:300,
+				width:600,
+				language:"javascript",
+				x:10,
+				y:40
+			},
+			{
+				xtype:"vmd.ace",
+				id:"MyAce1",
+				height:300,
+				width:600,
+				language:"javascript",
+				x:650,
+				y:40
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+	}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MainViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

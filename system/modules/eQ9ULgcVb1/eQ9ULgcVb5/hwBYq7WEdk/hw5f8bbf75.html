@@ -1,0 +1,1721 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>环境配置</title>
+    <!--基本样式-->
+    <link href="/css/common.css?ver=2.0.4.190627" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.4.190627" rel="stylesheet" />
+    <link href="/design/css/icons.css?ver=2.0.4.190627" rel="stylesheet" />
+    <link href="/lib/dhtmlx/skins/material/dhtmlx.css?ver=2.0.4.190627" rel="stylesheet" />
+    <!--样式快捷索引表-->
+    <link href="/css/shortcut.css?ver=2.0.4.190627" rel="stylesheet" />
+    <script src="/lib/labjs/LAB.min.js?ver=2.0.4.190627"></script>
+    <script src="/config.js?ver=2.0.4.190627"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.4.190627"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.4.190627"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.4.190627"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=2.0.4.190627"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.4.190627"></script>
+    <script src="/js/util.js?ver=2.0.4.190627"></script>
+    <script src="/lib/dhtmlx/codebase/dhtmlx.js?ver=2.0.4.190627"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.4.190627"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.4.190627"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.4.190627"></script>
+    <script src="/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.4.190627"></script>
+    <script src="/js/hwdas.js?ver=2.0.4.190627"></script>
+    <script src="/js/vmdcore.js?ver=2.0.4.190627"></script>
+    <script src="/js/vmdcomps.js?ver=2.0.4.190627"></script>
+    <script src="/js/publicMethods.js?ver=2.0.4.190627"></script>
+    <script src="/js/vmdreport.js?ver=2.0.4.190627"></script>
+    <script src="/system/modules/eQ9ULgcVb1/project.config.js"></script>
+    <style> </style>
+    <style type="text/css" id="vmdcss">
+        .aaaaa .x-tab-strip-top .x-tab-strip-active .x-tab-right {
+            background-color: #42b983
+        }
+
+        .aaaaa .x-tab-strip-active span.x-tab-strip-text {
+            color: white;
+            font-weight: bold;
+        }
+
+        .bbbbb .x-tab-strip-top .x-tab-strip-active .x-tab-right {
+            background-color: #fafafa
+        }
+
+        .bbbbb .x-tab-strip-active span.x-tab-strip-text {
+            color: #409eff;
+            font-weight: bold;
+        }
+
+        .ccccc .icon-refresh {
+            background-image: url("") !important;
+        }
+
+        .serverlist-info {
+            padding: 8px 17px;
+            margin: 2px;
+            line-height: 0.25em;
+            height: 5px;
+            width: 150px;
+            border-top: 5px solid transparent;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .x-grid3-hd-row td {
+            font: normal 14px arial, tahoma, helvetica, sans-serif;
+        }
+
+        .x-grid3-row td,
+        .x-grid3-summary-row td {
+            font: normal 14px arial, tahoma, helvetica, sans-serif;
+        }
+    </style>
+    <script>
+        vmd.previewMode = true;
+        vmd.virtualPath = '';
+        vmd.workspace = {
+            "workspaceid": "1174c7d2-f008-4f84-bb61-1845b5d28814",
+            "workflowIp": "",
+            "dataServiceIp": "",
+            "msgIp": "",
+            "projectid": "eQ9ULgcVb1"
+        }
+        vmd.resourceSettings = {
+            "test&&资源中心服务器": "http://www.hanweikeji.com:8050/resource",
+            "test&&服务器2": "http://192.168.1.202:8050/resource",
+            "test&&555": "http://www.hanweikeji.com:8050/resource",
+            "10055&&资源中心服务器": "http://www.hanweikeji.com:10050/resource"
+        }
+        vmd.projectInfo = {
+            "projectId": "eQ9ULgcVb1",
+            "workflowIp": "",
+            "dataServiceIp": "",
+            "msgIp": "",
+            "todoIp": "",
+            "authIp": "",
+            "docIp": "",
+            "reoprtIp": "",
+            "logIp": ""
+        }
+        Ext.define("vmd.module.MainViewport", {
+            extend: "vmd.comp.viewport",
+            requires: vmd.getCmpDeps(["vmd.ux.PublishResource$1.0$PublishResource"]),
+            xtype: "vmd.module.MainViewport",
+            layout: "border",
+            autoScroll: true,
+            afterrender: "MainViewport_afterrender",
+            initComponent: function() {
+                //定义校验规则表达式
+                var strRegex = '^(([0-9a-z_!~*().&=+$%-]+: )?[0-9a-z_!~*().&=+$%-]+@)?' //ftp的user@
+                    +
+                    '(([0-9]{1,3}.){3}[0-9]{1,3}' // IP形式的URL- 199.194.52.184
+                    +
+                    '|' // 允许IP和DOMAIN（域名）
+                    +
+                    '([0-9a-z_!~*()-]+.)*' // 域名- www.
+                    +
+                    '([0-9a-z][0-9a-z-]{0,61})?[0-9a-z].' // 二级域名
+                    +
+                    '[a-z]{2,6})' // first level domain- .com or .museum
+                    +
+                    '(:[0-9]{1,6})?' // 端口- :80
+                    +
+                    '((/?)|' // a slash isn't required if there is no file name
+                    +
+                    "(/[0-9a-z_!~*().;?:@&=+$,%#-]+)+/?)$";
+
+                function store_load(sender, records, options) {
+                    if (records.length > 0) {
+                        var rec = records[0].data
+                        txt_dev_dasserver.setValue(rec.dasserver);
+                        txt_dev_wfserver.setValue(rec.wfserver);
+                        txt_dev_msgserver.setValue(rec.msgserver);
+                        txt_dev_todoserver.setValue(rec.todoserver);
+                        txt_dev_authserver.setValue(rec.authserver);
+                        txt_dev_docserver.setValue(rec.docserver);
+                        txt_dev_reportserver.setValue(rec.reportserver);
+                        txt_dev_logserver.setValue(rec.logserver);
+                    }
+                }
+
+                function button_click(sender, e) {
+                    if (txt_dev_dasserver.activeError ||
+                        txt_dev_dasserver.activeError ||
+                        txt_dev_wfserver.activeError ||
+                        txt_dev_msgserver.activeError ||
+                        txt_dev_todoserver.activeError ||
+                        txt_dev_authserver.activeError ||
+                        txt_dev_docserver.activeError ||
+                        txt_dev_reportserver.activeError ||
+                        txt_dev_logserver.activeError
+                    ) {
+                        alert("微服务书写不规范，请核实后再保存!")
+                        return
+                    }
+                    hwDas.save("CDEServcie/project/projectconfig/devservers", {}, {}, {
+                        dasserver: txt_dev_dasserver.getValue(),
+                        wfserver: txt_dev_wfserver.getValue(),
+                        msgserver: txt_dev_msgserver.getValue(),
+                        todoserver: txt_dev_todoserver.getValue(),
+                        authserver: txt_dev_authserver.getValue(),
+                        docserver: txt_dev_docserver.getValue(),
+                        reportserver: txt_dev_reportserver.getValue(),
+                        logserver: txt_dev_logserver.getValue(),
+                        project_id: vmd.getUrlParam("projectid") || 'hWlI8gBXWj'
+                    }, function(result) {
+                        vmd.tip('保存成功', "success")
+                        if (parent && parent.reLoadWFandDas) {
+                            parent.reLoadWFandDas()
+                        }
+                    }, function(msg) {
+                        console.log(msg)
+                    })
+                }
+                //添加资源中心服务地址
+                winAddResourceServer = Ext.extend(Ext.Window, {
+                    xtype: "window",
+                    title: "添加资源中心服务地址",
+                    width: 300,
+                    height: 200,
+                    layout: "form",
+                    bodyStyle: 'padding:15px',
+                    labelAlign: "left",
+                    labelWidth: 40,
+                    modal: true,
+                    constructor: function(callback, name, addr, remark) {
+                        this.callback = callback;
+                        this.valueAddr = addr;
+                        this.valueName = name;
+                        this.valueRemark = remark;
+                        this.callParent();
+                    },
+                    initComponent: function() {
+                        var me = this;
+                        this.fbar = [{
+                            text: "确定",
+                            handler: function() {
+                                //var reg = /[\w\-]+(\.[\w\-]+)+([\w\-\.,@?^=%&:\/~\+#]*[\w\-\@?^=%&\/~\+#])?:([0-9]|[1-9]\d{1,5}|[1-5]\d{4}|6[0-5]{2}[0-3][0-5])$/;
+                                if (!new RegExp(strRegex).test(Ext.getCmp('addr').getValue())) {
+                                    Ext.Msg.alert("提示", "请输入正确的服务地址(带端口)！")
+                                    return;
+                                }
+                                //验证资源中心是否配置正确
+                                hwDas.get({
+                                    host: Ext.getCmp('addr').getValue(),
+                                    url: "zyzx/zyzxtree/getServerInfo"
+                                }, {}, {}, function() {
+                                    //如果包含资源中心，则保存并关闭
+                                    me.callback(Ext.getCmp('name').getValue().trim(), Ext.getCmp('addr').getValue(), Ext.getCmp('remark').getValue().trim());
+                                    me.close();
+                                }, function() {
+                                    //不包含资源中心接口，则提示
+                                    Ext.Msg.alert("提示", "地址:" + Ext.getCmp('addr').getValue() + "不是有效的资源中心地址,请确认该地址是否包含资源中心服务接口!")
+                                    return;
+                                })
+                            }
+                        }, {
+                            text: "取消",
+                            handler: function() {
+                                me.close();
+                            }
+                        }];
+                        this.items = [{
+                            id: 'name',
+                            xtype: "textfield",
+                            fieldLabel: "名称",
+                            anchor: "100%",
+                            value: this.valueName
+                        }, {
+                            id: 'addr',
+                            xtype: "textfield",
+                            fieldLabel: "地址",
+                            anchor: "100%",
+                            value: this.valueAddr,
+                            regex: new RegExp(strRegex), //   /[\w\-]+(\.[\w\-]+)+([\w\-\.,@?^=%&:\/~\+#]*[\w\-\@?^=%&\/~\+#])?:([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-5]{2}[0-3][0-5])$/,
+                            regexText: "输入标准的服务器地址（带端口）！"
+                        }, {
+                            id: 'remark',
+                            xtype: "textfield",
+                            fieldLabel: "说明",
+                            anchor: "100%",
+                            value: this.valueRemark
+                        }]
+                        winAddResourceServer.superclass.initComponent.call(this);
+                    }
+                })
+
+                function button5_click(sender, e) {
+                    var addResourceServer = function(name, addr, remark) {
+                        var id = vmd.util.guid();
+                        var records = vmd.data.Record.create({
+                            id: id,
+                            address: addr,
+                            name: name,
+                            remark: remark
+                        });
+                        hwDas.save("CDEServcie/project/projectconfig/devresourceservers", {}, {}, {
+                                projectid: vmd.getUrlParam("projectid") || 'hWlI8gBXWj',
+                                id: id,
+                                address: addr,
+                                name: name,
+                                remark: remark,
+                            },
+                            function(result) {
+                                vmd.tip('保存成功', "success")
+                                getresourceserver.add(records)
+                            },
+                            function(msg) {
+                                console.log(msg)
+                            })
+                    }
+                    var winForm = new winAddResourceServer(addResourceServer, "", "", "");
+                    winForm.show();
+                }
+                //编辑模块
+                function moduleEdit(index, record) {
+                    var rec = record || getresourceserver.getAt(index)
+                    if (rec) {
+                        var editServer = function(name, addr, remark) {
+                            var id = rec.data.id;
+                            hwDas.save("CDEServcie/project/projectconfig/devresourceservers", {}, {}, {
+                                    projectid: vmd.getUrlParam("projectid") || 'hWlI8gBXWj',
+                                    id: id,
+                                    address: addr,
+                                    name: name,
+                                    remark: remark,
+                                },
+                                function(result) {
+                                    vmd.tip('修改成功', "success")
+                                    rec.set("address", addr)
+                                    rec.set("name", name)
+                                    rec.set("remark", remark)
+                                },
+                                function(msg) {
+                                    console.log(msg)
+                                })
+                        }
+                        var winForm = new winAddResourceServer(editServer, rec.data.name, rec.data.address, rec.data.remark);
+                        winForm.show();
+                    }
+                }
+                window.moduleEdit = moduleEdit
+                //删除资源
+                function moduleDel(index, record) {
+                    var rec = record || getresourceserver.getAt(index)
+                    if (rec)
+                        hwDas.del("CDEServcie/project/projectconfig/devresourceservers", {}, {
+                            serviceaddressid: rec.data.id
+                        }, function(result) {
+                            vmd.tip('删除成功', "success")
+                            getresourceserver.remove(rec)
+                        }, function(msg) {
+                            console.log(msg)
+                        })
+                }
+                window.moduleDel = moduleDel
+
+                function MyGrid_beforerender(sender) {
+                    // this.colModel.config[4].renderer = function(value, cellmeta, record) { //可以根据行字段的某个类型进行转换设置显示值
+                    //     return '<button class="vmd-button vmd-button--text vmd-button--small " style="height:10px;"' +
+                    //         'onclick=moduleEdit(' + record.store.indexOf(record) + ')><i class="icon-edit-sign"></i>编辑</button>' +
+                    //         '<button class="vmd-button vmd-button--text vmd-button--small " style="height:10px;margin-left:10px"' +
+                    //         'onclick=moduleDel(' + record.store.indexOf(record) + ')><i class="icon-minus"></i>删除</button>'
+                    // }
+                }
+                //添加资源中心服务地址
+                winAddPubServer = Ext.extend(Ext.Window, {
+                    xtype: "window",
+                    title: "发布环境配置名称",
+                    width: 300,
+                    height: 150,
+                    layout: "form",
+                    bodyStyle: 'padding:15px',
+                    labelAlign: "left",
+                    labelWidth: 40,
+                    modal: true,
+                    constructor: function(callback, name) {
+                        this.callback = callback;
+                        this.valueName = name;
+                        this.callParent();
+                    },
+                    initComponent: function() {
+                        var me = this;
+                        this.fbar = [{
+                            text: "确定",
+                            handler: function() {
+                                me.callback(Ext.getCmp('name').getValue());
+                                me.close();
+                            }
+                        }, {
+                            text: "取消",
+                            handler: function() {
+                                me.close();
+                            }
+                        }];
+                        this.items = [{
+                            id: 'name',
+                            xtype: "textfield",
+                            fieldLabel: "名称",
+                            anchor: "100%",
+                            value: this.valueName
+                        }]
+                        winAddResourceServer.superclass.initComponent.call(this);
+                    }
+                })
+
+                function button2_click(sender, e) {
+                    var addPubServer = function(name) {
+                        var id = vmd.util.guid();
+                        var records = vmd.data.Record.create({
+                            config_id: id,
+                            project_id: vmd.getUrlParam("projectid") || 'hWlI8gBXWj',
+                            name: name
+                        });
+                        hwDas.save("CDEServcie/project/projectconfig/runserverconfig", {}, {}, {
+                                project_id: vmd.getUrlParam("projectid") || 'hWlI8gBXWj',
+                                config_id: id,
+                                name: name
+                            },
+                            function(result) {
+                                vmd.tip('添加成功', "success")
+                                pubservers.add(records)
+                            },
+                            function(msg) {
+                                console.log(msg)
+                            })
+                    }
+                    var winForm = new winAddPubServer(addPubServer, "");
+                    winForm.show();
+                }
+
+                function button4_click(sender, e) {
+                    if (hwDataView.getSelectionCount() > 0) {
+                        var rec = hwDataView.getSelectedRecords()[0]
+                        hwDas.del("CDEServcie/project/projectconfig/runserverconfig", {}, {
+                            config_id: rec.data.config_id
+                        }, function(result) {
+                            vmd.tip('删除成功', "success")
+                            pubservers.remove(rec)
+                        }, function(msg) {
+                            console.log(msg)
+                        })
+                    }
+                }
+
+                function bindtree(nodeid) {
+                    substore.loadData([])
+                    if (txt_ptserver.getValue()) {
+                        hwDas.get(txt_ptserver.getValue() + "/getsubsystem", {}, {}, function(result) {
+                            substore.loadData(result.data[0].datas);
+                            if (nodeid) {
+                                var node = tree.getNodeById(nodeid)
+                                if (node) node.select()
+                            }
+                        }, function(msg) {
+                            console.log(msg)
+                        })
+                    }
+                }
+
+                function hwDataView_click(sender, index, node, e) {
+                    var rec = pubservers.getAt(index)
+                    if (rec) {
+                        recdata = rec.data;
+                        txt_ptserver.setValue(recdata.ptservice)
+                        bindtree(recdata.subsysid)
+                        txt_vir.setValue(recdata.virtualdir)
+                        txt_pub_dasserver.setValue(recdata.dasserver);
+                        txt_pub_wfserver.setValue(recdata.wfserver);
+                        txt_pub_msgserver.setValue(recdata.msgserver);
+                        txt_pub_todoserver.setValue(recdata.todoserver);
+                        txt_pub_authserver.setValue(recdata.authserver);
+                        txt_pub_docserver.setValue(recdata.docserver);
+                        txt_pub_reportserver.setValue(recdata.reportserver);
+                        txt_pub_logserver.setValue(recdata.logserver);
+                        if (hwDiv.rendered)
+                            bindresource()
+                    }
+                    button7.setDisabled(false)
+                }
+                var comData = [{
+                    subsysname: "",
+                    subsysid: "",
+                    parentid: "0"
+                }]
+                var substore = new vmd.data.Store({
+                    data: comData,
+                    fields: ['subsysname', 'subsysid', 'parentid']
+                })
+
+                function tree_beforerender(sender) {
+                    tree.store = substore
+                }
+
+                function getNewResource() {
+                    if (!hwDiv.rendered) {
+                        if (hwDataView.getSelectionCount() > 0) {
+                            var _rec = hwDataView.getSelectedRecords()[0]
+                            return _rec.data.resourceserver;
+                        }
+                        return "[]";
+                    }
+                    var newres = []
+                    for (var i = 0; i < listPublishResourceComps.length; i++) {
+                        var _resourecInfo = listPublishResourceComps[i].com.getText();
+                        newres.push({
+                            name: listPublishResourceComps[i].sname,
+                            oldip: _resourecInfo.oldIP,
+                            newip: _resourecInfo.newIP
+                        })
+                    }
+                    return Ext.encode(newres);
+                }
+                window.getNewResource = getNewResource
+
+                function button7_click(sender, e) {
+                    if (hwDataView.getSelectionCount() > 0) {
+                        var rec = hwDataView.getSelectedRecords()[0]
+                        if (
+                            txt_pub_dasserver.activeError ||
+                            txt_pub_wfserver.activeError ||
+                            txt_pub_msgserver.activeError ||
+                            txt_pub_todoserver.activeError ||
+                            txt_pub_authserver.activeError ||
+                            txt_pub_docserver.activeError ||
+                            txt_pub_reportserver.activeError ||
+                            txt_pub_logserver.activeError
+                        ) {
+                            alert("微服务书写不规范，请核实后再保存!")
+                            return;
+                        }
+                        hwDas.save("CDEServcie/project/projectconfig/runserverconfig", {}, {}, {
+                                config_id: rec.data.config_id,
+                                project_id: vmd.getUrlParam("projectid") || 'hWlI8gBXWj',
+                                ptservice: txt_ptserver.getValue().trim(),
+                                subsysid: tree.getSelNodeId() || "",
+                                virtualdir: txt_vir.getValue().trim(),
+                                dasserver: txt_pub_dasserver.getValue(),
+                                wfserver: txt_pub_wfserver.getValue(),
+                                msgserver: txt_pub_msgserver.getValue(),
+                                todoserver: txt_pub_todoserver.getValue(),
+                                authserver: txt_pub_authserver.getValue(),
+                                docserver: txt_pub_docserver.getValue(),
+                                reportserver: txt_pub_reportserver.getValue(),
+                                logserver: txt_pub_logserver.getValue(),
+                                resourceserver: getNewResource()
+                            },
+                            function(result) {
+                                vmd.tip('保存成功', "success")
+                                rec.set("config_id", rec.data.config_id)
+                                rec.set("project_id", vmd.getUrlParam("projectid") || 'hWlI8gBXWj')
+                                rec.set("ptservice", txt_ptserver.getValue())
+                                rec.set("subsysid", tree.getSelNodeId() || "")
+                                rec.set("virtualdir", txt_vir.getValue())
+                                rec.set("dasserver", txt_pub_dasserver.getValue())
+                                rec.set("wfserver", txt_pub_wfserver.getValue())
+                                rec.set("msgserver", txt_pub_msgserver.getValue())
+                                rec.set("todoserver", txt_pub_todoserver.getValue())
+                                rec.set("authserver", txt_pub_authserver.getValue())
+                                rec.set("docserver", txt_pub_docserver.getValue())
+                                rec.set("reportserver", txt_pub_reportserver.getValue())
+                                rec.set("logserver", txt_pub_logserver.getValue())
+                                rec.set("resourceserver", getNewResource())
+                            },
+                            function(msg) {
+                                console.log(msg)
+                            })
+                    }
+                }
+
+                function button3_click(sender, e) {
+                    bindtree()
+                }
+                var resourceServices = []
+                var listPublishResourceComps = []
+
+                function bindresource() {
+                    hwDiv.removeAll()
+                    var resourceserver = [];
+                    listPublishResourceComps = []
+                    var j = 0
+                    if (hwDataView.getSelectionCount() > 0) {
+                        var _rec = hwDataView.getSelectedRecords()[0]
+                        resourceserver = Ext.decode(_rec.data.resourceserver);
+                    }
+                    for (var i = 0; i < getresourceserver.getCount(); i++) {
+                        var rec = getresourceserver.getAt(i);
+                        (function(rec, index) {
+                            hwDas.get({
+                                host: getresourceserver.getAt(index).data.address,
+                                url: "zyzx/zyzxtree/getServerInfo"
+                            }, {}, {}, function(c_result) {
+                                if (c_result.data && c_result.data.length > 0 && c_result.data[0].size > 0) {
+                                    for (var k = 0; k < c_result.data[0].datas.length; k++) {
+                                        var rname = rec.data.name + "/" + c_result.data[0].datas[k].name
+                                        var r_name = rec.data.name + "&&" + c_result.data[0].datas[k].name
+                                        var newip = ""
+                                        for (var m = 0; m < resourceserver.length; m++) {
+                                            if (resourceserver[m].name == r_name) newip = resourceserver[m].newip
+                                        }
+                                        var ipresource = new vmd.ux.PublishResource({
+                                            id: "PublishResource" + index + "_" + k,
+                                            anchor: "100% ",
+                                            style: "font-size:14px;margin: 10px"
+                                        });
+                                        //动态添加地址替换组件，根据有多少不同的地址进行添加
+                                        hwDiv.add(ipresource)
+                                        ipresource.setText(c_result.data[0].datas[k].ip, newip, rname);
+                                        listPublishResourceComps.push({
+                                            sname: r_name,
+                                            com: ipresource
+                                        })
+                                    }
+                                    hwDiv.doLayout()
+                                }
+                                j++
+                            }, function() {
+                                j++
+                            })
+                        })(rec, i)
+                    }
+                    var n = 0
+                }
+
+                function MyTabs_tabchange(sender, tab) {
+                    if (tab.id == 'panel1' && MyTabs1.activeTab.id == 'panel3')
+                        if (hwDiv.rendered) {
+                            bindresource()
+                        }
+                }
+
+                function MyTabs1_tabchange(sender, tab) {
+                    if (hwDiv.rendered && tab.id == 'panel3') {
+                        if (hwDataView.getSelectionCount() <= 0)
+                            hwDiv.removeAll()
+                        else
+                            bindresource()
+                    }
+                }
+
+                function button6_click(sender, e) {
+                    var rec;
+                    if (hwDataView.getSelectionCount() > 0) {
+                        rec = hwDataView.getSelectedRecords()[0]
+                    }
+                    if (rec) {
+                        var editPubServer = function(name) {
+                            hwDas.edit("CDEServcie/project/projectconfig/runserverconfig", {}, {}, {
+                                    config_id: rec.data.config_id,
+                                    name: name
+                                },
+                                function(result) {
+                                    vmd.tip('修改成功', "success")
+                                    rec.set("name", name)
+                                },
+                                function(msg) {
+                                    console.log(msg)
+                                })
+                        }
+                        var winForm = new winAddPubServer(editPubServer, rec.data.name);
+                        winForm.show();
+                    }
+                }
+
+                function hwDataView_afterrender(sender) {
+                    if (pubservers.getCount() > 0) {
+                        hwDataView.selectRange(0, 0)
+                        hwDataView_click(sender, 0)
+                    }
+                    hwDataView.on("containerclick", function() {
+                        substore.loadData([])
+                        txt_ptserver.setValue("")
+                        txt_vir.setValue("")
+                        txt_pub_dasserver.setValue("")
+                        txt_pub_wfserver.setValue("")
+                        txt_pub_msgserver.setValue("")
+                        txt_pub_todoserver.setValue("")
+                        txt_pub_authserver.setValue("")
+                        txt_pub_docserver.setValue("")
+                        txt_pub_reportserver.setValue("")
+                        txt_pub_logserver.setValue("")
+                        hwDiv.removeAll()
+                        button7.setDisabled(true)
+                    })
+                }
+
+                function panel_beforerender(sender) {}
+
+                function setRegEx(cmp) {
+                    cmp.regex = new RegExp(strRegex)
+                    cmp.regexText = "输入格式如:www.hanweikeji.com:8888或192.168.1.1:8888";
+                }
+
+                function txt_dev_dasserver_afterrender(sender) {
+                    setRegEx(this)
+                }
+
+                function txt_dev_wfserver_afterrender(sender) {
+                    setRegEx(this)
+                }
+
+                function txt_dev_msgserver_afterrender(sender) {
+                    setRegEx(this)
+                }
+
+                function txt_dev_todoserver_afterrender(sender) {
+                    setRegEx(this)
+                }
+
+                function txt_dev_authserver_afterrender(sender) {
+                    setRegEx(this)
+                }
+
+                function txt_dev_docserver_afterrender(sender) {
+                    setRegEx(this)
+                }
+
+                function txt_dev_reportserver_afterrender(sender) {
+                    setRegEx(this)
+                }
+
+                function txt_dev_logserver_afterrender(sender) {
+                    setRegEx(this)
+                }
+
+                function txt_pub_dasserver_afterrender(sender) {
+                    setRegEx(this)
+                }
+
+                function txt_pub_wfserver_afterrender(sender) {
+                    setRegEx(this)
+                }
+
+                function txt_pub_msgserver_afterrender(sender) {
+                    setRegEx(this)
+                }
+
+                function txt_pub_todoserver_afterrender(sender) {
+                    setRegEx(this)
+                }
+
+                function txt_pub_authserver_afterrender(sender) {
+                    setRegEx(this)
+                }
+
+                function txt_pub_docserver_afterrender(sender) {
+                    setRegEx(this)
+                }
+
+                function txt_pub_reportserver_afterrender(sender) {
+                    setRegEx(this)
+                }
+
+                function txt_pub_logserver_afterrender(sender) {
+                    setRegEx(this)
+                }
+
+                function MainViewport_afterrender(sender) {}
+
+                function panel3_afterrender(sender) {}
+
+                function button8_click(sender, e) {
+                    var selects = MyGrid.getSelectionModel();
+                    if (selects.selections.items.length > 0) {
+                        var selrow = selects.selections.items[0]
+                        moduleEdit("", selrow)
+                    }
+                    //记录日志信息 
+                    //vmd.webBase.syslog(loginfo,logtype,operationtype,function(res){}) 
+                }
+
+                function button9_click(sender, e) {
+                    var selects = MyGrid.getSelectionModel();
+                    if (selects.selections.items.length > 0) {
+                        var selrow = selects.selections.items[0]
+                        moduleDel("", selrow)
+                    }
+                    //记录日志信息 
+                    //vmd.webBase.syslog(loginfo,logtype,operationtype,function(res){}) 
+                }
+                this.MainViewport_afterrender = MainViewport_afterrender;
+                store = new vmd.store.jsonStore({
+                    listeners: {
+                        load: function() {
+                            store_load.apply(this, arguments);
+                        }
+                    },
+                    "xtype": "vmd.jsonStore",
+                    "id": "store",
+                    "autoLoad": true,
+                    "cid": "vmdJsonStore",
+                    "storeConfig": "{\"id\":\"mpB2MEOdnZ\",\"callcode\":\"vmdCode\",\"url\":\"CDEServcie/project/projectconfig/devservers\",\"host\":\"\",\"isHwRest\":true,\"name\":\"项目开发环境的服务配置\",\"getMethods\":[{\"id\":\"project_id\",\"value1\":\"//返回值 \\r\\n return vmd.getUrlParam(\\\"projectid\\\")||'hWlI8gBXWj'\",\"value2\":\"\",\"defaultvalue\":\"\"}],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"dasserver\",\"type\":\"string\"},{\"name\":\"wfserver\",\"type\":\"string\"},{\"name\":\"msgserver\",\"type\":\"string\"},{\"name\":\"todoserver\",\"type\":\"string\"},{\"name\":\"authserver\",\"type\":\"string\"},{\"name\":\"docserver\",\"type\":\"string\"},{\"name\":\"reportserver\",\"type\":\"string\"},{\"name\":\"logserver\",\"type\":\"string\"}]}",
+                    "load": "store_load"
+                });
+                getresourceserver = new vmd.store.jsonStore({
+                    "xtype": "vmd.jsonStore",
+                    "id": "getresourceserver",
+                    "autoLoad": true,
+                    "cid": "vmdJsonStore",
+                    "storeConfig": "{\"id\":\"bn6KEvEwwL\",\"callcode\":\"vmdCode\",\"url\":\"CDEServcie/project/projectconfig/devresourceservers\",\"host\":\"\",\"isHwRest\":true,\"name\":\"项目开发环境资源服务信息\",\"getMethods\":[{\"id\":\"id\",\"value1\":\"//返回值 \\r\\n return vmd.getUrlParam(\\\"projectid\\\")||'hWlI8gBXWj'\",\"value2\":\"\",\"defaultvalue\":\"\"}],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"address\",\"type\":\"string\"},{\"name\":\"remark\",\"type\":\"string\"}]}"
+                });
+                pubservers = new vmd.store.jsonStore({
+                    "xtype": "vmd.jsonStore",
+                    "id": "pubservers",
+                    "autoLoad": true,
+                    "cid": "vmdJsonStore",
+                    "storeConfig": "{\"id\":\"mpChgtJuL5\",\"callcode\":\"vmdCode\",\"url\":\"CDEServcie/project/projectconfig/runserverconfig\",\"host\":\"\",\"isHwRest\":true,\"name\":\"项目运行环境配置\",\"getMethods\":[{\"id\":\"project_id\",\"value1\":\"//返回值 \\r\\n return vmd.getUrlParam(\\\"projectid\\\")||'hWlI8gBXWj'\",\"value2\":\"\",\"defaultvalue\":\"\"}],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"config_id\",\"type\":\"string\"},{\"name\":\"project_id\",\"type\":\"string\"},{\"name\":\"type\",\"type\":\"int32\"},{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"ptservice\",\"type\":\"string\"},{\"name\":\"subsysid\",\"type\":\"string\"},{\"name\":\"virtualdir\",\"type\":\"string\"},{\"name\":\"dasserver\",\"type\":\"string\"},{\"name\":\"wfserver\",\"type\":\"string\"},{\"name\":\"msgserver\",\"type\":\"string\"},{\"name\":\"todoserver\",\"type\":\"string\"},{\"name\":\"authserver\",\"type\":\"string\"},{\"name\":\"docserver\",\"type\":\"string\"},{\"name\":\"reportserver\",\"type\":\"string\"},{\"name\":\"logserver\",\"type\":\"string\"},{\"name\":\"resourceserver\",\"type\":\"string\"},{\"name\":\"ppdm_guid\",\"type\":\"string\"},{\"name\":\"remark\",\"type\":\"string\"},{\"name\":\"source\",\"type\":\"string\"},{\"name\":\"row_changed_by\",\"type\":\"string\"},{\"name\":\"row_changed_date\",\"type\":\"datetime\"},{\"name\":\"row_created_by\",\"type\":\"string\"},{\"name\":\"row_created_date\",\"type\":\"datetime\"},{\"name\":\"row_effective_date\",\"type\":\"datetime\"},{\"name\":\"row_expiry_date\",\"type\":\"datetime\"},{\"name\":\"row_quality\",\"type\":\"string\"}]}"
+                });
+                this.items = [{
+                    xtype: "tabpanel",
+                    id: "MyTabs",
+                    activeTab: 0,
+                    height: 150,
+                    width: 500,
+                    x: 170,
+                    y: 120,
+                    region: "center",
+                    margins: "10 20 10 20",
+                    border: false,
+                    unstyled: false,
+                    collapsible: false,
+                    collapseMode: "standard",
+                    cls: "aaaaa",
+                    tabchange: "MyTabs_tabchange",
+                    listeners: {
+                        tabchange: MyTabs_tabchange
+                    },
+                    items: [{
+                            xtype: "panel",
+                            id: "panel",
+                            title: "开发环境",
+                            header: true,
+                            border: false,
+                            height: 100,
+                            layout: "border",
+                            bodyStyle: "border-top: 0px;",
+                            beforerender: "panel_beforerender",
+                            listeners: {
+                                beforerender: panel_beforerender
+                            },
+                            items: [{
+                                xtype: "tabpanel",
+                                id: "MyTabs2",
+                                activeTab: 0,
+                                height: 150,
+                                width: 500,
+                                region: "center",
+                                margins: "5 10 5 10",
+                                cls: "bbbbb",
+                                bodyStyle: "border-top: 0px;",
+                                items: [{
+                                        xtype: "panel",
+                                        id: "panel5",
+                                        title: "微服务配置",
+                                        header: true,
+                                        border: false,
+                                        height: 100,
+                                        layout: "fit",
+                                        items: [{
+                                            xtype: "vmd.div",
+                                            id: "div10",
+                                            autoEl: "div",
+                                            border: false,
+                                            backgroundRepeat: "no-repeat",
+                                            backgroundPosition: "top left",
+                                            width: 400,
+                                            height: 338,
+                                            region: "north",
+                                            style: "border-top: 0px;    font-size:14px;",
+                                            layout: "absolute",
+                                            items: [{
+                                                    xtype: "vmd.button",
+                                                    id: "button",
+                                                    text: "保存",
+                                                    type: "primary",
+                                                    size: "large",
+                                                    x: 340,
+                                                    y: 340,
+                                                    style: "font-size:14px;",
+                                                    click: "button_click",
+                                                    listeners: {
+                                                        click: button_click
+                                                    }
+                                                },
+                                                {
+                                                    xtype: "label",
+                                                    id: "label6",
+                                                    text: "数据服务：",
+                                                    x: 20,
+                                                    y: 20,
+                                                    height: 20
+                                                },
+                                                {
+                                                    xtype: "label",
+                                                    id: "label7",
+                                                    text: "流程中心：",
+                                                    x: 20,
+                                                    y: 60
+                                                },
+                                                {
+                                                    xtype: "label",
+                                                    id: "label8",
+                                                    text: "消息中心：",
+                                                    x: 20,
+                                                    y: 100
+                                                },
+                                                {
+                                                    xtype: "label",
+                                                    id: "label9",
+                                                    text: "待办中心：",
+                                                    x: 20,
+                                                    y: 140
+                                                },
+                                                {
+                                                    xtype: "label",
+                                                    id: "label10",
+                                                    text: "认证中心：",
+                                                    x: 20,
+                                                    y: 180
+                                                },
+                                                {
+                                                    xtype: "label",
+                                                    id: "label12",
+                                                    text: "文档中心：",
+                                                    x: 20,
+                                                    y: 220
+                                                },
+                                                {
+                                                    xtype: "label",
+                                                    id: "label13",
+                                                    text: "报表中心：",
+                                                    x: 20,
+                                                    y: 260,
+                                                    height: 20
+                                                },
+                                                {
+                                                    xtype: "label",
+                                                    id: "label14",
+                                                    text: "日志中心：",
+                                                    x: 20,
+                                                    y: 300
+                                                },
+                                                {
+                                                    xtype: "textfield",
+                                                    id: "txt_dev_dasserver",
+                                                    allowBlank: true,
+                                                    enableKeyEvents: true,
+                                                    x: 90,
+                                                    y: 20,
+                                                    width: 310,
+                                                    afterrender: "txt_dev_dasserver_afterrender",
+                                                    listeners: {
+                                                        vmdafterrender: txt_dev_dasserver_afterrender
+                                                    }
+                                                },
+                                                {
+                                                    xtype: "textfield",
+                                                    id: "txt_dev_wfserver",
+                                                    allowBlank: true,
+                                                    enableKeyEvents: true,
+                                                    x: 90,
+                                                    y: 60,
+                                                    width: 310,
+                                                    afterrender: "txt_dev_wfserver_afterrender",
+                                                    listeners: {
+                                                        vmdafterrender: txt_dev_wfserver_afterrender
+                                                    }
+                                                },
+                                                {
+                                                    xtype: "textfield",
+                                                    id: "txt_dev_msgserver",
+                                                    allowBlank: true,
+                                                    enableKeyEvents: true,
+                                                    x: 90,
+                                                    y: 100,
+                                                    width: 310,
+                                                    afterrender: "txt_dev_msgserver_afterrender",
+                                                    listeners: {
+                                                        vmdafterrender: txt_dev_msgserver_afterrender
+                                                    }
+                                                },
+                                                {
+                                                    xtype: "textfield",
+                                                    id: "txt_dev_todoserver",
+                                                    allowBlank: true,
+                                                    enableKeyEvents: true,
+                                                    x: 90,
+                                                    y: 140,
+                                                    width: 310,
+                                                    afterrender: "txt_dev_todoserver_afterrender",
+                                                    listeners: {
+                                                        vmdafterrender: txt_dev_todoserver_afterrender
+                                                    }
+                                                },
+                                                {
+                                                    xtype: "textfield",
+                                                    id: "txt_dev_authserver",
+                                                    allowBlank: true,
+                                                    enableKeyEvents: true,
+                                                    x: 90,
+                                                    y: 180,
+                                                    width: 310,
+                                                    afterrender: "txt_dev_authserver_afterrender",
+                                                    listeners: {
+                                                        vmdafterrender: txt_dev_authserver_afterrender
+                                                    }
+                                                },
+                                                {
+                                                    xtype: "textfield",
+                                                    id: "txt_dev_docserver",
+                                                    allowBlank: true,
+                                                    enableKeyEvents: true,
+                                                    x: 90,
+                                                    y: 220,
+                                                    width: 310,
+                                                    afterrender: "txt_dev_docserver_afterrender",
+                                                    listeners: {
+                                                        vmdafterrender: txt_dev_docserver_afterrender
+                                                    }
+                                                },
+                                                {
+                                                    xtype: "textfield",
+                                                    id: "txt_dev_reportserver",
+                                                    allowBlank: true,
+                                                    enableKeyEvents: true,
+                                                    x: 90,
+                                                    y: 260,
+                                                    width: 310,
+                                                    afterrender: "txt_dev_reportserver_afterrender",
+                                                    listeners: {
+                                                        vmdafterrender: txt_dev_reportserver_afterrender
+                                                    }
+                                                },
+                                                {
+                                                    xtype: "textfield",
+                                                    id: "txt_dev_logserver",
+                                                    allowBlank: true,
+                                                    enableKeyEvents: true,
+                                                    x: 90,
+                                                    y: 300,
+                                                    width: 310,
+                                                    afterrender: "txt_dev_logserver_afterrender",
+                                                    listeners: {
+                                                        vmdafterrender: txt_dev_logserver_afterrender
+                                                    }
+                                                }
+                                            ]
+                                        }]
+                                    },
+                                    {
+                                        xtype: "panel",
+                                        id: "panel6",
+                                        title: "资源配置",
+                                        header: true,
+                                        border: false,
+                                        height: 100,
+                                        layout: "fit",
+                                        items: [{
+                                            xtype: "vmd.div",
+                                            id: "div7",
+                                            autoEl: "div",
+                                            border: false,
+                                            backgroundRepeat: "no-repeat",
+                                            backgroundPosition: "top left",
+                                            width: 199,
+                                            height: 50,
+                                            region: "west",
+                                            layout: "border",
+                                            style: "border-right: 1px solid #dddddd;    font-size: 14px",
+                                            items: [{
+                                                    xtype: "vmd.div",
+                                                    id: "div8",
+                                                    autoEl: "div",
+                                                    border: false,
+                                                    backgroundRepeat: "no-repeat",
+                                                    backgroundPosition: "top left",
+                                                    width: 400,
+                                                    height: 43,
+                                                    region: "north",
+                                                    style: "border-bottom: 1px solid #dddddd",
+                                                    layout: "hbox",
+                                                    items: [{
+                                                            xtype: "vmd.button",
+                                                            id: "button5",
+                                                            text: "添加",
+                                                            type: "text",
+                                                            size: "small",
+                                                            icon: "icon-plus",
+                                                            margins: "5",
+                                                            style: "font-size: 14px",
+                                                            click: "button5_click",
+                                                            listeners: {
+                                                                click: button5_click
+                                                            }
+                                                        },
+                                                        {
+                                                            xtype: "vmd.button",
+                                                            id: "button8",
+                                                            text: "编辑",
+                                                            type: "text",
+                                                            size: "small",
+                                                            icon: "icon-edit",
+                                                            margins: "5",
+                                                            style: "font-size: 14px",
+                                                            click: "button8_click",
+                                                            listeners: {
+                                                                click: button8_click
+                                                            }
+                                                        },
+                                                        {
+                                                            xtype: "vmd.button",
+                                                            id: "button9",
+                                                            text: "删除",
+                                                            type: "text",
+                                                            size: "small",
+                                                            icon: "icon-minus",
+                                                            margins: "5",
+                                                            style: "font-size: 14px",
+                                                            click: "button9_click",
+                                                            listeners: {
+                                                                click: button9_click
+                                                            }
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    xtype: "vmd.div",
+                                                    id: "div9",
+                                                    autoEl: "div",
+                                                    border: false,
+                                                    backgroundRepeat: "no-repeat",
+                                                    backgroundPosition: "top left",
+                                                    width: 400,
+                                                    height: 50,
+                                                    region: "center",
+                                                    layout: "fit",
+                                                    items: [{
+                                                        xtype: "grid",
+                                                        id: "MyGrid",
+                                                        title: "Grid Panel",
+                                                        loadMask: true,
+                                                        border: false,
+                                                        header: false,
+                                                        style: "font-size:14px",
+                                                        store: getresourceserver,
+                                                        beforerender: "MyGrid_beforerender",
+                                                        hideHeaders: false,
+                                                        disableHeaderClick: true,
+                                                        enableHdMenu: false,
+                                                        listeners: {
+                                                            beforerender: MyGrid_beforerender
+                                                        },
+                                                        columns: [{
+                                                                xtype: "gridcolumn",
+                                                                header: "id",
+                                                                sortable: true,
+                                                                resizable: true,
+                                                                dataIndex: "id",
+                                                                width: 100,
+                                                                hidden: true
+                                                            },
+                                                            {
+                                                                xtype: "gridcolumn",
+                                                                header: "资源名称",
+                                                                sortable: true,
+                                                                resizable: true,
+                                                                dataIndex: "name",
+                                                                width: 200,
+                                                                align: "center",
+                                                                menuDisabled: false
+                                                            },
+                                                            {
+                                                                xtype: "gridcolumn",
+                                                                header: "资源地址",
+                                                                sortable: true,
+                                                                resizable: true,
+                                                                dataIndex: "address",
+                                                                width: 300,
+                                                                align: "center",
+                                                                menuDisabled: false
+                                                            },
+                                                            {
+                                                                xtype: "gridcolumn",
+                                                                header: "remark",
+                                                                sortable: true,
+                                                                resizable: true,
+                                                                dataIndex: "remark",
+                                                                width: 100,
+                                                                hidden: true,
+                                                                menuDisabled: false
+                                                            },
+                                                            {
+                                                                xtype: "templatecolumn",
+                                                                header: "操作",
+                                                                sortable: true,
+                                                                resizable: true,
+                                                                width: 100,
+                                                                tpl: "<button class=\"vmd-button vmd-button--success vmd-button--small\" style=\"height:10px\">模块编辑</button>",
+                                                                align: "center",
+                                                                hidden: true
+                                                            }
+                                                        ]
+                                                    }]
+                                                }
+                                            ]
+                                        }]
+                                    }
+                                ]
+                            }]
+                        },
+                        {
+                            xtype: "panel",
+                            id: "panel1",
+                            title: "发布环境",
+                            header: true,
+                            border: true,
+                            height: 666,
+                            layout: "border",
+                            autoScroll: true,
+                            items: [{
+                                    xtype: "vmd.div",
+                                    id: "div2",
+                                    autoEl: "div",
+                                    border: false,
+                                    backgroundRepeat: "no-repeat",
+                                    backgroundPosition: "top left",
+                                    width: 400,
+                                    height: 50,
+                                    region: "center",
+                                    layout: "border",
+                                    autoScroll: true,
+                                    margins: "5 10 0 0",
+                                    items: [{
+                                            xtype: "tabpanel",
+                                            id: "MyTabs1",
+                                            activeTab: 0,
+                                            height: 150,
+                                            width: 500,
+                                            cls: "bbbbb",
+                                            region: "center",
+                                            bodyStyle: "border-bottom: 0;",
+                                            tabchange: "MyTabs1_tabchange",
+                                            listeners: {
+                                                tabchange: MyTabs1_tabchange
+                                            },
+                                            items: [{
+                                                    xtype: "panel",
+                                                    id: "panel4",
+                                                    title: "平台配置",
+                                                    header: true,
+                                                    border: false,
+                                                    height: 372,
+                                                    layout: "absolute",
+                                                    style: "font-size: 14px;",
+                                                    items: [{
+                                                            xtype: "label",
+                                                            id: "label",
+                                                            text: "平台服务地址：",
+                                                            x: 20,
+                                                            y: 20
+                                                        },
+                                                        {
+                                                            xtype: "textfield",
+                                                            id: "txt_ptserver",
+                                                            allowBlank: true,
+                                                            enableKeyEvents: true,
+                                                            x: 110,
+                                                            y: 20,
+                                                            width: 370
+                                                        },
+                                                        {
+                                                            xtype: "label",
+                                                            id: "label1",
+                                                            text: "注册子系统选择：",
+                                                            x: 20,
+                                                            y: 60,
+                                                            height: 20
+                                                        },
+                                                        {
+                                                            xtype: "vmd.div",
+                                                            id: "div5",
+                                                            autoEl: "div",
+                                                            border: true,
+                                                            backgroundRepeat: "no-repeat",
+                                                            backgroundPosition: "top left",
+                                                            width: 450,
+                                                            height: 200,
+                                                            x: 30,
+                                                            y: 90,
+                                                            layout: "fit",
+                                                            items: [{
+                                                                xtype: "vmd.treeex",
+                                                                id: "tree",
+                                                                width: 478,
+                                                                height: 270,
+                                                                hideRoot: true,
+                                                                textField: "subsysname",
+                                                                valueField: "subsysid",
+                                                                parentField: "parentid",
+                                                                loadType: "全部加载",
+                                                                rootValue: "0",
+                                                                rootText: "子系统",
+                                                                beforerender: "tree_beforerender",
+                                                                folderImg: "/system/modules/eQ9ULgcVb1/img/folderClosed.gif",
+                                                                leafImg: "/system/modules/eQ9ULgcVb1/img/folderClosed.gif",
+                                                                listeners: {
+                                                                    beforerender: tree_beforerender
+                                                                }
+                                                            }]
+                                                        },
+                                                        {
+                                                            xtype: "label",
+                                                            id: "label2",
+                                                            text: "虚拟目录：",
+                                                            x: 30,
+                                                            y: 310
+                                                        },
+                                                        {
+                                                            xtype: "textfield",
+                                                            id: "txt_vir",
+                                                            allowBlank: true,
+                                                            enableKeyEvents: true,
+                                                            x: 100,
+                                                            y: 310,
+                                                            width: 380
+                                                        },
+                                                        {
+                                                            xtype: "vmd.button",
+                                                            id: "button3",
+                                                            text: "重新加载",
+                                                            type: "text",
+                                                            size: "small",
+                                                            x: 130,
+                                                            y: 55,
+                                                            icon: "icon-refresh",
+                                                            style: "font-size: 14px; background-image: url() !important;",
+                                                            width: 90,
+                                                            height: 30,
+                                                            cls: "ccccc",
+                                                            click: "button3_click",
+                                                            listeners: {
+                                                                click: button3_click
+                                                            }
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    xtype: "panel",
+                                                    id: "panel2",
+                                                    title: "微服务配置",
+                                                    header: true,
+                                                    border: false,
+                                                    height: 100,
+                                                    layout: "absolute",
+                                                    bodyStyle: "font-size:14px",
+                                                    items: [{
+                                                            xtype: "vmd.button",
+                                                            id: "button1",
+                                                            text: "从平台提取",
+                                                            type: "primary",
+                                                            size: "small",
+                                                            x: 360,
+                                                            y: 10
+                                                        },
+                                                        {
+                                                            xtype: "label",
+                                                            id: "label15",
+                                                            text: "数据服务：",
+                                                            x: 20,
+                                                            y: 40
+                                                        },
+                                                        {
+                                                            xtype: "label",
+                                                            id: "label16",
+                                                            text: "流程中心：",
+                                                            x: 20,
+                                                            y: 80
+                                                        },
+                                                        {
+                                                            xtype: "textfield",
+                                                            id: "txt_pub_dasserver",
+                                                            allowBlank: true,
+                                                            enableKeyEvents: true,
+                                                            x: 90,
+                                                            y: 40,
+                                                            width: 310,
+                                                            afterrender: "txt_pub_dasserver_afterrender",
+                                                            listeners: {
+                                                                vmdafterrender: txt_pub_dasserver_afterrender
+                                                            }
+                                                        },
+                                                        {
+                                                            xtype: "label",
+                                                            id: "label17",
+                                                            text: "消息中心：",
+                                                            x: 20,
+                                                            y: 120
+                                                        },
+                                                        {
+                                                            xtype: "label",
+                                                            id: "label18",
+                                                            text: "待办中心：",
+                                                            x: 20,
+                                                            y: 160
+                                                        },
+                                                        {
+                                                            xtype: "label",
+                                                            id: "label19",
+                                                            text: "认证中心：",
+                                                            x: 20,
+                                                            y: 200
+                                                        },
+                                                        {
+                                                            xtype: "label",
+                                                            id: "label20",
+                                                            text: "文档中心：",
+                                                            x: 20,
+                                                            y: 240
+                                                        },
+                                                        {
+                                                            xtype: "label",
+                                                            id: "label21",
+                                                            text: "报表中心：",
+                                                            x: 20,
+                                                            y: 280
+                                                        },
+                                                        {
+                                                            xtype: "label",
+                                                            id: "label22",
+                                                            text: "日志中心：",
+                                                            x: 20,
+                                                            y: 320
+                                                        },
+                                                        {
+                                                            xtype: "textfield",
+                                                            id: "txt_pub_wfserver",
+                                                            allowBlank: true,
+                                                            enableKeyEvents: true,
+                                                            x: 90,
+                                                            y: 80,
+                                                            width: 310,
+                                                            afterrender: "txt_pub_wfserver_afterrender",
+                                                            listeners: {
+                                                                vmdafterrender: txt_pub_wfserver_afterrender
+                                                            }
+                                                        },
+                                                        {
+                                                            xtype: "textfield",
+                                                            id: "txt_pub_msgserver",
+                                                            allowBlank: true,
+                                                            enableKeyEvents: true,
+                                                            x: 90,
+                                                            y: 120,
+                                                            width: 310,
+                                                            afterrender: "txt_pub_msgserver_afterrender",
+                                                            listeners: {
+                                                                vmdafterrender: txt_pub_msgserver_afterrender
+                                                            }
+                                                        },
+                                                        {
+                                                            xtype: "textfield",
+                                                            id: "txt_pub_todoserver",
+                                                            allowBlank: true,
+                                                            enableKeyEvents: true,
+                                                            x: 90,
+                                                            y: 160,
+                                                            width: 310,
+                                                            afterrender: "txt_pub_todoserver_afterrender",
+                                                            listeners: {
+                                                                vmdafterrender: txt_pub_todoserver_afterrender
+                                                            }
+                                                        },
+                                                        {
+                                                            xtype: "textfield",
+                                                            id: "txt_pub_authserver",
+                                                            allowBlank: true,
+                                                            enableKeyEvents: true,
+                                                            x: 90,
+                                                            y: 200,
+                                                            width: 310,
+                                                            afterrender: "txt_pub_authserver_afterrender",
+                                                            listeners: {
+                                                                vmdafterrender: txt_pub_authserver_afterrender
+                                                            }
+                                                        },
+                                                        {
+                                                            xtype: "textfield",
+                                                            id: "txt_pub_docserver",
+                                                            allowBlank: true,
+                                                            enableKeyEvents: true,
+                                                            x: 90,
+                                                            y: 240,
+                                                            width: 310,
+                                                            afterrender: "txt_pub_docserver_afterrender",
+                                                            listeners: {
+                                                                vmdafterrender: txt_pub_docserver_afterrender
+                                                            }
+                                                        },
+                                                        {
+                                                            xtype: "textfield",
+                                                            id: "txt_pub_reportserver",
+                                                            allowBlank: true,
+                                                            enableKeyEvents: true,
+                                                            x: 90,
+                                                            y: 280,
+                                                            width: 310,
+                                                            afterrender: "txt_pub_reportserver_afterrender",
+                                                            listeners: {
+                                                                vmdafterrender: txt_pub_reportserver_afterrender
+                                                            }
+                                                        },
+                                                        {
+                                                            xtype: "textfield",
+                                                            id: "txt_pub_logserver",
+                                                            allowBlank: true,
+                                                            enableKeyEvents: true,
+                                                            x: 90,
+                                                            y: 320,
+                                                            width: 310,
+                                                            afterrender: "txt_pub_logserver_afterrender",
+                                                            listeners: {
+                                                                vmdafterrender: txt_pub_logserver_afterrender
+                                                            }
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    xtype: "panel",
+                                                    id: "panel3",
+                                                    title: "资源配置",
+                                                    header: true,
+                                                    border: false,
+                                                    height: 100,
+                                                    layout: "fit",
+                                                    autoScroll: true,
+                                                    style: "overflow-x: hidden",
+                                                    bodyStyle: "overflow-x: hidden",
+                                                    items: [{
+                                                        xtype: "vmd.div",
+                                                        id: "hwDiv",
+                                                        autoEl: "div",
+                                                        border: true,
+                                                        backgroundRepeat: "no-repeat",
+                                                        backgroundPosition: "top left",
+                                                        width: 400,
+                                                        height: 50,
+                                                        layout: "auto",
+                                                        style: "overflow-x: hidden",
+                                                        items: [{
+                                                                xtype: "vmd.ux.PublishResource",
+                                                                id: "PublishResource1",
+                                                                layout: "column",
+                                                                margins: "10"
+                                                            },
+                                                            {
+                                                                xtype: "vmd.ux.PublishResource",
+                                                                id: "PublishResource2",
+                                                                layout: "column",
+                                                                margins: "10"
+                                                            },
+                                                            {
+                                                                xtype: "vmd.ux.PublishResource",
+                                                                id: "PublishResource",
+                                                                layout: "column",
+                                                                margins: "10",
+                                                                style: "font-size:14px;margin: 10px"
+                                                            }
+                                                        ]
+                                                    }]
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            xtype: "vmd.div",
+                                            id: "div13",
+                                            autoEl: "div",
+                                            border: true,
+                                            backgroundRepeat: "no-repeat",
+                                            backgroundPosition: "top left",
+                                            width: 400,
+                                            height: 34,
+                                            region: "north",
+                                            layout: "absolute",
+                                            style: "background-color: #d9e8fb",
+                                            items: [{
+                                                xtype: "label",
+                                                id: "label11",
+                                                text: "测试发布配置   发布环境配置",
+                                                height: 20,
+                                                style: "font-size: 14px;    font-weight: 600",
+                                                x: 10,
+                                                y: 5
+                                            }]
+                                        }
+                                    ]
+                                },
+                                {
+                                    xtype: "vmd.div",
+                                    id: "div3",
+                                    autoEl: "div",
+                                    border: true,
+                                    backgroundRepeat: "no-repeat",
+                                    backgroundPosition: "top left",
+                                    width: 200,
+                                    height: 50,
+                                    region: "west",
+                                    layout: "border",
+                                    margins: "5 5 0 10",
+                                    style: "border-bottom:0px;",
+                                    items: [{
+                                            xtype: "vmd.div",
+                                            id: "div",
+                                            autoEl: "div",
+                                            border: false,
+                                            backgroundRepeat: "no-repeat",
+                                            backgroundPosition: "top left",
+                                            width: 400,
+                                            height: 34,
+                                            region: "north",
+                                            layout: "hbox",
+                                            style: "border-bottom: 1px solid #dddddd;",
+                                            items: [{
+                                                    xtype: "vmd.button",
+                                                    id: "button2",
+                                                    text: "添加",
+                                                    type: "text",
+                                                    size: "small",
+                                                    margins: "5 0 0 10",
+                                                    icon: "icon-plus",
+                                                    style: "font-size: 14px;",
+                                                    click: "button2_click",
+                                                    listeners: {
+                                                        click: button2_click
+                                                    }
+                                                },
+                                                {
+                                                    xtype: "vmd.button",
+                                                    id: "button6",
+                                                    text: "编辑",
+                                                    type: "text",
+                                                    size: "small",
+                                                    style: "font-size: 14px;",
+                                                    margins: "5 0 0 10",
+                                                    icon: "icon-edit",
+                                                    click: "button6_click",
+                                                    listeners: {
+                                                        click: button6_click
+                                                    }
+                                                },
+                                                {
+                                                    xtype: "vmd.button",
+                                                    id: "button4",
+                                                    text: "删除",
+                                                    type: "text",
+                                                    size: "small",
+                                                    icon: "icon-minus",
+                                                    margins: "5 0 0 10",
+                                                    style: "font-size: 14px;",
+                                                    click: "button4_click",
+                                                    listeners: {
+                                                        click: button4_click
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            xtype: "vmd.div",
+                                            id: "div4",
+                                            autoEl: "div",
+                                            border: false,
+                                            backgroundRepeat: "no-repeat",
+                                            backgroundPosition: "top left",
+                                            width: 400,
+                                            height: 50,
+                                            region: "center",
+                                            layout: "fit",
+                                            style: "font-size: 14px;",
+                                            items: [{
+                                                xtype: "vmd.dataview",
+                                                id: "hwDataView",
+                                                width: 350,
+                                                height: 270,
+                                                itemSelector: "li.info",
+                                                overClass: "info-hover",
+                                                selectedClass: "x-view-selected",
+                                                singleSelect: true,
+                                                multiSelect: true,
+                                                autoScroll: true,
+                                                tpl: "<ul>    <tpl for=\".\">        <li class='info serverlist-info'>{name}</li>    </tpl></ul>",
+                                                data: "var data = [{    \"name\": \"Border Layout\"}, {    \"name\": \"layout-accordion.gif\"}];return data;",
+                                                store: pubservers,
+                                                click: "hwDataView_click",
+                                                afterrender: "hwDataView_afterrender",
+                                                listeners: {
+                                                    click: hwDataView_click,
+                                                    vmdafterrender: hwDataView_afterrender
+                                                }
+                                            }]
+                                        }
+                                    ]
+                                },
+                                {
+                                    xtype: "vmd.div",
+                                    id: "div1",
+                                    layoutConfig: {
+                                        align: "middle",
+                                        pack: "end"
+                                    },
+                                    autoEl: "div",
+                                    border: true,
+                                    backgroundRepeat: "no-repeat",
+                                    backgroundPosition: "top left",
+                                    width: 400,
+                                    height: 49,
+                                    region: "south",
+                                    layout: "hbox",
+                                    margins: "0 10 5 10",
+                                    items: [{
+                                        xtype: "vmd.button",
+                                        id: "button7",
+                                        text: "保存",
+                                        type: "primary",
+                                        size: "large",
+                                        x: 420,
+                                        y: 0,
+                                        style: "font-size:14px;",
+                                        margins: "0 30 0 0",
+                                        click: "button7_click",
+                                        listeners: {
+                                            click: button7_click
+                                        }
+                                    }]
+                                }
+                            ]
+                        }
+                    ]
+                }]
+                this.callParent();
+                var me = this;
+                vmd.core.moduleInit(this.items, this);
+                me.on('afterrender', function() {
+                    MainViewport_afterrender.call(me, me)
+                })
+            }
+        })
+        Ext.onReady(function() {
+            Ext.create('vmd.module.MainViewport', {
+                renderTo: document.body
+            })
+        })
+    </script>
+</head>
+
+<body> </body>
+
+</html>

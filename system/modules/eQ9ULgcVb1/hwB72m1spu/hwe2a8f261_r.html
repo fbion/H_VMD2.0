@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>复合组件开发</title>
+	<!--基本样式-->
+    <link href="{vmdvirtualPath}/css/common.css?ver=2.0.4.190514" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="{vmdvirtualPath}/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.4.190514" rel="stylesheet" />
+   
+    <link href="{vmdvirtualPath}/design/css/icons.css?ver=2.0.4.190514" rel="stylesheet" />
+
+	<link href="{vmdvirtualPath}/lib/dhtmlx/dhtmlx.css?ver=2.0.4.190514" rel="stylesheet" />
+	  <!--样式快捷索引表-->
+    <link href="{vmdvirtualPath}/css/shortcut.css?ver=2.0.4.190514" rel="stylesheet" />
+    <link href="{vmdvirtualPath}/components/ux/datetest2/1.0/css/button.css?ver=2.0.4.190514" rel="stylesheet" />
+	{vmdprojectcssfiles}
+    
+    <script src="{vmdvirtualPath}/lib/labjs/LAB.min.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/config.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/ext-all-debug.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/js/util.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/lib/dhtmlx/dhtmlx.js?ver=2.0.4.190514"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.4.190514"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.4.190514"></script>
+	<script src="{vmdvirtualPath}/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/js/hwdas.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/js/vmdcore.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/js/vmdcomps.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/js/publicMethods.js?ver=2.0.4.190514"></script>
+    <script src="{vmdvirtualPath}/js/vmdreport.js?ver=2.0.4.190514"></script>
+    
+	{vmdprojectjsfiles}
+    
+    {vmdworkspacePath}
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        
+    </style>
+    <script>
+	    
+        vmd.virtualPath = '{vmdvirtualPath}';
+        
+        Ext.define("vmd.module.MainViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps(["vmd.ux.DateTest$1.0$DateTest","vmd.ux.DateTest2$1.0$DateTest2"]),
+	xtype:"vmd.module.MainViewport",
+	layout:"absolute",
+	beforerender:"MainViewport_beforerender",
+	afterrender:"MainViewport_afterrender",
+	initComponent: function(){
+		function report_afterrender(render) {
+    report.query();
+}
+
+function button1_beforerender(sender) {
+
+
+}
+
+function MainViewport_beforerender(sender) {
+
+
+}
+
+function button1_afterrender(sender) {
+
+    //this.addClass('red')
+    this.addClass('red')
+}
+
+function MainViewport_afterrender(sender) {
+
+}
+
+function button_click(sender, e) {
+    alert(hwDateTest.getKsrqValue())
+    alert(hwDateTest.getJsrqValue())
+}
+
+
+function hwDateTest2_queryclick(sender, ksrq, jsrq) {
+
+    alert(ksrq)
+    alert(jsrq)
+
+}
+
+function hwDateTest21_queryclick(sender,ksrq,jsrq){
+ alert(ksrq)
+    alert(jsrq)
+}
+			this.MainViewport_afterrender=MainViewport_afterrender;
+		this.MainViewport_beforerender=MainViewport_beforerender;
+
+		store=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"store","autoLoad":true,"cid":"vmdJsonStore","storeConfig":"{\"id\":\"eQ9TXjYMJR\",\"callcode\":\"vmdCode\",\"url\":\"CDEServcie/project/info\",\"host\":\"\",\"isHwRest\":true,\"name\":\"项目信息\",\"getMethods\":[],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"xh\",\"type\":\"int64\"},{\"name\":\"code\",\"type\":\"string\"},{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"row_created_by\",\"type\":\"string\"},{\"name\":\"row_created_date\",\"type\":\"datetime\"},{\"name\":\"row_changed_date\",\"type\":\"datetime\"},{\"name\":\"row_changed_by\",\"type\":\"string\"}]}"});
+
+
+		this.items=[
+			{
+				xtype:"vmd.ux.DateTest",
+				id:"hwDateTest",
+				layoutConfig:{
+					align:"middle",
+					pack:"center"
+				},
+				jsrqlabel:"桑日期:",
+				ksrqlabel:"桑:",
+				layout:"hbox",
+				x:120,
+				y:110
+			},
+			{
+				xtype:"vmd.button",
+				id:"button",
+				text:"button",
+				type:"(none)",
+				size:"small",
+				x:540,
+				y:110,
+				click:"button_click",
+				listeners:{
+					click:button_click
+				}
+			},
+			{
+				xtype:"vmd.ux.DateTest2",
+				id:"hwDateTest2",
+				layoutConfig:{
+					align:"middle",
+					pack:"center"
+				},
+				text:"查询",
+				layout:"hbox",
+				x:80,
+				y:200,
+				queryclick:"hwDateTest2_queryclick",
+				store:store,
+				listeners:{
+					queryclick:hwDateTest2_queryclick
+				}
+			},
+			{
+				xtype:"vmd.combo",
+				id:"combo",
+				width:150,
+				x:180,
+				y:380,
+				store:store,
+				valueField:"name",
+				displayField:"name"
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+			me.on('beforerender',function(){ MainViewport_beforerender.call(me,me)})
+		me.on('afterrender',function(){ MainViewport_afterrender.call(me,me)})
+}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MainViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

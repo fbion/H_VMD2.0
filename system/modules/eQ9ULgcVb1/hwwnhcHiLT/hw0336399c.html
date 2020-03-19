@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>虚拟列界面设计</title>
+    <!--基本样式-->
+    <link href="/css/common.css?ver=vmd2.0.5.191111" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=vmd2.0.5.191111" rel="stylesheet" />
+    <link href="/design/css/icons.css?ver=vmd2.0.5.191111" rel="stylesheet" />
+    <link href="/lib/dhtmlx/skins/material/dhtmlx.css?ver=vmd2.0.5.191111" rel="stylesheet" />
+    <!--样式快捷索引表-->
+    <link href="/css/shortcut.css?ver=vmd2.0.5.191111" rel="stylesheet" />
+    <script src="/lib/labjs/LAB.min.js?ver=vmd2.0.5.191111"></script>
+    <script src="/config.js?ver=vmd2.0.5.191111"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=vmd2.0.5.191111"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=vmd2.0.5.191111"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=vmd2.0.5.191111"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=vmd2.0.5.191111"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=vmd2.0.5.191111"></script>
+    <script src="/js/util.js?ver=vmd2.0.5.191111"></script>
+    <script src="/lib/dhtmlx/codebase/dhtmlx.js?ver=vmd2.0.5.191111"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=vmd2.0.5.191111"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=vmd2.0.5.191111"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=vmd2.0.5.191111"></script>
+    <script src="/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=vmd2.0.5.191111"></script>
+    <script src="/js/hwdas.js?ver=vmd2.0.5.191111"></script>
+    <script src="/js/vmdcore.js?ver=vmd2.0.5.191111"></script>
+    <script src="/js/vmdcomps.js?ver=vmd2.0.5.191111"></script>
+    <script src="/js/publicMethods.js?ver=vmd2.0.5.191111"></script>
+    <script src="/js/vmdreport.js?ver=vmd2.0.5.191111"></script>
+    <script src="/system/modules/eQ9ULgcVb1/project.config.js"></script>
+    <style> </style>
+    <style type="text/css" id="vmdcss">
+        ul.x-tab-strip-top {
+            border: 0;
+            background-color: #fff;
+    </style>
+    <script>
+        vmd.previewMode = true;
+        vmd.virtualPath = '';
+        vmd.workspace = {
+            "workspaceid": "1174c7d2-f008-4f84-bb61-1845b5d28814",
+            "workflowIp": "",
+            "dataServiceIp": "",
+            "msgIp": "",
+            "projectid": "eQ9ULgcVb1"
+        }
+        vmd.resourceSettings = {
+            "资源中心&&资源中心服务器": "http://www.hanweikeji.com:10050/resource"
+        }
+        vmd.projectInfo = {
+            "projectId": "eQ9ULgcVb1",
+            "workflowIp": "",
+            "dataServiceIp": "",
+            "msgIp": "",
+            "todoIp": "",
+            "authIp": "",
+            "docIp": "",
+            "reoprtIp": "",
+            "logIp": ""
+        }
+        Ext.define("vmd.module.MainViewport", {
+            extend: "vmd.comp.viewport",
+            requires: vmd.getCmpDeps([]),
+            xtype: "vmd.module.MainViewport",
+            layout: "absolute",
+            initComponent: function() {
+                this.items = [{
+                        xtype: "label",
+                        id: "hwLabel",
+                        text: "虚拟字段名：",
+                        x: 50,
+                        y: 55
+                    },
+                    {
+                        xtype: "label",
+                        id: "hwLabel1",
+                        text: "虚拟列名：",
+                        x: 50,
+                        y: 20
+                    },
+                    {
+                        xtype: "textfield",
+                        id: "hwText",
+                        allowBlank: true,
+                        enableKeyEvents: true,
+                        x: 110,
+                        y: 15,
+                        width: 290
+                    },
+                    {
+                        xtype: "textfield",
+                        id: "hwText1",
+                        allowBlank: true,
+                        enableKeyEvents: true,
+                        x: 110,
+                        y: 50,
+                        width: 290
+                    },
+                    {
+                        xtype: "vmd.div",
+                        id: "hwDiv",
+                        autoEl: "div",
+                        border: false,
+                        backgroundRepeat: "no-repeat",
+                        backgroundPosition: "top left",
+                        width: 450,
+                        height: 350,
+                        x: 50,
+                        y: 140,
+                        layout: "border",
+                        items: [{
+                                xtype: "vmd.div",
+                                id: "hwDiv2",
+                                autoEl: "div",
+                                border: true,
+                                backgroundRepeat: "no-repeat",
+                                backgroundPosition: "top left",
+                                width: 400,
+                                height: 50,
+                                region: "center",
+                                layout: "border",
+                                style: "border-left: 0px solid;",
+                                items: [{
+                                        xtype: "vmd.div",
+                                        id: "hwDiv7",
+                                        autoEl: "div",
+                                        border: false,
+                                        backgroundRepeat: "no-repeat",
+                                        backgroundPosition: "top left",
+                                        width: 400,
+                                        height: 50,
+                                        region: "center",
+                                        layout: "fit",
+                                        items: [{
+                                            xtype: "tabpanel",
+                                            id: "hwMyTabs",
+                                            activeTab: 0,
+                                            height: 150,
+                                            width: 245,
+                                            style: "border: 0px solid;    border-top: 1px solid #e8e8e8;",
+                                            bodyStyle: "border: 0px solid;    border-top: 1px solid #e8e8e8;",
+                                            items: [{
+                                                    xtype: "panel",
+                                                    id: "panel",
+                                                    title: "属性",
+                                                    header: true,
+                                                    border: false,
+                                                    height: 100,
+                                                    width: 245,
+                                                    style: "margin-left: 5px",
+                                                    items: [{
+                                                            xtype: "vmd.div",
+                                                            id: "hwDiv4",
+                                                            autoEl: "div",
+                                                            border: false,
+                                                            backgroundRepeat: "no-repeat",
+                                                            backgroundPosition: "top left",
+                                                            width: 232,
+                                                            height: 32,
+                                                            anchor: "",
+                                                            items: [{
+                                                                    xtype: "label",
+                                                                    id: "hwLabel11",
+                                                                    text: "组件名："
+                                                                },
+                                                                {
+                                                                    xtype: "textfield",
+                                                                    id: "hwText2",
+                                                                    allowBlank: true,
+                                                                    enableKeyEvents: true
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            xtype: "vmd.div",
+                                                            id: "hwDiv5",
+                                                            autoEl: "div",
+                                                            border: false,
+                                                            backgroundRepeat: "no-repeat",
+                                                            backgroundPosition: "top left",
+                                                            width: 236,
+                                                            height: 31,
+                                                            items: [{
+                                                                    xtype: "label",
+                                                                    id: "hwLabel12",
+                                                                    text: "组件编码："
+                                                                },
+                                                                {
+                                                                    xtype: "textfield",
+                                                                    id: "hwText3",
+                                                                    allowBlank: true,
+                                                                    enableKeyEvents: true
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            xtype: "vmd.div",
+                                                            id: "hwDiv6",
+                                                            autoEl: "div",
+                                                            border: false,
+                                                            backgroundRepeat: "no-repeat",
+                                                            backgroundPosition: "top left",
+                                                            width: 235,
+                                                            height: 30,
+                                                            items: [{
+                                                                    xtype: "label",
+                                                                    id: "hwLabel13",
+                                                                    text: "lable:"
+                                                                },
+                                                                {
+                                                                    xtype: "textfield",
+                                                                    id: "hwText4",
+                                                                    allowBlank: true,
+                                                                    enableKeyEvents: true
+                                                                }
+                                                            ]
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    xtype: "panel",
+                                                    id: "panel1",
+                                                    title: "事件",
+                                                    header: true,
+                                                    border: false,
+                                                    height: 100,
+                                                    items: [{
+                                                            xtype: "label",
+                                                            id: "hwLabel17",
+                                                            text: "click："
+                                                        },
+                                                        {
+                                                            xtype: "textfield",
+                                                            id: "hwText5",
+                                                            allowBlank: true,
+                                                            enableKeyEvents: true,
+                                                            width: 222
+                                                        },
+                                                        {
+                                                            xtype: "vmd.button",
+                                                            id: "button5",
+                                                            type: "(none)",
+                                                            size: "small",
+                                                            icon: "icon-trash",
+                                                            width: 32
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }]
+                                    },
+                                    {
+                                        xtype: "vmd.div",
+                                        id: "hwDiv8",
+                                        autoEl: "div",
+                                        border: false,
+                                        backgroundRepeat: "no-repeat",
+                                        backgroundPosition: "top left",
+                                        width: 400,
+                                        height: 150,
+                                        region: "north",
+                                        layout: "border",
+                                        items: [{
+                                                xtype: "vmd.div",
+                                                id: "hwDiv1",
+                                                autoEl: "div",
+                                                border: true,
+                                                backgroundRepeat: "no-repeat",
+                                                backgroundPosition: "top left",
+                                                width: 380,
+                                                height: 80,
+                                                x: 160,
+                                                y: 520,
+                                                layout: "column",
+                                                autoScroll: true,
+                                                region: "center",
+                                                style: "border: 0px solid ;;        border-top: 1px solid #e8e8e8;",
+                                                items: [{
+                                                        xtype: "vmd.button",
+                                                        id: "button1",
+                                                        text: "button",
+                                                        type: "(none)",
+                                                        size: "small"
+                                                    },
+                                                    {
+                                                        xtype: "vmd.button",
+                                                        id: "button2",
+                                                        text: "button",
+                                                        type: "(none)",
+                                                        size: "small"
+                                                    },
+                                                    {
+                                                        xtype: "vmd.combo",
+                                                        id: "combo",
+                                                        width: 150
+                                                    },
+                                                    {
+                                                        xtype: "radio",
+                                                        id: "hwRadio",
+                                                        fieldLabel: "Radio",
+                                                        boxLabel: "boxLabel"
+                                                    },
+                                                    {
+                                                        xtype: "vmd.img",
+                                                        id: "hwImg",
+                                                        width: 35,
+                                                        height: 34
+                                                    },
+                                                    {
+                                                        xtype: "vmd.img",
+                                                        id: "hwImg1",
+                                                        width: 38,
+                                                        height: 34
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                xtype: "vmd.div",
+                                                id: "hwDiv9",
+                                                layoutConfig: {
+                                                    align: "middle"
+                                                },
+                                                autoEl: "div",
+                                                border: false,
+                                                backgroundRepeat: "no-repeat",
+                                                backgroundPosition: "top left",
+                                                width: 400,
+                                                height: 40,
+                                                region: "north",
+                                                layout: "hbox",
+                                                items: [{
+                                                    xtype: "label",
+                                                    id: "hwLabel16",
+                                                    text: "虚拟列内容：",
+                                                    margins: "0 0 0 10"
+                                                }]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                xtype: "vmd.div",
+                                id: "hwDiv10",
+                                autoEl: "div",
+                                border: true,
+                                backgroundRepeat: "no-repeat",
+                                backgroundPosition: "top left",
+                                width: 130,
+                                height: 50,
+                                region: "west",
+                                layout: "border",
+                                items: [{
+                                        xtype: "vmd.div",
+                                        id: "hwDiv3",
+                                        layoutConfig: {
+                                            align: "left",
+                                            pack: "start",
+                                            padding: "0 0 0 20"
+                                        },
+                                        autoEl: "div",
+                                        border: true,
+                                        backgroundRepeat: "no-repeat",
+                                        backgroundPosition: "top left",
+                                        width: 141,
+                                        height: 50,
+                                        region: "center",
+                                        layout: "vbox",
+                                        style: "border: 0px solid;    border-top: 1px solid #e8e8e8;",
+                                        items: [{
+                                                xtype: "label",
+                                                id: "hwLabel2",
+                                                text: "按钮",
+                                                margins: "20 0 5 0"
+                                            },
+                                            {
+                                                xtype: "label",
+                                                id: "hwLabel3",
+                                                text: "文本",
+                                                margins: "0 0 5 0"
+                                            },
+                                            {
+                                                xtype: "label",
+                                                id: "hwLabel4",
+                                                text: "超链接",
+                                                margins: "0 0 5 0"
+                                            },
+                                            {
+                                                xtype: "label",
+                                                id: "hwLabel5",
+                                                text: "图片",
+                                                margins: "0 0 5 0"
+                                            },
+                                            {
+                                                xtype: "label",
+                                                id: "hwLabel6",
+                                                text: "单选按钮",
+                                                margins: "0 0 5 0"
+                                            },
+                                            {
+                                                xtype: "label",
+                                                id: "hwLabel7",
+                                                text: "复选按钮",
+                                                margins: "0 0 5 0"
+                                            },
+                                            {
+                                                xtype: "label",
+                                                id: "hwLabel8",
+                                                text: "单选按钮组",
+                                                margins: "0 0 5 0"
+                                            },
+                                            {
+                                                xtype: "label",
+                                                id: "hwLabel9",
+                                                text: "复选按钮组",
+                                                margins: "0 0 5 0"
+                                            },
+                                            {
+                                                xtype: "label",
+                                                id: "hwLabel10",
+                                                text: "下拉框",
+                                                margins: "0 0 5 0"
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        xtype: "vmd.div",
+                                        id: "hwDiv11",
+                                        layoutConfig: {
+                                            align: "middle",
+                                            pack: "start"
+                                        },
+                                        autoEl: "div",
+                                        border: false,
+                                        backgroundRepeat: "no-repeat",
+                                        backgroundPosition: "top left",
+                                        width: 400,
+                                        height: 40,
+                                        region: "north",
+                                        layout: "hbox",
+                                        items: [{
+                                            xtype: "vmd.button",
+                                            id: "button",
+                                            text: "添加到虚拟列",
+                                            type: "text",
+                                            size: "small",
+                                            icon: "icon-plus",
+                                            margins: "0 5 0 5"
+                                        }]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        xtype: "vmd.button",
+                        id: "button3",
+                        text: "确定",
+                        type: "primary",
+                        size: "small",
+                        x: 360,
+                        y: 510
+                    },
+                    {
+                        xtype: "vmd.button",
+                        id: "button4",
+                        text: "关闭",
+                        type: "(none)",
+                        size: "small",
+                        x: 440,
+                        y: 510
+                    },
+                    {
+                        xtype: "label",
+                        id: "hwLabel15",
+                        text: "虚拟列配置",
+                        x: 50,
+                        y: 120
+                    },
+                    {
+                        xtype: "label",
+                        id: "hwLabel14",
+                        text: "虚拟列宽：",
+                        x: 50,
+                        y: 90
+                    },
+                    {
+                        xtype: "numberfield",
+                        id: "hwNumber",
+                        allowDecimals: true,
+                        allowNegative: true,
+                        decimalPrecision: 0,
+                        allowBlank: true,
+                        x: 110,
+                        y: 85,
+                        width: 290
+                    }
+                ]
+                this.callParent();
+                var me = this;
+                vmd.core.moduleInit(this.items, this);
+            }
+        })
+        Ext.onReady(function() {
+            Ext.create('vmd.module.MainViewport', {
+                renderTo: document.body
+            })
+        })
+    </script>
+</head>
+
+<body> </body>
+
+</html>

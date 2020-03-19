@@ -1,0 +1,77 @@
+ /*使用说明
+ 1.在设计界面点击资源选择引入此样式文件；
+ 2.在报表panel样式类名属性中添加类名标识，如vmd-report；
+ */
+
+/*标题单元格样式设置*/
+.vmd-report div.gridbox_material.gridbox table.hdr td.rpt-title {
+    font-size: 20px;
+    font-weight: bold;
+    /*height:40px !important; 设置高度必须加权重，以覆盖内联样式,不建议在样式中设置高度*/
+    text-align:center;
+    border-top:none !important;
+    border-right: none !important;
+    border-bottom: 1px solid #e3e2e8 !important;
+    border-left: none !important;
+}
+
+/*表头单元格样式设置*/
+.vmd-report div.gridbox_material.gridbox table.hdr td.rpt-header {
+    font-size:14px;
+    font-family: '微软雅黑';
+    /*height:32px !important; 设置高度必须加权重，以覆盖内联样式,不建议在样式中设置高度*/
+    color:#000;
+    background-color: rgb(247, 247, 247);
+    font-weight: bold;
+    text-align:center;
+    border-top:none; 
+    border-color: #e3e2e8 !important; 
+}
+
+/*数据单元格样式设置*/
+.vmd-report div.gridbox_material.gridbox table.obj.row20px tr td.rpt-data {
+   /*height:32px !important; 设置高度必须加权重，以覆盖内联样式,不建议在样式中设置高度*/
+   border-color: #e3e2e8 !important; 
+}
+
+/*统一样式设置*/
+/*偶数行样式设置 隔行变色 */
+.vmd-report div.gridbox_material.gridbox .odd_material {
+    background-color: #f6f7fc;    
+}
+/*奇数行样式设置 隔行变色 */
+.vmd-report div.gridbox_material.gridbox .ev_material {
+    background-color: #fff;
+}
+/*单元格选中样式*/
+.vmd-report div.gridbox_material.gridbox table.obj.row20px tr.rowselected td{
+	background-color:#fff;
+}
+/*审批组件按钮统一样式*/
+.vmd-report div.gridbox_material.gridbox table.obj.row20px tr td div.dhx_approve input.approve_btn {
+    color:#000 !important; /*前景色添加权重，以覆盖内联样式*/
+    border: 1px solid #e3e2e8;
+    border-radius: 4px;
+}
+/*审批组件同意按钮样式*/
+.vmd-report div.gridbox_material.gridbox table.obj.row20px tr td div.dhx_approve input.approve_btn.approve_agree {
+    background-color: #fff; 
+}
+/*审批组件不同意按钮样式*/
+.vmd-report div.gridbox_material.gridbox table.obj.row20px tr td div.dhx_approve input.approve_btn.approve_disagree {
+    background-color: #fff;
+}
+/*审批组件退回按钮样式*/
+.vmd-report div.gridbox_material.gridbox table.obj.row20px tr td div.dhx_approve input.approve_btn.approve_back {
+    background-color: #fff;
+}
+/*审批日期样式*/
+.vmd-report div.gridbox_material.gridbox table.obj.row20px tr td div.dhx_approve input.approve_date {
+	background-color:transparent;
+    border-width:0px 0px 1px 0px;
+}
+/*审批意见样式*/
+.vmd-report div.gridbox_material.gridbox table.obj.row20px tr td div.dhx_approve textarea.approve_options {
+    border: 1px solid #e3e2e8;
+    border-radius: 2px;
+}

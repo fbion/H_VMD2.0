@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>工区管理主界面</title>
+	<!--基本样式-->
+    <link href="{virtualPath}/css/common.css?ver=2.0.3.092701" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="{virtualPath}/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.3.092701" rel="stylesheet" />
+   
+    <link href="{virtualPath}/design/css/icons.css?ver=2.0.3.092701" rel="stylesheet" />
+
+	<link href="{virtualPath}/lib/dhtmlx/dhtmlx.css?ver=2.0.3.092701" rel="stylesheet" />
+	  <!--样式快捷索引表-->
+    <link href="{virtualPath}/css/shortcut.css?ver=2.0.3.092701" rel="stylesheet" />
+    
+    <script src="{virtualPath}/lib/labjs/LAB.min.js?ver=2.0.3.092701"></script>
+    <script src="{virtualPath}/config.js?ver=2.0.3.092701"></script>
+    <script src="{virtualPath}/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.3.092701"></script>
+    <script src="{virtualPath}/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.3.092701"></script>
+    <script src="{virtualPath}/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.3.092701"></script>
+    <script src="{virtualPath}/lib/ext-3.4/ext-all-debug.js?ver=2.0.3.092701"></script>
+    <script src="{virtualPath}/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.3.092701"></script>
+    <script src="{virtualPath}/js/util.js?ver=2.0.3.092701"></script>
+    <script src="{virtualPath}/lib/dhtmlx/dhtmlx.js?ver=2.0.3.092701"></script>
+	<script src="{virtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.3.092701"></script>
+	<script src="{virtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.3.092701"></script>
+    <script src="{virtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.3.092701"></script>
+	<script src="{virtualPath}/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.3.092701"></script>
+    <script src="{virtualPath}/js/hwdas.js?ver=2.0.3.092701"></script>
+	<script src="{virtualPath}/js/hwMSC.js?ver=2.0.3.092701"></script>
+    <script src="{virtualPath}/js/vmdcore.js?ver=2.0.3.092701"></script>
+    <script src="{virtualPath}/js/vmdcomps.js?ver=2.0.3.092701"></script>
+    <script src="{virtualPath}/js/publicMethods.js?ver=2.0.3.092701"></script>
+    <script src="{virtualPath}/js/vmdreport.js?ver=2.0.3.092701"></script>
+    {workspacePath}
+
+    <script src="{virtualPath}/lib/ace/ace.js"></script>
+    <script src="{virtualPath}/lib/ace/mode-base.js" type="text/javascript"></script>
+    <script src="{virtualPath}/lib/ace/theme-xcode.js" type="text/javascript" ></script>
+    <script src="{virtualPath}/lib/ace/ext-language_tools.js"></script>
+    
+
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        
+    </style>
+    <script>
+	    
+        vmd.virtualPath = '{virtualPath}';
+        
+        Ext.define("vmd.module.MyViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps(["vmd.ux.WorkSpaceList$1.0$WorkSpaceList","vmd.ux.TabWorkSpaceInfo$1.0$TabWorkSpaceInfo"]),
+	xtype:"vmd.module.MyViewport",
+	layout:"absolute",
+	afterrender:"MyViewport_afterrender",
+	beforerender:"MyViewport_beforerender",
+	listeners:{
+		vmdafterrender:function(){
+	this.MyViewport_afterrender(this)
+},
+		beforerender:function(){
+	this.MyViewport_beforerender(this)
+}
+	},
+	initComponent: function(){
+		var workspaceId = "";
+var lastWorkid = '';
+var workspaceIdCur = "";
+var curWorkflowAddr = "";
+var curDataServiceAddr = "";
+var ifUpdateHomePage = false;
+var ifClosed = false;
+// var workspaceId = "657e35d9-494a-456d-8f80-98b4924133d7";
+// var hwvarWorkSpaceName = "我的工区";
+var workspaceSelData;
+var login = Ext.util.Cookies.get('userName');
+
+function btnSave_click(sender, e) {
+    TabWorkSpaceInfo.iSaveData(lastWorkid, function(id) {
+        // ;
+        storeWorkSpaceList.toRefresh();
+        parent.initMenuWorkSpaceList();
+        lastWorkid = id;
+        // parent.formWorkSpaceManage.close();
+    });
+    // TabWorkSpaceInfo.isSaveFlow(
+    //     function() {
+    //         parent.reloadWorkflowCategory();
+    //     }
+    // );
+    // TabWorkSpaceInfo.isSaveService(
+    //     function() {
+    //         
+    //         parent.reloadDataServiceCategory();
+    //     }
+    // );
+}
+
+function btnClose_click(sender, e) {
+    // 因为会走两遍，所有增加限制
+    if(!ifClosed) {
+        ifClosed = true;
+        if(ifUpdateHomePage) {
+            parent.initMenuWorkSpaceList();
+        } else {
+            parent.updateMenuWorkSpaceList();
+        }
+    }
+    parent && parent.formWorkSpaceManage.close();
+    // parent.updateMenuWorkSpaceList();
+    // parent.formWorkSpaceManage.close();
+}
+
+function MyViewport_afterrender(sender) {
+    workspaceId = getUrlParam('workspaceid');
+    lastWorkid = getUrlParam('lastWorkid');
+    ifUpdateHomePage = false;
+    ifClosed = false;
+
+    // 处理窗体右上角的叉号关闭按钮
+    parent && parent.formWorkSpaceManage.on('hide', function() {
+        btnClose_click();
+    })
+}
+
+function hwDataView_click(sender, index, node, e) {
+    // index;
+    // sender.
+}
+
+// function btnAdd_click(sender, e) {
+//     TabWorkSpaceInfo.iNewWorkSpace();
+// }
+
+// function btnDel_click(sender, e) {
+
+// }
+
+function TabWorkSpaceInfo_afterrender(sender) {
+
+    TabWorkSpaceInfo.comlistWorkflowAddress.regex = /[\w\-]+(\.[\w\-]+)+([\w\-\.,@?^=%&:\/~\+#]*[\w\-\@?^=%&\/~\+#])?:([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-5]{2}[0-3][0-5])$/;
+    TabWorkSpaceInfo.comlistWorkflowAddress.regexText = '输入标准的服务器地址!';
+    TabWorkSpaceInfo.comlistWorkflowAddress.valueField = 'id';
+    TabWorkSpaceInfo.comlistWorkflowAddress.displayField = 'address';
+    TabWorkSpaceInfo.comlistWorkflowAddress.dropDownFields = 'address';
+    TabWorkSpaceInfo.comlistWorkflowAddress.queryField = 'id';
+    TabWorkSpaceInfo.comlistWorkflowAddress.store = storeWorkflowList;
+
+    TabWorkSpaceInfo.comlistDataServiceAddress.regex = /[\w\-]+(\.[\w\-]+)+([\w\-\.,@?^=%&:\/~\+#]*[\w\-\@?^=%&\/~\+#])?:([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-5]{2}[0-3][0-5])$/;
+    TabWorkSpaceInfo.comlistDataServiceAddress.regexText = '输入标准的服务器地址!';
+    TabWorkSpaceInfo.comlistDataServiceAddress.valueField = 'id';
+    TabWorkSpaceInfo.comlistDataServiceAddress.displayField = 'address';
+    TabWorkSpaceInfo.comlistDataServiceAddress.dropDownFields = 'address';
+    TabWorkSpaceInfo.comlistDataServiceAddress.queryField = 'id';
+    TabWorkSpaceInfo.comlistDataServiceAddress.store = storeDataService;
+
+    TabWorkSpaceInfo.comlistMSG.regex = /[\w\-]+(\.[\w\-]+)+([\w\-\.,@?^=%&:\/~\+#]*[\w\-\@?^=%&\/~\+#])?:([0-9]|[1-9]\d{1,3}|[1-5]\d{4}|6[0-5]{2}[0-3][0-5])$/;
+    TabWorkSpaceInfo.comlistMSG.regexText = '输入标准的服务器地址!';
+    TabWorkSpaceInfo.comlistMSG.valueField = 'id';
+    TabWorkSpaceInfo.comlistMSG.displayField = 'address';
+    TabWorkSpaceInfo.comlistMSG.dropDownFields = 'address';
+    TabWorkSpaceInfo.comlistMSG.queryField = 'id';
+    TabWorkSpaceInfo.comlistMSG.store = storeMSG;
+    
+    TabWorkSpaceInfo.iSetWorkSpaceId(workspaceId);
+}
+
+function WorkSpaceList_onItemClick(sender, index, node, e) {
+    workspaceSelData = WorkSpaceList.getSelData();
+    if(workspaceId != workspaceSelData.workspace_id) {
+        workspaceId = workspaceSelData.workspace_id;
+        TabWorkSpaceInfo.iSetIfDataLoaded(false);
+        TabWorkSpaceInfo.iChangeWorkSpace(workspaceId);
+        // TabWorkSpaceInfo.iQueryWorkSpaceInfo(workspaceId);
+    }
+}
+
+function WorkSpaceList_onAddItem(sender) {
+
+    workspaceId = vmd.util.guid();
+    TabWorkSpaceInfo.iNewWorkSpace(workspaceId);
+}
+
+function WorkSpaceList_onDelItem(sender) {
+    // 获取当前用户工区数量，若只有一个工区，不可再删除
+    if(storeWorkSpaceList.totalLength < 2) {
+        Ext.Msg.alert('提示', '系统默认至少一个工区！');
+        return
+    }
+
+    // 删除工区信息，调用删除工区的服务
+    // 清空工区Tab页的信息或者设置上一个选中；
+    // var selData = WorkSpaceList.getSelData();
+
+    Ext.Msg.confirm("提示", "确认要删除工区？", function(type) {
+        if(type == "yes") {
+            workspaceId = workspaceSelData.workspace_id;
+            // 获取当前选中的索引值
+            // 将获取的索引值减1，获取其ID
+            // 设置减1后的项为当前选中项
+            var nextSelId = WorkSpaceList.iGetSelIdAfterDel();
+            TabWorkSpaceInfo.iSetIfDataLoaded(true);
+            hwDas.del(
+                "DataServiceWorkSpace/WorkSpaceInfo/WorkSpaceInfo", {}, {
+                    'workspaceid': workspaceId
+                },
+                function(result) {
+                    // // 更改活动工区状态
+                    // hwDas.edit(
+                    //     "DataServiceWorkSpace/WorkSpaceInfo/changeActive", {}, {}, [{
+                    //         'lastworkid': lastWorkid,
+                    //         'workid': nextSelId
+                    //     }],
+                    //     function(result) {
+                    //         // parent.initMenuWorkSpaceList();
+                    //         lastWorkid = nextSelId
+                    //     },
+                    //     function(msg) {
+                    //         Tips.tips("工区状态更改失败！", "error");
+                    //     }
+                    // );
+                    // 如果删除的是主页面中显示的工区，就需要更新主页面的工区及项目信息；
+                    if(workspaceIdCur == workspaceId) {
+                        ifUpdateHomePage = true;
+                    }
+                    workspaceId = nextSelId;
+                    // 绑定的数据集刷新
+                    storeWorkSpaceList.toRefresh();
+                    Tips.tips("删除成功！", "success");
+                },
+                function(msg) {
+                    Tips.tips("删除失败！", "error");
+                }
+            );
+        }
+    });
+}
+
+function TabWorkSpaceInfo_beforerender(sender) {
+
+    TabWorkSpaceInfo.iSetIfDataLoaded(false);
+}
+
+function storeWorkSpaceList_load(sender, records, options) {
+    // 绑定数据加载完成后，设置选中项
+    // workspaceId = getUrlParam('workspaceid');
+    // 设置工区列表中的选中项
+    WorkSpaceList.iSelectItemById(workspaceId);
+    workspaceSelData = WorkSpaceList.getSelData();
+    TabWorkSpaceInfo.iSetIfDataLoaded(false);
+    TabWorkSpaceInfo.iQueryWorkSpaceInfo(workspaceId);
+}
+
+function MyViewport_beforerender(sender) {
+
+    workspaceId = getUrlParam('workspaceid');
+    workspaceIdCur = workspaceId;
+
+    curWorkflowAddr = getUrlParam('workflowaddr');
+    curDataServiceAddr = getUrlParam('dataserviceaddr');
+
+    hwvarWorkSpaceId.setValue(workspaceId);
+}
+// var workflowStoreRecords = null;
+// var dataserviceStoreRecords = null;
+function storeWorkflowList_load(sender, records, options) {
+    storeWorkflowList.removeAll()
+    records = records.distinct();
+    // workflowStoreRecords = records;
+    storeWorkflowList.toAdd(records);
+    TabWorkSpaceInfo.iSetWorkflowStoreRecords(records);
+}
+
+function storeDataService_load(sender, records, options) {
+    storeDataService.removeAll()
+    records = records.distinct();
+    // dataserviceStoreRecords = records;
+    storeDataService.toAdd(records);
+    TabWorkSpaceInfo.iSetDataServiceStoreRecords(records);
+}
+Array.prototype.distinct = function() {
+    var arr = this,
+        i,
+        obj = {},
+        result = [],
+        len = arr.length;
+    for(i = 0; i < arr.length; i++) {
+        if(!obj[arr[i].data.address]) { //如果能查找到，证明数组元素重复了
+            obj[arr[i].data.address] = 1;
+            result.push(arr[i].data);
+        }
+    }
+    return result;
+};
+
+function storeMSG_load(sender,records,options){
+  storeMSG.removeAll()
+    records = records.distinct();
+    storeMSG.toAdd(records);
+}
+			this.MyViewport_afterrender=MyViewport_afterrender;
+		this.MyViewport_beforerender=MyViewport_beforerender;
+		hwvarServiceType=new vmd.var.variable({});
+		hwvarWorkSpaceId=new vmd.var.variable({});
+
+		storeResourceImage=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"storeResourceImage","autoLoad":true,"cid":"vmdJsonStore","storeConfig":"{\"id\":\"TxgUO9ajRM\",\"callcode\":\"vmdCode\",\"url\":\"DataServiceWorkSpace/WorkSpaceInfo/ServiceAddress\",\"host\":\"\",\"isHwRest\":true,\"name\":\"服务地址\",\"getMethods\":[{\"id\":\"workspaceid\",\"value1\":\"\",\"value2\":\"\"},{\"id\":\"servicetype\",\"value1\":\"\",\"value2\":\"\"}],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"address\",\"type\":\"string\"},{\"name\":\"remark\",\"type\":\"string\"}]}"});
+		storeWorkflowList=new vmd.store.jsonStore({listeners:{load:function(){storeWorkflowList_load.apply(this,arguments);}},"xtype":"vmd.jsonStore","id":"storeWorkflowList","autoLoad":true,"storeConfig":"{\"id\":\"TDblz0Ejpz\",\"callcode\":\"vmdCode\",\"url\":\"DataServiceWorkSpace/WorkSpaceInfo/ServiceAddressAll\",\"host\":\"\",\"isHwRest\":true,\"name\":\"所有服务地址\",\"getMethods\":[{\"id\":\"type\",\"value1\":\"return 3;\",\"value2\":\"\"}],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"address\",\"type\":\"string\"},{\"name\":\"remark\",\"type\":\"string\"}]}","load":"storeWorkflowList_load"});
+		storeDataService=new vmd.store.jsonStore({listeners:{load:function(){storeDataService_load.apply(this,arguments);}},"xtype":"vmd.jsonStore","id":"storeDataService","autoLoad":true,"storeConfig":"{\"id\":\"TDblz0Ejpz\",\"callcode\":\"vmdCode\",\"url\":\"DataServiceWorkSpace/WorkSpaceInfo/ServiceAddressAll\",\"host\":\"\",\"isHwRest\":true,\"name\":\"所有服务地址\",\"getMethods\":[{\"id\":\"type\",\"value1\":\"return 4;\",\"value2\":\"\"}],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"address\",\"type\":\"string\"},{\"name\":\"remark\",\"type\":\"string\"}]}","load":"storeDataService_load"});
+		storeWorkSpaceList=new vmd.store.jsonStore({listeners:{load:function(){storeWorkSpaceList_load.apply(this,arguments);}},"xtype":"vmd.jsonStore","id":"storeWorkSpaceList","autoLoad":true,"storeConfig":"{\"id\":\"TxfVyP1knW\",\"callcode\":\"vmdCode\",\"url\":\"DataServiceWorkSpace/WorkSpaceInfo/WorkSpaceUserQuery\",\"host\":\"\",\"isHwRest\":true,\"name\":\"用户关联工区查询\",\"getMethods\":[{\"id\":\"loginname\",\"value1\":\"return  Ext.util.Cookies.get('hwLogin')\",\"value2\":\"\"}],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"workspace_id\",\"type\":\"string\"},{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"active_ind\",\"type\":\"string\"}]}","load":"storeWorkSpaceList_load"});
+		storeMSG=new vmd.store.jsonStore({listeners:{load:function(){storeMSG_load.apply(this,arguments);}},"xtype":"vmd.jsonStore","id":"storeMSG","autoLoad":true,"cid":"vmdJsonStore","storeConfig":"{\"id\":\"TDblz0Ejpz\",\"callcode\":\"vmdCode\",\"url\":\"DataServiceWorkSpace/WorkSpaceInfo/ServiceAddressAll\",\"host\":\"\",\"isHwRest\":true,\"name\":\"所有服务地址\",\"getMethods\":[{\"id\":\"type\",\"value1\":\"return 5;\",\"value2\":\"\",\"defaultvalue\":\"\"}],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"address\",\"type\":\"string\"},{\"name\":\"id\",\"type\":\"string\"}]}","load":"storeMSG_load"});
+
+
+		this.items=[
+			{
+				xtype:"vmd.ux.TabWorkSpaceInfo",
+				id:"TabWorkSpaceInfo",
+				layout:"absolute",
+				x:220,
+				y:0,
+				comboListStore:"store",
+				width:610,
+				height:420,
+				afterrender:"TabWorkSpaceInfo_afterrender",
+				beforerender:"TabWorkSpaceInfo_beforerender",
+				listeners:{
+					vmdafterrender:TabWorkSpaceInfo_afterrender,
+					beforerender:TabWorkSpaceInfo_beforerender
+				}
+			},
+			{
+				xtype:"vmd.button",
+				id:"btnSave",
+				text:"保存",
+				type:"(none)",
+				size:"small",
+				x:680,
+				y:430,
+				width:70,
+				style:"background-color: rgb(64, 158, 255);    color: rgb(255, 255, 255);    font-size: 14px;",
+				click:"btnSave_click",
+				listeners:{
+					click:btnSave_click
+				}
+			},
+			{
+				xtype:"vmd.button",
+				id:"btnClose",
+				text:"关闭",
+				type:"(none)",
+				size:"small",
+				x:760,
+				y:430,
+				width:70,
+				style:"background-color: rgb(201, 201, 201);    color: rgb(0, 0, 0);    font-size: 14px;",
+				click:"btnClose_click",
+				listeners:{
+					click:btnClose_click
+				}
+			},
+			{
+				xtype:"vmd.ux.WorkSpaceList",
+				id:"WorkSpaceList",
+				listTpl:"<ul>    <tpl for=\".\">        <li class='info serverlist-info'> {name} </li>    </tpl></ul>",
+				listData:"var data = [{    \"workspace_id\": \"0000000001\",    \"name\": \"我的工区\",    \"remark\": \"test\"}, {    \"workspace_id\": \"0000000002\",    \"name\": \"我的工区1\",    \"remark\": \"test\"}];return data;",
+				x:0,
+				y:0,
+				width:220,
+				height:420,
+				store:storeWorkSpaceList,
+				onItemClick:"WorkSpaceList_onItemClick",
+				onAddItem:"WorkSpaceList_onAddItem",
+				onDelItem:"WorkSpaceList_onDelItem",
+				listeners:{
+					onItemClick:WorkSpaceList_onItemClick,
+					onAddItem:WorkSpaceList_onAddItem,
+					onDelItem:WorkSpaceList_onDelItem
+				}
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+	}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MyViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

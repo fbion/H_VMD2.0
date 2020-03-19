@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>单元格数字</title>
+	<!--基本样式-->
+    <link href="/css/common.css?ver=2.0.3.0908" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.3.0908" rel="stylesheet" />
+   
+    <link href="/design/css/icons.css?ver=2.0.3.0908" rel="stylesheet" />
+
+	<link href="/lib/dhtmlx/dhtmlx.css?ver=2.0.3.0908" rel="stylesheet" />
+	  <!--样式快捷索引表-->
+    <link href="/css/shortcut.css?ver=2.0.3.0908" rel="stylesheet" />
+    
+    <script src="/lib/labjs/LAB.min.js?ver=2.0.3.0908"></script>
+    <script src="/config.js?ver=2.0.3.0908"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.3.0908"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.3.0908"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.3.0908"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=2.0.3.0908"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.3.0908"></script>
+    <script src="/js/util.js?ver=2.0.3.0908"></script>
+    <script src="/lib/dhtmlx/dhtmlx.js?ver=2.0.3.0908"></script>
+	<script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.3.0908"></script>
+	<script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.3.0908"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.3.0908"></script>
+	<script src="/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.3.0908"></script>
+    <script src="/js/hwdas.js?ver=2.0.3.0908"></script>
+    <script src="/js/vmdcore.js?ver=2.0.3.0908"></script>
+    <script src="/js/vmdcomps.js?ver=2.0.3.0908"></script>
+    <script src="/js/publicMethods.js?ver=2.0.3.0908"></script>
+    <script src="/js/vmdreport.js?ver=2.0.3.0908"></script>
+    
+
+    <script src="/lib/ace/ace.js"></script>
+    <script src="/lib/ace/mode-base.js" type="text/javascript"></script>
+    <script src="/lib/ace/theme-xcode.js" type="text/javascript" ></script>
+    <script src="/lib/ace/ext-language_tools.js"></script>
+    
+
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        
+    </style>
+    <script>
+	    vmd.preivewMode=true;
+        vmd.virtualPath = '';
+        vmd.workspace={"workspaceid":"a10139fa-d032-472f-b1f4-1933b14b4765","projectid":"eQ9ULgcVb1","workflowIp":"","dataServiceIp":""}
+        Ext.define("vmd.module.MainViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps(["vmd.ux.NumberType$1.0$NumberType"]),
+	xtype:"vmd.module.MainViewport",
+	layout:"absolute",
+	initComponent: function(){
+		var page = this
+
+function cellNumberType() {
+    this.allowEdit = {
+            id: "allowEdit",
+            value: "true",
+            type: "CheckBox"
+        },
+        this.allowPrint = {
+            id: "allowPrint",
+            value: "true",
+            type: "CheckBox"
+        },
+        this.allowEmpty = {
+            id: "allowEmpty",
+            value: "true",
+            type: "CheckBox"
+        },
+        this.allowFloat = {
+            id: "allowFloat",
+            value: "true",
+            type: "CheckBox"
+        },
+        this.allowNegative = {
+            id: "allowNegative",
+            value: "true",
+            type: "CheckBox"
+        },
+        this.max = {
+            id: "max",
+            value: "false",
+            type: "CheckBox"
+        },
+        this.min = {
+            id: "min",
+            value: "false",
+            type: "CheckBox"
+        },
+        this.limit = {
+            id: "limit",
+            value: "false",
+            type: "CheckBox"
+        },
+        this.decimalPoints = {
+            id: "decimalPoints",
+            value: "",
+            type: "Text"
+        },
+        this.emptyAlert = {
+            id: "emptyAlert",
+            value: "",
+            type: "Text"
+        }
+
+
+
+    //清空属性
+    this.clearInfo = function() {
+        this.allowEmpty.value = "true"
+        this.allowEdit.value = "true"
+        this.allowPrint.value = "true"
+        this.allowFloat.value = "true"
+        this.allowNegative.value = "true"
+        this.max.value = "false"
+        this.min.value = "false"
+        this.limit.value = "false"
+        this.decimalPoints.value = "1"
+        this.emptyAlert.value = "133"
+    };
+
+    //设置值
+    this.setCellTextInfo = function(info, cell) {
+        this.allowEmpty.value = info.allowEmpty.value
+        this.allowEdit.value = info.allowEdit.value
+        this.allowPrint.value = info.allowPrint.value
+        this.allowFloat.value = info.allowFloat.value
+        this.allowNegative.value = info.allowNegative.value
+        this.max.value = info.max.value
+        this.min.value = info.min.value
+        this.limit.value = info.limit.value
+        this.decimalPoints.value = info.decimalPoints.value
+        this.emptyAlert.value = info.emptyAlert.value
+    };
+
+    // 根据id设置相应属性的值
+    this.setCellInfos = function(id, value) {
+        var c = this.getInfoByID(id);
+        if(c) {
+            if(c.type == "Text") {
+                c.value = value;
+            }
+            if(c.type == "CheckBox") {
+                c.checked = value;
+            }
+            if(c.type == "ComboBox") {
+                c.value = value;
+            }
+            if(c.type == "compound") {
+                c.value = value;
+            }
+            if(c.type == "combo") {
+                c.value = value;
+            }
+            if(c.type == "radiostoregroup") {
+                c.value = value;
+            }
+            if(c.type == "ColorSelect") {
+                c.value = value;
+            }
+            if(c.type == "LineStyle") {
+                c.value = value;
+            }
+        }
+    };
+
+    //通过id获取属性
+    this.getInfoByID = function(id) {
+        if(this.allowEdit.id == id) {
+            return this.allowEdit;
+        }
+        if(this.allowPrint.id == id) {
+            return this.allowPrint;
+        }
+        if(this.allowEmpty.id == id) {
+            return this.allowEmpty;
+        }
+        if(this.allowFloat.id == id) {
+            return this.allowFloat;
+        }
+        if(this.allowNegative.id == id) {
+            return this.allowNegative;
+        }
+        if(this.max.id == id) {
+            return this.max;
+        }
+        if(this.min.id == id) {
+            return this.min;
+        }
+
+
+        if(this.limit.id == id) {
+            return this.limit;
+        }
+        if(this.decimalPoints.id == id) {
+            return this.decimalPoints;
+        }
+        if(this.emptyAlert.id == id) {
+            return this.emptyAlert;
+        }
+
+
+
+    }
+
+    //转换JSON串
+    this.cellInfoToJson = function() {
+        json = {
+            cellNumberInfo: [{
+                allowEdit: {
+                    id: 'allowEdit',
+                    value: this.allowEdit.value,
+                    type: 'CheckBox'
+                },
+                allowPrint: {
+                    id: 'allowPrint',
+                    value: this.allowPrint.value,
+                    type: 'CheckBox'
+                },
+                allowEmpty: {
+                    id: 'allowEmpty',
+                    value: this.allowEmpty.value,
+                    type: 'CheckBox'
+                },
+                allowFloat: {
+                    id: 'allowFloat',
+                    value: this.allowFloat.value,
+                    type: 'CheckBox'
+                },
+                allowNegative: {
+                    id: 'allowNegative',
+                    value: this.allowNegative.value,
+                    type: 'CheckBox'
+                },
+                max: {
+                    id: 'max',
+                    value: this.max.value,
+                    type: 'CheckBox'
+                },
+                min: {
+                    id: 'min',
+                    value: this.min.value,
+                    type: 'CheckBox'
+                },
+                limit: {
+                    id: 'limit',
+                    value: this.limit.value,
+                    type: 'CheckBox'
+                },
+                decimalPoints: {
+                    id: 'decimalPoints',
+                    value: this.decimalPoints.value,
+                    type: 'Text'
+                },
+                emptyAlert: {
+                    id: 'emptyAlert',
+                    value: this.emptyAlert.value,
+                    type: 'Text'
+                }
+
+
+
+
+
+            }]
+
+        }
+    }
+}
+var p = new cellNumberType()
+
+function button_click(sender, e) {
+    p.allowEmpty.value = NumberType.getInfo("allowEmpty")
+    p.allowEdit.value = NumberType.getInfo("allowEdit")
+    p.allowPrint.value = NumberType.getInfo("allowPrint")
+    p.allowFloat.value = NumberType.getInfo("allowFloat")
+    p.allowNegative.value = NumberType.getInfo("allowNegative")
+    p.max.value = NumberType.getInfo("max")
+    p.min.value = NumberType.getInfo("min")
+    p.limit.value = NumberType.getInfo("limit")
+    p.decimalPoints.value = NumberType.getInfo("decimalPoints")
+    p.emptyAlert.value = NumberType.getInfo("emptyAlert")
+
+    alert(p.allowEmpty.value + "," + p.allowEdit.value + "," + p.allowPrint.value +
+        "," + p.allowFloat.value + "," + p.allowNegative.value + "," + p.max.value +
+        "," + p.min.value + "," + p.limit.value + "," + p.decimalPoints.value + "," + p.emptyAlert.value)
+}
+
+function button1_click(sender, e) {
+    p.allowEmpty.value = "false"
+    p.allowEdit.value = "false"
+    p.allowPrint.value = "false"
+    p.allowFloat.value = "false"
+    p.allowNegative.value = "false"
+    p.max.value = "false"
+    p.min.value = "false"
+    p.limit.value = "false"
+    p.decimalPoints.value = "4"
+    p.emptyAlert.value = "123"
+    NumberType.setInfo(p, null)
+}
+
+function button2_click(sender, e) {
+    p.clearInfo()
+    NumberType.setInfo(p, null)
+}
+
+function button3_click(sender, e) {
+    p.allowEmpty.value = NumberType.getInfo("allowEmpty")
+    p.allowEdit.value = NumberType.getInfo("allowEdit")
+    p.allowPrint.value = NumberType.getInfo("allowPrint")
+    p.allowFloat.value = NumberType.getInfo("allowFloat")
+    p.allowNegative.value = NumberType.getInfo("allowNegative")
+    p.max.value = NumberType.getInfo("max")
+    p.min.value = NumberType.getInfo("min")
+    p.limit.value = NumberType.getInfo("limit")
+    p.decimalPoints.value = NumberType.getInfo("decimalPoints")
+    p.emptyAlert.value = NumberType.getInfo("emptyAlert")
+    p.cellInfoToJson()
+    alert(JSON.stringify(json))
+}
+	
+
+
+		this.items=[
+			{
+				xtype:"vmd.ux.NumberType",
+				id:"NumberType",
+				layout:"absolute",
+				x:90,
+				y:20
+			},
+			{
+				xtype:"vmd.button",
+				id:"button",
+				text:"取值",
+				type:"(none)",
+				size:"small",
+				x:640,
+				y:110,
+				click:"button_click",
+				listeners:{
+					click:button_click
+				}
+			},
+			{
+				xtype:"vmd.button",
+				id:"button1",
+				text:"传值",
+				type:"(none)",
+				size:"small",
+				x:640,
+				y:150,
+				click:"button1_click",
+				listeners:{
+					click:button1_click
+				}
+			},
+			{
+				xtype:"vmd.button",
+				id:"button2",
+				text:"clear",
+				type:"(none)",
+				size:"small",
+				x:640,
+				y:190,
+				click:"button2_click",
+				listeners:{
+					click:button2_click
+				}
+			},
+			{
+				xtype:"vmd.button",
+				id:"button3",
+				text:"json",
+				type:"(none)",
+				size:"small",
+				x:640,
+				y:230,
+				click:"button3_click",
+				listeners:{
+					click:button3_click
+				}
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+	}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MainViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

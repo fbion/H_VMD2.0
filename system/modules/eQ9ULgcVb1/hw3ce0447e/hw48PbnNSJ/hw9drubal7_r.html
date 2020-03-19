@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>资源选择</title>
+	<!--基本样式-->
+    <link href="{vmdvirtualPath}/css/common.css?ver=2.0.4.20190402" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="{vmdvirtualPath}/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.4.20190402" rel="stylesheet" />
+   
+    <link href="{vmdvirtualPath}/design/css/icons.css?ver=2.0.4.20190402" rel="stylesheet" />
+
+	<link href="{vmdvirtualPath}/lib/dhtmlx/dhtmlx.css?ver=2.0.4.20190402" rel="stylesheet" />
+	  <!--样式快捷索引表-->
+    <link href="{vmdvirtualPath}/css/shortcut.css?ver=2.0.4.20190402" rel="stylesheet" />
+    
+    
+    <script src="{vmdvirtualPath}/lib/labjs/LAB.min.js?ver=2.0.4.20190402"></script>
+    <script src="{vmdvirtualPath}/config.js?ver=2.0.4.20190402"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.4.20190402"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.4.20190402"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.4.20190402"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/ext-all-debug.js?ver=2.0.4.20190402"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.4.20190402"></script>
+    <script src="{vmdvirtualPath}/js/util.js?ver=2.0.4.20190402"></script>
+    <script src="{vmdvirtualPath}/lib/dhtmlx/dhtmlx.js?ver=2.0.4.20190402"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.4.20190402"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.4.20190402"></script>
+    <script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.4.20190402"></script>
+	<script src="{vmdvirtualPath}/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.4.20190402"></script>
+    <script src="{vmdvirtualPath}/js/hwdas.js?ver=2.0.4.20190402"></script>
+    <script src="{vmdvirtualPath}/js/vmdcore.js?ver=2.0.4.20190402"></script>
+    <script src="{vmdvirtualPath}/js/vmdcomps.js?ver=2.0.4.20190402"></script>
+    <script src="{vmdvirtualPath}/js/publicMethods.js?ver=2.0.4.20190402"></script>
+    <script src="{vmdvirtualPath}/js/vmdreport.js?ver=2.0.4.20190402"></script>
+    
+    
+    {vmdworkspacePath}
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        .icon-cloud-download {
+    display: inline-block;
+    background-image: url(/modules/eQ9ULgcVb1/img/menu_icon.png);
+    width: 16px !important;
+    background-position: -16px -48px;
+    background-size: auto !important;
+    background-repeat: no-repeat;
+    height: 16px;
+    margin-right: 15px;
+}
+.font-icon {
+    display: inline-block;
+    width: 16px;
+    text-align: center;
+    font-size: 1.2em;
+    color: #aaa;
+    margin-right: 15px;
+    vertical-align: middle;
+    margin-top: -2px;
+    padding: 0;
+}
+.icon-folder-close-alt {
+    display: inline-block;
+    background-image: url(/modules/eQ9ULgcVb1/img/menu_icon.png);
+    width: 16px !important;
+    background-position: 0 -16px;
+    background-size: auto !important;
+    background-repeat: no-repeat;
+    height: 16px;
+    margin-right: 15px;
+}
+.icon-cloud-upload  {
+    display: inline-block;
+    background-image: url(/modules/eQ9ULgcVb1/img/menu_icon.png);
+    width: 16px !important;
+    background-position: 0 -48px;
+    background-size: auto !important;
+    background-repeat: no-repeat;
+    height: 16px;
+    margin-right: 15px;
+}
+.icon-cloud-newfolder {
+    display: inline-block;
+    background-image: url(/modules/eQ9ULgcVb1/img/menu_icon.png);
+    width: 16px !important;
+    background-position: 0 -16px;
+    background-size: auto !important;
+    background-repeat: no-repeat;
+    height: 16px;
+    margin-right: 15px;
+}
+.icon-cloud-search{
+    display: inline-block;
+    background-image: url(/modules/eQ9ULgcVb1/img/menu_icon.png);
+    width: 16px !important;
+    background-position: 0 0px;
+    background-size: auto !important;
+    background-repeat: no-repeat;
+    height: 16px;
+    margin-right: 15px;
+}
+.icon-cloud-remove{
+    display: inline-block;
+    background-image: url(/modules/eQ9ULgcVb1/img/menu_icon.png);
+    width: 16px !important;
+    background-position: 0 -80px;
+    background-size: auto !important;
+    background-repeat: no-repeat;
+    height: 16px;
+    margin-right: 15px;
+}
+.icon-cloud-rname  {
+    display: inline-block;
+    background-image: url(/modules/eQ9ULgcVb1/img/menu_icon.png);
+    width: 16px !important;
+    background-position: 0 -64px;
+    background-size: auto !important;
+    background-repeat: no-repeat;
+    height: 16px;
+    margin-right: 15px;
+}
+.icon-cloud-paste {
+    display: inline-block;
+    background-image: url(/modules/eQ9ULgcVb1/img/menu_icon.png);
+    width: 16px !important;
+    background-position: -16px -64px;
+    background-size: auto !important;
+    background-repeat: no-repeat;
+    height: 16px;
+    margin-right: 15px;
+}
+.icon-cloud-cut{
+    display: inline-block;
+    background-image: url(/modules/eQ9ULgcVb1/img/menu_icon.png);
+    width: 16px !important;
+    background-position: -16px -80px;
+    background-size: auto !important;
+    background-repeat: no-repeat;
+    height: 16px;
+    margin-right: 15px;
+}
+.icon-cloud-copy {
+    display: inline-block;
+    background-image: url(/modules/eQ9ULgcVb1/img/menu_icon.png);
+    width: 16px !important;
+    background-position: 0 -96px;
+    background-size: auto !important;
+    background-repeat: no-repeat;
+    height: 16px;
+    margin-right: 15px;
+}
+
+.icon-cloud-info {
+    color: #fff !important;
+    background: #c4e5ff;
+    text-align: center;
+    width: 15px;
+    border-radius: 50%;
+    height: 15px;
+    line-height: 15px;
+    margin-right: 15px;
+    box-shadow: 0 0 0 1px #6db9f5;
+}
+.icon-cloud-newfile  {
+    display: inline-block;
+    background-image: url(/modules/eQ9ULgcVb1/img/menu_icon.png);
+    width: 16px !important;
+    background-position: 0 -32px;
+    background-size: auto !important;
+    background-repeat: no-repeat;
+    height: 16px;
+    margin-right: 15px;
+}
+.icon-cloud-css  {
+    display: inline-block;
+    background-image: url(/modules/eQ9ULgcVb1/img/icon_file/css.png);
+    width: 16px !important;
+    background-size: cover !important;
+    background-repeat: no-repeat;
+    height: 16px;
+    margin-right: 15px;
+}
+.icon-cloud-js  {
+    display: inline-block;
+    background-image: url(/modules/eQ9ULgcVb1/img/icon_file/js.png);
+    width: 16px !important;
+    background-size: cover !important;
+    background-repeat: no-repeat;
+    height: 16px;
+    margin-right: 15px;
+}
+.icon-cloud-html  {
+    display: inline-block;
+    background-image: url(/modules/eQ9ULgcVb1/img/icon_file/html.png);
+    width: 16px !important;
+    background-size: cover !important;
+    background-repeat: no-repeat;
+    height: 16px;
+    margin-right: 15px;
+}
+
+.list-view{
+    margin-left: 25px;
+    background-image: url("/system/modules/eQ9ULgcVb1/img/list-view.png");
+    background-repeat: no-repeat;
+    background-position: center center;
+    border-radius: 0px;
+}
+.list-view-sel{
+    background-color: lightBlue;
+}
+.list-list{
+    margin-left: 25px;
+    background-image: url("/system/modules/eQ9ULgcVb1/img/list-list.png");
+    background-repeat: no-repeat;
+    background-position: center center;
+    border-radius: 0px;
+}
+.list-list-sel{
+    background-color: lightBlue;
+}
+.server-list{
+    background-image: url("/system/modules/eQ9ULgcVb1/img/servermenu.png");
+    background-repeat: no-repeat;
+    background-position: center center;
+    border-radius: 0px;
+}
+
+    </style>
+    <script>
+	    
+        vmd.virtualPath = '{vmdvirtualPath}';
+        
+        Ext.define("vmd.module.MyViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps(["vmd.ux.ZyglList$1.0$ZyglList","vmd.ux.ZyflSearch$1.0$ZyflSearch","vmd.ux.Navigation$1.0$Navigation","vmd.ux.ZyglTree$1.0$ZyglTree"]),
+	xtype:"vmd.module.MyViewport",
+	layout:"border",
+	initComponent: function(){
+		if (typeof(Element.onselectstart) != "undefined") {        
+    // IE下禁止元素被选取        
+    Element.onselectstart = new Function("return false");        
+} else {
+    // firefox下禁止元素被选取的变通办法        
+    Element.onmousedown = new Function("return false");        
+    Element.onmouseup = new Function("return true");        
+}
+
+
+var resourceServerId = "";
+var resourceHost = vmdSettings.dataServiceIp;
+var resourceId = [];
+var resourceIds = "";
+var resourceServerName = getUrlParam("servername");
+var hasUserResource = false;
+hwDas.get("DataServiceWorkSpace/projectInfo/getResourceInfo", {}, {
+    module_id: getUrlParam("moduleid"),
+    resource_server_id: getUrlParam("serviceid"),
+    resource_center_id: getUrlParam("resourceid")
+}, function(result) {
+    if(result.data && result.data.length > 0 && result.data[0].datas && result.data[0].datas.length > 0) {
+        resourceHost = (result.data[0].datas[0].address);
+        //resourceServerName= (result.data[0].datas[0].name);
+        hasUserResource = true;
+        var isServer = false; //定义变量，记录是否为选择的服务根目录
+        for(var i = 0; i < result.data[0].datas.length; i++) {
+            if(result.data[0].datas[i].resource_server_id == result.data[0].datas[i].resource_category_id) {
+                isServer = true;
+            }
+            var path = result.data[0].datas[i].path;
+            var resource_category_id = result.data[0].datas[i].resource_category_id;
+            var needadd = true;
+            for(var j = 0; j < resourceId.length; j++) {
+                if(resourceId[j].path.length >= path.length && resourceId[j].path.indexOf(path) >= 0) {
+                    resourceId[j].path = path;
+                    resourceId[j].resource_category_id = resource_category_id;
+                    needadd = false;
+                } else if(resourceId[j].path.length < path.length && path.indexOf(resourceId[j].path) >= 0) {
+                    needadd = false;
+                }
+            }
+            if(needadd) {
+                resourceId.push({
+                    path: path,
+                    resource_category_id: resource_category_id
+                })
+            }
+        }
+        for(var j = 0; j < resourceId.length; j++) {
+            if(resourceIds == "")
+                resourceIds += resourceId[j].resource_category_id;
+            else
+                resourceIds += "," + resourceId[j].resource_category_id;
+        }
+        ZyglTree.setRootText(resourceServerName);
+        if(isServer)
+            ZyglTree.setRootValue(getUrlParam("serviceid"));
+        else
+            ZyglTree.setRootValue("0");
+        resourceIDs.setValue(resourceIds);
+        store.toRefresh(function() {
+            ZyglTree.tree.refresh();
+        }, resourceHost);
+    } else {
+        ZyglTree.setRootText(resourceServerName);
+        ZyglTree.setRootValue(getUrlParam("serviceid"));
+        resourceIDs.setValue(resourceIds);
+        store.toRefresh(function(result) {
+            ZyglTree.tree.refresh();
+        }, resourceHost);
+    }
+}, function() {})
+
+function send() {
+    var validData = [];
+    var data = "";
+    var selectedRecords = getSelResource(); //ZyglList.dataView.getSelectedRecords();
+    selectedRecords.forEach(function(data) {
+        var type = data.data.type;
+        var ext = data.data.ext;
+        var validExt = ['css', 'js', 'jpg', 'gif', 'png'];
+        var path = data.data.path;
+        if(type == 'file' && validExt.indexOf(ext) != -1) {
+            var info = {
+                ip: 'http://' + data.data.ip + '/resource',
+                path: path,
+                servName: resourceServerName,
+                ext: ext
+            }
+            validData.push(info);
+        }
+    })
+    data = Ext.encode(validData);
+    parent.postMessage && parent.postMessage(data, '*'); // 触发父页面的message事件
+}
+
+function savereName() {}
+
+//树节点的点击，绑定列表资源显示
+function ZyglTree_resourceNodeClick(sender, node, e) {
+    if(node.id != "0") {
+        selnodeID.setValue(node.id);
+        liststore.toRefresh(function() {}, resourceHost, "zyzx/zyzxtree/getResource");
+    } else {
+        selnodeID.setValue(resourceIds);
+        liststore.toRefresh(function() {}, resourceHost, "zyzx/zyzxtree/getCategoryByIDs");
+    }
+    node.select();
+    Navigation.setPath(node.getPath("text").replace(/(^\/)/g, ""))
+}
+
+//ace编辑 类型
+var aceExtList = ["html", "js", "css", "text"];
+//图片类型列表 
+var imgExtList = ["jpg", "jpeg", "png", "gif", "ico", "bmp"];
+//列表中选中的数据
+var listSelData;
+//双击列表图标
+function ZyglList_listDbClick(sender, index, node, e) {
+    var target = e.target;
+    if(e.target.className != 'ico') return;
+    listSelData = sender.store.getAt(index);
+    var listSelJson = listSelData.data;
+    if(listSelJson.type == "folder") {
+        selnodeID.setValue(sender.store.getAt(index).data.id);
+        ZyglTree.setNodeSel(sender.store.getAt(index).data.id);
+        liststore.toRefresh(function() {}, resourceHost, "zyzx/zyzxtree/getResource");
+        //设置导航的路径
+        Navigation.setPath(ZyglTree.tree.root.text + "/" + ZyglTree.getSelNodepath() + "/")
+        ZyglTree.getSelCartery().expand();
+    } else if(listSelJson.type == "file") { //如果是文件 ，进行打开处理
+        var selext = listSelJson.ext;
+        if(imgExtList.indexOf(selext) >= 0) { //如果是图片，用图片管理器打开
+            openImgShow(sender.store, listSelJson.name);
+        } else if(aceExtList.indexOf(selext) >= 0) {
+            //打开文件编辑
+            openAceEdit(sender.store, index);
+        }
+    }
+} //打开文本编辑器
+function openAceEdit(store, index) {
+    //获取当前选中的文件所在的数据集行记录
+    var selFileItemData = store.getAt(index);
+    var path;
+    //打开文本编辑器，
+    if(selFileItemData) {
+        hwdasFileServer = {
+            host: selFileItemData.data.ip,
+            mark: vmdSettings.resourceCode
+        }
+        window["hwdasFileServer"] = hwdasFileServer;
+        path = selFileItemData.data.path;
+        openAcetoEdit(path)
+    }
+}
+
+function openAcetoEdit(path) {
+    var aceFileEditWin = new vmd.window({
+        title: "编辑",
+        url: vmd.core.getVirtualPath() + "/modules/eQ9ULgcVb1/hw3ce0447e/hwef4bf837/hw1c51773c.html",
+        auto: false,
+        height: getHeight(),
+        width: getWidth(),
+        params: {
+            path: path,
+            readonly: true
+        }
+    })
+    aceFileEditWin.show();
+}
+//图片查看
+function openImgShow(store, selName) {
+    var imageList = {};
+    var imageListItems = [];
+    var index = -1;
+    for(var i = 0; i < store.data.items.length; i++) { //遍历当前的资源，将图片列表信息生成特定格式
+        var itemData = store.data.items[i].data;
+        if(imgExtList.indexOf(itemData.ext) >= 0) {
+            var imageListItem = {
+                msrc: "http://" + resourceHost + "/" + (zyzxVPath.getValue() ? "/" + zyzxVPath.getValue() : "") + "/" + itemData.path,
+                src: "http://" + resourceHost + "/" + (zyzxVPath.getValue() ? "/" + zyzxVPath.getValue() : "") + "/" + itemData.path,
+                h: 0,
+                w: 0,
+                title: itemData.name
+            }
+            imageListItems.push(imageListItem);
+            index++; ////获取当前图片在图片列表中的索引
+        }
+        if(selName == itemData.name) //根据当前点击的项与添加的图片项作对比 记录当前点击图片的index
+            imageList.index = index;
+    }
+    imageList.items = imageListItems;
+    vmd.showImg(imageList)
+}
+//默认列表展示模式
+var isview = true;
+
+function ZyglList_afterrender(sender) {
+    ZyglList.enableView();
+    ZyglList.body.on('click', function() {
+        //发送消息，进行文件过滤
+        send();
+    })
+}
+//设置列表展示模式切换的样式
+function button1_click(sender, e) {
+    ZyglList.enableView();
+    isview = true;
+    btn_list.removeClass("list-list-sel")
+    button1.addClass("list-view-sel")
+}
+//设置列表展示模式切换的样式
+function btn_list_click(sender, e) {
+    ZyglList.enableList();
+    isview = false;
+    button1.removeClass("list-view-sel")
+    btn_list.addClass("list-list-sel")
+}
+
+//资源树绑定后，默认的选中根节点，并展示根节点的数据
+function ZyglTree_afterCategoryBind(sender, e) {
+    ZyglTree.tree.root.select();
+    if(hasUserResource) {
+        selnodeID.setValue(resourceIds);
+        liststore.toRefresh(function() {}, resourceHost, "zyzx/zyzxtree/getCategoryByIDs");
+    } else {
+        selnodeID.setValue(ZyglTree.tree.root.id);
+        liststore.toRefresh(function() {}, resourceHost, "zyzx/zyzxtree/getResource");
+    }
+    ZyglTree.tree.root.expand();
+    ZyglTree.tree.root.setIcon("/img/public/server2.png");
+}
+//导航的专业按钮，定位到根节点并刷新列表
+function Navigation_homeClick(sender, e) {
+    ZyglTree.tree.root.select();
+    selnodeID.setValue(resourceIds);
+    if(hasUserResource) {
+        selnodeID.setValue(resourceIds);
+        liststore.toRefresh(function() {}, resourceHost, "zyzx/zyzxtree/getCategoryByIDs");
+    } else {
+        selnodeID.setValue(ZyglTree.tree.root.id);
+        liststore.toRefresh(function() {}, resourceHost, "zyzx/zyzxtree/getResource");
+    }
+}
+//导航的点击，定位到指定目录并刷新列表
+function Navigation_pathClick(sender, path) {
+    //根节点，则调用home的点击事件
+    if(ZyglTree.tree.root.text + "/" == path || ZyglTree.tree.root.text == path) {
+        Navigation_homeClick();
+    } else {
+        var id = ZyglTree.getIdByPath(path);
+        selnodeID.setValue(id);
+        ZyglTree.setNodeSel(id);
+        liststore.toRefresh(function() {}, resourceHost, "zyzx/zyzxtree/getResource");
+    }
+}
+
+function getHeight() {
+    return (document.documentElement || document.body).clientHeight - 50;
+}
+
+function getWidth() {
+    var width = (document.documentElement || document.body).clientWidth;
+    if(width > 400) {
+        return width - 200;
+    }
+    return width - 20;
+}
+
+function ZyflSearch_searchTextChange(sender, oldValue, newValue) {
+    hwDas.get("zyzx/zyzxtree/search", {}, {
+            name: newValue,
+            category_id: ZyglTree.getSelNodeId()
+        }, function(result) {
+            var selIds = [];
+            if(result.data && result.data.length > 0 && result.data[0].datas && result.data[0].datas.length > 0) {
+
+                for(var i = 0; i < result.data[0].datas.length; i++) {
+                    selIds.push(result.data[0].datas[i].resource_id)
+                }
+            }
+            ZyglList.setItemsSel(selIds);
+        },
+        function(msg) {
+            Tips.tips("检索失败", "error");
+        })
+}
+
+//处理右键菜单等功能的隐藏，只有在设计模式下才会隐藏
+function ZyglTree_afterrender(sender) {
+    ZyglTree.tree.contentMenu = "";
+    ZyglTree.setEditVisible(false);
+}
+//接口，返回当前选择的资源的信息
+function getSelResource() {
+    var selItems = ZyglList.getSelItemsData();
+    return selItems || [];
+}
+
+function Navigation_afterrender(sender) {
+    Navigation.setPath(resourceServerName + "/")
+}
+			selnodeID=new vmd.Variable({});
+		resourceIDs=new vmd.Variable({});
+		menuObjName=new vmd.Variable({});
+		zyzxVPath=new vmd.Variable({value:"return vmdSettings.resourceCode;"});
+		selServerUrl=new vmd.Variable({});
+
+		store=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"store","autoLoad":false,"storeConfig":"{\"id\":\"l1nBV8jN0D\",\"callcode\":\"vmdCode\",\"url\":\"zyzx/zyzxtree/getTreeByCategoryIDs\",\"host\":\"\",\"isHwRest\":true,\"name\":\"通过目录id获取资源目录树\",\"getMethods\":[{\"id\":\"resource_category_id\",\"value1\":\"return resourceIDs.getValue()\",\"value2\":\"\"}],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"category_id\",\"type\":\"string\"},{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"parent_id\",\"type\":\"string\"},{\"name\":\"type\",\"type\":\"string\"},{\"name\":\"leaf\",\"type\":\"string\"},{\"name\":\"path\",\"type\":\"string\"},{\"name\":\"info\",\"type\":\"string\"}]}"});
+		liststore=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"liststore","autoLoad":true,"storeConfig":"{\"id\":\"TxnFNuKnTM\",\"callcode\":\"vmdCode\",\"url\":\"zyzx/zyzxtree/getResource\",\"host\":\"\",\"isHwRest\":true,\"name\":\"获取分类下资源\",\"getMethods\":[{\"id\":\"category_id\",\"value1\":\"return selnodeID.getValue();\",\"value2\":\"\"}],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"path\",\"type\":\"string\"},{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"type\",\"type\":\"string\"},{\"name\":\"ext\",\"type\":\"string\"},{\"name\":\"size\",\"type\":\"string\"},{\"name\":\"modifytime\",\"type\":\"datetime\"},{\"name\":\"ip\",\"type\":\"string\"},{\"name\":\"isparent\",\"type\":\"string\"}]}"});
+
+
+		this.items=[
+			{
+				xtype:"panel",
+				id:"MyP_info",
+				title:"Panel",
+				header:false,
+				border:true,
+				height:640,
+				x:0,
+				y:60,
+				layout:"border",
+				region:"center",
+				items:[
+					{
+						xtype:"panel",
+						id:"MyP_ModelTree",
+						title:"Panel",
+						header:false,
+						border:true,
+						height:639,
+						width:220,
+						layout:"fit",
+						x:0,
+						y:0,
+						region:"west",
+						style:"background-color: white;    border: 1px;",
+						bodyStyle:"background-color: white;    border: 1px;",
+						split:true,
+						floatable:false,
+						collapseMode:"mini",
+						collapsible:false,
+						items:[
+							{
+								xtype:"vmd.div",
+								id:"div6",
+								autoEl:"div",
+								border:true,
+								backgroundRepeat:"no-repeat",
+								backgroundPosition:"top left",
+								width:400,
+								height:50,
+								layout:"fit",
+								items:[
+									{
+										xtype:"vmd.ux.ZyglTree",
+										id:"ZyglTree",
+										store:store,
+										treeRootValue:"0000000001",
+										treeRootText:"资源中心服务器",
+										layout:"border",
+										region:"center",
+										treemenu:"hwMenu",
+										resourceNodeClick:"ZyglTree_resourceNodeClick",
+										afterCategoryBind:"ZyglTree_afterCategoryBind",
+										afterrender:"ZyglTree_afterrender",
+										listeners:{
+											resourceNodeClick:ZyglTree_resourceNodeClick,
+											afterCategoryBind:ZyglTree_afterCategoryBind,
+											vmdafterrender:ZyglTree_afterrender
+										}
+									}
+								]
+							}
+						]
+					},
+					{
+						xtype:"panel",
+						id:"MyP_jcxx",
+						title:"Panel",
+						header:false,
+						border:true,
+						height:640,
+						width:900,
+						x:220,
+						y:0,
+						layout:"border",
+						region:"center",
+						style:"background-color: white;    border: 1px;",
+						bodyStyle:"background-color: white;    border: 1px;",
+						items:[
+							{
+								xtype:"vmd.div",
+								id:"div2",
+								autoEl:"div",
+								border:true,
+								backgroundRepeat:"no-repeat",
+								backgroundPosition:"top left",
+								width:400,
+								height:35,
+								x:100,
+								y:20,
+								region:"north",
+								style:"border-bottom: 0",
+								layout:"border",
+								items:[
+									{
+										xtype:"vmd.div",
+										id:"div1",
+										autoEl:"div",
+										border:false,
+										backgroundRepeat:"no-repeat",
+										backgroundPosition:"top left",
+										width:400,
+										height:35,
+										region:"center",
+										layout:"fit",
+										items:[
+											{
+												xtype:"vmd.ux.Navigation",
+												id:"Navigation",
+												layout:"absolute",
+												height:28,
+												style:"margin-left: 10px;    margin-top: 3px;    padding-bottom: 4px",
+												homeClick:"Navigation_homeClick",
+												pathClick:"Navigation_pathClick",
+												afterrender:"Navigation_afterrender",
+												listeners:{
+													homeClick:Navigation_homeClick,
+													pathClick:Navigation_pathClick,
+													vmdafterrender:Navigation_afterrender
+												}
+											}
+										]
+									},
+									{
+										xtype:"vmd.div",
+										id:"div",
+										layoutConfig:{
+											align:"middle",
+											pack:"start"
+										},
+										autoEl:"div",
+										border:false,
+										backgroundRepeat:"no-repeat",
+										backgroundPosition:"top left",
+										width:300,
+										height:35,
+										layout:"hbox",
+										region:"east",
+										style:"margin-left: 10px",
+										items:[
+											{
+												xtype:"vmd.ux.ZyflSearch",
+												id:"ZyflSearch",
+												layout:"absolute",
+												height:28,
+												disabled:false,
+												style:"margin-left: 15px",
+												width:200,
+												seaechTextChange:"ZyflSearch_seaechTextChange",
+												searchTextChange:"ZyflSearch_searchTextChange",
+												listeners:{
+													searchTextChange:ZyflSearch_searchTextChange
+												}
+											},
+											{
+												xtype:"vmd.button",
+												id:"button1",
+												type:"(none)",
+												size:"small",
+												width:28,
+												height:28,
+												click:"button1_click",
+												cls:"list-view list-view-sel",
+												listeners:{
+													click:button1_click
+												}
+											},
+											{
+												xtype:"vmd.button",
+												id:"btn_list",
+												type:"(none)",
+												size:"small",
+												width:28,
+												height:28,
+												click:"btn_list_click",
+												cls:"list-list",
+												listeners:{
+													click:btn_list_click
+												}
+											}
+										]
+									}
+								]
+							},
+							{
+								xtype:"vmd.div",
+								id:"div3",
+								autoEl:"div",
+								border:true,
+								backgroundRepeat:"no-repeat",
+								backgroundPosition:"top left",
+								width:400,
+								height:50,
+								region:"center",
+								layout:"fit",
+								items:[
+									{
+										xtype:"vmd.ux.ZyglList",
+										id:"ZyglList",
+										tpl:"<tpl for=\".\">    <div class=\"file undefined file-box menu-file is{type}\" original-name=\"{name}\" title=\"名称:{name};大小:{size}B;位置:{path};修改时间:{modifyTime}\" data-size=\"221\">        <div class=\"item-select\">            <div class=\"item-check\"></div>        </div>        <div class=\"item-menu\">            <div class=\"cert\"></div>        </div>        <div class=\"ico\" filetype=\"{type}\"><i class=\"x-item-file x-{ext}\"></i></div>        <div class=\"filename\"> <span class=\"title db-click-rename\" title=\"双击名称重命名\">{name}	</span> </div>    </div></tpl>",
+										data:"var data = [{    \"id\": 0,    \"path\": \"test\",    \"name\": \"desktop\",    \"type\": \"folder\",    \"ext\": \"folder\",    \"modifyTime\": \"2018/03/19 18:21:20\",    \"isParent\": true,    \"size\": ''}, {    \"id\": 11,    \"path\": \"test\",    \"name\": \"Document\",    \"type\": \"folder\",    \"ext\": \"folder\",    \"modifyTime\": \"2018/03/19 18:21:20\",    \"isParent\": true}, {    \"id\": 1,    \"path\": \"test\",    \"name\": \"a.css\",    \"type\": \"file\",    \"ext\": \"css\",    \"modifyTime\": \"2018/03/19 18:21:20\",    \"isParent\": true,    \"size\": 4000}, {    \"id\": 2,    \"path\": \"test\",    \"name\": \"ext-all-debug.js\",    \"type\": \"file\",    \"ext\": \"js\",    \"modifyTime\": \"2018/03/19 18:21:20\",    \"isParent\": false,    \"size\": 52010}, {    \"id\": 3,    \"path\": \"test\",    \"name\": \"test.html\",    \"type\": \"file\",    \"ext\": \"html\",    \"modifyTime\": \"2018/03/19 18:21:20\",    \"isParent\": false,    \"size\": 100}, {    \"id\": 4,    \"path\": \"test\",    \"name\": \"newfile.jpg\",    \"type\": \"file\",    \"ext\": \"jpg\",    \"modifyTime\": \"2018/03/19 18:21:20\",    \"isParent\": false,    \"size\": 25410}, {    \"id\": 5,    \"path\": \"test\",    \"name\": \"汉威科技技术成果产品化构想 -可视化.pptx\",    \"type\": \"file\",    \"ext\": \"pptx\",    \"modifyTime\": \"2018/03/19 18:21:20\",    \"isParent\": false,    \"size\": 2024}];return data;",
+										listHidden:true,
+										layout:"anchor",
+										store:liststore,
+										listDbClick:"ZyglList_listDbClick",
+										hidden:false,
+										afterrender:"ZyglList_afterrender",
+										listeners:{
+											listDbClick:ZyglList_listDbClick,
+											vmdafterrender:ZyglList_afterrender
+										}
+									}
+								]
+							}
+						]
+					}
+				]
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+	}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MyViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

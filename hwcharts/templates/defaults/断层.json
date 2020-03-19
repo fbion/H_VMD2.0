@@ -1,0 +1,276 @@
+{
+	"vers": "1.0",
+	"coorSys": "Beijing_1954_GK_Zone_21",
+	"dataset":{
+		"ds1": {
+			"type":0,
+			"priority":1,
+			"url":"txwebh/txweb/jwsj",
+			"params":{
+				"dydm": "",
+				"wellid":""
+			}
+		},
+		"ds2": {
+			"type":0,
+			"priority":0,
+			"url":"txwebh/txweb/sjjwsj",
+			"params":{
+				"dydm": "",
+				"wellid":""
+			}
+		},
+		"ds3":{
+			"type":0,
+			"priority":0,
+			"url":"txwebh/txweb/webjsx",
+			"params":{
+				"dydm": "",
+				"wellid":""
+			}
+		},
+		"ds4":{
+			"type":1,
+			"priority":0,
+			"url":"ISOAlgorithm/isoline",
+			"params":{
+				"dydm": "",
+				"wellid":""
+			}
+		},
+		"ds5":{
+			"type":1,
+			"priority":0,
+			"url":"ISOAlgorithm/isoarea",
+			"params":{
+				"dydm": "",
+				"wellid":""
+			}
+		},
+		"ds6":{
+			"type":0,
+			"url":"txwebh/txweb/dcsj",
+			"params":{
+
+			}
+		},
+		"ds8":{
+			"type":1,
+			"priority":0,
+			"url":"ISOAlgorithm/isoarea",
+			"params":{
+				"dydm": "",
+				"wellid":""
+			}
+		}
+	},
+	"seriesMapping":[
+		{
+			"source":"ds8",
+			"seriseName": "等值区"
+		},
+		{
+			"source":"ds4",
+			"seriseName": "等值线"
+		},
+		{	"seriseName": "断层",
+			"source":"ds6",
+			"fields":["id","", "type","wallid","walltype","x","y"]
+		},
+		{
+			"source":"ds3",
+			"seriseName": "井旁标注",
+			"fields":["jh","value"]
+		},
+		{
+			"source":"ds1",
+			"seriseName": "油井井位",
+			"fields":["jh","jm","jb","x","y"]
+		},
+		{
+			"source":"ds2",
+			"seriseName": "水井井位",
+			"fields":["jh","jm","jb","x","y"]
+		}
+
+	],
+	"frame": {
+		"id":"2",
+		"style":
+		{
+			"show": true,
+			"font": "3"
+		}
+	},
+	"legend": {
+		"id":"3",
+		"style":
+		{
+			"show": true,
+			"font": "2"
+		}
+	},
+	"scale": {
+		"id":"4",
+		"style":
+		{
+			"show": true,
+			"font": "3"
+		}
+	},
+	"compass": {
+		"id":"5",
+		"style":
+		{
+			"show": true,
+			"font": "3"
+		}
+	},
+	"mapInfo": {
+		"id":"6",
+		"style":
+		{
+			"show": true,
+			"font": "2"
+		}
+	},
+	"geo": [{
+		"map": "testMap",
+		"roam": true,
+		"left": 320,
+		"width": 600,
+		"itemStyle": {
+			"normal": {
+				"borderColor": "rgba(26,82,231, 1)",
+				"borderWidth": 1,
+				"areaColor": "#FFFFFF",
+				"shadowColor": "rgba(255, 255, 255, 0)",
+				"shadowOffsetX": -2,
+				"shadowOffsetY": 2,
+				"shadowBlur": 10
+			},
+			"emphasis": {
+				"areaColor": "#FFFFFF"
+			}
+		}
+	}],
+	"visualMap": {
+		"min": 19,
+		"max": 100,
+		"left": "left",
+		"top": "bottom",
+		"text": ["高", "低"],
+		"seriesIndex": [0],
+		"inRange": {
+			"color": ["rgb(0, 204, 255)", "rgb(0, 0, 255)"]
+		},
+		"calculable": true
+	},
+	"series": [
+		{
+			"type": "isoArea",
+			"name": "等值区",
+			"dependentSeries": ["断层", "井旁标注","油井井位","水井井位"],
+			"data": [],
+			"dense": 0
+		},
+		{
+			"type": "isoLine",
+			"name": "等值线",
+			"dependentSeries": ["断层", "井旁标注","油井井位","水井井位"],
+			"data": [],
+			"lineStyle": {
+				"normal":{
+					"type": "pinchLine",
+					"color": "black",
+					"width": 1
+				}
+			}
+		},
+		{
+			"type": "faultLine",
+			"name": "断层",
+			"data": [],
+			"lineStyle": {
+				"normal":{
+					"type": "faultLine",
+					"color": "red",
+					"width": 3
+				}
+			}
+		},
+		{
+			"type": "wellLabel",
+			"name": "井旁标注",
+			"dependentSeries": ["油井井位"],
+			"data": [],
+			"itemStyle":{
+				"normal":{
+					"color": "red"
+				}
+			}
+		},
+		{
+			"type": "wellSymbol",
+			"name": "油井井位",
+			"label": {
+				"normal":{
+					"color": "black",
+					"show": true,
+					"fontSize": 12,
+					"formatter": "{b}",
+					"position": "right"
+				}
+			},
+			"data": [],
+			"symbolSize": 12
+		},
+		{
+			"type": "wellSymbol",
+			"name": "水井井位",
+			"label": {
+				"normal":{
+					"color": "black",
+					"show": true,
+					"formatter": "{b}",
+					"position": "right"
+				}
+			},
+			"data": [],
+			"symbolSize": 12
+		}
+	],
+	"fonts":{
+		"1": {
+			"fontFamily": "Arial",
+			"fontStyle": "normal",
+			"fontSize": "40px",
+			"fontColor": "#000000",
+			"fontWeight": "bold",
+			"textAlign": "left",
+			"textVerticalAlign": "middle",
+			"textRotation": "0"
+		},
+		"2": {
+			"fontFamily": "Georgia",
+			"fontStyle": "normal",
+			"fontSize": "12px",
+			"fontColor": "#000000",
+			"fontWeight": "normal",
+			"textAlign": "left",
+			"textVerticalAlign": "middle",
+			"textRotation": "0"
+		},
+		"3": {
+			"fontFamily": "serif",
+			"fontStyle": "normal",
+			"fontSize": "9px",
+			"fontColor": "#000000",
+			"fontWeight": "normal",
+			"textAlign": "left",
+			"textVerticalAlign": "middle",
+			"textRotation": "0"
+		}
+	}
+
+}

@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>发布项目镜像-vmd镜像选择测试</title>
+	<!--基本样式-->
+    <link href="{vmdvirtualPath}/css/common.css?ver=vmd2.0.6.200119" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="{vmdvirtualPath}/lib/ext-3.4/resources/css/ext-all.css?ver=vmd2.0.6.200119" rel="stylesheet" />
+   
+    <link href="{vmdvirtualPath}/design/css/icons.css?ver=vmd2.0.6.200119" rel="stylesheet" />
+
+	<link href="{vmdvirtualPath}/lib/dhtmlx/skins/material/dhtmlx.css?ver=vmd2.0.6.200119" rel="stylesheet" />
+	  <!--样式快捷索引表-->
+    <link href="{vmdvirtualPath}/css/shortcut.css?ver=vmd2.0.6.200119" rel="stylesheet" />
+    
+	{vmdprojectcssfiles}
+    
+    <script src="{vmdvirtualPath}/lib/labjs/LAB.min.js?ver=vmd2.0.6.200119"></script>
+    <script src="{vmdvirtualPath}/config.js?ver=vmd2.0.6.200119"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=vmd2.0.6.200119"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=vmd2.0.6.200119"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=vmd2.0.6.200119"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/ext-all-debug.js?ver=vmd2.0.6.200119"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=vmd2.0.6.200119"></script>
+    <script src="{vmdvirtualPath}/js/util.js?ver=vmd2.0.6.200119"></script>
+    <script src="{vmdvirtualPath}/lib/dhtmlx/codebase/dhtmlx.js?ver=vmd2.0.6.200119"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=vmd2.0.6.200119"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=vmd2.0.6.200119"></script>
+    <script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=vmd2.0.6.200119"></script>
+	<script src="{vmdvirtualPath}/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=vmd2.0.6.200119"></script>
+    <script src="{vmdvirtualPath}/js/hwdas.js?ver=vmd2.0.6.200119"></script>
+    <script src="{vmdvirtualPath}/js/vmdcore.js?ver=vmd2.0.6.200119"></script>
+    <script src="{vmdvirtualPath}/js/vmdcomps.js?ver=vmd2.0.6.200119"></script>
+    <script src="{vmdvirtualPath}/js/publicMethods.js?ver=vmd2.0.6.200119"></script>
+    <script src="{vmdvirtualPath}/js/vmdreport.js?ver=vmd2.0.6.200119"></script>
+    
+    {vmdworkspacePath}
+	{vmdprojectconfigjs}
+	
+	{vmdprojectjsfiles}
+    
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        
+    </style>
+    <script>
+	    
+        vmd.virtualPath = '{vmdvirtualPath}';
+        
+        Ext.define("vmd.module.MainViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps([]),
+	xtype:"vmd.module.MainViewport",
+	layout:"absolute",
+	initComponent: function(){
+		var comData = [{
+    sel: false,
+    ver: "vmd2.0.6.200119",
+    mark: "版本说明"
+}, {
+    sel: false,
+    ver: "vmd2.0.5.200119",
+    mark: "版本说明"
+}, {
+    sel: false,
+    ver: "vmd2.0.4.200119",
+    mark: "版本说明"
+}, {
+    sel: false,
+    ver: "vmd2.0.3.200119",
+    mark: "版本说明"
+}]
+var verstore = new vmd.data.Store({
+    data: comData,
+    fields: ['sel', 'ver', 'mark']
+})
+var imageServer = ""
+var imageFileService = "www.hanweikeji.com:10050"
+
+function MyGrid_afterrender(sender) {
+    // //先获取镜像服务地址
+    // var hwFao1 = new HwFao(vmdSettings.vmdFileServiceIp || vmdSettings.dataServiceIp, "vmd");
+    // hwFao1.read("imageService.txt", function(result) {
+    //     imageServer = result.data
+    //     if (!imageServer)
+    //         Ext.Msg.alert("提示", "请先配置镜像服务地址后再操作！", function() {})
+    //     //通过镜像服务获取文件服务地址
+    //     hwDas.ajax({
+    //         url: "http://" + imageServer + "/VMDCI/initService",
+    //         type: 'get',
+    //         timeout: 20000,
+    //         success: function(data) {
+    //             imageFileService = data.data
+    //             if (!imageFileService)
+    //                 Ext.Msg.alert("提示", "获取镜像服务所需的文件服务地址失败！", function() {});
+
+                //通过文件服务获取对应目录下的文件列表信息
+                var hwFao = new HwFao(imageFileService, "dockerimages");
+                hwFao.getDirs("data/vmd", "Dir", function(result) {
+                    if (result.data && result.data.length > 0) {
+                        var storeData = []
+                        for (var i = 0; i < result.data.length; i++) {
+                            if (result.data[i].type = 'Dir' && result.data[i].name) {
+                                storeData.push({
+                                    sel: false,
+                                    ver: result.data[i].name,
+                                    mark: "版本说明"
+                                })
+                            }
+                        }
+                        //更新数据
+                        verstore.loadData(storeData);
+                    }
+                }, function() {})
+    //         },
+    //         error: function(msg) {
+    //             Ext.Msg.alert("提示", "获取镜像服务所需的文件服务地址失败！", function() {});
+    //         }
+    //     })
+    // }, function(result) {
+    //     Ext.Msg.alert("提示", "请先配置镜像服务地址后再操作！", function() {})
+    // })
+}
+
+function MyGrid_beforerender(sender) {
+    MyGrid.store = verstore;
+}
+
+function button_click(sender, e) {
+    var selVer = ""
+    for (var i = 0; i < verstore.getCount(); i++) {
+        var rreacord = verstore.getAt(i)
+        if (rreacord.get("sel")) {
+            selVer = rreacord.get("ver")
+        }
+    }
+    if (!selVer) {
+        Ext.Msg.alert("提示", "请选择项目镜像！", function() {})
+        return;
+    }
+    if (!hwText.getValue()) {
+        Ext.Msg.alert("提示", "项目镜像名称不能为空！", function() {})
+        return;
+    }
+    var publishparams = {
+        fileSerIp: imageFileService,
+        imageSerIp: imageServer,
+        vmd_ver: selVer,
+        projectId: vmd.getUrlParam("projectId"),
+        projectName: vmd.getUrlParam("projectName"),
+        imageType: 2,
+        vmdToken: Cookie.get("hwToken"),
+        info: hwTextArea.getValue()
+    };
+    var myMask = new Ext.LoadMask(Ext.getBody(), {
+        msg: "正在发布" + vmd.getUrlParam("projectName") + "镜像,请稍后...",
+        msgCls: 'z-index:10000;'
+    });
+    myMask.show();
+    //发布
+    vmd.ajax({
+        url: "/expandimp/api/ImagePublish",
+        type: 'post',
+        timeout: 120000,
+        //dataType:"text",
+        contentType: 'application/json;charset=UTF-8',
+        data: publishparams, //jsonp: "callbackparam", 
+        success: function(result) {
+            myMask.hide();
+            if (result.type == "success") {
+                Ext.Msg.alert("提示", "发布成功！")
+            } else
+                Ext.Msg.alert("提示", result.msg)
+        },
+        error: function(msg) {
+            myMask.hide();
+            Ext.Msg.alert("提示", "发布失败！")
+        }
+    })
+}
+var selrowIndex;
+
+function MyGrid_checked(sender, field, val, record, rowIndex, columnIndex, e) {
+    if (!record)
+        return;
+    selrowIndex = rowIndex;
+    for (var i = 0; i < verstore.getCount(); i++) {
+        var rreacord = verstore.getAt(i)
+        if (i != selrowIndex && selrowIndex >= 0)
+            rreacord.set("sel", false)
+    }
+
+
+
+    var myDate = new Date();
+    hwText.setValue(vmd.getUrlParam("projectName") + "-" + myDate.format('ymd') + "-" + record.ver)
+
+
+
+}
+
+function MyGrid_cellclick(sender, rowIndex, columnIndex, e) {
+    if (rowIndex > 0) {
+        var record = verstore.getAt(rowIndex)
+        subView.show()
+        var hwFao = new HwFao(imageFileService, "dockerimages");
+        hwFao.read("data/vmd/update.txt", function(result) {
+            hwDiv.update(result.data)
+        }, function() {})
+    }
+}
+	
+
+
+	 var subView=new vmd.comp.SubView({view:{
+			xtype:"vmd.subview",
+			id:"subView",
+			width:350,
+			height:303,
+			layout:"fit",
+			closable:true,
+			draggable:false,
+			maximizable:true,
+			modal:true,
+			resizable:true,
+			autoScroll:true,
+			closeAction:"close",
+			header:false,
+			cid:"vmdSubView",
+			items:[
+				{
+					xtype:"vmd.div",
+					id:"hwDiv",
+					autoEl:"div",
+					border:true,
+					backgroundRepeat:"no-repeat",
+					backgroundPosition:"top left",
+					width:400,
+					height:50,
+					x:70,
+					y:70
+				}
+			]
+		},rootScope:this,isModule:true})
+		this.items=[
+			{
+				xtype:"label",
+				id:"hwLabel",
+				text:"选择项目基础镜像",
+				x:170,
+				y:10,
+				style:"font-size: 14px;"
+			},
+			{
+				xtype:"label",
+				id:"hwLabel1",
+				text:"vmd基础镜像列表：",
+				x:20,
+				y:115,
+				style:"font-size: 14px;"
+			},
+			{
+				xtype:"grid",
+				id:"MyGrid",
+				title:"Grid Panel",
+				loadMask:true,
+				x:20,
+				y:135,
+				width:440,
+				height:190,
+				header:false,
+				border:true,
+				style:"font-size: 14px;    border: 1px solid #c5c5c5",
+				enableHdMenu:false,
+				disableHeaderClick:false,
+				hideHeaders:false,
+				afterrender:"MyGrid_afterrender",
+				beforerender:"MyGrid_beforerender",
+				checked:"MyGrid_checked",
+				cellclick:"MyGrid_cellclick",
+				listeners:{
+					vmdafterrender:MyGrid_afterrender,
+					beforerender:MyGrid_beforerender,
+					checked:MyGrid_checked,
+					cellclick:MyGrid_cellclick
+				},
+				columns:[
+					{
+						xtype:"checkcolumn",
+						header:"选择",
+						sortable:true,
+						resizable:true,
+						dataIndex:"sel",
+						width:80,
+						align:"center",
+						fixed:false
+					},
+					{
+						xtype:"gridcolumn",
+						header:"镜像版本",
+						sortable:true,
+						resizable:true,
+						dataIndex:"ver",
+						width:200,
+						align:"center"
+					},
+					{
+						xtype:"gridcolumn",
+						header:"说明",
+						sortable:true,
+						resizable:true,
+						dataIndex:"mark",
+						width:120,
+						align:"center"
+					}
+				]
+			},
+			{
+				xtype:"label",
+				id:"hwLabel2",
+				text:"项目镜像名称：",
+				x:20,
+				y:85,
+				style:"font-size: 14px;"
+			},
+			{
+				xtype:"textfield",
+				id:"hwText",
+				allowBlank:true,
+				enableKeyEvents:true,
+				x:110,
+				y:80,
+				width:290,
+				style:"font-size: 14px;"
+			},
+			{
+				xtype:"label",
+				id:"hwLabel3",
+				text:"项目说明：",
+				x:20,
+				y:330,
+				style:"font-size: 14px;"
+			},
+			{
+				xtype:"textarea",
+				id:"hwTextArea",
+				allowBlank:true,
+				x:20,
+				y:350,
+				width:440,
+				height:80
+			},
+			{
+				xtype:"vmd.button",
+				id:"button",
+				text:"确定",
+				type:"primary",
+				size:"small",
+				x:340,
+				y:450,
+				click:"button_click",
+				listeners:{
+					click:button_click
+				}
+			},
+			{
+				xtype:"vmd.button",
+				id:"button1",
+				text:"关闭",
+				type:"(none)",
+				size:"small",
+				x:410,
+				y:450
+			},
+			{
+				xtype:"label",
+				id:"hwLabel4",
+				text:"提示：请确认项目或修改的模块已发布。如已发布请忽略该提示；如未发布，请通过项目配置中的发布项目进行操作。",
+				x:20,
+				y:35,
+				width:440,
+				style:"color:red"
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+	}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MainViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

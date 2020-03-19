@@ -1,0 +1,2147 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>资源管理主页面</title>
+    <!--基本样式-->
+    <link href="/css/common.css?ver=vmd2.0.5.191228" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=vmd2.0.5.191228" rel="stylesheet" />
+    <link href="/design/css/icons.css?ver=vmd2.0.5.191228" rel="stylesheet" />
+    <link href="/lib/dhtmlx/skins/material/dhtmlx.css?ver=vmd2.0.5.191228" rel="stylesheet" />
+    <!--样式快捷索引表-->
+    <link href="/css/shortcut.css?ver=vmd2.0.5.191228" rel="stylesheet" />
+    <script src="/lib/labjs/LAB.min.js?ver=vmd2.0.5.191228"></script>
+    <script src="/config.js?ver=vmd2.0.5.191228"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=vmd2.0.5.191228"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=vmd2.0.5.191228"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=vmd2.0.5.191228"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=vmd2.0.5.191228"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=vmd2.0.5.191228"></script>
+    <script src="/js/util.js?ver=vmd2.0.5.191228"></script>
+    <script src="/lib/dhtmlx/codebase/dhtmlx.js?ver=vmd2.0.5.191228"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=vmd2.0.5.191228"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=vmd2.0.5.191228"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=vmd2.0.5.191228"></script>
+    <script src="/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=vmd2.0.5.191228"></script>
+    <script src="/js/hwdas.js?ver=vmd2.0.5.191228"></script>
+    <script src="/js/vmdcore.js?ver=vmd2.0.5.191228"></script>
+    <script src="/js/vmdcomps.js?ver=vmd2.0.5.191228"></script>
+    <script src="/js/publicMethods.js?ver=vmd2.0.5.191228"></script>
+    <script src="/js/vmdreport.js?ver=vmd2.0.5.191228"></script>
+    <script src="/system/modules/eQ9ULgcVb1/project.config.js"></script>
+    <style> </style>
+    <style type="text/css" id="vmdcss">
+        .icon-cloud-download {
+            display: inline-block;
+            background-image: url(/system/modules/eQ9ULgcVb1/hw3ce0447e/img/menu_icon.png);
+            width: 16px !important;
+            background-position: -16px -48px;
+            background-size: auto !important;
+            background-repeat: no-repeat;
+            height: 16px;
+            margin-right: 15px;
+        }
+
+        .font-icon {
+            display: inline-block;
+            width: 16px;
+            text-align: center;
+            font-size: 1.2em;
+            color: #aaa;
+            margin-right: 15px;
+            vertical-align: middle;
+            margin-top: -2px;
+            padding: 0;
+        }
+
+        .icon-folder-close-alt {
+            display: inline-block;
+            background-image: url(/system/modules/eQ9ULgcVb1/hw3ce0447e/img/menu_icon.png);
+            width: 16px !important;
+            background-position: 0 -16px;
+            background-size: auto !important;
+            background-repeat: no-repeat;
+            height: 16px;
+            margin-right: 15px;
+        }
+
+        .icon-cloud-upload {
+            display: inline-block;
+            background-image: url(/system/modules/eQ9ULgcVb1/hw3ce0447e/img/menu_icon.png);
+            width: 16px !important;
+            background-position: 0 -48px;
+            background-size: auto !important;
+            background-repeat: no-repeat;
+            height: 16px;
+            margin-right: 15px;
+        }
+
+        .icon-cloud-newfolder {
+            display: inline-block;
+            background-image: url(/system/modules/eQ9ULgcVb1/hw3ce0447e/img/menu_icon.png);
+            width: 16px !important;
+            background-position: 0 -16px;
+            background-size: auto !important;
+            background-repeat: no-repeat;
+            height: 16px;
+            margin-right: 15px;
+        }
+
+        .icon-cloud-search {
+            display: inline-block;
+            background-image: url(/system/modules/eQ9ULgcVb1/hw3ce0447e/img/menu_icon.png);
+            width: 16px !important;
+            background-position: 0 0px;
+            background-size: auto !important;
+            background-repeat: no-repeat;
+            height: 16px;
+            margin-right: 15px;
+        }
+
+        .icon-cloud-remove {
+            display: inline-block;
+            background-image: url(/system/modules/eQ9ULgcVb1/hw3ce0447e/img/menu_icon.png);
+            width: 16px !important;
+            background-position: 0 -80px;
+            background-size: auto !important;
+            background-repeat: no-repeat;
+            height: 16px;
+            margin-right: 15px;
+        }
+
+        .icon-cloud-rname {
+            display: inline-block;
+            background-image: url(/system/modules/eQ9ULgcVb1/hw3ce0447e/img/menu_icon.png);
+            width: 16px !important;
+            background-position: 0 -64px;
+            background-size: auto !important;
+            background-repeat: no-repeat;
+            height: 16px;
+            margin-right: 15px;
+        }
+
+        .icon-cloud-paste {
+            display: inline-block;
+            background-image: url(/system/modules/eQ9ULgcVb1/hw3ce0447e/img/menu_icon.png);
+            width: 16px !important;
+            background-position: -16px -64px;
+            background-size: auto !important;
+            background-repeat: no-repeat;
+            height: 16px;
+            margin-right: 15px;
+        }
+
+        .icon-cloud-cut {
+            display: inline-block;
+            background-image: url(/system/modules/eQ9ULgcVb1/hw3ce0447e/img/menu_icon.png);
+            width: 16px !important;
+            background-position: -16px -80px;
+            background-size: auto !important;
+            background-repeat: no-repeat;
+            height: 16px;
+            margin-right: 15px;
+        }
+
+        .icon-cloud-copy {
+            display: inline-block;
+            background-image: url(/system/modules/eQ9ULgcVb1/hw3ce0447e/img/menu_icon.png);
+            width: 16px !important;
+            background-position: 0 -96px;
+            background-size: auto !important;
+            background-repeat: no-repeat;
+            height: 16px;
+            margin-right: 15px;
+        }
+
+        .icon-cloud-info {
+            color: #fff !important;
+            background: #c4e5ff;
+            text-align: center;
+            width: 15px;
+            border-radius: 50%;
+            height: 15px;
+            line-height: 15px;
+            margin-right: 15px;
+            box-shadow: 0 0 0 1px #6db9f5;
+        }
+
+        .icon-cloud-newfile {
+            display: inline-block;
+            background-image: url(/system/modules/eQ9ULgcVb1/hw3ce0447e/img/menu_icon.png);
+            width: 16px !important;
+            background-position: 0 -32px;
+            background-size: auto !important;
+            background-repeat: no-repeat;
+            height: 16px;
+            margin-right: 15px;
+        }
+
+        .icon-cloud-css {
+            display: inline-block;
+            background-image: url(/system/modules/eQ9ULgcVb1/hw3ce0447e/img/icon_file/css.png);
+            width: 16px !important;
+            background-size: cover !important;
+            background-repeat: no-repeat;
+            height: 16px;
+            margin-right: 15px;
+        }
+
+        .icon-cloud-js {
+            display: inline-block;
+            background-image: url(/system/modules/eQ9ULgcVb1/hw3ce0447e/img/icon_file/js.png);
+            width: 16px !important;
+            background-size: cover !important;
+            background-repeat: no-repeat;
+            height: 16px;
+            margin-right: 15px;
+        }
+
+        .icon-cloud-html {
+            display: inline-block;
+            background-image: url(/system/modules/eQ9ULgcVb1/hw3ce0447e/img/icon_file/html.png);
+            width: 16px !important;
+            background-size: cover !important;
+            background-repeat: no-repeat;
+            height: 16px;
+            margin-right: 15px;
+        }
+
+        .list-view {
+            margin-left: 25px;
+            background-image: url("/system/modules/eQ9ULgcVb1/hw3ce0447e/img/list-view.png");
+            background-repeat: no-repeat;
+            background-position: center center;
+            border-radius: 0px;
+        }
+
+        .list-view-sel {
+            background-color: lightBlue;
+        }
+
+        .list-list {
+            margin-left: 25px;
+            background-image: url("/system/modules/eQ9ULgcVb1/hw3ce0447e/img/list-list.png");
+            background-repeat: no-repeat;
+            background-position: center center;
+            border-radius: 0px;
+        }
+
+        .list-list-sel {
+            background-color: lightBlue;
+        }
+
+        .server-list {
+            background-image: url("/system/modules/eQ9ULgcVb1/hw3ce0447e/img/servermenu.png");
+            background-repeat: no-repeat;
+            background-position: center center;
+            border-radius: 0px;
+        }
+
+        .icon-folder-open {
+            color: #39c;
+            font-size: 16px
+        }
+    </style>
+    <script>
+        vmd.previewMode = true;
+        vmd.virtualPath = '';
+        vmd.workspace = {
+            "workspaceid": "1174c7d2-f008-4f84-bb61-1845b5d28814",
+            "workflowIp": "",
+            "dataServiceIp": "",
+            "msgIp": "",
+            "projectid": "eQ9ULgcVb1"
+        }
+        vmd.resourceSettings = {
+            "资源中心&&资源中心服务器": "http://www.hanweikeji.com:10050/resource"
+        }
+        vmd.projectInfo = {
+            "projectId": "eQ9ULgcVb1",
+            "workflowIp": "",
+            "dataServiceIp": "",
+            "msgIp": "",
+            "todoIp": "",
+            "authIp": "",
+            "docIp": "",
+            "reoprtIp": "",
+            "reportIp": "",
+            "logIp": ""
+        }
+        Ext.define("vmd.module.MyViewport", {
+            extend: "vmd.comp.viewport",
+            requires: vmd.getCmpDeps(["vmd.ux.Uploader$1.0$Uploader", "vmd.ux.ZyglList$1.0$ZyglList", "vmd.ux.ZyflSearch$1.0$ZyflSearch", "vmd.ux.Navigation$1.0$Navigation", "vmd.ux.ZyglTree$1.0$ZyglTree"]),
+            xtype: "vmd.module.MyViewport",
+            layout: "border",
+            afterrender: "MyViewport_afterrender",
+            initComponent: function() {
+                if (typeof(Element.onselectstart) != "undefined") {
+                    // IE下禁止元素被选取        
+                    Element.onselectstart = new Function("return false");
+                } else {
+                    // firefox下禁止元素被选取的变通办法        
+                    Element.onmousedown = new Function("return false");
+                    Element.onmouseup = new Function("return true");
+                }
+                ///menuObjName  1  树节点弹出菜单   0 列表弹出菜单;
+                ///
+                ///
+                var hwdasFileServer;
+                /*
+                function send() {
+                    var validData = [];
+                    var data = "";
+                    var selectedRecords = ZyglList.dataView.getSelectedRecords();
+                    selectedRecords.forEach(function(data) {
+                        var type = data.data.type;
+                        var ext = data.data.ext;
+                        var validExt = ['css', 'js', 'jpg', 'gif', 'png'];
+                        var path = data.data.path;
+                        if(type == 'file' && validExt.indexOf(ext) != -1) {
+                            var info = {
+                                ip: 'http://www.hanweikeji.com:8000/zyzx',
+                                path: path,
+                                servName: '资源管理中心',
+                                ext: ext
+                            }
+                            validData.push(info);
+                        }
+                    })
+                    data = Ext.encode(validData);
+                    parent.postMessage && parent.postMessage(data, '*'); // 触发父页面的message事件
+                }
+                */
+                function ZyglTree_onAfterShowMenu(sender, node, e) {
+                    selnodeID.setValue(ZyglTree.getSelNodeId());
+                    menuObjName.setValue("1");
+                    ZyglTree_resourceNodeClick(sender, node, e)
+                }
+                //树的右键菜单控制
+                function ZyglTree_onBeforeShowMenu(sender, node, e) {
+                    //首先判断节点是否为根节点  根节点为服务器，部分功能禁用
+                    if (node && node.getDepth() <= 0) {
+                        refreshItem.setVisible(true);
+                        copyItem.setVisible(false);
+                        cutItem.setVisible(false);
+                        pasteItem.setVisible(false);
+                        renameItem.setVisible(false);
+                        removeItem.setVisible(false);
+                        newFileItem.setVisible(false);
+                        newFordItem.setVisible(true);
+                        searchItem.setVisible(true);
+                        uploadItem.setVisible(false);
+                        uploadFolder.setVisible(false);
+                        downItem.setVisible(false);
+                        infoItem.setVisible(false);
+                    } else if (node) {
+                        refreshItem.setVisible(false);
+                        copyItem.setVisible(false);
+                        cutItem.setVisible(false);
+                        pasteItem.setVisible(true);
+                        renameItem.setVisible(true);
+                        removeItem.setVisible(true);
+                        newFileItem.setVisible(true);
+                        newFordItem.setVisible(true);
+                        searchItem.setVisible(true);
+                        uploadItem.setVisible(true);
+                        uploadFolder.setVisible(true);
+                        downItem.setVisible(false);
+                        infoItem.setVisible(false);
+                    }
+                }
+                //菜单点击事件的处理
+                function hwMenu_click(sender, menuItem, e) {
+                    var itemid = menuItem.id;
+                    switch (itemid) {
+                        case "newFordItem":
+                            {
+                                addNewFord();
+                                break;
+                            }
+                        case "refreshItem":
+                            {
+                                store.toRefresh();
+                                break;
+                            }
+                        case "uploadItem":
+                            {
+                                var selnodePath = ZyglTree.getSelNodepath();
+                                if (selnodePath)
+                                    Uploader.disableDirUpload();
+                                upLoadFile(selnodePath);
+                                break;
+                            }
+                        case "uploadFolder":
+                            {
+                                var selnodePath = ZyglTree.getSelNodepath();
+                                if (selnodePath) {
+                                    //upLoadFile(selnodePath);
+                                    if (Ext.isIE) {
+                                        vmd.alert('提示', 'IE浏览器不支持文件夹上传！')
+                                        return
+                                    }
+                                    //上传支持文件夹
+                                    Uploader.enableDirUpload();
+                                    //private
+                                    _uploadfolder(selnodePath)
+                                }
+                                break;
+                            }
+                        case "removeItem":
+                            {
+                                removeResource();
+                                break;
+                            }
+                        case "renameItem":
+                            {
+                                rename();
+                                break;
+                            }
+                        case "downItem":
+                            {
+                                downLoad();
+                                break;
+                            }
+                        case "copyItem":
+                            {
+                                copyFileItem();
+                                break;
+                            }
+                        case "cutItem":
+                            {
+                                cutFileItem();
+                                break;
+                            }
+                        case "pasteItem":
+                            {
+                                pasteFile();
+                                break;
+                            }
+                    }
+                }
+                //文件夹上传 rootpath 上传根路径
+                function _uploadfolder(rootpath) {
+                    var uploader = Uploader.getUploader();
+                    var uploaderwin = new vmd.window({
+                        items: Uploader,
+                        auto: false,
+                        height: 500,
+                        width: 655,
+                        maximizable: false,
+                        resizable: false,
+                        closeAction: 'hide',
+                        title: "文件上传"
+                    })
+                    Uploader.show()
+                    uploaderwin.show();
+                    uploaderwin.hide(); //上传接口
+                    uploader.upload(selServerUrl.getValue(), rootpath, uploaderwin, function(fileList) {
+                        //上传成功回调
+                        var saveDate = []; //需要提交的文件数据
+                        var saveCategoryDate = []; //需要提交的文件夹数据
+                        var filePathList = [] //记录所有的路径
+                        var Pathandparpath = [] //记录路径和上级路径
+                        var fileandpath = []; //文件和路径
+                        var pathAndId = [] //文件和id
+                        //获取上传返回的路径
+                        for (var i = 0; i < fileList.length; i++) {
+                            var selNodeName = ZyglTree.getSelCartery().text
+                            var filename = fileList[i].url.trim();
+                            var filepath = filename.substr(0, filename.lastIndexOf('/'));
+                            fileandpath.push({
+                                filename: filename,
+                                filepath: filepath
+                            })
+                            var fileNameList = filepath.split("/"); //拆分路径的列表
+                            var filepath1 = ""
+                            var ppath = ""
+                            for (var j = 0; j < fileNameList.length; j++) {
+                                if (fileNameList[j] == selNodeName)
+                                    filepath1 = selNodeName
+                                else
+                                    filepath1 += "/" + fileNameList[j]
+                                if (filePathList.indexOf(filepath1) == -1) {
+                                    filePathList.push(filepath1);
+                                    filePathList.push(filepath1);
+                                    Pathandparpath.push({
+                                        name: fileNameList[j],
+                                        path: filepath1,
+                                        parpath: ppath,
+                                        id: "",
+                                        pid: ""
+                                    })
+                                    pathAndId.push({
+                                        path: filepath1,
+                                        id: ""
+                                    })
+                                }
+                                ppath = filepath1;
+                            }
+                        }
+                        //将获取到的路径地址去数据库中比对。将包含的目录id拿到
+                        var filepaths = filePathList.join(',')
+                        hwDas.get("zyzx/zyzxtree/getpathid", {}, {
+                            path: filepaths,
+                            serverid: selServerID.getValue()
+                        }, function(result) {
+                            var datas = [];
+                            if (result.data && result.data.length > 0 && result.data[0].datas && result.data[0].datas.length > 0)
+                                datas = result.data[0].datas
+                            //将没有id的分类添加上id
+                            //将记录，目录和id的数组添加上对应的id
+                            for (var i = 0; i < pathAndId.length; i++) {
+                                var paid = ""
+                                for (var j = 0; j < datas.length; j++) {
+                                    if (datas[j].path == pathAndId[i].path)
+                                        paid = datas[j].category_id
+                                }
+                                pathAndId[i].id = paid || vmd.getGuid()
+                            }
+                            //将记录，目录和id的数组添加上对应的id
+                            for (var i = 0; i < Pathandparpath.length; i++) {
+                                for (var j = 0; j < pathAndId.length; j++) {
+                                    if (pathAndId[j].path == Pathandparpath[i].path) {
+                                        Pathandparpath[i].id = pathAndId[j].id
+                                    }
+                                    if (pathAndId[j].path == Pathandparpath[i].parpath) {
+                                        Pathandparpath[i].pid = pathAndId[j].id
+                                    }
+                                }
+                                saveCategoryDate.push({
+                                    path: Pathandparpath[i].path,
+                                    category_id: Pathandparpath[i].id,
+                                    parent_id: Pathandparpath[i].pid,
+                                    name: Pathandparpath[i].name,
+                                    server_id: selServerID.getValue()
+                                })
+                            } //将文件添加上分类id
+                            for (var i = 0; i < fileList.length; i++) {
+                                var filename = fileList[i].url.trim();
+                                var filepath = filename.substr(0, filename.lastIndexOf('/'));
+                                var pathid = ""
+                                for (var j = 0; j < Pathandparpath.length; j++) {
+                                    if (Pathandparpath[j].path == filepath)
+                                        pathid = Pathandparpath[j].id
+                                }
+                                var filedate = {
+                                    RESOURCE_ID: vmd.util.guid(),
+                                    xh: 10,
+                                    name: fileList[i].title.trim(),
+                                    type: fileList[i].ext,
+                                    size: fileList[i].size,
+                                    path: fileList[i].url.trim(),
+                                    CATEGORY_ID: pathid,
+                                    SERVER_ID: selServerID.getValue()
+                                }
+                                saveDate.push(filedate);
+                            }
+                            //将上传的文件通过数据服务进行保存
+                            hwDas.save("zyzx/zyzxtree/zysc", {}, {}, saveDate, function(e) { //将上传的文件通过数据服务进行保存
+                                hwDas.save("zyzx/zyzxtree/addCategorys", {}, {}, saveCategoryDate, function(e) {
+                                    //文件上传成功 需要刷新下列表
+                                    liststore.toRefresh();
+                                    Tips.tips("上传成功", "success");
+                                }, function(e) {
+                                    Tips.tips("上传失败", "error");
+                                })
+                            }, function(e) {
+                                Tips.tips("上传失败", "error");
+                            })
+                        })
+                        //处理分类
+                    });
+                }
+                //新建文件的子菜单事件
+                function hwMenu1_click(sender, menuItem, e) {
+                    var itemid = menuItem.id;
+                    switch (itemid) {
+                        case "jsItem":
+                            {
+                                addNewFile("js");
+                                break;
+                            }
+                        case "htmlItem":
+                            {
+                                addNewFile("html");
+                                break;
+                            }
+                        case "cssItem":
+                            {
+                                addNewFile("css");
+                                break;
+                            }
+                    }
+                }
+                //添加分类的弹出框
+                function addNewFord() {
+                    //添加文件夹 成功后的回调，通过在资源树节点添加实现数据库和界面的添加
+                    var toAddFord = function(values, fun) {
+                        hwDas.get("zyzx/zyzxtree/checkFord", {}, {
+                            name: values.name,
+                            parent_id: ZyglTree.getSelNodeId()
+                        }, function(result) {
+                            if (result.data && result.data.length > 0 && result.data[0].datas && result.data[0].datas.length > 0) {
+                                Ext.Msg.alert("警告", "已存在该文件夹，请重新修改文件夹名！");
+                            } else {
+                                var SelNodepath = ZyglTree.getSelNodepath();
+                                ZyglTree.addCartery(ZyglTree.getSelNodeId(),
+                                    vmd.util.guid(),
+                                    values.name,
+                                    SelNodepath == "" ? values.name : SelNodepath + "/" + values.name,
+                                    selServerID.getValue(),
+                                    values.remark,
+                                    function() {
+                                        liststore.toRefresh(); //成功后刷新分类下的列表数据
+                                        Tips.tips("新建文件夹成功", "success");
+                                        fun();
+                                    },
+                                    function() {
+                                        Tips.tips("新建文件夹失败", "error");
+                                    });
+                            }
+                        }, function() {
+                            Tips.tips("新建文件夹失败", "error")
+                        })
+                    }
+                    //添加分类的弹出框
+                    addFile("folder", null, null, toAddFord)
+                }
+                //添加新文件  
+                function addNewFile(type) {
+                    //添加成功后的回调
+                    var c_toAddFile = function(values, fun) {
+                        //判断是否存在该文件
+                        hwDas.get("zyzx/zyzxtree/checkFileName", {}, {
+                            name: values.name,
+                            actegory_id: ZyglTree.getSelNodeId()
+                        }, function(result) {
+                            if (result.data && result.data.length > 0 && result.data[0].datas && result.data[0].datas.length > 0) {
+                                Ext.Msg.alert("警告", "已存在该文件，请重新修改文件名！");
+                                //Tips.tips("已存在该文件，请重新修改文件名！", "error");
+                            } else { //调用数据服务信息的保存方法
+                                toAddorEditFile(values.name, values.remark, type, function() {
+                                    var newpath = ZyglTree.getSelNodepath() == "" ? values.name : (ZyglTree.getSelNodepath() + "/" + values.name)
+                                    hwDas.write(hwdasFileServer, newpath.trim(), " ", function(result) {
+                                        openAcetoEdit(newpath.trim());
+                                        liststore.toRefresh();
+                                        Tips.tips("新建文件成功", "success");
+                                        fun();
+                                    }, function(err) {
+                                        Tips.tips("新建文件失败", 'error')
+                                    })
+                                }, function(e) {
+                                    Tips.tips("新建文件失败", "error");
+                                });
+                            }
+                        }, function() {
+                            Tips.tips("检测文件是否重复出错", "error");
+                        })
+                    }
+                    //定义类型的校验规则
+                    var reg, regText;
+                    reg = new RegExp("\\." + type + "$");
+                    regText = "名称必须以." + type + "结尾！";
+                    //调用添加文件的页面
+                    addFile(type, reg, regText, c_toAddFile);
+                }
+                //新建文件或修改文件的保存服务
+                function toAddorEditFile(name, remark, type, sucfun, erfun) {
+                    var saveData = {};
+                    saveData.name = name.trim();
+                    saveData.mark = remark;
+                    saveData.resource_id = vmd.util.guid();
+                    saveData.category_id = ZyglTree.getSelNodeId();
+                    saveData.path = (ZyglTree.getSelNodepath() == "" ? name : (ZyglTree.getSelNodepath() + "/" + name)).trim();
+                    saveData.server_id = selServerID.getValue();
+                    saveData.type = type;
+                    hwDas.save("zyzx/zyzxtree/addFile", {}, {}, saveData, sucfun, erfun)
+                }
+                //添加文件和分类的名称录入界面
+                function addFile(type, Reg, regText, fun) {
+                    var newName;
+                    if (type == "folder")
+                        newName = "新建文件夹" + new Date().getTime();
+                    else
+                        newName = "new" + type + new Date().getTime() + "." + type;
+                    //定义表单
+                    var form = new Ext.form.FormPanel({
+                        labelAlign: "top",
+                        bodyStyle: "padding: 10px",
+                        border: false,
+                        items: [{
+                            xtype: "textfield",
+                            allowBlank: false,
+                            anchor: "100%",
+                            name: 'name',
+                            height: 30,
+                            fieldLabel: '名称',
+                            emptyText: "请输入名称",
+                            regex: Reg,
+                            regexText: regText
+                        }, {
+                            xtype: "textarea",
+                            allowBlank: true,
+                            name: 'remark',
+                            anchor: "100%",
+                            fieldLabel: "备注"
+                        }]
+                    })
+                    //表单窗体
+                    var win = new Ext.Window({
+                        width: 440,
+                        height: 260,
+                        title: '创建分类',
+                        hidden: false,
+                        layout: "fit",
+                        border: false,
+                        modal: true,
+                        items: form,
+                        fbar: [{
+                            text: '确定',
+                            handler: function() {
+                                if (form.getForm().isValid()) {
+                                    var values = form.form.getValues()
+                                    //添加完节点，不仅仅在树上添加，还要刷新右侧列表
+                                    if (fun) {
+                                        fun(values, function() {
+                                            win.close()
+                                        })
+                                    } else
+                                        win.close()
+                                }
+                            }
+                        }, {
+                            text: '取消',
+                            handler: function() {
+                                win.close()
+                            }
+                        }]
+                    });
+                    win.show()
+                    form.form.setValues({
+                        name: newName.trim() + ""
+                    })
+                }
+                //上传文件  参数：上传路径
+                function upLoadFile(filepath) {
+                    var uploader = Uploader.getUploader()
+                    var win = new vmd.window({
+                        items: Uploader,
+                        auto: false,
+                        height: 500,
+                        width: 655,
+                        maximizable: false,
+                        resizable: false,
+                        closeAction: 'hide',
+                        title: "文件上传"
+                    })
+                    Uploader.show()
+                    win.show();
+                    win.hide();
+                    //上传接口
+                    uploader.upload(selServerUrl.getValue(), filepath, win, function(fileList) {
+                        //上传成功回调
+                        var saveDate = [];
+                        //获取上传返回的路径
+                        for (var i = 0; i < fileList.length; i++) {
+                            var filedate = {
+                                RESOURCE_ID: vmd.util.guid(),
+                                xh: 10,
+                                name: fileList[i].title.trim(),
+                                type: fileList[i].ext,
+                                size: fileList[i].size,
+                                path: fileList[i].url.trim(),
+                                CATEGORY_ID: selnodeID.getValue(),
+                                SERVER_ID: selServerID.getValue()
+                            }
+                            saveDate.push(filedate);
+                        }
+                        //将上传的文件通过数据服务进行保存
+                        hwDas.add("zyzx/zyzxtree/zysc", {}, {}, saveDate, function(e) {
+                            //文件上传成功 需要刷新下列表
+                            liststore.toRefresh();
+                            Tips.tips("上传成功", "success");
+                        }, function(e) {
+                            Tips.tips("上传失败", "error");
+                        })
+                    });
+                }
+                //下载
+                function downLoad() {
+                    var filepath = listSelData.data.path;
+                    var descname = listSelData.data.name;
+                    var dirmark = vmdSettings.resourceCode;
+                    hwDas.down(hwdasFileServer, filepath, descname);
+                }
+                //删除资源  
+                function removeResource() {
+                    Ext.Msg.confirm("提示", "确定要进行删除操作吗？文件删除之后将不可恢复！", function(type) {
+                        if (type == "yes") {
+                            switch (menuObjName.getValue()) {
+                                case "1": //从树节点右键删除分类
+                                    {
+                                        //var selnodeID = ZyglTree.getSelNodeId();
+                                        var selnodePath = ZyglTree.getSelNodepath();
+                                        var selnodeParId = ZyglTree.getSelNodeparentId(); //当前节点的父节点id
+                                        if (selnodeID.getValue()) {
+                                            ZyglTree.removeCaretory(selnodeID.getValue(), function() {
+                                                hwDas.remove(hwdasFileServer, selnodePath, function() {
+                                                    Tips.tips("删除分类成功", "success");
+                                                }, function(msg) {
+                                                    Tips.tips("删除分类失败", "error");
+                                                })
+                                                //在删除树节点的分类后，定位到其上层节点
+                                                if (selnodeParId) {
+                                                    selnodeID.setValue(selnodeParId);
+                                                    ZyglTree.setNodeSel(selnodeParId);
+                                                    liststore.toRefresh();
+                                                }
+                                            }); //从树节点上移除,同时同步数据库
+                                        }
+                                        break;
+                                    }
+                                case "0": //从列表中右键删除分类或文件
+                                    {
+                                        var selItemData = ZyglList.getSelItemData();
+                                        var selItemID = selItemData.id;
+                                        var selItemtype = selItemData.type;
+                                        var selItemPath = selItemData.path;
+                                        if (selItemtype == "folder") //如果是分类，则通过树节点的删除方式进行删除，并同步。
+                                        {
+                                            if (selItemID) {
+                                                //删除数据库信息
+                                                ZyglTree.removeCaretory(selItemID, function() {
+                                                    ZyglList.removeSelItem();
+                                                    hwDas.remove(hwdasFileServer, selItemPath, function() {
+                                                        Tips.tips("删除分类成功", "success");
+                                                    }, function(msg) {
+                                                        Tips.tips("删除分类失败", "error");
+                                                    })
+                                                }, function() {
+                                                    Tips.tips("删除分类失败", "error");
+                                                });
+                                            }
+                                        } else { //如果为文件，调用单独服务进行删除
+                                            hwDas.del("zyzx/zyzxtree/delresource", {}, {
+                                                resource_id: selItemID
+                                            }, function() {
+                                                hwDas.remove(hwdasFileServer, selItemPath, function() {
+                                                    ZyglList.removeSelItem();
+                                                    Tips.tips("删除文件成功", "success");
+                                                }, function(msg) {
+                                                    Tips.tips("删除文件失败", "error");
+                                                })
+                                            }, function(msg) {
+                                                Tips.tips("删除文件失败", "error");
+                                            });
+                                        }
+                                        break;
+                                    }
+                            }
+                        } else
+                            return;
+                    })
+                }
+                //重命名
+                function rename() {
+                    //定义服务变量
+                    var type = "1";
+                    var resource_id = "";
+                    var category_id = "";
+                    var path = "";
+                    var vpath = "";
+                    var name = "";
+                    var ext = "";
+                    var reg, regText;
+                    //当前为树节点右键修改
+                    if (menuObjName.getValue() == "1") {
+                        type = "1";
+                        category_id = ZyglTree.getSelNodeId();
+                        path = ZyglTree.getSelNodepath();
+                        name = ZyglTree.getSelCartery().text;
+                    } else {
+                        //当前为列表项右键修改
+                        if (listSelData) { //判断是否存在选中的项
+                            if (listSelData.data.type == "folder") { //如果选中的项为目录
+                                type = "1";
+                                category_id = listSelData.data.id;
+                            } else { //如果选中的项为文件
+                                type = "0";
+                                resource_id = listSelData.data.id;
+                                ext = listSelData.data.ext;
+                                reg = new RegExp("\\." + ext + "$"); //new RegExp("/\." + ext + "$/"); ///^[A-Z][a-zA-Z0-9]*$/;
+                                regText = "名称必须以." + ext + "结尾！";
+                            }
+                            path = listSelData.data.path;
+                            name = listSelData.data.name;
+                        }
+                    }
+                    //定义表单
+                    var form = new Ext.form.FormPanel({
+                        labelAlign: "top",
+                        bodyStyle: "padding: 10px",
+                        border: false,
+                        items: [{
+                            xtype: "textfield",
+                            allowBlank: false,
+                            anchor: "100%",
+                            name: 'name',
+                            height: 30,
+                            fieldLabel: '将<span style="color:red;font-weight:bold">' + name + '</span>重命名为',
+                            emptyText: "请输入重命名分类名称",
+                            regex: reg,
+                            regexText: regText
+                        }]
+                    })
+                    //表单窗体
+                    var win = new Ext.Window({
+                        width: 440,
+                        height: 150,
+                        title: '重命名',
+                        hidden: false,
+                        layout: "fit",
+                        border: false,
+                        modal: true,
+                        items: form,
+                        fbar: [{
+                            text: '确定',
+                            handler: function() { //修改后确定
+                                if (form.getForm().isValid()) { //是否录入的名称
+                                    var values = form.form.getValues(); //是否录入的名称
+                                    if (path) { //根据路径重新组织新路径
+                                        var index = path.lastIndexOf("\/");
+                                        vpath = path.substring(0, index + 1) + values.name;
+                                    }
+                                    //调用重命名的服务
+                                    hwDas.edit("zyzx/zyzxtree/rename", {}, {}, [{
+                                        resource_id: resource_id,
+                                        category_id: category_id,
+                                        rename: values.name.trim(),
+                                        vpath: vpath.trim(),
+                                        path: path.trim(),
+                                        type: type
+                                    }], function() {
+                                        //设置节点名称
+                                        //根据右键菜单的点击位置进行处理，如为树节点
+                                        if (menuObjName.getValue() == "1") {
+                                            ZyglTree.setCarteryName(category_id, values.name);
+                                        } else {
+                                            //根据右键菜单的点击位置进行处理，如为列表项
+                                            if (listSelData) {
+                                                //根据右键菜单的点击位置进行处理，如为文件夹
+                                                if (listSelData.data.type == "folder") {
+                                                    ZyglTree.setCarteryName(category_id, values.name);
+                                                }
+                                                listSelData.set("path", vpath.trim());
+                                                listSelData.set("name", values.name.trim()) //设置名称，出发改变事件
+                                            }
+                                        }
+                                        moveFile(path, vpath, "重命名");
+                                        //Tips.tips("重命名成功", "success");
+                                    }, function(msg) {
+                                        debugger
+                                        Tips.tips("重命名失败", "error");
+                                    });
+                                    win.close()
+                                }
+                            }
+                        }, {
+                            text: '取消',
+                            handler: function() {
+                                win.close()
+                            }
+                        }]
+                    });
+                    win.show()
+                    form.form.setValues({
+                        name: name.trim()
+                    })
+                }
+
+                function savereName() {}
+                var copyItemData;
+
+                function copyFileItem() {
+                    cutItemData = null;
+                    copyItemData = listSelData.data;
+                }
+                var cutItemData;
+
+                function cutFileItem() {
+                    copyItemData = null;
+                    cutItemData = listSelData.data;
+                }
+
+                function pasteFile() {
+                    var type;
+                    var path;
+                    var vpath;
+                    var pName;
+                    var saveDate = {};
+                    saveDate.vcategory_id = ZyglTree.getSelNodeId();
+                    if (copyItemData) {
+                        path = copyItemData.path;
+                        saveDate.type = "0";
+                        type = "0";
+                        saveDate.resource_id = copyItemData.id;
+                        pName = copyItemData.name;
+                        vpath = ZyglTree.getSelNodepath() == "" ? values.name : (ZyglTree.getSelNodepath() + "/" + pName.trim());
+                    } else if (cutItemData) {
+                        path = cutItemData.path;
+                        saveDate.type = "1";
+                        type = "1";
+                        saveDate.resource_id = cutItemData.id;
+                        pName = cutItemData.name;
+                        vpath = ZyglTree.getSelNodepath() == "" ? values.name : (ZyglTree.getSelNodepath() + "/" + pName.trim());
+                    }
+                    //判断是否为同级目录,同级目录且为复制时，会生成“文件名(1)”的文件。
+                    if (path == vpath && type == "0") {
+                        pName = pName.replace(/(.*)\./, '$1' + new Date().getTime() + '.'); //正则表达式，设置复制的文件为“文件名(1).类型”
+                        vpath = ZyglTree.getSelNodepath() == "" ? values.name : (ZyglTree.getSelNodepath() + "/" + pName.trim());
+                    } else if (path == vpath && type == "1") { //同级目录且为剪切时，禁止该操作。
+                        Ext.Msg.alert("警告", "同级目录禁止剪切后粘帖！");
+                        return;
+                    }
+                    saveDate.pName = pName.trim();
+                    saveDate.vpath = vpath.trim();
+                    hwDas.add("zyzx/zyzxtree/pasteItem", {}, {}, saveDate, function(e) {
+                        //文件上传成功 需要刷新下列表
+                        liststore.toRefresh();
+                        if (type == "0") {
+                            copyFile(path, vpath, "粘帖");
+                        } else {
+                            moveFile(path, vpath, "粘帖");
+                        }
+                    }, function(e) {
+                        Tips.tips("粘帖失败", "error");
+                    });
+                }
+                //树节点的点击，绑定列表资源显示
+                function ZyglTree_resourceNodeClick(sender, node, e) {
+                    selnodeID.setValue(node.id);
+                    liststore.toRefresh();
+                    node.select();
+                    if (ZyglTree.tree.root == node) {
+                        Navigation.setPath(ZyglTree.tree.root.text + "/")
+                    } else {
+                        Navigation.setPath(ZyglTree.tree.root.text + "/" + ZyglTree.getSelNodepath() + "/")
+                    }
+                }
+                //树上方工具的回到主目录
+                function ZyglTree_homeClick(sender, e) {
+                    selnodeID.setValue(ZyglTree.getSelNodeId());
+                    liststore.toRefresh();
+                }
+                //树上方工具的新建分类
+                function ZyglTree_creatCategory(sender, e) {
+                    addNewFord();
+                }
+                //树上方工具的刷新树
+                function ZyglTree_refreshTree(sender, e) {
+                    store.toRefresh();
+                }
+                //ace编辑 类型
+                var aceExtList = ["html", "js", "css", "text"];
+                //图片类型列表 
+                var imgExtList = ["jpg", "jpeg", "png", "gif", "ico", "bmp"];
+                //列表中选中的数据
+                var listSelData;
+                //双击列表图标
+                function ZyglList_listDbClick(sender, index, node, e) {
+                    var target = e.target;
+                    //if(e.target.className != 'ico') return;
+                    listSelData = sender.store.getAt(index);
+                    var listSelJson = listSelData.data;
+                    if (listSelJson.type == "folder") {
+                        selnodeID.setValue(sender.store.getAt(index).data.id);
+                        ZyglTree.setNodeSel(sender.store.getAt(index).data.id);
+                        liststore.toRefresh();
+                        //设置导航的路径
+                        Navigation.setPath(ZyglTree.tree.root.text + "/" + ZyglTree.getSelNodepath() + "/")
+                        ZyglTree.getSelCartery().expand();
+                    } else if (listSelJson.type == "file") { //如果是文件 ，进行打开处理
+                        var selext = listSelJson.ext;
+                        if (imgExtList.indexOf(selext) >= 0) { //如果是图片，用图片管理器打开
+                            openImgShow(sender.store, listSelJson.name);
+                        } else if (aceExtList.indexOf(selext) >= 0) {
+                            //打开文件编辑
+                            openAceEdit(sender.store, index);
+                        }
+                    }
+                }
+                //图片查看
+                function openImgShow(store, selName) {
+                    var imageList = {};
+                    var imageListItems = [];
+                    var index = -1;
+                    for (var i = 0; i < store.data.items.length; i++) { //遍历当前的资源，将图片列表信息生成特定格式
+                        var itemData = store.data.items[i].data;
+                        if (imgExtList.indexOf(itemData.ext) >= 0) {
+                            var imageListItem = {
+                                msrc: "http://" + selServerUrl.getValue() + "/" + (zyzxVPath.getValue() ? "/" + zyzxVPath.getValue() : "") + "/" + itemData.path,
+                                src: "http://" + selServerUrl.getValue() + "/" + (zyzxVPath.getValue() ? "/" + zyzxVPath.getValue() : "") + "/" + itemData.path,
+                                h: 0,
+                                w: 0,
+                                title: itemData.name
+                            }
+                            imageListItems.push(imageListItem);
+                            index++; ////获取当前图片在图片列表中的索引
+                        }
+                        if (selName == itemData.name) //根据当前点击的项与添加的图片项作对比 记录当前点击图片的index
+                            imageList.index = index;
+                    }
+                    imageList.items = imageListItems;
+                    vmd.showImg(imageList)
+                }
+                //打开文本编辑器
+                function openAceEdit(store, index) {
+                    //获取当前选中的文件所在的数据集行记录
+                    var selFileItemData = store.getAt(index);
+                    var path;
+                    //打开文本编辑器，
+                    if (selFileItemData) {
+                        path = selFileItemData.data.path;
+                        openAcetoEdit(path)
+                    }
+                }
+
+                function openAcetoEdit(path) {
+                    var aceFileEditWin = new vmd.window({
+                        title: "编辑",
+                        url: vmd.core.getVirtualPath() + "modules/eQ9ULgcVb1/hw3ce0447e/hwef4bf837/hw1c51773c.html",
+                        auto: false,
+                        height: getHeight(),
+                        width: getWidth(),
+                        params: {
+                            path: path
+                        }
+                    })
+                    aceFileEditWin.show();
+                }
+                //保存编辑文件信息
+                function saveAceFileEditinfo() {
+                    //先判断当前的选中项是否存在
+                    if (listSelData && ZyglList.getSelItemData())
+                        //调用保存服务方法
+                        toAddorEditFile(listSelData.data.name, '修改', listSelData.data.ext, function() {
+                            liststore.toRefresh();
+                            Tips.tips("更新文件信息成功", "success");
+                        }, function(e) {
+                            Tips.tips("更新文件信息失败", "error");
+                        })
+                }
+                //在打开的页面中保存时会调用该方法实现保存，放到window中
+                window.saveAceFileEditinfo = saveAceFileEditinfo;
+                //默认列表展示模式
+                var isview = true;
+
+                function ZyglList_afterrender(sender) {
+                    ZyglList.enableView();
+                    ZyglList.body.on('click', function() {
+                        //发送消息，进行文件过滤
+                        // send();
+                    })
+                }
+                //处理列表的右键菜单显示
+                function ZyglList_contextmenu(sender, index, e) {
+                    //根据当前点击的列表项，设置列表项选中
+                    if (sender.xtype == "vmd.dataview") {
+                        sender.selectRange(index, index);
+                    } else if (sender.xtype == "grid") {
+                        sender.selModel.selectRow(index);
+                    }
+                    //根据传递的index 来判断是在文件或分类上点击的右键还是空白区域展示的右键
+                    if (index != null) {
+                        //获取选中项的数据
+                        listSelData = sender.store.getAt(index);
+                        var listSelJson = listSelData.data;
+                        //根据不同的类型来调用不同的菜单
+                        if (listSelJson.type == "folder") {
+                            refreshItem.setVisible(false);
+                            copyItem.setVisible(false);
+                            cutItem.setVisible(false);
+                            pasteItem.setVisible(false);
+                            renameItem.setVisible(true);
+                            removeItem.setVisible(true);
+                            newFileItem.setVisible(false);
+                            newFordItem.setVisible(false);
+                            searchItem.setVisible(true);
+                            uploadItem.setVisible(false);
+                            uploadFolder.setVisible(false);
+                            downItem.setVisible(false);
+                            infoItem.setVisible(false);
+                        } else {
+                            refreshItem.setVisible(false);
+                            copyItem.setVisible(true);
+                            cutItem.setVisible(true);
+                            pasteItem.setVisible(false);
+                            renameItem.setVisible(true);
+                            removeItem.setVisible(true);
+                            newFileItem.setVisible(false);
+                            newFordItem.setVisible(false);
+                            searchItem.setVisible(false);
+                            uploadItem.setVisible(false);
+                            uploadFolder.setVisible(false);
+                            downItem.setVisible(true);
+                            infoItem.setVisible(true);
+                        }
+                    } else {
+                        refreshItem.setVisible(false);
+                        copyItem.setVisible(false);
+                        cutItem.setVisible(false);
+                        pasteItem.setVisible(true);
+                        renameItem.setVisible(false);
+                        removeItem.setVisible(false);
+                        newFileItem.setVisible(true);
+                        newFordItem.setVisible(true);
+                        searchItem.setVisible(true);
+                        uploadItem.setVisible(true);
+                        uploadFolder.setVisible(true);
+                        downItem.setVisible(false);
+                        infoItem.setVisible(false);
+                    }
+                    //设置菜单显示位置
+                    hwMenu.showAt(e.xy);
+                    e.stopEvent(); //阻止冒泡
+                    //设置菜单为列表中弹出 ，以方便进行不同操作
+                    menuObjName.setValue("0");
+                }
+                //设置列表展示模式切换的样式
+                function button1_click(sender, e) {
+                    ZyglList.enableView();
+                    isview = true;
+                    btn_list.removeClass("list-list-sel")
+                    button1.addClass("list-view-sel")
+                }
+                //设置列表展示模式切换的样式
+                function btn_list_click(sender, e) {
+                    ZyglList.enableList();
+                    isview = false;
+                    button1.removeClass("list-view-sel")
+                    btn_list.addClass("list-list-sel")
+                }
+                //通过双击文件名进行重命名
+                function ZyglList_rename(sender, name, oldname, curIndex) {
+                    if (curIndex == null) return;
+                    //调用重命名的服务
+                    var cnData = sender.store.getAt(curIndex);
+                    if (!cnData) return;
+                    //定义服务变量
+                    var type = "1";
+                    var resource_id = "";
+                    var category_id = "";
+                    var path = "";
+                    var vpath = "";
+                    //当前为列表项右键修改
+                    if (cnData) { //判断是否存在选中的项
+                        if (cnData.data.type == "folder") { //如果选中的项为目录
+                            type = "1";
+                            category_id = cnData.data.id;
+                        } else { //如果选中的项为文件
+                            type = "0";
+                            resource_id = cnData.data.id;
+                        }
+                        path = cnData.data.path;
+                    }
+                    if (path) { //根据路径重新组织新路径
+                        var index = path.lastIndexOf("\/");
+                        vpath = path.substring(0, index + 1) + name.trim();
+                    }
+                    //调用重命名的服务
+                    hwDas.edit("zyzx/zyzxtree/rename", {}, {}, [{
+                        resource_id: resource_id,
+                        category_id: category_id,
+                        rename: name.trim(),
+                        vpath: vpath.trim(),
+                        path: path.trim(),
+                        type: type
+                    }], function() {
+                        //根据右键菜单的点击位置进行处理，如为列表项
+                        if (cnData) {
+                            //根据右键菜单的点击位置进行处理，如为文件夹
+                            if (cnData.data.type == "folder") {
+                                ZyglTree.setCarteryName(category_id, name.trim());
+                            }
+                            cnData.set("path", vpath.trim());
+                            cnData.set("name", name.trim()) //设置名称，出发改变事件
+                            moveFile(path.trim(), vpath.trim(), "重命名");
+                        }
+                    }, function(msg) {
+                        Tips.tips("重命名失败", "error");
+                    });
+                }
+                //服务器端移动文件方法，在重命名或剪切时用到
+                function moveFile(path, vpath, msg) {
+                    var pSuccess = function(res) {
+                        if (res.isSucceed) {
+                            Tips.tips(msg + "成功", "success");
+                            copyItemData = null;
+                            cutItemData = null;
+                        } else {
+                            if (res.indexOf("不存在") >= 0)
+                                Tips.tips(msg + "成功", "success");
+                            else
+                                Tips.tips(msg + "失败", "error");
+                        }
+                    }
+                    var eSuccess = function(res) {
+                        if (res.indexOf("不存在") >= 0)
+                            Tips.tips(msg + "成功", "success");
+                        else
+                            Tips.tips(msg + "失败", "error");
+                    }
+                    hwDas.move(hwdasFileServer, path.trim(), vpath.trim(), pSuccess, eSuccess);
+                }
+                //服务器端复制文件，文件复制时用到
+                function copyFile(path, vpath, msg) {
+                    var pSuccess = function(res) {
+                        if (res.isSucceed) {
+                            Tips.tips(msg + "成功", "success");
+                            copyItemData = null;
+                            cutItemData = null;
+                        } else {
+                            Tips.tips(msg + "失败", "error");
+                        }
+                    }
+                    var eSuccess = function(res) {
+                        Tips.tips(msg + "失败", "error");
+                    }
+                    hwDas.copy(hwdasFileServer, path, vpath, pSuccess, eSuccess);
+                }
+                //资源树绑定后，默认的选中根节点，并展示根节点的数据
+                function ZyglTree_afterCategoryBind(sender, e) {
+                    ZyglTree.tree.root.select();
+                    selnodeID.setValue(ZyglTree.tree.root.id);
+                    liststore.toRefresh();
+                    ZyglTree.tree.root.expand();
+                    ZyglTree.tree.root.setIcon("/img/public/server2.png");
+                }
+                //快捷键的菜单
+                function ZyglTree_creatFile(sender, e) {
+                    hwMenu1.showAt([sender.x, sender.y + 80])
+                }
+                //导航的专业按钮，定位到根节点并刷新列表
+                function Navigation_homeClick(sender, e) {
+                    ZyglTree.tree.root.select();
+                    selnodeID.setValue(ZyglTree.tree.root.id);
+                    liststore.toRefresh();
+                }
+                //导航的点击，定位到指定目录并刷新列表
+                function Navigation_pathClick(sender, path) {
+                    //根节点，则调用home的点击事件
+                    if (ZyglTree.tree.root.text + "/" == path || ZyglTree.tree.root.text == path) {
+                        Navigation_homeClick();
+                    } else {
+                        //获取导航返回的路径，并进行处理，过滤掉根节点，最后的/
+                        var cPath = path.replace(ZyglTree.tree.root.text + "/", "");
+                        if (cPath.substr(cPath.length - 1) == "/")
+                            cPath = cPath.substr(0, cPath.length - 1);
+                        //通过服务 和 路径获取分类id，唯一
+                        hwDas.get("zyzx/zyzxtree/getIdByPath", {}, {
+                            path: cPath
+                        }, function(result) {
+                            //获取到分类id后，定位到指定节点，并刷新列表
+                            if (result.data && result.data.length > 0 && result.data[0].datas && result.data[0].datas.length > 0) {
+                                selnodeID.setValue(result.data[0].datas[0].category_id);
+                                ZyglTree.setNodeSel(result.data[0].datas[0].category_id);
+                                liststore.toRefresh();
+                                //设置导航的路径
+                                // Navigation.setPath(ZyglTree.tree.root.text + "/" + ZyglTree.getSelNodepath())
+                            }
+                        }, function() {})
+                    }
+                }
+                //服务器设置的时间
+                function MyLb_hjbl_afterrender(sender) {
+                    sender.el.on('click', function() {
+                        openServerEdit();
+                    })
+                }
+                //服务器设置的时间
+                function MyC_hjbl_afterrender(sender) {
+                    sender.el.on('click', function() {
+                        openServerEdit();
+                    })
+                }
+                //关闭服务器配置后刷新列表
+                function closeEditWin() {
+                    serverstore.toRefresh();
+                }
+                //打开服务器编辑框
+                function openServerEdit() {
+                    serverEditWin = new vmd.window({
+                        title: "编辑",
+                        url: vmd.core.getVirtualPath() + "modules/eQ9ULgcVb1/hw3ce0447e/hwef4bf837/hw999da775.html",
+                        auto: false,
+                        height: 480,
+                        width: 650,
+                        closable: true
+                    })
+                    serverEditWin.show();
+                    serverEditWin.on('close', closeEditWin, this)
+                    window.serverEditWin = serverEditWin;
+                }
+                //打开服务器列表菜单
+                function openServerMenu(sender, e) {
+                    hwMenu2.showAt(sender.xy);
+                }
+                //服务器列表数据集初始化完后，加载列表菜单
+                function serverstore_load(sender, records, options) {
+                    hwMenu2.removeAll();
+                    for (var i = 0; i < records.length; i++) {
+                        if (selServerID.getValue() == "") {
+                            selServerID.setValue(records[i].data.server_id);
+                            selServerUrl.setValue(records[i].data.ip + (records[i].data.port == "" ? "" : (":" + records[i].data.port)));
+                            hwdasFileServer = {
+                                host: selServerUrl.getValue(),
+                                mark: vmdSettings.resourceCode
+                            }
+                            window["hwdasFileServer"] = hwdasFileServer;
+                        }
+                        var item1 = new Ext.menu.Item({
+                            id: records[i].data.server_id,
+                            text: records[i].data.name,
+                            iconCls: "server-list"
+                        })
+                        item1.dataObj = records[i].data;
+                        hwMenu2.addMenuItem(item1)
+                    }
+                }
+                //选择服务器点击事件
+                function label1_afterrender(sender) {
+                    sender.el.on('click', function(sender, e) {
+                        openServerMenu(sender, e);
+                    })
+                }
+                //选择服务器点击事件
+                function div5_afterrender(sender) {
+                    sender.el.on('click', function(sender, e) {
+                        openServerMenu(sender, e);
+                    })
+                }
+                //服务器列表选择事件
+                function hwMenu2_click(sender, menuItem, e) {
+                    label1.setText(menuItem.text);
+                    selServerID.setValue(menuItem.id);
+                    selServerUrl.setValue(menuItem.dataObj.ip + (menuItem.dataObj.port == "" ? "" : (":" + menuItem.dataObj.port)));
+                    hwdasFileServer = {
+                        host: selServerUrl.getValue(),
+                        mark: vmdSettings.resourceCode
+                    }
+                    window["hwdasFileServer"] = hwdasFileServer;
+                    ZyglTree.setRootText(menuItem.text);
+                    ZyglTree.setRootValue(menuItem.id);
+                    store.toRefresh();
+                }
+
+                function getHeight() {
+                    return (document.documentElement || document.body).clientHeight - 50;
+                }
+
+                function getWidth() {
+                    var width = (document.documentElement || document.body).clientWidth;
+                    if (width > 400) {
+                        return width - 200;
+                    }
+                    return width - 20;
+                }
+
+                function ZyflSearch_searchTextChange(sender, oldValue, newValue) {
+                    hwDas.get("zyzx/zyzxtree/search", {}, {
+                            name: newValue,
+                            category_id: ZyglTree.getSelNodeId()
+                        }, function(result) {
+                            var selIds = [];
+                            if (result.data && result.data.length > 0 && result.data[0].datas && result.data[0].datas.length > 0) {
+                                for (var i = 0; i < result.data[0].datas.length; i++) {
+                                    selIds.push(result.data[0].datas[i].resource_id)
+                                }
+                            }
+                            ZyglList.setItemsSel(selIds);
+                        },
+                        function(msg) {
+                            Tips.tips("检索失败", "error");
+                        })
+                }
+
+                function Navigation_afterrender(sender) {
+                    Navigation.setPath(ZyglTree.tree.root.text + "/")
+                }
+                //接口，返回当前选择的资源的信息
+                function getSelResource() {
+                    var selItems = ZyglList.getSelItemsData();
+                    return selItems;
+                }
+
+                function MyViewport_afterrender(sender) {}
+                this.MyViewport_afterrender = MyViewport_afterrender;
+                selnodeID = new vmd.Variable({});
+                selServerID = new vmd.Variable({});
+                menuObjName = new vmd.Variable({});
+                zyzxVPath = new vmd.Variable({
+                    value: "return vmdSettings.resourceCode;"
+                });
+                selServerUrl = new vmd.Variable({});
+                store = new vmd.store.jsonStore({
+                    "xtype": "vmd.jsonStore",
+                    "id": "store",
+                    "xcls": "vmd.store.jsonStore",
+                    "autoLoad": true,
+                    "storeConfig": "{\"id\":\"Tv3lpnpaBV\",\"callcode\":\"vmdCode\",\"url\":\"zyzx/zyzxtree/zycategorytree\",\"host\":\"\",\"isHwRest\":true,\"name\":\"资源分类树\",\"getMethods\":[],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"category_id\",\"type\":\"string\"},{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"parent_id\",\"type\":\"string\"},{\"name\":\"type\",\"type\":\"string\"},{\"name\":\"leaf\",\"type\":\"string\"},{\"name\":\"path\",\"type\":\"string\"},{\"name\":\"info\",\"type\":\"string\"}]}"
+                });
+                liststore = new vmd.store.jsonStore({
+                    "xtype": "vmd.jsonStore",
+                    "id": "liststore",
+                    "xcls": "vmd.store.jsonStore",
+                    "autoLoad": false,
+                    "region": "east",
+                    "storeConfig": "{\"id\":\"TxnFNuKnTM\",\"callcode\":\"vmdCode\",\"url\":\"zyzx/zyzxtree/getResource\",\"host\":\"\",\"isHwRest\":true,\"name\":\"获取分类下资源\",\"getMethods\":[{\"id\":\"category_id\",\"value1\":\"return selnodeID.getValue()\",\"value2\":\"\"}],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"path\",\"type\":\"string\"},{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"type\",\"type\":\"string\"},{\"name\":\"ext\",\"type\":\"string\"},{\"name\":\"size\",\"type\":\"string\"},{\"name\":\"modifytime\",\"type\":\"datetime\"},{\"name\":\"isparent\",\"type\":\"string\"}]}"
+                });
+                serverstore = new vmd.store.jsonStore({
+                    listeners: {
+                        load: function() {
+                            serverstore_load.apply(this, arguments);
+                        }
+                    },
+                    "xtype": "vmd.jsonStore",
+                    "id": "serverstore",
+                    "xcls": "vmd.store.jsonStore",
+                    "autoLoad": true,
+                    "storeConfig": "{\"id\":\"TBsf2M8hEi\",\"callcode\":\"vmdCode\",\"url\":\"zyzx/zyzxtree/getServer\",\"host\":\"\",\"isHwRest\":true,\"name\":\"获取服务器\",\"getMethods\":[{\"id\":\"server_id\",\"value1\":\"\",\"value2\":\"\"}],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"server_id\",\"type\":\"string\"},{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"ip\",\"type\":\"string\"},{\"name\":\"port\",\"type\":\"string\"},{\"name\":\"remark\",\"type\":\"string\"},{\"name\":\"row_created_date\",\"type\":\"datetime\"},{\"name\":\"row_changed_date\",\"type\":\"datetime\"}]}",
+                    "load": "serverstore_load"
+                });
+                this.items = [{
+                        xtype: "panel",
+                        id: "MyPanel_head",
+                        title: "Panel",
+                        header: false,
+                        border: true,
+                        height: 60,
+                        x: 0,
+                        y: 0,
+                        layout: "border",
+                        bodyStyle: "background-color:skyblue;",
+                        region: "north",
+                        items: [{
+                                xtype: "panel",
+                                id: "MyPanel_logo",
+                                title: "Panel",
+                                header: false,
+                                border: false,
+                                height: 100,
+                                region: "west",
+                                layout: "border",
+                                width: 500,
+                                maskDisabled: true,
+                                bodyStyle: "background-color:#1e7fff;",
+                                items: [{
+                                        xtype: "vmd.div",
+                                        id: "MyC_Logoimg",
+                                        autoEl: "div",
+                                        border: false,
+                                        backgroundRepeat: "no-repeat",
+                                        backgroundPosition: "center center",
+                                        width: 83,
+                                        height: 25,
+                                        style: "margin-left: 20px;",
+                                        x: 0,
+                                        y: 0,
+                                        region: "west",
+                                        backgroundImage: "/system/modules/eQ9ULgcVb1/img/resourceLogowhite.png",
+                                        disableImage: false,
+                                        hideMode: "offsets"
+                                    },
+                                    {
+                                        xtype: "vmd.div",
+                                        id: "div4",
+                                        autoEl: "div",
+                                        border: false,
+                                        backgroundRepeat: "no-repeat",
+                                        backgroundPosition: "top left",
+                                        width: 400,
+                                        height: 50,
+                                        region: "center",
+                                        layout: "absolute",
+                                        items: [{
+                                                xtype: "label",
+                                                id: "MyLb_name",
+                                                text: "资源管理",
+                                                x: 0,
+                                                y: -6,
+                                                style: "font-size: 26px;    color: #ffffff;    margin-left: 20px;    margin-top: 10px;",
+                                                region: "center",
+                                                split: false,
+                                                cls: "lineHeight200"
+                                            },
+                                            {
+                                                xtype: "label",
+                                                id: "label",
+                                                text: "V1.0.1",
+                                                x: 130,
+                                                y: 30,
+                                                height: 20,
+                                                style: "color: #fff;"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                xtype: "panel",
+                                id: "MyP_Htool",
+                                layoutConfig: {
+                                    align: "middle",
+                                    pack: "end",
+                                    scrollOffset: 30
+                                },
+                                title: "Panel",
+                                header: false,
+                                border: false,
+                                height: 100,
+                                region: "east",
+                                width: 450,
+                                layout: "hbox",
+                                style: "background-color:skyblue;",
+                                bodyStyle: "background-color:#1e7fff;",
+                                items: [{
+                                        xtype: "vmd.div",
+                                        id: "div5",
+                                        autoEl: "div",
+                                        border: false,
+                                        backgroundRepeat: "no-repeat",
+                                        backgroundPosition: "top left",
+                                        width: 20,
+                                        height: 20,
+                                        x: 10,
+                                        y: 25,
+                                        afterrender: "div5_afterrender",
+                                        backgroundImage: "/system/modules/eQ9ULgcVb1/img/server.png",
+                                        disableImage: false,
+                                        listeners: {
+                                            vmdafterrender: div5_afterrender
+                                        }
+                                    },
+                                    {
+                                        xtype: "label",
+                                        id: "label1",
+                                        text: "资源中心服务器",
+                                        x: 30,
+                                        y: 27,
+                                        style: "color: white;    font-size: 12px;    color: #ffffff;",
+                                        afterrender: "label1_afterrender",
+                                        width: 100,
+                                        autoWidth: true,
+                                        autoHeight: false,
+                                        cls: "hand",
+                                        listeners: {
+                                            vmdafterrender: label1_afterrender
+                                        }
+                                    },
+                                    {
+                                        xtype: "vmd.div",
+                                        id: "MyC_hjbl",
+                                        autoEl: "div",
+                                        border: false,
+                                        backgroundRepeat: "no-repeat",
+                                        backgroundPosition: "top left",
+                                        width: 20,
+                                        height: 20,
+                                        x: 150,
+                                        y: 25,
+                                        style: "background-image: url(/system/img/main/hjbl.png);",
+                                        afterrender: "MyC_hjbl_afterrender",
+                                        listeners: {
+                                            vmdafterrender: MyC_hjbl_afterrender
+                                        }
+                                    },
+                                    {
+                                        xtype: "label",
+                                        id: "MyLb_hjbl",
+                                        text: "服务器配置",
+                                        x: 180,
+                                        y: 27,
+                                        style: "color: white;    font-size: 12px;    color: #ffffff;",
+                                        afterrender: "MyLb_hjbl_afterrender",
+                                        margins: "0 10 0 0",
+                                        hidden: false,
+                                        cls: "hand",
+                                        listeners: {
+                                            vmdafterrender: MyLb_hjbl_afterrender
+                                        }
+                                    },
+                                    {
+                                        xtype: "vmd.div",
+                                        id: "MyC_grxx",
+                                        autoEl: "div",
+                                        border: false,
+                                        backgroundRepeat: "no-repeat",
+                                        backgroundPosition: "top left",
+                                        width: 20,
+                                        height: 20,
+                                        x: 260,
+                                        y: 25,
+                                        style: "background-image: url(/system/img/main/grxx.png);",
+                                        hidden: false,
+                                        disabled: true
+                                    },
+                                    {
+                                        xtype: "label",
+                                        id: "MyLb_grxx",
+                                        text: "个人信息",
+                                        x: 290,
+                                        y: 27,
+                                        style: "color: white;    font-size: 12px;    color: #ffffff;",
+                                        width: 60,
+                                        hidden: false,
+                                        disabled: true
+                                    },
+                                    {
+                                        xtype: "vmd.div",
+                                        id: "MyC_tc",
+                                        autoEl: "div",
+                                        border: false,
+                                        backgroundRepeat: "no-repeat",
+                                        backgroundPosition: "top left",
+                                        width: 20,
+                                        height: 20,
+                                        x: 365,
+                                        y: 25,
+                                        style: "background-image: url(/system/img/main/tc.png);",
+                                        hidden: false,
+                                        disabled: true
+                                    },
+                                    {
+                                        xtype: "vmd.button",
+                                        id: "button",
+                                        text: "退出",
+                                        type: "text",
+                                        size: "small",
+                                        x: 375,
+                                        y: 22,
+                                        width: 39,
+                                        style: "font-size: 12px;    color: #ffffff;",
+                                        hidden: false,
+                                        disabled: true
+                                    }
+                                ]
+                            },
+                            {
+                                xtype: "panel",
+                                id: "MyPanel7",
+                                title: "Panel",
+                                header: false,
+                                border: false,
+                                height: 100,
+                                region: "center",
+                                style: "background-color: #1e7fff;",
+                                bodyStyle: "background-color:#1e7fff;",
+                                width: 175
+                            }
+                        ]
+                    },
+                    {
+                        xtype: "panel",
+                        id: "MyP_info",
+                        title: "Panel",
+                        header: false,
+                        border: true,
+                        height: 640,
+                        x: 0,
+                        y: 60,
+                        layout: "border",
+                        region: "center",
+                        items: [{
+                                xtype: "panel",
+                                id: "MyP_ModelTree",
+                                title: "Panel",
+                                header: false,
+                                border: true,
+                                height: 639,
+                                width: 220,
+                                layout: "fit",
+                                x: 0,
+                                y: 0,
+                                region: "west",
+                                style: "background-color: white;    border: 1px;",
+                                bodyStyle: "background-color: white;    border: 1px;",
+                                split: true,
+                                floatable: false,
+                                collapseMode: "mini",
+                                collapsible: false,
+                                items: [{
+                                    xtype: "vmd.div",
+                                    id: "div6",
+                                    autoEl: "div",
+                                    border: true,
+                                    backgroundRepeat: "no-repeat",
+                                    backgroundPosition: "top left",
+                                    width: 400,
+                                    height: 50,
+                                    layout: "fit",
+                                    items: [{
+                                        xtype: "vmd.ux.ZyglTree",
+                                        id: "ZyglTree",
+                                        store: store,
+                                        treeRootValue: "0000000001",
+                                        treeRootText: "资源中心服务器",
+                                        layout: "border",
+                                        region: "center",
+                                        treemenu: "hwMenu",
+                                        onBeforeShowMenu: "ZyglTree_onBeforeShowMenu",
+                                        onAfterShowMenu: "ZyglTree_onAfterShowMenu",
+                                        resourceNodeClick: "ZyglTree_resourceNodeClick",
+                                        homeClick: "ZyglTree_homeClick",
+                                        creatCategory: "ZyglTree_creatCategory",
+                                        refreshTree: "ZyglTree_refreshTree",
+                                        afterCategoryBind: "ZyglTree_afterCategoryBind",
+                                        creatFile: "ZyglTree_creatFile",
+                                        listeners: {
+                                            onBeforeShowMenu: ZyglTree_onBeforeShowMenu,
+                                            onAfterShowMenu: ZyglTree_onAfterShowMenu,
+                                            resourceNodeClick: ZyglTree_resourceNodeClick,
+                                            homeClick: ZyglTree_homeClick,
+                                            creatCategory: ZyglTree_creatCategory,
+                                            refreshTree: ZyglTree_refreshTree,
+                                            afterCategoryBind: ZyglTree_afterCategoryBind,
+                                            creatFile: ZyglTree_creatFile
+                                        }
+                                    }]
+                                }]
+                            },
+                            {
+                                xtype: "panel",
+                                id: "MyP_jcxx",
+                                title: "Panel",
+                                header: false,
+                                border: true,
+                                height: 640,
+                                width: 900,
+                                x: 220,
+                                y: 0,
+                                layout: "border",
+                                region: "center",
+                                style: "background-color: white;    border: 1px;",
+                                bodyStyle: "background-color: white;    border: 1px;",
+                                items: [{
+                                        xtype: "vmd.div",
+                                        id: "div2",
+                                        autoEl: "div",
+                                        border: true,
+                                        backgroundRepeat: "no-repeat",
+                                        backgroundPosition: "top left",
+                                        width: 400,
+                                        height: 35,
+                                        x: 100,
+                                        y: 20,
+                                        region: "north",
+                                        style: "border-bottom: 0",
+                                        layout: "border",
+                                        items: [{
+                                                xtype: "vmd.div",
+                                                id: "div1",
+                                                autoEl: "div",
+                                                border: false,
+                                                backgroundRepeat: "no-repeat",
+                                                backgroundPosition: "top left",
+                                                width: 400,
+                                                height: 35,
+                                                region: "center",
+                                                layout: "fit",
+                                                items: [{
+                                                    xtype: "vmd.ux.Navigation",
+                                                    id: "Navigation",
+                                                    layout: "absolute",
+                                                    height: 28,
+                                                    style: "margin-left: 10px;    margin-top: 3px;    padding-bottom: 4px",
+                                                    homeClick: "Navigation_homeClick",
+                                                    pathClick: "Navigation_pathClick",
+                                                    afterrender: "Navigation_afterrender",
+                                                    listeners: {
+                                                        homeClick: Navigation_homeClick,
+                                                        pathClick: Navigation_pathClick,
+                                                        vmdafterrender: Navigation_afterrender
+                                                    }
+                                                }]
+                                            },
+                                            {
+                                                xtype: "vmd.div",
+                                                id: "div",
+                                                layoutConfig: {
+                                                    align: "middle",
+                                                    pack: "start"
+                                                },
+                                                autoEl: "div",
+                                                border: false,
+                                                backgroundRepeat: "no-repeat",
+                                                backgroundPosition: "top left",
+                                                width: 300,
+                                                height: 35,
+                                                layout: "hbox",
+                                                region: "east",
+                                                style: "margin-left: 10px",
+                                                items: [{
+                                                        xtype: "vmd.ux.ZyflSearch",
+                                                        id: "ZyflSearch",
+                                                        layout: "absolute",
+                                                        height: 28,
+                                                        disabled: false,
+                                                        style: "margin-left: 15px",
+                                                        width: 200,
+                                                        seaechTextChange: "ZyflSearch_seaechTextChange",
+                                                        searchTextChange: "ZyflSearch_searchTextChange",
+                                                        listeners: {
+                                                            searchTextChange: ZyflSearch_searchTextChange
+                                                        }
+                                                    },
+                                                    {
+                                                        xtype: "vmd.button",
+                                                        id: "button1",
+                                                        type: "(none)",
+                                                        size: "small",
+                                                        width: 28,
+                                                        height: 28,
+                                                        click: "button1_click",
+                                                        cls: "list-view list-view-sel",
+                                                        listeners: {
+                                                            click: button1_click
+                                                        }
+                                                    },
+                                                    {
+                                                        xtype: "vmd.button",
+                                                        id: "btn_list",
+                                                        type: "(none)",
+                                                        size: "small",
+                                                        width: 28,
+                                                        height: 28,
+                                                        click: "btn_list_click",
+                                                        cls: "list-list",
+                                                        listeners: {
+                                                            click: btn_list_click
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        xtype: "vmd.div",
+                                        id: "div3",
+                                        autoEl: "div",
+                                        border: true,
+                                        backgroundRepeat: "no-repeat",
+                                        backgroundPosition: "top left",
+                                        width: 400,
+                                        height: 50,
+                                        region: "center",
+                                        layout: "fit",
+                                        items: [{
+                                            xtype: "vmd.ux.ZyglList",
+                                            id: "ZyglList",
+                                            tpl: "<tpl for=\".\">    <div class=\"file undefined file-box menu-file is{type}\" original-name=\"{name}\" title=\"名称:{name};大小:{size}B;位置:{path};修改时间:{modifyTime}\" data-size=\"221\">        <div class=\"item-select\">            <div class=\"item-check\"></div>        </div>        <div class=\"item-menu\">            <div class=\"cert\"></div>        </div>        <div class=\"ico\" filetype=\"{type}\"><i class=\"x-item-file x-{ext}\"></i></div>        <div class=\"filename\"> <span class=\"title db-click-rename\" title=\"双击名称重命名\">{name}	</span> </div>    </div></tpl>",
+                                            data: "var data = [{    \"id\": 0,    \"path\": \"test\",    \"name\": \"desktop\",    \"type\": \"folder\",    \"ext\": \"folder\",    \"modifyTime\": \"2018/03/19 18:21:20\",    \"isParent\": true,    \"size\": ''}, {    \"id\": 11,    \"path\": \"test\",    \"name\": \"Document\",    \"type\": \"folder\",    \"ext\": \"folder\",    \"modifyTime\": \"2018/03/19 18:21:20\",    \"isParent\": true}, {    \"id\": 1,    \"path\": \"test\",    \"name\": \"a.css\",    \"type\": \"file\",    \"ext\": \"css\",    \"modifyTime\": \"2018/03/19 18:21:20\",    \"isParent\": true,    \"size\": 4000}, {    \"id\": 2,    \"path\": \"test\",    \"name\": \"ext-all-debug.js\",    \"type\": \"file\",    \"ext\": \"js\",    \"modifyTime\": \"2018/03/19 18:21:20\",    \"isParent\": false,    \"size\": 52010}, {    \"id\": 3,    \"path\": \"test\",    \"name\": \"test.html\",    \"type\": \"file\",    \"ext\": \"html\",    \"modifyTime\": \"2018/03/19 18:21:20\",    \"isParent\": false,    \"size\": 100}, {    \"id\": 4,    \"path\": \"test\",    \"name\": \"newfile.jpg\",    \"type\": \"file\",    \"ext\": \"jpg\",    \"modifyTime\": \"2018/03/19 18:21:20\",    \"isParent\": false,    \"size\": 25410}, {    \"id\": 5,    \"path\": \"test\",    \"name\": \"汉威科技技术成果产品化构想 -可视化.pptx\",    \"type\": \"file\",    \"ext\": \"pptx\",    \"modifyTime\": \"2018/03/19 18:21:20\",    \"isParent\": false,    \"size\": 2024}];return data;",
+                                            listHidden: true,
+                                            layout: "anchor",
+                                            store: liststore,
+                                            listDbClick: "ZyglList_listDbClick",
+                                            hidden: false,
+                                            afterrender: "ZyglList_afterrender",
+                                            contextmenu: "ZyglList_contextmenu",
+                                            rename: "ZyglList_rename",
+                                            listeners: {
+                                                listDbClick: ZyglList_listDbClick,
+                                                vmdafterrender: ZyglList_afterrender,
+                                                contextmenu: ZyglList_contextmenu,
+                                                rename: ZyglList_rename
+                                            }
+                                        }]
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        xtype: "vmd.menu",
+                        id: "hwMenu2",
+                        width: 120,
+                        hidden: true,
+                        floating: true,
+                        click: "hwMenu2_click",
+                        region: "west",
+                        listeners: {
+                            click: hwMenu2_click
+                        }
+                    },
+                    {
+                        xtype: "vmd.menu",
+                        id: "hwMenu",
+                        width: 120,
+                        hidden: true,
+                        floating: true,
+                        region: "west",
+                        disabled: false,
+                        click: "hwMenu_click",
+                        listeners: {
+                            click: hwMenu_click
+                        },
+                        items: [{
+                                xtype: "menuitem",
+                                id: "refreshItem",
+                                width: 120,
+                                text: "刷新树目录",
+                                hidden: false,
+                                iconCls: "icon-refresh"
+                            },
+                            {
+                                xtype: "menuitem",
+                                id: "copyItem",
+                                width: 120,
+                                text: "复制",
+                                hidden: false,
+                                iconCls: "icon-cloud-copy"
+                            },
+                            {
+                                xtype: "menuitem",
+                                id: "cutItem",
+                                width: 120,
+                                text: "剪切",
+                                hidden: false,
+                                iconCls: "icon-cloud-cut"
+                            },
+                            {
+                                xtype: "menuitem",
+                                id: "pasteItem",
+                                width: 120,
+                                text: "粘帖",
+                                iconCls: "icon-cloud-paste"
+                            },
+                            {
+                                xtype: "menuitem",
+                                id: "renameItem",
+                                width: 120,
+                                text: "重命名",
+                                iconCls: "icon-cloud-rname"
+                            },
+                            {
+                                xtype: "menuitem",
+                                id: "removeItem",
+                                width: 120,
+                                text: "删除",
+                                iconCls: "icon-cloud-remove"
+                            },
+                            {
+                                xtype: "menuitem",
+                                id: "newFileItem",
+                                width: 120,
+                                text: "新建文件",
+                                iconCls: "icon-cloud-newfile",
+                                items: [{
+                                    xtype: "vmd.menu",
+                                    id: "hwMenu1",
+                                    width: 120,
+                                    hidden: true,
+                                    floating: true,
+                                    click: "hwMenu1_click",
+                                    listeners: {
+                                        click: hwMenu1_click
+                                    },
+                                    items: [{
+                                            xtype: "menuitem",
+                                            id: "jsItem",
+                                            width: 120,
+                                            text: "js文件",
+                                            hidden: false,
+                                            iconCls: "icon-cloud-js"
+                                        },
+                                        {
+                                            xtype: "menuitem",
+                                            id: "htmlItem",
+                                            width: 120,
+                                            text: "html文件",
+                                            hidden: false,
+                                            iconCls: "icon-cloud-html"
+                                        },
+                                        {
+                                            xtype: "menuitem",
+                                            id: "cssItem",
+                                            width: 120,
+                                            text: "css文件",
+                                            hidden: false,
+                                            iconCls: "icon-cloud-css"
+                                        }
+                                    ]
+                                }]
+                            },
+                            {
+                                xtype: "menuitem",
+                                id: "newFordItem",
+                                width: 120,
+                                text: "新建文件夹",
+                                iconCls: "icon-cloud-newfolder"
+                            },
+                            {
+                                xtype: "menuitem",
+                                id: "searchItem",
+                                width: 120,
+                                text: "文件夹中搜索",
+                                iconCls: "icon-cloud-search"
+                            },
+                            {
+                                xtype: "menuitem",
+                                id: "uploadItem",
+                                width: 120,
+                                text: "文件上传",
+                                iconCls: "icon-cloud-upload"
+                            },
+                            {
+                                xtype: "menuitem",
+                                id: "uploadFolder",
+                                width: 120,
+                                text: "上传文件夹",
+                                icon: "icon-folder-open"
+                            },
+                            {
+                                xtype: "menuitem",
+                                id: "downItem",
+                                width: 120,
+                                text: "下载",
+                                iconCls: "icon-cloud-download"
+                            },
+                            {
+                                xtype: "menuitem",
+                                id: "infoItem",
+                                width: 120,
+                                text: "属性",
+                                iconCls: "icon-cloud-info",
+                                icon: "icon-info"
+                            }
+                        ]
+                    },
+                    {
+                        xtype: "vmd.ux.Uploader",
+                        id: "Uploader",
+                        layout: "fit",
+                        hidden: true,
+                        region: "east"
+                    }
+                ]
+                this.callParent();
+                var me = this;
+                vmd.core.moduleInit(this.items, this);
+                me.on('afterrender', function() {
+                    MyViewport_afterrender.call(me, me)
+                })
+            }
+        })
+        Ext.onReady(function() {
+            Ext.create('vmd.module.MyViewport', {
+                renderTo: document.body
+            })
+        })
+    </script>
+</head>
+
+<body> </body>
+
+</html>

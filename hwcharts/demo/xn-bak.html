@@ -1,0 +1,133 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>开采现状图示例</title>
+    <!--<script src="../js/core/base.js"></script>-->
+    <!--base-->
+    <script src="../js/core/base.min.js"></script>
+    <script src="../js/core/base-ext.js"></script>
+    <!--zrender-->
+    <script src="../lib/zrender/dist/zrender.js"></script>
+    <!--hwchart-->
+    <script src="../js/hwcharts.js"></script>
+    <script src="../lib/jquery.min.js"></script>
+    <!--hwdas-->
+    <script src="../js/hwDas.js"></script>
+
+    <!-- dhtmlx -->
+    <script src="../lib/dhtmlx/codebase/dhtmlx.js"></script>
+    <link rel="stylesheet" href="../lib/dhtmlx/codebase/dhtmlx.css">
+    <!-- <link rel="stylesheet" href="../lib/dhtmlx/skins/terrace/dhtmlx.css"> -->
+    <!-- <link rel="stylesheet" href="../lib/dhtmlx/skins/skyblue/dhtmlx.css"> -->
+    <link rel="stylesheet" href="../lib/dhtmlx/skins/material/dhtmlx.css">
+
+    <link href="../css/hwcharts.css" rel="stylesheet" />
+
+    <script type="text/javascript" src="../lib/chroma/chroma.js"></script>
+    
+    <style>
+         #main{
+            width: 100%;
+            height: 99%;
+        }
+    </style>
+</head>
+
+<body  oncontextmenu="return false">
+    <div id="main"></div>
+    <script>
+        Vmd.onReady(function () {
+           
+           Vmd.require([
+                'hwchart.component.Geo',
+                'hwchart.component.Frame',
+                'hwchart.component.FrameNew',
+                'hwchart.chart.WellGroup',
+                'hwchart.chart.Area',
+                'hwchart.component.Legend',
+                'hwchart.chart.WellSymbol',
+                'hwchart.chart.WellTrace',
+                'hwchart.chart.WellLabel',
+                'hwchart.chart.IsoLine',
+                'hwchart.chart.SymbolLine',
+                'hwchart.chart.FaultLine',
+                'hwchart.component.Title',
+                'hwchart.component.Scale',
+                'hwchart.component.Compass',
+                'hwchart.component.MapInfo',
+                'hwchart.chart.MiningIndex',
+                'hwchart.chart.IsoArea',
+                'hwchart.component.VisualMap',
+                'hwchart.component.Brush',
+                'hwchart.component.Toolbox',
+				'hwchart.component.Tooltip'
+                
+                //'hwchart.component.MarkPoint'
+           ], function () {
+                var chart=hwcharts.init(document.getElementById('main'));
+                var path = hwchartsPATH + 'templates/defaults/xn_bak.json';
+                 /*
+                    path: string 模板路径，
+                    option ：boject 
+                    isUser： bool 是否使用用户自定模板
+                */
+                chart.loadTemplate(path,{
+                    host:'www.hanweikeji.com:8050', // 数据访问服务地址
+                    GeologyAlgorithmHost:'192.168.1.186:5015/GeologyAlgorithm', // 后台计算数据服务地址
+                    callCode:'txwebh',
+                    fileHost:'192.168.1.181:9050', //模板及配置文件保存读取路径 （与数据访问服务设置一样时，可不填）
+                    fileCallCode:'hwchart', //模板及配置文件保存读取路径识别码 （与数据访问服务设置一样时，可不填）
+                    timeout:60*1000 , // 选填
+                    params:{
+                        dwdm:'J_154_14'
+                    }
+                },true)
+
+                // 去掉默认事件
+                document.oncontextmenu = function () { return false; }; 
+                // 监听框选事件
+                chart.on('chartregionselected', function (seleted) {
+                    console.log(seleted) // 所有选中的井数据
+                })
+                
+                // 井位添加右键事件
+                chart.on('contextmenu','series.wellSymbol',function (params) {
+                    var x = params.event.offsetX;
+                    var y = params.event.offsetY;;
+                    var wellName = params.name;
+                    console.log(params)
+                    //创建菜单
+                    if(!chart.wellMen){
+                        chart.wellMen = new dhtmlXMenuObject();
+                        chart.wellMen.renderAsContextMenu();
+                         // 添加菜单项
+                        chart.wellMen.addNewChild(chart.wellMen.topId, 1, "edit", '基础情况');
+                        chart.wellMen.addNewChild(chart.wellMen.topId,2, "add", '生产情况');
+                        chart.wellMen.addNewChild(chart.wellMen.topId, 3, "delete", '递减分析');
+                        // 菜单项添加点击事件
+                        chart.wellMen.attachEvent("onClick", function(id) {
+                            if (id === "edit") {
+                                alert(wellName+'基础情况')
+                            }
+                            if (id === "add") {
+                                alert(wellName+'生产情况')
+                            }
+                            if (id === "delete") {
+                                alert(wellName+'递减分析')
+                            }
+                        })
+                    }
+                   
+                    // 显示菜单
+                    chart.wellMen.showContextMenu(x+10,y+10);
+                    
+                })
+                
+          })
+        });
+    </script>
+</body>
+
+</html>

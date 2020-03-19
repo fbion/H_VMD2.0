@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>汉威财务OA</title>
+    
+    <!--基本样式-->
+    <link href="/css/common.css?ver=2.0.3.20190124" rel="stylesheet" />
+
+    <!--加载dhx组件-->
+    
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.3.20190124" rel="stylesheet" />
+    
+    <link href="/lib/dhtmlx/dhtmlx.css?ver=2.0.3.20190124" rel="stylesheet" />
+	<link href="/report/dhtmlx/dhtmlxGrid/codebase/skins/dhtmlxgrid_dhx_skyblue.css?ver=2.0.3.20190124" rel="stylesheet" />
+	<link href="/report/dhtmlx/dhtmlxGrid/codebase/skins/dhtmlxgrid_default.css?ver=2.0.3.20190124" rel="stylesheet" />
+	<link href="/report/dhtmlx/dhtmlxCheckBox/codebase/skins/dhtmlxcheckbox_dhx_skyblue.css?ver=2.0.3.20190124" rel="stylesheet" />
+	<link href="/report/FillReport2.2/js/Adjustment.css?ver=2.0.3.20190124" rel="stylesheet" />
+    <!--样式快捷索引表-->
+    <link href="/css/shortcut.css?ver=2.0.3.20190124" rel="stylesheet" />
+	 
+    <script src="/lib/labjs/LAB.min.js?ver=2.0.3.20190124"></script>
+    <script src="/config.js?ver=2.0.3.20190124"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.3.20190124"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.3.20190124"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.3.20190124"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=2.0.3.20190124"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.3.20190124"></script>
+	<script src="/js/util.js?ver=2.0.3.20190124"></script>
+    <script src="/lib/dhtmlx/dhtmlx.js?ver=2.0.3.20190124"></script>
+	
+    
+   <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.3.20190124"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon_old.js?ver=2.0.3.20190124"></script>
+   <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.3.20190124"></script>
+   <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.3.20190124"></script>
+   <script src="/report/dhtmlx/dhtmlxLayout/codebase/dhtmlxlayout.js?ver=2.0.3.20190124"></script>
+   <script src="/report/dhtmlx/dhtmlxWindows/codebase/dhtmlxwindows.js?ver=2.0.3.20190124"></script>
+   <script src="/report/dhtmlx/dhtmlxGrid/codebase/dhtmlxgrid.js?ver=2.0.3.20190124"></script>
+   <script src="/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_rowspan.js?ver=2.0.3.20190124"></script>
+   <script src="/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_splt.js?ver=2.0.3.20190124"></script>
+   <script src="/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_srnd.js?ver=2.0.3.20190124"></script>
+   <script src="/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_selection.js?ver=2.0.3.20190124"></script>
+	<script src="/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_nxml.js?ver=2.0.3.20190124"></script>
+	<script src="/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_mcol.js?ver=2.0.3.20190124"></script>
+	<script src="/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_undo.js?ver=2.0.3.20190124"></script>
+   <script src="/report/dhtmlx/dhtmlxGrid/codebase/excells/dhtmlxgrid_excell_link_OverLoad.js?ver=2.0.3.20190124"></script>
+    <script src="/report/dhtmlx/dhtmlxGrid/codebase/excells/dhtmlxgrid_excell_menu.js?ver=2.0.3.20190124"></script>
+   <script src="/report/dhtmlx/dhtmlxGrid/codebase/dhtmlxtreegrid.js?ver=2.0.3.20190124"></script>
+   <script src="/report/dhtmlx/dhtmlxMenu/codebase/dhtmlxmenu.js?ver=2.0.3.20190124"></script>
+   <script src="/report/dhtmlx/dhtmlxGrid/codebase/Base64.js?ver=2.0.3.20190124"></script>
+   <script src="/report/FillReport2.2/js/libs/hwvmain.js?ver=2.0.3.20190124"></script>
+    <script src="/report/FillReport2.2/js/hw/FillReport.js?ver=2.0.3.20190124"></script>
+	<script src="/report/dhtmlx/dhtmlxToolbar/codebase/dhtmlxtoolbar.js?ver=2.0.3.20190124"></script>
+	<script src="/report/dhtmlx/dhtmlxWindows/codebase/ext/dhtmlxwindows_dnd.js?ver=2.0.3.20190124"></script>
+	<script src="/report/dhtmlx/dhtmlxWindows/codebase/ext/dhtmlxwindows_resize.js?ver=2.0.3.20190124"></script>
+	<script src="/report/dhtmlx/dhtmlxWindows/codebase/ext/dhtmlxwindows_dnd.js?ver=2.0.3.20190124"></script>
+	<script src="/report/dhtmlx/dhtmlxWindows/codebase/ext/dhtmlxwindows_resize.js?ver=2.0.3.20190124"></script>
+	<script src="/report/dhtmlx/dhtmlxMessage/codebase/dhtmlxmessage.js?ver=2.0.3.20190124"></script>
+	<script src="/report/dhtmlx/dhtmlxGrid/codebase/dhtmlxgrid_ext.js?ver=2.0.3.20190124"></script>
+	<script src="/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_validation.js?ver=2.0.3.20190124"></script>
+	<script src="/report/dhtmlx/dhtmlxGrid/codebase/ext/dhtmlxgrid_markers.js?ver=2.0.3.20190124"></script>
+	<script src="/report/dhtmlx/dhtmlxCheckBox/codebase/dhtmlxcheckbox.js?ver=2.0.3.20190124"></script>
+	<script src="/report/dhtmlx/dhtmlxCombo/codebase/dhtmlxcombo.js?ver=2.0.3.20190124"></script>
+	<script src="/report/dhtmlx/dhtmlxGrid/codebase/excells/dhtmlxgrid_excell_combo.js?ver=2.0.3.20190124"></script>
+	<script src="/report/dhtmlx/dhtmlxTree/codebase/dhtmlxtree.js?ver=2.0.3.20190124"></script>
+	<script src="/report/dhtmlx/dhtmlxTree/codebase/ext/dhtmlxtree_ed.js?ver=2.0.3.20190124"></script>
+	<script src="/report/dhtmlx/dhtmlxTree/codebase/ext/dhtmlxtree_json.js?ver=2.0.3.20190124"></script>
+	<script src="/report/dhtmlx/dhtmlxTree/codebase/ext/dhtmlxtree_kn.js?ver=2.0.3.20190124"></script>
+	<script src="/report/dhtmlx/dhtmlxCalendar/codebase/dhtmlxcalendar.js?ver=2.0.3.20190124"></script>
+	<script src="/report/dhtmlx/dhtmlxForm/codebase/ext/swfobject.js?ver=2.0.3.20190124"></script>
+	<script src="/report/dhtmlx/dhtmlxEditor/codebase/dhtmlxeditor.js?ver=2.0.3.20190124"></script>
+	<script src="/report/dhtmlx/dhtmlxEditor/codebase/ext/dhtmlxeditor_ext.js?ver=2.0.3.20190124"></script>
+	<script src="/report/dhtmlx/dhtmlxDataStore/codebase/ext/datastore_grid.js?ver=2.0.3.20190124"></script>
+	<script src="/report/dhtmlx/dhtmlxDataStore/codebase/ext/datastore_combo.js?ver=2.0.3.20190124"></script>
+	<script src="/report/dhtmlx/dhtmlxDataStore/codebase/ext/datastore_tree.js?ver=2.0.3.20190124"></script>
+	<script src="/report/dhtmlx/dhtmlxDataStore/codebase/datastore_ext.js?ver=2.0.3.20190124"></script>
+	<script src="/report/dhtmlx/dhtmlxDataStore/codebase/ext/datastore_checkbox.js?ver=2.0.3.20190124"></script>
+	<script src="/report/FillReport2.2/js/libs/HwPrint.js?ver=2.0.3.20190124"></script>
+	
+    <script src="/js/hwdas.js?ver=2.0.3.20190124"></script>
+	<script src="/js/hwMSC.js?ver=2.0.3.20190124"></script>
+    <script src="/js/vmdcore.js?ver=2.0.3.20190124"></script>
+    <script src="/js/vmdcomps.js?ver=2.0.3.20190124"></script>
+    <script src="/js/vmdreport.js?ver=2.0.3.20190124"></script>
+	<script src="/js/publicMethods.js?ver=2.0.3.20190124"></script>
+    
+    
+
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        
+    </style>
+    <script>
+	    vmd.preivewMode=true;
+        vmd.virtualPath = '';
+        vmd.workspace={"workspaceid":"290c7de6-2922-4ffe-81c4-18ee7b97d168","workflowIp":"","dataServiceIp":"","msgIp":"","projectid":"eQ9ULgcVb1"}
+	vmd.resourceSettings={"测试&&资源中心服务器":"http://www.hanweikeji.com:10050/resource","测试&&服务器2":"http://www.hanweikeji.com:10050/resource"}
+        Ext.define("vmd.module.MyViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps([]),
+	xtype:"vmd.module.MyViewport",
+	layout:"border",
+	initComponent: function(){
+		function report_afterrender(sender) {
+    //设置报表内变量的值
+    //report.setParamValue("var1", var1.getValue());
+    report.query();
+}
+
+
+
+function save_click(sender) {
+    Ext.Msg.confirm("提示", "是否保存付款单？", function(type) {
+        if(type == "yes") {
+            report.save(function() {
+                Ext.Msg.alert('提示', '保存成功。')
+            })
+        }
+    })
+}
+
+			FKDID=new vmd.var.variable({});
+		FKDID1=new vmd.var.variable({});
+		gw=new vmd.var.variable({});
+		leader=new vmd.var.variable({});
+		managerSP=new vmd.var.variable({});
+		leaderSP=new vmd.var.variable({});
+		cfoSP=new vmd.var.variable({});
+		isresubmit=new vmd.var.variable({});
+
+		用户=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"用户","autoLoad":false,"cid":"vmdJsonStore","storeConfig":"{\"id\":\"TmP1m7hiIB\",\"callcode\":\"vmdCode\",\"url\":\"CWOA/tbuser/user\",\"host\":\"\",\"isHwRest\":true,\"name\":\"用户\",\"getMethods\":[{\"id\":\"login\",\"value1\":\"\",\"value2\":\"\"}],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"dwdm\",\"type\":\"string\"},{\"name\":\"dwscgs\",\"type\":\"string\"},{\"name\":\"fkf\",\"type\":\"string\"},{\"name\":\"fkdbt\",\"type\":\"string\"},{\"name\":\"fkdnm\",\"type\":\"string\"}]}"});
+		付款单信息=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"付款单信息","autoLoad":false,"cid":"vmdJsonStore","storeConfig":"{\"id\":\"TmQKf5cKvw\",\"callcode\":\"vmdCode\",\"url\":\"CWOA/tbuser/PayForm\",\"host\":\"\",\"isHwRest\":true,\"name\":\"付款单信息\",\"getMethods\":[{\"id\":\"fkdid\",\"value1\":\"\",\"value2\":\"\"},{\"id\":\"flag\",\"value1\":\"\",\"value2\":\"\"}],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"fkdid\",\"type\":\"string\"},{\"name\":\"jbr\",\"type\":\"string\"},{\"name\":\"sqsj\",\"type\":\"string\"},{\"name\":\"fkdnm\",\"type\":\"string\"},{\"name\":\"dwdm\",\"type\":\"string\"},{\"name\":\"yt\",\"type\":\"string\"},{\"name\":\"skfmc\",\"type\":\"string\"},{\"name\":\"skfkhh\",\"type\":\"string\"},{\"name\":\"skfzh\",\"type\":\"string\"},{\"name\":\"hkbz\",\"type\":\"string\"},{\"name\":\"sqzfrq\",\"type\":\"string\"},{\"name\":\"zfjexx\",\"type\":\"string\"},{\"name\":\"zfjedx\",\"type\":\"string\"},{\"name\":\"fkf\",\"type\":\"string\"},{\"name\":\"sqrqz\",\"type\":\"string\"},{\"name\":\"sqrqzrq\",\"type\":\"string\"},{\"name\":\"bmjlqz\",\"type\":\"string\"},{\"name\":\"bmjlspyj\",\"type\":\"string\"},{\"name\":\"bmjlspsj\",\"type\":\"string\"},{\"name\":\"fglzqz\",\"type\":\"string\"},{\"name\":\"fglzspyj\",\"type\":\"string\"},{\"name\":\"fglzspsj\",\"type\":\"string\"},{\"name\":\"zjcc\",\"type\":\"string\"},{\"name\":\"cwzjqz\",\"type\":\"string\"},{\"name\":\"cwzjspyj\",\"type\":\"string\"},{\"name\":\"cwzjspsj\",\"type\":\"string\"},{\"name\":\"zt\",\"type\":\"string\"},{\"name\":\"cnqz\",\"type\":\"string\"},{\"name\":\"cnqzsj\",\"type\":\"string\"}]}"});
+		回单查询=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"回单查询","autoLoad":false,"cid":"vmdJsonStore","storeConfig":"{\"id\":\"TsK0XsDJpw\",\"callcode\":\"cwoa\",\"url\":\"CWOA/tbuser/hdcx\",\"host\":\"\",\"isHwRest\":true,\"name\":\"回单查询\",\"fields\":[],\"getMethods\":[],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[]}"});
+		发票查询=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"发票查询","autoLoad":false,"cid":"vmdJsonStore","storeConfig":"{\"id\":\"TsKZOZpph3\",\"callcode\":\"cwoa\",\"url\":\"CWOA/tbuser/fpcx\",\"host\":\"\",\"isHwRest\":true,\"name\":\"发票查询\",\"fields\":[],\"getMethods\":[],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[]}"});
+		部门经理审核=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"部门经理审核","autoLoad":false,"cid":"vmdJsonStore","storeConfig":"{\"id\":\"Ts3PhtTcbT\",\"callcode\":\"cwoa\",\"url\":\"CWOA/tbuser/bmjlsh\",\"host\":\"\",\"isHwRest\":true,\"name\":\"部门经理审核\",\"fields\":[],\"getMethods\":[],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[]}"});
+		分管老总审核=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"分管老总审核","autoLoad":false,"cid":"vmdJsonStore","storeConfig":"{\"id\":\"Ts3U7hKfPi\",\"callcode\":\"cwoa\",\"url\":\"CWOA/tbuser/fglzsh\",\"host\":\"\",\"isHwRest\":true,\"name\":\"分管老总审核\",\"fields\":[],\"getMethods\":[],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[]}"});
+		财务总监审核=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"财务总监审核","autoLoad":false,"cid":"vmdJsonStore","storeConfig":"{\"id\":\"Ts36Bex7S2\",\"callcode\":\"cwoa\",\"url\":\"CWOA/tbuser/cwzjsh\",\"host\":\"\",\"isHwRest\":true,\"name\":\"财务总监审核\",\"fields\":[],\"getMethods\":[],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[]}"});
+		出纳审核=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"出纳审核","autoLoad":false,"cid":"vmdJsonStore","storeConfig":"{\"id\":\"Ts4lPiMxuJ\",\"callcode\":\"cwoa\",\"url\":\"CWOA/tbuser/cnsh\",\"host\":\"\",\"isHwRest\":true,\"name\":\"出纳审核\",\"fields\":[],\"getMethods\":[],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[]}"});
+		根据登录人判断角色=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"根据登录人判断角色","autoLoad":false,"cid":"vmdJsonStore","storeConfig":"{\"id\":\"Ts9E2i1FmH\",\"callcode\":\"cwoa\",\"url\":\"CWOA/tbuser/gjdlrpdjs\",\"host\":\"\",\"isHwRest\":true,\"name\":\"根据登录人判断角色\",\"fields\":[],\"getMethods\":[],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[]}"});
+		申请人查询=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"申请人查询","autoLoad":false,"cid":"vmdJsonStore","storeConfig":"{\"id\":\"Tup4lJz266\",\"callcode\":\"cwoa\",\"url\":\"CWOA/tbuser/sqr\",\"host\":\"\",\"isHwRest\":true,\"name\":\"申请人查询\",\"fields\":[],\"getMethods\":[],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[]}"});
+		判断当前登录人岗位=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"判断当前登录人岗位","autoLoad":false,"cid":"vmdJsonStore","storeConfig":"{\"id\":\"l3y3MdNs6y\",\"callcode\":\"cwoa\",\"url\":\"CWOA/tbuser/pddqdlrgw\",\"host\":\"\",\"isHwRest\":true,\"name\":\"判断当前登录人岗位\",\"fields\":[],\"getMethods\":[],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[]}"});
+		付款单信息1=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"付款单信息1","autoLoad":false,"cid":"vmdJsonStore","storeConfig":"{\"id\":\"TmQKoSD7VD\",\"callcode\":\"cwoa\",\"url\":\"CWOA/tbuser/PayForm\",\"host\":\"\",\"isHwRest\":true,\"name\":\"付款单信息1\",\"fields\":[],\"getMethods\":[],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[]}","dsName":"fkdxx"});
+
+		hwWorkFlow=new vmd.workFlow({configInfo:{"modelId":"257602","variantNode":[{"processKey":"sNY","taskNodeid":"a001","taskNodeName":"开始","formProperties":[{"id":"FKDID","name":"FKDID","type":"string","readable":true,"writable":true,"required":true,"value":"FKDID1"}]},{"processKey":"sNY","taskNodeid":"a002","taskNodeName":"提交付款单","formProperties":[{"id":"gw","name":"gw","type":"string","readable":true,"writable":true,"required":true,"value":"gw"},{"id":"leader","name":"leader","type":"string","readable":true,"writable":true,"required":true,"value":"leader"}]},{"processKey":"sNY","taskNodeid":"a003","taskNodeName":"部门经理审批","formProperties":[{"id":"managerSP","name":"managerSP","type":"enum","readable":true,"writable":true,"enumValues":[{"id":"1","name":"同意"},{"id":"2","name":"退回"}],"required":true,"value":"managerSP"}]},{"processKey":"sNY","taskNodeid":"a004","taskNodeName":"部门分管老总审批","formProperties":[{"id":"leaderSP","name":"leaderSP","type":"enum","readable":true,"writable":true,"required":true,"enumValues":[{"id":"1","name":"同意"},{"id":"2","name":"退回"}],"value":"leaderSP"}]},{"processKey":"sNY","taskNodeid":"a005","taskNodeName":"财务总监审批","formProperties":[{"id":"cfoSP","name":"cfoSP","type":"enum","readable":true,"writable":true,"enumValues":[{"id":"1","name":"同意"},{"id":"2","name":"退回"}],"required":true,"value":"cfoSP"}]},{"processKey":"sNY","taskNodeid":"a006","taskNodeName":"提交回单"},{"processKey":"sNY","taskNodeid":"a008","taskNodeName":"申请人调整","formProperties":[{"id":"isresubmit","name":"isresubmit","type":"enum","readable":true,"writable":true,"enumValues":[{"id":"1","name":"重填"},{"id":"2","name":"结束"}],"value":"isresubmit"}]}],"startNodeId":"a001","variantProcess":[{"id":"FKDID","name":"FKDID","type":"string","readable":true,"writable":true,"required":true}]}});
+
+		this.items=[
+			{
+				xtype:"panel",
+				id:"panel1",
+				layoutConfig:{
+					pack:"center"
+				},
+				title:"Panel",
+				header:false,
+				border:false,
+				height:607,
+				x:0,
+				y:70,
+				layout:"hbox",
+				autoScroll:true,
+				region:"center",
+				items:[
+					{
+						xtype:"vmd.report2_2",
+						id:"report",
+						text:"report",
+						relativepath:"Resources//Report",
+						align:"center",
+						fillReport:true,
+						nousedataset:false,
+						isServer:true,
+						ocx_version:"1,1,5,16",
+						rptVersion:"2.2",
+						afterrender:"report_afterrender",
+						path:"付款申请单.xml",
+						dsnames:"用户,付款单信息,回单查询,发票查询,部门经理审核,分管老总审核,财务总监审核,出纳审核,根据登录人判断角色,申请人查询,付款单信息1,判断当前登录人岗位",
+						isWebEdit:false,
+						listeners:{
+							vmdafterrender:report_afterrender
+						}
+					}
+				]
+			},
+			{
+				xtype:"panel",
+				id:"panel",
+				layoutConfig:{
+					align:"middle",
+					pack:"center"
+				},
+				title:"Panel",
+				header:false,
+				border:false,
+				height:70,
+				layout:"hbox",
+				region:"south",
+				y:0,
+				x:-1,
+				items:[
+					{
+						xtype:"vmd.button",
+						id:"save",
+						text:"保存",
+						type:"(none)",
+						size:"small",
+						margins:"0 20 0 0",
+						click:"save_click",
+						listeners:{
+							click:save_click
+						}
+					},
+					{
+						xtype:"vmd.button",
+						id:"submit",
+						text:"提交",
+						type:"(none)",
+						size:"small"
+					}
+				]
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+	}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MyViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

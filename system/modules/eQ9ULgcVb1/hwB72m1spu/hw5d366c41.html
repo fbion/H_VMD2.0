@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>多数据集源绑定</title>
+	<!--基本样式-->
+    <link href="/css/common.css?ver=2.0.3.092701" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.3.092701" rel="stylesheet" />
+   
+    <link href="/design/css/icons.css?ver=2.0.3.092701" rel="stylesheet" />
+
+	<link href="/lib/dhtmlx/dhtmlx.css?ver=2.0.3.092701" rel="stylesheet" />
+	  <!--样式快捷索引表-->
+    <link href="/css/shortcut.css?ver=2.0.3.092701" rel="stylesheet" />
+    
+    <script src="/lib/labjs/LAB.min.js?ver=2.0.3.092701"></script>
+    <script src="/config.js?ver=2.0.3.092701"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.3.092701"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.3.092701"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.3.092701"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=2.0.3.092701"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.3.092701"></script>
+    <script src="/js/util.js?ver=2.0.3.092701"></script>
+    <script src="/lib/dhtmlx/dhtmlx.js?ver=2.0.3.092701"></script>
+	<script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.3.092701"></script>
+	<script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.3.092701"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.3.092701"></script>
+	<script src="/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.3.092701"></script>
+    <script src="/js/hwdas.js?ver=2.0.3.092701"></script>
+	<script src="/js/hwMSC.js?ver=2.0.3.092701"></script>
+    <script src="/js/vmdcore.js?ver=2.0.3.092701"></script>
+    <script src="/js/vmdcomps.js?ver=2.0.3.092701"></script>
+    <script src="/js/publicMethods.js?ver=2.0.3.092701"></script>
+    <script src="/js/vmdreport.js?ver=2.0.3.092701"></script>
+    
+
+    <script src="/lib/ace/ace.js"></script>
+    <script src="/lib/ace/mode-base.js" type="text/javascript"></script>
+    <script src="/lib/ace/theme-xcode.js" type="text/javascript" ></script>
+    <script src="/lib/ace/ext-language_tools.js"></script>
+    
+
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        
+    </style>
+    <script>
+	    vmd.preivewMode=true;
+        vmd.virtualPath = '';
+        vmd.workspace={"workspaceid":"74b8010d-2acc-4ad7-b68d-80db9601e791","projectid":"eQ9ULgcVb1","workflowIp":"","dataServiceIp":""}
+	vmd.resourceSettings={"资源中心&&资源中心服务器":"http://www.hanweikeji.com:10050/resource","资源中心&&服务器2":"http://www.hanweikeji.com:10050/resource"}
+        Ext.define("vmd.module.MainViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps(["vmd.ux.DataviewList$1.0$DataviewList"]),
+	xtype:"vmd.module.MainViewport",
+	layout:"absolute",
+	initComponent: function(){
+		function DataviewList_beforerender(sender) {
+    DataviewList.store3_displayField = "aaaaa";
+    DataviewList.store3_valueField = "bbbbb";
+}
+
+function hwDataView_beforerender(sender) {
+    var html = this.tpl.html.replace(/{desc}/g, '{name}');
+    this.tpl = new Ext.XTemplate(html);
+}
+
+function hwDataView_afterrender(sender) {
+
+}
+
+function div_beforerender(sender) {
+    this.tpl = new Ext.XTemplate("<div>11111{name}</div>");
+}
+
+function div_afterrender(sender) {
+
+    this.tpl.overwrite(div.id, {
+        name: 'sdafsadf'
+    });
+}
+	
+		store=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"store","autoLoad":true,"cid":"vmdJsonStore","storeConfig":"{\"id\":\"eQ9TXjYMJR\",\"callcode\":\"vmdCode\",\"url\":\"CDEServcie/project/info\",\"host\":\"\",\"isHwRest\":true,\"name\":\"项目信息\",\"getMethods\":[],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"xh\",\"type\":\"string\"},{\"name\":\"code\",\"type\":\"string\"},{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"category_id\",\"type\":\"string\"},{\"name\":\"ppdm_guid\",\"type\":\"string\"},{\"name\":\"row_changed_by\",\"type\":\"string\"},{\"name\":\"row_changed_date\",\"type\":\"datetime\"},{\"name\":\"row_created_by\",\"type\":\"string\"},{\"name\":\"row_created_date\",\"type\":\"datetime\"},{\"name\":\"row_effective_date\",\"type\":\"datetime\"},{\"name\":\"row_expiry_date\",\"type\":\"datetime\"},{\"name\":\"row_quality\",\"type\":\"string\"},{\"name\":\"effective_date\",\"type\":\"datetime\"},{\"name\":\"expiry_date\",\"type\":\"datetime\"}]}"});
+		store1=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"store1","autoLoad":true,"cid":"vmdJsonStore","storeConfig":"{\"id\":\"eQ9UexZkvk\",\"callcode\":\"vmdCode\",\"url\":\"CDEServcie/resource/info\",\"host\":\"\",\"isHwRest\":true,\"name\":\"资源信息\",\"getMethods\":[{\"id\":\"project_id\",\"value1\":\"\",\"value2\":\"\",\"defaultvalue\":\"\"},{\"id\":\"category_id\",\"value1\":\"\",\"value2\":\"\",\"defaultvalue\":\"\"},{\"id\":\"name\",\"value1\":\"\",\"value2\":\"\",\"defaultvalue\":\"\"}],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"code\",\"type\":\"string\"},{\"name\":\"xh\",\"type\":\"string\"},{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"uxname\",\"type\":\"string\"},{\"name\":\"type\",\"type\":\"string\"},{\"name\":\"category_id\",\"type\":\"string\"},{\"name\":\"shared\",\"type\":\"string\"},{\"name\":\"classname\",\"type\":\"string\"},{\"name\":\"modetype\",\"type\":\"string\"},{\"name\":\"project_id\",\"type\":\"string\"},{\"name\":\"remark\",\"type\":\"string\"},{\"name\":\"ppdm_guid\",\"type\":\"string\"},{\"name\":\"row_changed_by\",\"type\":\"string\"},{\"name\":\"row_changed_date\",\"type\":\"datetime\"},{\"name\":\"row_created_by\",\"type\":\"string\"},{\"name\":\"row_created_date\",\"type\":\"datetime\"},{\"name\":\"row_effective_date\",\"type\":\"datetime\"},{\"name\":\"row_expiry_date\",\"type\":\"datetime\"},{\"name\":\"row_quality\",\"type\":\"string\"},{\"name\":\"effective_date\",\"type\":\"datetime\"},{\"name\":\"expiry_date\",\"type\":\"datetime\"}]}"});
+
+
+		this.items=[
+			{
+				xtype:"vmd.ux.DataviewList",
+				id:"DataviewList",
+				layout:"auto",
+				x:80,
+				y:40,
+				width:570,
+				height:220,
+				store2:store,
+				store3:store,
+				beforerender:"DataviewList_beforerender",
+				store3_valueField:"row_changed_by",
+				store3_displayField:"id",
+				listeners:{
+					beforerender:DataviewList_beforerender
+				}
+			},
+			{
+				xtype:"grid",
+				id:"MyGrid",
+				title:"Grid Panel",
+				loadMask:true,
+				x:90,
+				y:340,
+				height:240,
+				width:530,
+				store:store1,
+				columns:[
+					{
+						xtype:"gridcolumn",
+						header:"id",
+						sortable:true,
+						resizable:true,
+						dataIndex:"id",
+						width:100
+					},
+					{
+						xtype:"gridcolumn",
+						header:"code",
+						sortable:true,
+						resizable:true,
+						dataIndex:"code",
+						width:100
+					},
+					{
+						xtype:"gridcolumn",
+						header:"xh",
+						sortable:true,
+						resizable:true,
+						dataIndex:"xh",
+						width:100
+					},
+					{
+						xtype:"gridcolumn",
+						header:"name",
+						sortable:true,
+						resizable:true,
+						dataIndex:"name",
+						width:100
+					},
+					{
+						xtype:"gridcolumn",
+						header:"uxname",
+						sortable:true,
+						resizable:true,
+						dataIndex:"uxname",
+						width:100
+					},
+					{
+						xtype:"gridcolumn",
+						header:"type",
+						sortable:true,
+						resizable:true,
+						dataIndex:"type",
+						width:100
+					},
+					{
+						xtype:"gridcolumn",
+						header:"category_id",
+						sortable:true,
+						resizable:true,
+						dataIndex:"category_id",
+						width:100
+					},
+					{
+						xtype:"gridcolumn",
+						header:"shared",
+						sortable:true,
+						resizable:true,
+						dataIndex:"shared",
+						width:100
+					},
+					{
+						xtype:"gridcolumn",
+						header:"classname",
+						sortable:true,
+						resizable:true,
+						dataIndex:"classname",
+						width:100
+					},
+					{
+						xtype:"gridcolumn",
+						header:"modetype",
+						sortable:true,
+						resizable:true,
+						dataIndex:"modetype",
+						width:100
+					},
+					{
+						xtype:"gridcolumn",
+						header:"project_id",
+						sortable:true,
+						resizable:true,
+						dataIndex:"project_id",
+						width:100
+					},
+					{
+						xtype:"gridcolumn",
+						header:"remark",
+						sortable:true,
+						resizable:true,
+						dataIndex:"remark",
+						width:100
+					},
+					{
+						xtype:"gridcolumn",
+						header:"ppdm_guid",
+						sortable:true,
+						resizable:true,
+						dataIndex:"ppdm_guid",
+						width:100
+					},
+					{
+						xtype:"gridcolumn",
+						header:"row_changed_by",
+						sortable:true,
+						resizable:true,
+						dataIndex:"row_changed_by",
+						width:100
+					},
+					{
+						xtype:"gridcolumn",
+						header:"row_changed_date",
+						sortable:true,
+						resizable:true,
+						dataIndex:"row_changed_date",
+						width:100
+					},
+					{
+						xtype:"gridcolumn",
+						header:"row_created_by",
+						sortable:true,
+						resizable:true,
+						dataIndex:"row_created_by",
+						width:100
+					},
+					{
+						xtype:"gridcolumn",
+						header:"row_created_date",
+						sortable:true,
+						resizable:true,
+						dataIndex:"row_created_date",
+						width:100
+					},
+					{
+						xtype:"gridcolumn",
+						header:"row_effective_date",
+						sortable:true,
+						resizable:true,
+						dataIndex:"row_effective_date",
+						width:100
+					},
+					{
+						xtype:"gridcolumn",
+						header:"row_expiry_date",
+						sortable:true,
+						resizable:true,
+						dataIndex:"row_expiry_date",
+						width:100
+					},
+					{
+						xtype:"gridcolumn",
+						header:"row_quality",
+						sortable:true,
+						resizable:true,
+						dataIndex:"row_quality",
+						width:100
+					},
+					{
+						xtype:"gridcolumn",
+						header:"effective_date",
+						sortable:true,
+						resizable:true,
+						dataIndex:"effective_date",
+						width:100
+					},
+					{
+						xtype:"gridcolumn",
+						header:"expiry_date",
+						sortable:true,
+						resizable:true,
+						dataIndex:"expiry_date",
+						width:100
+					}
+				]
+			},
+			{
+				xtype:"vmd.ux.DataviewList",
+				id:"DataviewList1",
+				layout:"auto",
+				x:730,
+				y:20,
+				store3:store,
+				store3_valueField:"row_changed_by",
+				store3_displayField:"xh"
+			},
+			{
+				xtype:"vmd.dataview",
+				id:"hwDataView",
+				width:350,
+				height:270,
+				itemSelector:"li.info",
+				overClass:"info-hover",
+				selectedClass:"x-view-selected",
+				singleSelect:true,
+				multiSelect:true,
+				autoScroll:true,
+				tpl:"<ul>    <tpl for=\".\">        <li class=\"info\">            <h4>{desc}</h4>        </li>    </tpl></ul>",
+				data:"var data = [{    \"id\": 1,    \"picname\": \"border-layout.gif\",    \"name\": \"Border Layout\",    \"desc\": \"方位布局\"}, {    \"id\": 2,    \"picname\": \"layout-accordion.gif\",    \"name\": \"Accordion Layout\",    \"desc\": \"手风琴布局\"}, {    \"id\": 3,    \"picname\": \"layout-anchor.gif\",    \"name\": \"Accordion Layout\",    \"desc\": \"百分比布局\"}, {    \"id\": 4,    \"picname\": \"layout-form.gif\",    \"name\": \"Absolute Layout\",    \"desc\": \"绝对定位布局\"}, {    \"id\": 5,    \"picname\": \"layout-column.gif\",    \"name\": \"Column Layout\",    \"desc\": \"列布局\"}, {    \"id\": 6,    \"picname\": \"layout-table.gif\",    \"name\": \"Table Layout\",    \"desc\": \"表格布局\"}];return data;",
+				x:710,
+				y:320,
+				beforerender:"hwDataView_beforerender",
+				afterrender:"hwDataView_afterrender",
+				listeners:{
+					beforerender:hwDataView_beforerender,
+					vmdafterrender:hwDataView_afterrender
+				}
+			},
+			{
+				xtype:"vmd.div",
+				id:"div",
+				autoEl:"div",
+				border:true,
+				backgroundRepeat:"no-repeat",
+				backgroundPosition:"top left",
+				width:400,
+				height:110,
+				x:700,
+				y:620,
+				beforerender:"div_beforerender",
+				afterrender:"div_afterrender",
+				listeners:{
+					beforerender:div_beforerender,
+					vmdafterrender:div_afterrender
+				}
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+	}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MainViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

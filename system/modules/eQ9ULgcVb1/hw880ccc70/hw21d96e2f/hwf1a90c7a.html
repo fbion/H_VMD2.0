@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>垂直布局（VBox Layout）</title>
+    
+    <!--基本样式-->
+    <link href="/css/common.css" rel="stylesheet" />
+
+    <!--加载dhx组件-->
+    
+    <link href="/lib/ext-3.4/resources/css/ext-all.css" rel="stylesheet" />
+     <!--样式快捷索引表-->
+    <link href="/css/shortcut.css" rel="stylesheet" />
+    <link href="/lib/dhtmlx/dhtmlx.css" rel="stylesheet" />
+
+    <script src="/lib/labjs/LAB.min.js"></script>
+    <script src="/config.js"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js"></script>
+
+    <script src="/lib/dhtmlx/dhtmlx.js"></script>
+    <script src="/js/hwdas.js"></script>
+    <script src="/js/vmdcore.js"></script>
+    <script src="/js/vmdcomps.js"></script>
+    <style>
+        .x-viewport, .x-viewport body {
+            overflow:auto !important
+        }
+    </style>
+    <script>
+
+        Ext.define("vmd.module.MyViewport" ,{
+	extend:"Ext.Viewport",
+	xtype:"vmd.module.MyViewport",
+	layout:"border",
+	initComponent: function(){
+		this.items=[
+			{
+				xtype:"panel",
+				id:"MyPanel",
+				title:"Panel",
+				header:false,
+				border:true,
+				height:100,
+				x:120,
+				y:50,
+				region:"center",
+				items:[
+					{
+						xtype:"panel",
+						id:"MyPanel2",
+						title:"Panel",
+						header:false,
+						border:false,
+						height:47,
+						layout:"hbox",
+						items:[
+							{
+								xtype:"vmd.button",
+								id:"button41",
+								text:"Spaced / Align: left",
+								type:"(none)",
+								size:"small",
+								margins:"5",
+								click:"button41_click",
+								listeners:{
+									click:button41_click
+								}
+							},
+							{
+								xtype:"vmd.button",
+								id:"button5",
+								text:"Multi-Spaced / Align: left",
+								type:"(none)",
+								size:"small",
+								margins:"5",
+								click:"button5_click",
+								listeners:{
+									click:button5_click
+								}
+							},
+							{
+								xtype:"vmd.button",
+								id:"button6",
+								text:"Align: left",
+								type:"(none)",
+								size:"small",
+								margins:"5",
+								click:"button6_click",
+								listeners:{
+									click:button6_click
+								}
+							},
+							{
+								xtype:"vmd.button",
+								id:"button7",
+								text:"Align: center",
+								type:"(none)",
+								size:"small",
+								margins:"5",
+								click:"button7_click",
+								listeners:{
+									click:button7_click
+								}
+							},
+							{
+								xtype:"vmd.button",
+								id:"button8",
+								text:"Align: stretch",
+								type:"(none)",
+								size:"small",
+								margins:"5",
+								click:"button8_click",
+								listeners:{
+									click:button8_click
+								}
+							},
+							{
+								xtype:"vmd.button",
+								id:"button9",
+								text:"Align: stretchmax",
+								type:"(none)",
+								size:"small",
+								margins:"5",
+								click:"button9_click",
+								listeners:{
+									click:button9_click
+								}
+							}
+						]
+					},
+					{
+						xtype:"panel",
+						id:"MyPanel3",
+						title:"Panel",
+						header:false,
+						border:false,
+						height:62,
+						layout:"hbox",
+						items:[
+							{
+								xtype:"vmd.button",
+								id:"button10",
+								text:"Flex: Even / Align: center",
+								type:"(none)",
+								size:"small",
+								margins:"5",
+								click:"button10_click",
+								listeners:{
+									click:button10_click
+								}
+							},
+							{
+								xtype:"vmd.button",
+								id:"button11",
+								text:"Flex: Ratio / Align: center",
+								type:"(none)",
+								size:"small",
+								margins:"5",
+								click:"button11_click",
+								listeners:{
+									click:button11_click
+								}
+							},
+							{
+								xtype:"vmd.button",
+								id:"button12",
+								text:"Flex + Stretch",
+								type:"(none)",
+								size:"small",
+								margins:"5",
+								click:"button12_click",
+								listeners:{
+									click:button12_click
+								}
+							},
+							{
+								xtype:"vmd.button",
+								id:"button13",
+								text:"Pack: start / Align: center",
+								type:"(none)",
+								size:"small",
+								margins:"5",
+								click:"button13_click",
+								listeners:{
+									click:button13_click
+								}
+							},
+							{
+								xtype:"vmd.button",
+								id:"button14",
+								text:"Pack: center / Align: center",
+								type:"(none)",
+								size:"small",
+								margins:"5",
+								click:"button14_click",
+								listeners:{
+									click:button14_click
+								}
+							},
+							{
+								xtype:"vmd.button",
+								id:"button15",
+								text:"Pack: end / Align: center",
+								type:"(none)",
+								size:"small",
+								margins:"5",
+								click:"button15_click",
+								listeners:{
+									click:button15_click
+								}
+							}
+						]
+					}
+				]
+			},
+			{
+				xtype:"panel",
+				id:"btns",
+				title:"Panel",
+				header:false,
+				border:true,
+				height:100,
+				x:190,
+				y:190,
+				region:"west",
+				width:160,
+				layout:"fit",
+				split:true,
+				items:[
+					{
+						xtype:"panel",
+						id:"MyPanel1",
+						title:"Panel",
+						header:false,
+						border:false,
+						height:100,
+						layout:"vbox",
+						items:[
+							{
+								xtype:"vmd.button",
+								id:"button1",
+								text:"button2",
+								type:"(none)",
+								size:"small",
+								margins:"5"
+							},
+							{
+								xtype:"vmd.button",
+								id:"button2",
+								text:"button3",
+								type:"(none)",
+								size:"small",
+								margins:"5"
+							},
+							{
+								xtype:"vmd.button",
+								id:"button",
+								text:"button1",
+								type:"(none)",
+								size:"small",
+								margins:"5"
+							},
+							{
+								xtype:"vmd.button",
+								id:"button4",
+								text:"button4",
+								type:"(none)",
+								size:"small",
+								margins:"5"
+							}
+						]
+					}
+				]
+			}
+		]
+		this.callParent();
+		vmd.core.moduleInit(this.items, this);
+			  var currentName;
+  var replace = function(config, name) {
+      var btns = Ext.getCmp('btns');
+
+      if(name && name != currentName) {
+          currentName = name;
+
+          btns.remove(0);
+
+          btns.add(config);
+      };
+
+      // console.profile();
+
+      btns.doLayout();
+      // console.profileEnd();
+  }
+
+  function button41_click(sender) {
+      replace({
+          layout: {
+              type: 'vbox',
+              padding: '5',
+              align: 'left'
+          },
+          defaults: {
+              margins: '0 0 5 0'
+          },
+          items: [{
+              xtype: 'vmd.button',
+              text: 'Button 1'
+          }, {
+              xtype: 'spacer',
+              flex: 1
+          }, {
+              xtype: 'vmd.button',
+              text: 'Button 2'
+          }, {
+              xtype: 'vmd.button',
+              text: 'Button 3'
+          }, {
+              xtype: 'vmd.button',
+              text: 'Button 4',
+              margins: '0'
+          }]
+      }, 'spaced');
+  }
+
+  function button15_click(sender) {
+      replace({
+          layout: {
+              type: 'vbox',
+              padding: '5',
+              pack: 'end',
+              align: 'center'
+          },
+          defaults: {
+              margins: '0 0 5 0'
+          },
+          items: [{
+              xtype: 'vmd.button',
+              text: 'Button 1'
+          }, {
+              xtype: 'vmd.button',
+              text: 'Button 2'
+          }, {
+              xtype: 'vmd.button',
+              text: 'Button 3'
+          }, {
+              xtype: 'vmd.button',
+              text: 'Button 4',
+              margins: '0'
+          }]
+      }, 'align pack end + align center');
+  }
+
+  function button14_click(sender) {
+      replace({
+          layout: {
+              type: 'vbox',
+              padding: '5',
+              pack: 'center',
+              align: 'center'
+          },
+          defaults: {
+              margins: '0 0 5 0'
+          },
+          items: [{
+              xtype: 'vmd.button',
+              text: 'Button 1'
+          }, {
+              xtype: 'vmd.button',
+              text: 'Button 2'
+          }, {
+              xtype: 'vmd.button',
+              text: 'Button 3'
+          }, {
+              xtype: 'vmd.button',
+              text: 'Button 4',
+              margins: '0'
+          }]
+      }, 'align pack center + align center');
+  }
+
+  function button13_click(sender) {
+      replace({
+          layout: {
+              type: 'vbox',
+              padding: '5',
+              pack: 'start',
+              align: 'center'
+          },
+          defaults: {
+              margins: '0 0 5 0'
+          },
+          items: [{
+              xtype: 'vmd.button',
+              text: 'Button 1'
+          }, {
+              xtype: 'vmd.button',
+              text: 'Button 2'
+          }, {
+              xtype: 'vmd.button',
+              text: 'Button 3'
+          }, {
+              xtype: 'vmd.button',
+              text: 'Button 4'
+          }]
+      }, 'align pack start + align center');
+  }
+
+  function button12_click(sender) {
+      replace({
+          layout: {
+              type: 'vbox',
+              padding: '5',
+              align: 'stretch'
+          },
+          defaults: {
+              margins: '0 0 5 0'
+          },
+          items: [{
+              xtype: 'vmd.button',
+              text: 'Button 1',
+              flex: 1
+          }, {
+              xtype: 'vmd.button',
+              text: 'Button 2',
+              flex: 1
+          }, {
+              xtype: 'vmd.button',
+              text: 'Button 3',
+              flex: 1
+          }, {
+              xtype: 'vmd.button',
+              text: 'Button 4',
+              flex: 3,
+              margins: '0'
+          }]
+      }, 'align flex + stretch');
+  }
+
+  function button11_click(sender) {
+      replace({
+          layout: {
+              type: 'vbox',
+              padding: '5',
+              align: 'center'
+          },
+          defaults: {
+              margins: '0 0 5 0'
+          },
+          items: [{
+              xtype: 'vmd.button',
+              text: 'Button 1',
+              flex: 1
+          }, {
+              xtype: 'vmd.button',
+              text: 'Button 2',
+              flex: 1
+          }, {
+              xtype: 'vmd.button',
+              text: 'Button 3',
+              flex: 1
+          }, {
+              xtype: 'vmd.button',
+              text: 'Button 4',
+              flex: 3,
+              margins: '0'
+          }]
+      }, 'align flex ratio');
+  }
+
+  function button10_click(sender) {
+      replace({
+          layout: {
+              type: 'vbox',
+              padding: '5',
+              align: 'center'
+          },
+          defaults: {
+              margins: '0 0 5 0'
+          },
+          items: [{
+              xtype: 'vmd.button',
+              text: 'Button 1',
+              flex: 1
+          }, {
+              xtype: 'vmd.button',
+              text: 'Button 2',
+              flex: 1
+          }, {
+              xtype: 'vmd.button',
+              text: 'Button 3',
+              flex: 1
+          }, {
+              xtype: 'vmd.button',
+              text: 'Button 4',
+              flex: 1,
+              margins: '0'
+          }]
+      }, 'align flex even');
+  }
+
+  function button9_click(sender) {
+      replace({
+          layout: {
+              type: 'vbox',
+              padding: '5',
+              align: 'stretchmax'
+          },
+          defaults: {
+              margins: '0 0 5 0'
+          },
+          items: [{
+              xtype: 'vmd.button',
+              text: 'Button 1'
+          }, {
+              xtype: 'vmd.button',
+              text: 'Button 2'
+          }, {
+              xtype: 'vmd.button',
+              text: 'Button 3'
+          }, {
+              xtype: 'vmd.button',
+              text: 'Button 4'
+          }]
+      }, 'align stretchmax');
+  }
+
+  function button8_click(sender) {
+      replace({
+          layout: {
+              type: 'vbox',
+              padding: '5',
+              align: 'stretch'
+          },
+          defaults: {
+              margins: '0 0 5 0'
+          },
+          items: [{
+              xtype: 'vmd.button',
+              text: 'Button 1'
+          }, {
+              xtype: 'vmd.button',
+              text: 'Button 2'
+          }, {
+              xtype: 'vmd.button',
+              text: 'Button 3'
+          }, {
+              xtype: 'vmd.button',
+              text: 'Button 4'
+          }]
+      }, 'align stretch');
+  }
+
+  function button7_click(sender) {
+      replace({
+          layout: {
+              type: 'vbox',
+              padding: '5',
+              align: 'center'
+          },
+          defaults: {
+              margins: '0 0 5 0'
+          },
+          items: [{
+              xtype: 'vmd.button',
+              text: 'Button 1'
+          }, {
+              xtype: 'vmd.button',
+              text: 'Button 2'
+          }, {
+              xtype: 'vmd.button',
+              text: 'Button 3'
+          }, {
+              xtype: 'vmd.button',
+              text: 'Button 4'
+          }]
+      }, 'align center');
+  }
+
+  function button6_click(sender) {
+      replace({
+          layout: {
+              type: 'vbox',
+              padding: '5',
+              align: 'left'
+          },
+          defaults: {
+              margins: '0 0 5 0'
+          },
+          items: [{
+              xtype: 'vmd.button',
+              text: 'Button 1'
+          }, {
+              xtype: 'vmd.button',
+              text: 'Button 2'
+          }, {
+              xtype: 'vmd.button',
+              text: 'Button 3'
+          }, {
+              xtype: 'vmd.button',
+              text: 'Button 4'
+          }]
+      }, 'align left');
+  }
+
+  function button5_click(sender) {
+      replace({
+          layout: {
+              type: 'vbox',
+              padding: '5',
+              align: 'left'
+          },
+          defaults: {
+              margins: '0 0 5 0'
+          },
+          items: [{
+              xtype: 'vmd.button',
+              text: 'Button 1'
+          }, {
+              xtype: 'spacer',
+              flex: 1
+          }, {
+              xtype: 'vmd.button',
+              text: 'Button 2'
+          }, {
+              xtype: 'spacer',
+              flex: 1
+          }, {
+              xtype: 'vmd.button',
+              text: 'Button 3'
+          }, {
+              xtype: 'spacer',
+              flex: 1
+          }, {
+              xtype: 'vmd.button',
+              text: 'Button 4',
+              margins: '0'
+          }]
+      }, 'multi spaced - align left');
+  }
+	}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MyViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

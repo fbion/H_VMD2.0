@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<mapper>
+<select id="SelectToken">
+  select  * from ds_auth 
+  <where>
+    <if type="isNotEmpty" property="lasttime">
+    lastTime  &gt; @lasttime
+    </if>
+    <if type="isNotEmpty" property="login">
+      and login = @login
+    </if>
+  </where> 
+</select>
+  <select id="SelectOneToken">
+    select  * from ds_auth where lastTime  &gt; @lasttime and token=@token
+  </select>
+  <insert id="InsertToken">
+    insert into   ds_auth(token,id,name,login,lasttime,logtime)values(@token,@id,@name,@login,@lasttime,@logtime)
+  </insert>
+   <update id="UpdateToken">
+     update  ds_auth set  lasttime=@lasttime  where token=@token
+   </update>
+  <delete id="DeleteToken">
+    delete from  ds_auth where   lastTime  &lt;  @lasttime
+    <if type="isNotEmpty"  property="token" >
+      and token=@token
+    </if>
+  </delete>
+  <update id="RevokeToken">
+    update  ds_auth set  isrevoke='1'  where login=@login
+  </update>
+  
+</mapper>

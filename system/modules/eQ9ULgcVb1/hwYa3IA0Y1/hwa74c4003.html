@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>单元格文本</title>
+	<!--基本样式-->
+    <link href="/css/common.css?ver=2.0.3.0908" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.3.0908" rel="stylesheet" />
+   
+    <link href="/design/css/icons.css?ver=2.0.3.0908" rel="stylesheet" />
+
+	<link href="/lib/dhtmlx/dhtmlx.css?ver=2.0.3.0908" rel="stylesheet" />
+	  <!--样式快捷索引表-->
+    <link href="/css/shortcut.css?ver=2.0.3.0908" rel="stylesheet" />
+    
+    <script src="/lib/labjs/LAB.min.js?ver=2.0.3.0908"></script>
+    <script src="/config.js?ver=2.0.3.0908"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.3.0908"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.3.0908"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.3.0908"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=2.0.3.0908"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.3.0908"></script>
+    <script src="/js/util.js?ver=2.0.3.0908"></script>
+    <script src="/lib/dhtmlx/dhtmlx.js?ver=2.0.3.0908"></script>
+	<script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.3.0908"></script>
+	<script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.3.0908"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.3.0908"></script>
+	<script src="/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.3.0908"></script>
+    <script src="/js/hwdas.js?ver=2.0.3.0908"></script>
+    <script src="/js/vmdcore.js?ver=2.0.3.0908"></script>
+    <script src="/js/vmdcomps.js?ver=2.0.3.0908"></script>
+    <script src="/js/publicMethods.js?ver=2.0.3.0908"></script>
+    <script src="/js/vmdreport.js?ver=2.0.3.0908"></script>
+    
+
+    <script src="/lib/ace/ace.js"></script>
+    <script src="/lib/ace/mode-base.js" type="text/javascript"></script>
+    <script src="/lib/ace/theme-xcode.js" type="text/javascript" ></script>
+    <script src="/lib/ace/ext-language_tools.js"></script>
+    
+
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        
+    </style>
+    <script>
+	    vmd.preivewMode=true;
+        vmd.virtualPath = '';
+        vmd.workspace={"workspaceid":"a10139fa-d032-472f-b1f4-1933b14b4765","projectid":"eQ9ULgcVb1","workflowIp":"","dataServiceIp":""}
+        Ext.define("vmd.module.MainViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps(["vmd.ux.TextType$1.0$TextType"]),
+	xtype:"vmd.module.MainViewport",
+	layout:"absolute",
+	afterrender:"MainViewport_afterrender",
+	listeners:{
+		vmdafterrender:function(){
+	this.MainViewport_afterrender(this)
+}
+	},
+	initComponent: function(){
+		var page = this
+
+function cellTextType() {
+    this.text_allowEdit = {
+            id: "text_allowEdit",
+            value: "false",
+            type: "CheckBox"
+        },
+        this.text_allowPrint = {
+            id: "text_allowPrint",
+            value: "false",
+            type: "CheckBox"
+        },
+        this.text_allowRows = {
+            id: "text_allowRows",
+            value: "false",
+            type: "CheckBox"
+        },
+        this.text_symbol = {
+            id: "text_symbol",
+            value: "false",
+            type: "CheckBox"
+        },
+        this.text_allowEmpty = {
+            id: "text_allowEmpty",
+            value: "false",
+            type: "CheckBox"
+        },
+        this.text_emptyAlert = {
+            id: "text_emptyAlert",
+            value: "",
+            type: "Text"
+        },
+        this.text_fillRules = {
+            id: "text_fillRules",
+            value: "",
+            type: "comlist"
+        },
+        this.id_length = {
+            id: "id_length",
+            value: "0",
+            type: "text"
+        },
+        this.guid_allowEmpty = {
+            id: "guid_allowEmpty",
+            value: "false",
+            type: "CheckBox"
+        },
+        this.guid_emptyAlert = {
+            id: "guid_emptyAlert",
+            value: "",
+            type: "Text"
+        },
+        this.no_allowPrint = {
+            id: "no_allowPrint",
+            value: "false",
+            type: "CheckBox"
+        },
+        this.no_allowEmpty = {
+            id: "no_allowEmpty",
+            value: "false",
+            type: "CheckBox"
+        },
+        this.no_emptyAlert = {
+            id: "no_emptyAlert",
+            value: "",
+            type: "Text"
+        },
+        this.hyperlink_allowClick = {
+            id: "hyperlink_allowClick",
+            value: "false",
+            type: "CheckBox"
+        },
+        this.hyperlink_allowPrint = {
+            id: "hyperlink_allowPrint",
+            value: "false",
+            type: "CheckBox"
+        },
+        this.hyperlink_parameter = {
+            id: "hyperlink_parameter",
+            value: "",
+            type: "Text"
+        },
+        this.hyperlink_allowEmpty = {
+            id: "hyperlink_allowEmpty",
+            value: "false",
+            type: "CheckBox"
+        },
+        this.hyperlink_emptyAlert = {
+            id: "hyperlink_emptyAlert",
+            value: "",
+            type: "Text"
+        },
+        this.menu_name = {
+            id: "menu_name",
+            value: "",
+            type: "comlist"
+        },
+        this.menu_parameter = {
+            id: "menu_parameter",
+            value: "",
+            type: "Text"
+        },
+        this.password_allowEdit = {
+            id: "password_allowEdit",
+            value: "false",
+            type: "CheckBox"
+        },
+        this.password_allowPrint = {
+            id: "password_allowPrint",
+            value: "false",
+            type: "CheckBox"
+        },
+        this.password_allowEmpty = {
+            id: "password_allowEmpty",
+            value: "false",
+            type: "CheckBox"
+        },
+        this.password_emptyAlert = {
+            id: "password_emptyAlert",
+            value: "",
+            type: "Text"
+        },
+        this.guid_prefix = {
+            id: "guid_prefix",
+            value: "",
+            type: "Text"
+        },
+        this.guid_suffix = {
+            id: "guid_suffix",
+            value: "",
+            type: "Text"
+        },
+        this.guid_source = {
+            id: "guid_source",
+            value: "",
+            type: "Text"
+        }, this.id_allowEmpty = {
+            id: "id_allowEmpty",
+            value: "",
+            type: "CheckBox"
+        }, this.id_emptyAlert = {
+            id: "id_emptyAlert",
+            value: "",
+            type: "Text"
+        }
+
+
+
+    //清空属性
+    this.clearInfo = function() {
+        this.text_symbol.value = "false"
+        this.text_fillRules.value = "0"; //0无，长度邮件blabla
+        this.text_emptyAlert.value = ""
+        this.text_allowEmpty.value = "true";
+        this.text_allowRows.value = "false";
+        this.text_allowPrint.value = "true";
+        this.text_allowEdit.value = "true"
+
+
+        this.id_length.value = "3";
+        this.guid_emptyAlert.value = "true";
+        this.guid_allowEmpty.value = ""
+
+
+        this.no_emptyAlert.value = "";
+        this.no_allowEmpty.value = "true";
+        this.no_allowPrint.value = "true"
+
+
+        this.hyperlink_emptyAlert.value = "";
+        this.hyperlink_parameter.value = "";
+        this.hyperlink_allowEmpty.value = "true"
+        this.hyperlink_allowPrint.value = "true";
+        this.hyperlink_allowClick.value = "true";
+
+
+        this.menu_parameter.value = ""
+        this.menu_name.value = "";
+
+
+        this.password_emptyAlert.value = "";
+        this.password_allowEmpty.value = "true"
+        this.password_allowPrint.value = "true";
+        this.password_allowEdit.value = "true";
+
+        this.guid_prefix.value = ""
+        this.guid_suffix.value = ""
+        this.guid_source.value = ""
+        this.id_allowEmpty.value = "true"
+        this.id_emptyAlert.value = ""
+    };
+
+    //设置值
+    this.setCellTextInfo = function(info, cell) {
+        this.text_symbol.value = info.text_symbol.value;
+        this.text_fillRules.value = info.text_fillRules.value;
+        this.text_emptyAlert.value = info.text_emptyAlert.value;
+        this.text_allowEmpty.value = info.text_allowEmpty.value;
+        this.text_allowRows.value = info.text_allowRows.value;
+        this.text_allowPrint.value = info.text_allowPrint.value;
+        this.text_allowEdit.value = info.text_allowEdit.value;
+
+
+        this.id_length.value = info.id_length.value;
+        this.guid_emptyAlert.value = info.guid_emptyAlert.value;
+        this.guid_allowEmpty.value = info.guid_allowEmpty.value;
+
+
+        this.no_emptyAlert.value = info.no_emptyAlert.value;
+        this.no_allowEmpty.value = info.no_allowEmpty.value;
+        this.no_allowPrint.value = info.no_allowPrint.value;
+
+
+        this.hyperlink_emptyAlert.value = info.hyperlink_emptyAlert.value;
+        this.hyperlink_parameter.value = info.hyperlink_parameter.value;
+        this.hyperlink_allowEmpty.value = info.hyperlink_allowEmpty.value;
+        this.hyperlink_allowPrint.value = info.hyperlink_allowPrint.value;
+        this.hyperlink_allowClick.value = info.hyperlink_allowClick.value;
+
+
+        this.menu_parameter.value = info.menu_parameter.value;
+        this.menu_name.value = info.menu_name.value;
+
+
+        this.password_emptyAlert.value = info.password_emptyAlert.value;
+        this.password_allowEmpty.value = info.password_allowEmpty.value;
+        this.password_allowPrint.value = info.password_allowPrint.value;
+        this.password_allowEdit.value = info.password_allowEdit.value;
+
+        this.guid_prefix.value = info.guid_prefix.value
+        this.guid_suffix.value = info.guid_suffix.value
+        this.guid_source.value = info.guid_source.value
+        this.id_allowEmpty.value = info.id_allowEmpty.value
+        this.id_emptyAlert.value = info.id_emptyAlert.value
+    };
+
+    // 根据id设置相应属性的值
+    this.setCellInfos = function(id, value) {
+        var c = this.getInfoByID(id);
+        if(c) {
+            if(c.type == "Text") {
+                c.value = value;
+            }
+            if(c.type == "CheckBox") {
+                c.checked = value;
+            }
+            if(c.type == "ComboBox") {
+                c.value = value;
+            }
+            if(c.type == "compound") {
+                c.value = value;
+            }
+            if(c.type == "comlist") {
+                c.value = value;
+            }
+            if(c.type == "comlist") {
+                c.value = value;
+            }
+            if(c.type == "radiostoregroup") {
+                c.value = value;
+            }
+            if(c.type == "ColorSelect") {
+                c.value = value;
+            }
+            if(c.type == "LineStyle") {
+                c.value = value;
+            }
+        }
+    };
+
+    //通过id获取属性
+    this.getInfoByID = function(id) {
+        if(this.text_symbol.id == id) {
+            return this.text_symbol;
+        }
+        if(this.text_allowEdit.id == id) {
+            return this.text_allowEdit;
+        }
+        if(this.text_allowPrint.id == id) {
+            return this.text_allowPrint;
+        }
+        if(this.text_allowRows.id == id) {
+            return this.text_allowRows;
+        }
+        if(this.text_fillRules.id == id) {
+            return this.text_fillRules;
+        }
+        if(this.text_allowEmpty.id == id) {
+            return this.text_allowEmpty;
+        }
+        if(this.text_emptyAlert.id == id) {
+            return this.text_emptyAlert;
+        }
+
+
+        if(this.id_length.id == id) {
+            return this.id_length;
+        }
+        if(this.guid_allowEmpty.id == id) {
+            return this.guid_allowEmpty;
+        }
+        if(this.guid_emptyAlert.id == id) {
+            return this.guid_emptyAlert;
+        }
+
+
+        if(this.no_allowPrint.id == id) {
+            return this.no_allowPrint;
+        }
+        if(this.no_allowEmpty.id == id) {
+            return this.no_allowEmpty;
+        }
+        if(this.no_emptyAlert.id == id) {
+            return this.no_emptyAlert;
+        }
+
+
+        if(this.hyperlink_parameter.id == id) {
+            return this.hyperlink_parameter;
+        }
+        if(this.hyperlink_allowClick.id == id) {
+            return this.hyperlink_allowClick;
+        }
+        if(this.hyperlink_allowPrint.id == id) {
+            return this.hyperlink_allowPrint;
+        }
+        if(this.hyperlink_allowEmpty.id == id) {
+            return this.hyperlink_allowEmpty;
+        }
+        if(this.hyperlink_emptyAlert.id == id) {
+            return this.hyperlink_emptyAlert;
+        }
+
+
+        if(this.menu_name.id == id) {
+            return this.menu_name;
+        }
+        if(this.menu_parameter.id == id) {
+            return this.menu_parameter;
+        }
+
+
+        if(this.password_allowEdit.id == id) {
+            return this.password_allowEdit;
+        }
+        if(this.password_allowPrint.id == id) {
+            return this.password_allowPrint;
+        }
+        if(this.password_allowEmpty.id == id) {
+            return this.password_allowEmpty;
+        }
+        if(this.password_emptyAlert.id == id) {
+            return this.password_emptyAlert;
+        }
+
+
+
+        if(this.guid_prefix.id == id) {
+            return this.guid_prefix;
+        }
+        if(this.guid_suffix.id == id) {
+            return this.guid_suffix;
+        }
+        if(this.guid_source.id == id) {
+            return this.guid_source;
+        }
+        if(this.id_allowEmpty.id == id) {
+            return this.id_allowEmpty;
+        }
+        if(this.id_emptyAlert.id == id) {
+            return this.id_emptyAlert;
+        }
+    }
+
+    //转换JSON串
+    this.cellInfoToJson = function() {
+        json = {
+            cellTextInfo: [{
+                text_symbol: {
+                    id: 'text_symbol',
+                    value: this.text_symbol.value,
+                    type: 'CheckBox'
+                },
+                text_emptyAlert: {
+                    id: 'text_emptyAlert',
+                    value: this.text_emptyAlert.value,
+                    type: 'Text'
+                },
+                text_allowEmpty: {
+                    id: 'text_allowEmpty',
+                    value: this.text_allowEmpty.value,
+                    type: 'CheckBox'
+                },
+                text_fillRules: {
+                    id: 'text_fillRules',
+                    value: this.text_fillRules.value,
+                    type: 'comlist'
+                },
+                text_allowRows: {
+                    id: 'text_allowRows',
+                    value: this.text_allowRows.value,
+                    type: 'CheckBox'
+                },
+                text_allowEdit: {
+                    id: 'text_allowEdit',
+                    value: this.text_allowEdit.value,
+                    type: 'CheckBox'
+                },
+                text_allowPrint: {
+                    id: 'text_allowPrint',
+                    value: this.text_allowPrint.value,
+                    type: 'CheckBox'
+                },
+
+
+                id_length: {
+                    id: 'id_length',
+                    value: this.id_length.value,
+                    type: 'Text'
+                },
+                guid_emptyAlert: {
+                    id: 'guid_emptyAlert',
+                    value: this.guid_emptyAlert.value,
+                    type: 'Text'
+                },
+                guid_allowEmpty: {
+                    id: 'guid_allowEmpty',
+                    value: this.guid_allowEmpty.value,
+                    type: 'CheckBox'
+                },
+
+
+                no_emptyAlert: {
+                    id: 'no_emptyAlert',
+                    value: this.no_emptyAlert.value,
+                    type: 'Text'
+                },
+                no_allowEmpty: {
+                    id: 'no_allowEmpty',
+                    value: this.no_allowEmpty.value,
+                    type: 'CheckBox'
+                },
+                no_allowPrint: {
+                    id: 'no_allowPrint',
+                    value: this.no_allowPrint.value,
+                    type: 'CheckBox'
+                },
+
+
+                hyperlink_parameter: {
+                    id: 'hyperlink_parameter',
+                    value: this.hyperlink_parameter.value,
+                    type: 'Text'
+                },
+                hyperlink_emptyAlert: {
+                    id: 'hyperlink_emptyAlert',
+                    value: this.hyperlink_emptyAlert.value,
+                    type: 'Text'
+                },
+                hyperlink_allowEmpty: {
+                    id: 'hyperlink_allowEmpty',
+                    value: this.hyperlink_allowEmpty.value,
+                    type: 'CheckBox'
+                },
+                hyperlink_allowPrint: {
+                    id: 'hyperlink_allowPrint',
+                    value: this.hyperlink_allowPrint.value,
+                    type: 'CheckBox'
+                },
+                hyperlink_allowClick: {
+                    id: 'hyperlink_allowClick',
+                    value: this.hyperlink_allowClick.value,
+                    type: 'CheckBox'
+                },
+
+
+                menu_name: {
+                    id: 'menu_name',
+                    value: this.menu_name.value,
+                    type: 'comlist'
+                },
+                menu_parameter: {
+                    id: 'menu_parameter',
+                    value: this.menu_parameter.value,
+                    type: 'Text'
+                },
+
+
+                password_emptyAlert: {
+                    id: 'password_emptyAlert',
+                    value: this.password_emptyAlert.value,
+                    type: 'Text'
+                },
+                password_allowEmpty: {
+                    id: 'password_allowEmpty',
+                    value: this.password_allowEmpty.value,
+                    type: 'CheckBox'
+                },
+                password_allowPrint: {
+                    id: 'password_allowPrint',
+                    value: this.password_allowPrint.value,
+                    type: 'CheckBox'
+                },
+                password_allowEdit: {
+                    id: 'password_allowEdit',
+                    value: this.password_allowEdit.value,
+                    type: 'CheckBox'
+                },
+                guid_prefix: {
+                    id: 'guid_prefix',
+                    value: this.guid_prefix.value,
+                    type: 'Text'
+                },
+                guid_suffix: {
+                    id: 'guid_suffix',
+                    value: this.guid_suffix.value,
+                    type: 'Text'
+                },
+                guid_source: {
+                    id: 'guid_source',
+                    value: this.guid_source.value,
+                    type: 'Text'
+                },
+                id_allowEmpty: {
+                    id: 'id_allowEmpty',
+                    value: this.id_allowEmpty.value,
+                    type: 'CheckBox'
+                },
+                id_emptyAlert: {
+                    id: 'id_emptyAlert',
+                    value: this.id_emptyAlert.value,
+                    type: 'Text'
+                }
+
+            }]
+
+        }
+    }
+}
+
+
+var p = new cellTextType()
+
+function button_click(sender, e) {
+    p.text_allowEdit.value = TextType.getInfo("text_allowEdit")
+    p.text_allowPrint.value = TextType.getInfo("text_allowPrint")
+    p.text_allowRows.value = TextType.getInfo("text_allowRows")
+    p.text_symbol.value = TextType.getInfo("text_symbol")
+    p.text_allowEmpty.value = TextType.getInfo("text_allowEmpty")
+    p.text_emptyAlert.value = TextType.getInfo("text_emptyAlert")
+    p.text_fillRules.value = TextType.getInfo("text_fillRules")
+    p.guid_allowEmpty.value = TextType.getInfo("guid_allowEmpty")
+    p.guid_emptyAlert.value = TextType.getInfo("guid_emptyAlert")
+    p.id_length.value = TextType.getInfo("id_length")
+    p.no_allowEmpty.value = TextType.getInfo("no_allowEmpty")
+    p.no_allowPrint.value = TextType.getInfo("no_allowPrint")
+    p.no_emptyAlert.value = TextType.getInfo("no_emptyAlert")
+    p.hyperlink_allowClick.value = TextType.getInfo("hyperlink_allowClick")
+    p.hyperlink_allowEmpty.value = TextType.getInfo("hyperlink_allowEmpty")
+    p.hyperlink_allowPrint.value = TextType.getInfo("hyperlink_allowPrint")
+    p.hyperlink_parameter.value = TextType.getInfo("hyperlink_parameter")
+    p.hyperlink_emptyAlert.value = TextType.getInfo("hyperlink_emptyAlert")
+    p.menu_name.value = TextType.getInfo("menu_name")
+    p.menu_parameter.value = TextType.getInfo("menu_parameter")
+    p.password_allowEdit.value = TextType.getInfo("password_allowEdit")
+    p.password_allowEmpty.value = TextType.getInfo("password_allowEmpty")
+    p.password_allowPrint.value = TextType.getInfo("password_allowPrint")
+    p.password_emptyAlert.value = TextType.getInfo("password_emptyAlert")
+    alert(p.text_allowEdit.value + "," + p.text_allowPrint.value + "," +
+        p.text_allowRows.value + "," + p.text_symbol.value + "," +
+        p.text_allowEmpty.value + "," + p.text_emptyAlert.value + "," +
+        p.text_fillRules.value + "," + p.guid_allowEmpty.value + "," +
+        p.id_length.value + "," + p.no_allowEmpty.value + "," +
+        p.no_emptyAlert.value + "," + p.no_allowPrint.value + "," +
+        p.hyperlink_allowClick.value + "," + p.hyperlink_allowEmpty.value + "," +
+        p.hyperlink_allowPrint.value + "," + p.hyperlink_parameter.value + "," +
+        p.hyperlink_emptyAlert.value + "," + p.menu_name.value + "," +
+        p.menu_parameter.value + "," + p.password_allowEdit.value + "," +
+        p.password_allowEmpty.value + "," + p.password_allowPrint.value + "," +
+        p.password_emptyAlert.value)
+}
+
+function button2_click(sender, e) {
+    p.clearInfo()
+    TextType.setInfo(p, null)
+}
+
+
+
+function button1_click(sender, e) {
+    p.text_allowEdit.value = "false"
+    p.text_allowPrint.value = "false"
+    p.text_allowRows.value = "false"
+    p.text_symbol.value = "false"
+    p.text_allowEmpty.value = "false"
+    p.text_emptyAlert.value = "false"
+    p.text_fillRules.value = "false"
+    p.guid_allowEmpty.value = "false"
+    p.guid_emptyAlert.value = "false"
+    p.id_length.value = "false"
+    p.no_allowEmpty.value = "false"
+    p.no_allowPrint.value = "false"
+    p.no_emptyAlert.value = "false"
+    p.hyperlink_allowClick.value = "false"
+    p.hyperlink_allowEmpty.value = "false"
+    p.hyperlink_allowPrint.value = "false"
+    p.hyperlink_parameter.value = "false"
+    p.hyperlink_emptyAlert.value = "false"
+    p.menu_name.value = "false"
+    p.menu_parameter.value = "false"
+    p.password_allowEdit.value = "false"
+    p.password_allowEmpty.value = "false"
+    p.password_allowPrint.value = "false"
+    p.password_emptyAlert.value = "false"
+    TextType.setInfo(p, null)
+}
+
+function button3_click(sender, e) {
+    p.text_allowEdit.value = TextType.getInfo("text_allowEdit")
+    p.text_allowPrint.value = TextType.getInfo("text_allowPrint")
+    p.text_allowRows.value = TextType.getInfo("text_allowRows")
+    p.text_symbol.value = TextType.getInfo("text_symbol")
+    p.text_allowEmpty.value = TextType.getInfo("text_allowEmpty")
+    p.text_emptyAlert.value = TextType.getInfo("text_emptyAlert")
+    p.text_fillRules.value = TextType.getInfo("text_fillRules")
+    p.guid_allowEmpty.value = TextType.getInfo("guid_allowEmpty")
+    p.guid_emptyAlert.value = TextType.getInfo("guid_emptyAlert")
+    p.id_length.value = TextType.getInfo("id_length")
+    p.no_allowEmpty.value = TextType.getInfo("no_allowEmpty")
+    p.no_allowPrint.value = TextType.getInfo("no_allowPrint")
+    p.no_emptyAlert.value = TextType.getInfo("no_emptyAlert")
+    p.hyperlink_allowClick.value = TextType.getInfo("hyperlink_allowClick")
+    p.hyperlink_allowEmpty.value = TextType.getInfo("hyperlink_allowEmpty")
+    p.hyperlink_allowPrint.value = TextType.getInfo("hyperlink_allowPrint")
+    p.hyperlink_parameter.value = TextType.getInfo("hyperlink_parameter")
+    p.hyperlink_emptyAlert.value = TextType.getInfo("hyperlink_emptyAlert")
+    p.menu_name.value = TextType.getInfo("menu_name")
+    p.menu_parameter.value = TextType.getInfo("menu_parameter")
+    p.password_allowEdit.value = TextType.getInfo("password_allowEdit")
+    p.password_allowEmpty.value = TextType.getInfo("password_allowEmpty")
+    p.password_allowPrint.value = TextType.getInfo("password_allowPrint")
+    p.password_emptyAlert.value = TextType.getInfo("password_emptyAlert")
+    p.cellInfoToJson()
+    alert(JSON.stringify(json))
+}
+
+function MainViewport_afterrender(sender) {
+
+}
+			this.MainViewport_afterrender=MainViewport_afterrender;
+
+
+
+		this.items=[
+			{
+				xtype:"vmd.ux.TextType",
+				id:"TextType",
+				layout:"absolute",
+				x:70,
+				y:10
+			},
+			{
+				xtype:"vmd.button",
+				id:"button",
+				text:"传值",
+				type:"(none)",
+				size:"small",
+				x:550,
+				y:90,
+				click:"button_click",
+				listeners:{
+					click:button_click
+				}
+			},
+			{
+				xtype:"vmd.button",
+				id:"button1",
+				text:"取值",
+				type:"(none)",
+				size:"small",
+				x:550,
+				y:150,
+				click:"button1_click",
+				listeners:{
+					click:button1_click
+				}
+			},
+			{
+				xtype:"vmd.button",
+				id:"button2",
+				text:"clear",
+				type:"(none)",
+				size:"small",
+				x:550,
+				y:210,
+				click:"button2_click",
+				listeners:{
+					click:button2_click
+				}
+			},
+			{
+				xtype:"vmd.button",
+				id:"button3",
+				text:"JSON",
+				type:"(none)",
+				size:"small",
+				x:550,
+				y:270,
+				click:"button3_click",
+				listeners:{
+					click:button3_click
+				}
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+	}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MainViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

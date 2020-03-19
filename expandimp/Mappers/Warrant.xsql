@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<mapper>
+  <select id="SelectWarrant">
+    select  * from ds_Warrant
+    <where>
+      <if type="isNotEmpty"  property="id" >
+        id = @id
+      </if>
+      <if type="isNotEmpty"  property="code" >
+       and code = @code
+      </if>
+    </where>
+  </select>
+</mapper>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>vmd历史版本查看</title>
+	<!--基本样式-->
+    <link href="{vmdvirtualPath}/css/common.css?ver=2.0.4.190627" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="{vmdvirtualPath}/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.4.190627" rel="stylesheet" />
+   
+    <link href="{vmdvirtualPath}/design/css/icons.css?ver=2.0.4.190627" rel="stylesheet" />
+
+	<link href="{vmdvirtualPath}/lib/dhtmlx/dhtmlx.css?ver=2.0.4.190627" rel="stylesheet" />
+	  <!--样式快捷索引表-->
+    <link href="{vmdvirtualPath}/css/shortcut.css?ver=2.0.4.190627" rel="stylesheet" />
+    
+	{vmdprojectcssfiles}
+    
+    <script src="{vmdvirtualPath}/lib/labjs/LAB.min.js?ver=2.0.4.190627"></script>
+    <script src="{vmdvirtualPath}/config.js?ver=2.0.4.190627"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.4.190627"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.4.190627"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.4.190627"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/ext-all-debug.js?ver=2.0.4.190627"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.4.190627"></script>
+    <script src="{vmdvirtualPath}/js/util.js?ver=2.0.4.190627"></script>
+    <script src="{vmdvirtualPath}/lib/dhtmlx/dhtmlx.js?ver=2.0.4.190627"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.4.190627"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.4.190627"></script>
+    <script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.4.190627"></script>
+	<script src="{vmdvirtualPath}/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.4.190627"></script>
+    <script src="{vmdvirtualPath}/js/hwdas.js?ver=2.0.4.190627"></script>
+    <script src="{vmdvirtualPath}/js/vmdcore.js?ver=2.0.4.190627"></script>
+    <script src="{vmdvirtualPath}/js/vmdcomps.js?ver=2.0.4.190627"></script>
+    <script src="{vmdvirtualPath}/js/publicMethods.js?ver=2.0.4.190627"></script>
+    <script src="{vmdvirtualPath}/js/vmdreport.js?ver=2.0.4.190627"></script>
+    
+	{vmdprojectjsfiles}
+    
+    {vmdworkspacePath}
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        
+    </style>
+    <script>
+	    
+        vmd.virtualPath = '{vmdvirtualPath}';
+        
+        Ext.define("vmd.module.MainViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps([]),
+	xtype:"vmd.module.MainViewport",
+	layout:"border",
+	style:"font-size:14px;",
+	beforerender:"MainViewport_beforerender",
+	initComponent: function(){
+		function MainViewport_beforerender(sender) {
+
+}
+
+function div1_afterrender(sender) {
+    var hwFao = new HwFao(vmdSettings.dataServiceIp, "version"); //地址:端口和存储标识(服务管理员分配)
+    hwFao.getDirs("vmd2.0.4", 'Dir', function(result) {
+        if (result.data && result.data.length > 0) {
+            for (var i = 0; i < result.data.length; i++) {
+                if (result.data[i].type == 'Dir' && result.data[i].name.indexOf('vmd2.0') >= 0) {
+                    var cpanel = new Ext.Panel({
+                        height: 45,
+                        width:300,
+                        layout: "hbox",
+                        border: false,
+                        items: [{
+                                xtype: "label",
+                                id: "MyLabel",
+                                width:150,
+                                text: result.data[i].name,
+                                style: 'font-size:14px;font-weight:bold;',
+                                margins:'10 10 10 30'
+                            },
+                            {
+                                xtype: 'vmd.button',
+                                icon: 'document',
+                                text: '下载',
+                                width: 70,
+                                type: 'text',
+                                style: 'margin-left:10px',
+                                downName:result.data[i].name+"_full.tar.gz",
+                                handler: function(e) {
+                                    var path = "/version/VMD2.0.4/" + this.downName;
+                                    window.open(path, '_self')
+                                }
+                            }]
+                    })
+                    div1.add(cpanel);
+                }
+            }
+        }
+        div1.doLayout()
+    }, function(msg) {
+        Tips.tips("获取文件数据失败", "error");
+    });
+
+}
+			this.MainViewport_beforerender=MainViewport_beforerender;
+
+
+
+		this.items=[
+			{
+				xtype:"vmd.div",
+				id:"div",
+				layoutConfig:{
+					align:"middle",
+					pack:"start"
+				},
+				autoEl:"div",
+				border:false,
+				backgroundRepeat:"no-repeat",
+				backgroundPosition:"top left",
+				width:400,
+				height:49,
+				x:20,
+				y:80,
+				layout:"hbox",
+				region:"north",
+				items:[
+					{
+						xtype:"label",
+						id:"label",
+						text:"VMD2.0历史版本",
+						x:20,
+						y:45,
+						margins:"0 20 0 20",
+						style:"font-size:18px;",
+						width:167
+					},
+					{
+						xtype:"label",
+						id:"label1",
+						text:"注:历史版本只提供全量包的下载",
+						x:150,
+						y:45,
+						height:20,
+						style:"color:red;",
+						margins:""
+					}
+				]
+			},
+			{
+				xtype:"vmd.div",
+				id:"div1",
+				layoutConfig:{
+					align:"left",
+					pack:"start"
+				},
+				autoEl:"div",
+				border:true,
+				backgroundRepeat:"no-repeat",
+				backgroundPosition:"top left",
+				width:400,
+				height:50,
+				x:20,
+				y:140,
+				region:"center",
+				layout:"vbox",
+				autoScroll:true,
+				afterrender:"div1_afterrender",
+				listeners:{
+					vmdafterrender:div1_afterrender
+				}
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+			me.on('beforerender',function(){ MainViewport_beforerender.call(me,me)})
+}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MainViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

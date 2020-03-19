@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>数字属性修改</title>
+	<!--基本样式-->
+    <link href="/css/common.css?ver=2.0.3.0907" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.3.0907" rel="stylesheet" />
+   
+    <link href="/design/css/icons.css?ver=2.0.3.0907" rel="stylesheet" />
+
+	<link href="/lib/dhtmlx/dhtmlx.css?ver=2.0.3.0907" rel="stylesheet" />
+	  <!--样式快捷索引表-->
+    <link href="/css/shortcut.css?ver=2.0.3.0907" rel="stylesheet" />
+    
+    <script src="/lib/labjs/LAB.min.js?ver=2.0.3.0907"></script>
+    <script src="/config.js?ver=2.0.3.0907"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.3.0907"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.3.0907"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.3.0907"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=2.0.3.0907"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.3.0907"></script>
+    <script src="/js/util.js?ver=2.0.3.0907"></script>
+    <script src="/lib/dhtmlx/dhtmlx.js?ver=2.0.3.0907"></script>
+	<script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.3.0907"></script>
+	<script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.3.0907"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.3.0907"></script>
+	<script src="/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.3.0907"></script>
+    <script src="/js/hwdas.js?ver=2.0.3.0907"></script>
+    <script src="/js/vmdcore.js?ver=2.0.3.0907"></script>
+    <script src="/js/vmdcomps.js?ver=2.0.3.0907"></script>
+    <script src="/js/publicMethods.js?ver=2.0.3.0907"></script>
+    <script src="/js/vmdreport.js?ver=2.0.3.0907"></script>
+    
+
+    <script src="/lib/ace/ace.js"></script>
+    <script src="/lib/ace/mode-base.js" type="text/javascript"></script>
+    <script src="/lib/ace/theme-xcode.js" type="text/javascript" ></script>
+    <script src="/lib/ace/ext-language_tools.js"></script>
+    
+
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        
+    </style>
+    <script>
+	    vmd.preivewMode=true;
+        vmd.virtualPath = '';
+        vmd.workspace={"workspaceid":"4b8ca00d-e441-4c6a-85ec-35b2bfd96508","projectid":"eQ9ULgcVb1","workflowIp":"","dataServiceIp":""}
+        Ext.define("vmd.module.MyViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps(["vmd.ux.NewNumber$1.0$NewNumber"]),
+	xtype:"vmd.module.MyViewport",
+	layout:"absolute",
+	afterrender:"MyViewport_afterrender",
+	listeners:{
+		vmdafterrender:function(){
+	this.MyViewport_afterrender(this)
+}
+	},
+	initComponent: function(){
+		function numberCategory() {
+    this.xs = {
+            id: "xs",
+            value: "0",
+            type: "Text"
+        },
+        this.xs1 = {
+            id: "xs1",
+            value: "0",
+            type: "Text"
+        },
+        this.xs2 = {
+            id: "xs2",
+            value: "0",
+            type: "Text"
+        },
+        this.xs3 = {
+            id: "xs3",
+            value: "0",
+            type: "Text"
+        },
+        this.xs4 = {
+            id: "xs4",
+            value: "0",
+            type: "Text"
+        },
+        this.noZeroCheckBox = {
+            id: "noZeroCheckBox",
+            value: "false",
+            type: "checkbox"
+        },
+        this.noZeroCheckBox1 = {
+            id: "noZeroCheckBox1",
+            value: "false",
+            type: "checkbox"
+        },
+        this.noZeroCheckBox2 = {
+            id: "noZeroCheckBox2",
+            value: "false",
+            type: "checkbox"
+        },
+        this.noZeroCheckBox3 = {
+            id: "noZeroCheckBox3",
+            value: "false",
+            type: "checkbox"
+        },
+        this.noZeroCheckBox4 = {
+            id: "noZeroCheckBox4",
+            value: "false",
+            type: "checkbox"
+        },
+        this.symbolCom = {
+            id: "symbolCom",
+            value: "none",
+            type: "comlist"
+        },
+        this.symbolCom1 = {
+            id: "symbolCom1",
+            value: "none",
+            type: "comlist"
+        },
+        this.areaCom = {
+            id: "areaCom",
+            value: "",
+            type: "comlist"
+        },
+        this.areaCom1 = {
+            id: "areaCom1",
+            value: "",
+            type: "comlist"
+        },
+        this.areaCom2 = {
+            id: "areaCom2",
+            value: "",
+            type: "comlist"
+        },
+        this.dateSortCom = {
+            id: "dateSortCom",
+            value: "0",
+            type: "comlist"
+        },
+        this.customCom = {
+            id: "customCom",
+            value: "1",
+            type: "comlist"
+        },
+        this.useCommaCheckBox = {
+            id: "useCommaCheckBox",
+            value: "false",
+            type: "checkbox"
+        },
+        this.negativeCom = {
+            id: "negativeCom",
+            value: "1",
+            type: "comlist"
+        }
+
+    //置空
+    this.clearInfo = function() {
+        this.xs.value = "0";
+        this.xs1.value = "0";
+        this.xs2.value = "0";
+        this.xs3.value = "0";
+        this.xs4.value = "0";
+
+        this.noZeroCheckBox.value = "false";
+        this.noZeroCheckBox1.value = "false";
+        this.noZeroCheckBox2.value = "false";
+        this.noZeroCheckBox3.value = "false";
+        this.noZeroCheckBox4.value = "false";
+
+        this.areaCom.value = "";
+        this.areaCom1.value = "";
+        this.areaCom2.value = ""
+
+        this.symbolCom.value = "none";
+        this.symbolCom1.value = "none";
+
+        this.useCommaCheckBox.value = "false";
+        this.negativeCom.value = "1";
+        this.dateSortCom.value = "0";
+        this.customCom.value = "1";
+
+    };
+    this.setNumberInfo = function(info, cell) {
+        // this.underline.value = info.underline.value;
+        this.xs.value = info.xs.value;
+        this.xs1.value = info.xs1.value;
+        this.xs2.value = info.xs2.value;
+        this.xs3.value = info.xs3.value;
+        this.xs4.value = info.xs4.value;
+
+        this.noZeroCheckBox.value = info.noZeroCheckBox.value;
+        this.noZeroCheckBox1.value = info.noZeroCheckBox1.value;
+        this.noZeroCheckBox2.value = info.noZeroCheckBox2.value;
+        this.noZeroCheckBox3.value = info.noZeroCheckBox3.value;
+        this.noZeroCheckBox4.value = info.noZeroCheckBox4.value;
+
+        this.areaCom.value = info.areaCom.value;
+        this.areaCom1.value = info.areaCom1.value;
+        this.areaCom2.value = info.areaCom2.value;
+
+        this.symbolCom.value = info.symbolCom.value;
+        this.symbolCom1.value = info.symbolCom1.value;
+
+        this.useCommaCheckBox.value = info.useCommaCheckBox.value;
+        this.negativeCom.value = info.negativeCom.value;
+        this.dateSortCom.value = info.dateSortCom.value;
+        this.customCom.value = info.customCom.value;
+    };
+    this.setCellInfos = function(id, value) {
+        var c = this.getInfoByID(id);
+        if(c) {
+            if(c.type == "Text") {
+                c.value = value;
+            }
+            if(c.type == "CheckBox") {
+                c.value = value;
+            }
+            if(c.type == "ComboBox") {
+                c.value = value;
+            }
+            if(c.type == "compound") {
+                c.value = value;
+            }
+            if(c.type == "comlist") {
+                c.value = value;
+            }
+            if(c.type == "radiostoregroup") {
+                c.value = value;
+            }
+        }
+    };
+    this.getInfoByID = function(id) {
+        if(this.xs.id == id) {
+            return this.xs;
+        }
+        if(this.xs1.id == id) {
+            return this.xs1;
+        }
+        if(this.xs2.id == id) {
+            return this.xs2;
+        }
+        if(this.xs3.id == id) {
+            return this.xs3;
+        }
+        if(this.xs4.id == id) {
+            return this.xs4;
+        }
+        if(this.noZeroCheckBox.id == id) {
+            return this.noZeroCheckBox;
+        }
+        if(this.noZeroCheckBox1.id == id) {
+            return this.noZeroCheckBox1;
+        }
+        if(this.noZeroCheckBox2.id == id) {
+            return this.noZeroCheckBox2;
+        }
+        if(this.noZeroCheckBox3.id == id) {
+            return this.noZeroCheckBox3;
+        }
+        if(this.noZeroCheckBox4.id == id) {
+            return this.noZeroCheckBox4;
+        }
+        if(this.areaCom.id == id) {
+            return this.areaCom;
+        }
+        if(this.areaCom1.id == id) {
+            return this.areaCom1;
+        }
+        if(this.areaCom2.id == id) {
+            return this.areaCom2;
+        }
+        if(this.symbolCom.id == id) {
+            return this.symbolCom;
+        }
+        if(this.symbolCom1.id == id) {
+            return this.symbolCom1;
+        }
+        if(this.useCommaCheckBox.id == id) {
+            return this.useCommaCheckBox;
+        }
+        if(this.negativeCom.id == id) {
+            return this.negativeCom;
+        }
+        if(this.dateSortCom.id == id) {
+            return this.dateSortCom;
+        }
+        if(this.customCom.id == id) {
+            return this.customCom;
+        }
+    }
+    this.cellInfoToJson = function() {
+        json = {
+            allNumberInfo: [{
+                xs: {
+                    id: "xs",
+                    value: this.xs.value,
+                    type: "Text"
+                },
+                noZeroCheckBox: {
+                    id: "noZeroCheckBox",
+                    value: this.noZeroCheckBox.value,
+                    type: "checkbox"
+                },
+                useCommaCheckBox: {
+                    id: "useCommaCheckBox",
+                    value: this.useCommaCheckBox.value,
+                    type: "checkbox"
+                },
+                xs1: {
+                    id: "xs1",
+                    value: this.xs1.value,
+                    type: "Text"
+                },
+                noZeroCheckBox1: {
+                    id: "noZeroCheckBox1",
+                    value: this.noZeroCheckBox1.value,
+                    type: "checkbox"
+                },
+                symbolCom: {
+                    id: "symbolCom",
+                    value: this.symbolCom.value,
+                    type: "comlist"
+                },
+                dateSortCom: {
+                    id: "dateSortCom",
+                    value: this.dateSortCom.value,
+                    type: "comlist"
+                },
+                areaCom: {
+                    id: "areaCom",
+                    value: this.areaCom.value,
+                    type: "comlist"
+                },
+                areaCom1: {
+                    id: "areaCom1",
+                    value: this.areaCom1.value,
+                    type: "comlist"
+                },
+                areaCom2: {
+                    id: "areaCom2",
+                    value: this.areaCom2.value,
+                    type: "comlist"
+                },
+                customCom: {
+                    id: "customCom",
+                    value: this.customCom.value,
+                    type: "comlist"
+                },
+                xs3: {
+                    id: "xs3",
+                    value: this.xs3.value,
+                    type: "Text"
+                },
+                xs4: {
+                    id: "xs4",
+                    value: this.xs4.value,
+                    type: "Text"
+                },
+                noZeroCheckBox3: {
+                    id: "noZeroCheckBox3",
+                    value: this.noZeroCheckBox3.value,
+                    type: "checkbox"
+                },
+                noZeroCheckBox4: {
+                    id: "noZeroCheckBox4",
+                    value: this.noZeroCheckBox4.value,
+                    type: "checkbox"
+                },
+                xs2: {
+                    id: "xs2",
+                    value: this.xs2.value,
+                    type: "Text"
+                },
+                noZeroCheckBox2: {
+                    id: "noZeroCheckBox2",
+                    value: this.noZeroCheckBox2.value,
+                    type: "checkbox"
+                },
+                symbolCom1: {
+                    id: "symbolCom1",
+                    value: this.symbolCom1.value,
+                    type: "comlist"
+                },
+                negativeCom: {
+                    id: "negativeCom",
+                    value: this.negativeCom.value,
+                    type: "comlist"
+                }
+            }]
+
+        }
+    }
+}
+var p = new numberCategory()
+
+function button_click(sender, e) {
+    //
+    p.xs.value = "1";
+    p.xs1.value = "1";
+    p.xs2.value = "1";
+    p.xs3.value = "1";
+    p.xs4.value = "1";
+
+    p.noZeroCheckBox.value = "true"
+    p.noZeroCheckBox1.value = "true";
+    p.noZeroCheckBox2.value = "true";
+    p.noZeroCheckBox3.value = "true";
+    p.noZeroCheckBox4.value = "true";
+
+    p.areaCom.value = "0";
+    p.areaCom1.value = "0";
+    p.areaCom2.value = "0";
+
+    p.symbolCom.value = "us";
+    p.symbolCom1.value = "fran";
+
+    p.useCommaCheckBox.value = "true";
+    p.negativeCom.value = "1";
+    p.dateSortCom.value = "1";
+    p.customCom.value = "23";
+    
+    NewNumber.setInfo(p, null)
+
+
+}
+
+function button2_click(sender, e) {
+    p.clearInfo()
+    NewNumber.setInfo(p, null)
+
+}
+
+
+function button1_click(sender, e) {
+    
+    p.xs.value = NewNumber.getInfo("xs");
+    p.xs1.value = NewNumber.getInfo("xs1");
+    p.xs2.value = NewNumber.getInfo("xs2");
+    p.xs3.value = NewNumber.getInfo("xs3");
+    p.xs4.value = NewNumber.getInfo("xs4");
+
+    p.noZeroCheckBox.value = NewNumber.getInfo("noZeroCheckBox");
+    p.noZeroCheckBox1.value = NewNumber.getInfo("noZeroCheckBox1");
+    p.noZeroCheckBox2.value = NewNumber.getInfo("noZeroCheckBox2");
+    p.noZeroCheckBox3.value = NewNumber.getInfo("noZeroCheckBox3");
+    p.noZeroCheckBox4.value = NewNumber.getInfo("noZeroCheckBox4");
+
+    p.areaCom.value = NewNumber.getInfo("areaCom");
+    p.areaCom1.value = NewNumber.getInfo("areaCom1");
+    p.areaCom2.value = NewNumber.getInfo("areaCom2");
+
+    p.symbolCom.value = NewNumber.getInfo("symbolCom");
+    p.symbolCom1.value = NewNumber.getInfo("symbolCom1");
+
+    p.useCommaCheckBox.value = NewNumber.getInfo("useCommaCheckBox");
+    p.negativeCom.value = NewNumber.getInfo("negativeCom");
+    p.dateSortCom.value = NewNumber.getInfo("dateSortCom");
+    p.customCom.value = NewNumber.getInfo("customCom");
+
+    alert(p.xs.value + "," + p.xs1.value + "," + p.xs2.value + "," + p.xs3.value + "," + p.xs4.value +
+        "," + p.noZeroCheckBox.value + "," + p.noZeroCheckBox1.value + "," + p.noZeroCheckBox3.value +
+        "," + p.noZeroCheckBox4.value + "," + p.areaCom.value + "," + p.areaCom1.value + "," + p.areaCom2.value +
+        "," + p.symbolCom.value + "," + p.symbolCom1.value + "," + p.useCommaCheckBox.value + "," + p.negativeCom.value +
+        "," + p.dateSortCom.value + "," + p.customCom.value)
+}
+
+function button3_click(sender, e) {
+    p.xs.value = NewNumber.getInfo("xs");
+    p.xs1.value = NewNumber.getInfo("xs1");
+    p.xs2.value = NewNumber.getInfo("xs2");
+    p.xs3.value = NewNumber.getInfo("xs3");
+    p.xs4.value = NewNumber.getInfo("xs4");
+
+    p.noZeroCheckBox.value = NewNumber.getInfo("noZeroCheckBox");
+    p.noZeroCheckBox1.value = NewNumber.getInfo("noZeroCheckBox1");
+    p.noZeroCheckBox2.value = NewNumber.getInfo("noZeroCheckBox2");
+    p.noZeroCheckBox3.value = NewNumber.getInfo("noZeroCheckBox3");
+    p.noZeroCheckBox4.value = NewNumber.getInfo("noZeroCheckBox4");
+
+    p.areaCom.value = NewNumber.getInfo("areaCom");
+    p.areaCom1.value = NewNumber.getInfo("areaCom1");
+    p.areaCom2.value = NewNumber.getInfo("areaCom2");
+
+    p.symbolCom.value = NewNumber.getInfo("symbolCom");
+    p.symbolCom1.value = NewNumber.getInfo("symbolCom1");
+
+    p.useCommaCheckBox.value = NewNumber.getInfo("useCommaCheckBox");
+    p.negativeCom.value = NewNumber.getInfo("negativeCom");
+    p.dateSortCom.value = NewNumber.getInfo("dateSortCom");
+    p.customCom.value = NewNumber.getInfo("customCom");
+    p.cellInfoToJson();
+    alert(JSON.stringify(json))
+}
+
+function MyViewport_afterrender(sender) {
+
+    // alert(NewNumber.getInfo("noZeroCheckBox"))
+}
+
+function NewNumber_afterrender(sender) {
+
+}
+			this.MyViewport_afterrender=MyViewport_afterrender;
+
+
+
+		this.items=[
+			{
+				xtype:"vmd.ux.NewNumber",
+				id:"NewNumber",
+				layout:"absolute",
+				x:80,
+				y:20,
+				afterrender:"NewNumber_afterrender",
+				listeners:{
+					vmdafterrender:NewNumber_afterrender
+				}
+			},
+			{
+				xtype:"vmd.button",
+				id:"button",
+				text:"取值测试",
+				type:"(none)",
+				size:"small",
+				x:600,
+				y:150,
+				click:"button_click",
+				listeners:{
+					click:button_click
+				}
+			},
+			{
+				xtype:"vmd.button",
+				id:"button1",
+				text:"传值测试",
+				type:"(none)",
+				size:"small",
+				x:600,
+				y:200,
+				click:"button1_click",
+				listeners:{
+					click:button1_click
+				}
+			},
+			{
+				xtype:"vmd.button",
+				id:"button2",
+				text:"clear",
+				type:"(none)",
+				size:"small",
+				x:600,
+				y:250,
+				width:70,
+				click:"button2_click",
+				listeners:{
+					click:button2_click
+				}
+			},
+			{
+				xtype:"vmd.button",
+				id:"button3",
+				text:"JSON串",
+				type:"(none)",
+				size:"small",
+				x:600,
+				y:300,
+				width:70,
+				click:"button3_click",
+				listeners:{
+					click:button3_click
+				}
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+	}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MyViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

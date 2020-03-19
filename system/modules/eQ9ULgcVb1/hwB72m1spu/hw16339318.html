@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>ace自动识别</title>
+    <!--基本样式-->
+    <link href="/css/common.css?ver=2.0.4.190514" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.4.190514" rel="stylesheet" />
+    <link href="/design/css/icons.css?ver=2.0.4.190514" rel="stylesheet" />
+    <link href="/lib/dhtmlx/dhtmlx.css?ver=2.0.4.190514" rel="stylesheet" />
+    <!--样式快捷索引表-->
+    <link href="/css/shortcut.css?ver=2.0.4.190514" rel="stylesheet" />
+    <link href="/components/ux/comboform191749/1.0/css/ComboForm.css?ver=2.0.4.190514" rel="stylesheet" />
+    <script src="/lib/labjs/LAB.min.js?ver=2.0.4.190514"></script>
+    <script src="/config.js?ver=2.0.4.190514"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.4.190514"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.4.190514"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.4.190514"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=2.0.4.190514"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.4.190514"></script>
+    <script src="/js/util.js?ver=2.0.4.190514"></script>
+    <script src="/lib/dhtmlx/dhtmlx.js?ver=2.0.4.190514"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.4.190514"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.4.190514"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.4.190514"></script>
+    <script src="/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.4.190514"></script>
+    <script src="/js/hwdas.js?ver=2.0.4.190514"></script>
+    <script src="/js/vmdcore.js?ver=2.0.4.190514"></script>
+    <script src="/js/vmdcomps.js?ver=2.0.4.190514"></script>
+    <script src="/js/publicMethods.js?ver=2.0.4.190514"></script>
+    <script src="/js/vmdreport.js?ver=2.0.4.190514"></script>
+    <script src="/components/ux/comboform191749/1.0/js/Template-web.js?ver=2.0.4.190514"></script>
+    <style> </style>
+    <style type="text/css" id="vmdcss"> </style>
+    <script>
+        vmd.previewMode = true;
+        vmd.virtualPath = '';
+        vmd.workspace = {
+            "workspaceid": "8c1e8fc5-ad53-4845-a50d-54bc01ee7d41",
+            "workflowIp": "",
+            "dataServiceIp": "",
+            "msgIp": "",
+            "projectid": "eQ9ULgcVb1"
+        }
+        vmd.resourceSettings = {
+            "test&&资源中心服务器": "http://www.hanweikeji.com:10050/resource"
+        }
+        vmd.projectInfo = {
+            "projectId": "eQ9ULgcVb1",
+            "workflowIp": "",
+            "dataServiceIp": "",
+            "msgIp": "",
+            "todoIp": "",
+            "authIp": "",
+            "docIp": "",
+            "reoprtIp": "",
+            "logIp": ""
+        }
+        Ext.define("vmd.module.MainViewport", {
+            extend: "vmd.comp.viewport",
+            requires: vmd.getCmpDeps(["vmd.ux.ComboForm191749$1.0$ComboForm191749"]),
+            xtype: "vmd.module.MainViewport",
+            layout: "border",
+            afterrender: "MainViewport_afterrender",
+            initComponent: function() {
+                //ace自定识别对象描述
+                var Data_defineobjclass = {
+                    Type: "defineobjclass",
+                    Property: {
+                        text: {
+                            Description: "显示文本",
+                            Prototype: "string text",
+                            Name: "文本",
+                            Args: {
+                                _Return_: "字符串"
+                            },
+                            Example: ""
+                        },
+                        icon: {
+                            Description: "按钮图标",
+                            Prototype: "string icon",
+                            Name: "图标",
+                            Args: {
+                                _Return_: "字符串（none,search,success,plus,picture,star-off,close,loading,setting）"
+                            },
+                            Example: ""
+                        },
+                        iconCls: {
+                            Description: "用来指定背景图片的样式类",
+                            Prototype: "string icon",
+                            Name: "图标样式类",
+                            Args: {
+                                _Return_: "字符串"
+                            },
+                            Example: ""
+                        }
+                    },
+                    Method: {
+                        getText2222: {
+                            Description: "获取按钮文本",
+                            Prototype: "getText()",
+                            Name: "获取按钮文本",
+                            Args: {
+                                _Return_: "字符串"
+                            },
+                            Example: ""
+                        },
+                        setText: {
+                            Description: "设置按钮文本",
+                            Prototype: "setText(text)",
+                            Name: "设置按钮文本",
+                            Args: {
+                                _Return_: "",
+                                text: "String  文本值"
+                            },
+                            Example: ""
+                        },
+                        setIcon: {
+                            Description: "设置按钮图标",
+                            Prototype: "setIcon()",
+                            Name: "设置按钮图标",
+                            Args: {
+                                _Return_: "字符串"
+                            },
+                            Example: ""
+                        }
+                    },
+                    Event: {
+                        clickabc: {
+                            Description: "点击事件",
+                            Prototype: "void click(sender)",
+                            Args: {
+                                _Return_: "",
+                                sender: "控件本身"
+                            },
+                            Example: ""
+                        }
+                    }
+                };
+                parent.ControlsDataManage._add(Data_defineobjclass);
+                if (parent.init_def_platformControlData) {
+                    //构造自定义业务对象
+                    var root = new Ext.tree.TreeNode();
+                    root.component = {
+                        cid: 'aroot',
+                        id: 'aroot'
+                    };
+                    var childnode = new Ext.tree.TreeNode();
+                    childnode.component = {
+                        cid: 'defineobjclass',
+                        id: 'abcd'
+                    }
+                    root.appendChild(childnode);
+                    // if(!parent.xds.defineNodes) {
+                    //     parent.xds.defineNodes = [];
+                    // }
+                    parent.xds.defineNodes = [];
+                    parent.xds.defineNodes.push(root);
+                    //内置方法
+                    parent.init_def_platformControlData();
+                    def_platformControl = parent.def_platformControl;
+                }
+
+                function MainViewport_afterrender(sender) {
+                    // p_ace = new vmd.comp.AceEx({
+                    //     language: 'javascript'
+                    // })
+                    // panel.add(p_ace);
+                    // panel.doLayout();
+                }
+                this.MainViewport_afterrender = MainViewport_afterrender;
+                store = new vmd.store.jsonStore({
+                    "xtype": "vmd.jsonStore",
+                    "id": "store",
+                    "autoLoad": true,
+                    "cid": "vmdJsonStore",
+                    "storeConfig": "{\"id\":\"eQ9TXjYMJR\",\"callcode\":\"vmdCode\",\"url\":\"CDEServcie/project/info\",\"host\":\"\",\"isHwRest\":true,\"name\":\"项目信息\",\"getMethods\":[],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"xh\",\"type\":\"int64\"},{\"name\":\"code\",\"type\":\"string\"},{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"row_created_by\",\"type\":\"string\"},{\"name\":\"row_created_date\",\"type\":\"datetime\"},{\"name\":\"row_changed_date\",\"type\":\"datetime\"},{\"name\":\"row_changed_by\",\"type\":\"string\"}]}"
+                });
+                this.items = [{
+                        xtype: "panel",
+                        id: "panel",
+                        title: "Panel",
+                        header: true,
+                        border: true,
+                        height: 100,
+                        x: 20,
+                        y: 90,
+                        region: "center",
+                        layout: "absolute",
+                        items: [{
+                            xtype: "vmd.ux.ComboForm191749",
+                            id: "hwComboForm191749",
+                            layout: "auto",
+                            x: 360,
+                            y: 150,
+                            GridStore: store,
+                            ColumnId: "xh,code,name"
+                        }]
+                    },
+                    {
+                        xtype: "panel",
+                        id: "panel1",
+                        title: "业务对象",
+                        header: true,
+                        border: true,
+                        height: 100,
+                        x: 210,
+                        y: 250,
+                        region: "west",
+                        width: 136,
+                        layout: "fit",
+                        items: [{
+                            xtype: "vmd.treeex",
+                            id: "tree",
+                            width: 350,
+                            height: 270,
+                            hideRoot: false
+                        }]
+                    }
+                ]
+                this.callParent();
+                var me = this;
+                vmd.core.moduleInit(this.items, this);
+                me.on('afterrender', function() {
+                    MainViewport_afterrender.call(me, me)
+                })
+            }
+        })
+        Ext.onReady(function() {
+            Ext.create('vmd.module.MainViewport', {
+                renderTo: document.body
+            })
+        })
+    </script>
+</head>
+
+<body> </body>
+
+</html>

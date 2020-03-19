@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>dataview使用</title>
+	<!--基本样式-->
+    <link href="{virtualPath}/css/common.css?ver=2.0.3.09152" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="{virtualPath}/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.3.09152" rel="stylesheet" />
+   
+    <link href="{virtualPath}/design/css/icons.css?ver=2.0.3.09152" rel="stylesheet" />
+
+	<link href="{virtualPath}/lib/dhtmlx/dhtmlx.css?ver=2.0.3.09152" rel="stylesheet" />
+	  <!--样式快捷索引表-->
+    <link href="{virtualPath}/css/shortcut.css?ver=2.0.3.09152" rel="stylesheet" />
+    
+    <script src="{virtualPath}/lib/labjs/LAB.min.js?ver=2.0.3.09152"></script>
+    <script src="{virtualPath}/config.js?ver=2.0.3.09152"></script>
+    <script src="{virtualPath}/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.3.09152"></script>
+    <script src="{virtualPath}/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.3.09152"></script>
+    <script src="{virtualPath}/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.3.09152"></script>
+    <script src="{virtualPath}/lib/ext-3.4/ext-all-debug.js?ver=2.0.3.09152"></script>
+    <script src="{virtualPath}/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.3.09152"></script>
+    <script src="{virtualPath}/js/util.js?ver=2.0.3.09152"></script>
+    <script src="{virtualPath}/lib/dhtmlx/dhtmlx.js?ver=2.0.3.09152"></script>
+	<script src="{virtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.3.09152"></script>
+	<script src="{virtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.3.09152"></script>
+    <script src="{virtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.3.09152"></script>
+	<script src="{virtualPath}/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.3.09152"></script>
+    <script src="{virtualPath}/js/hwdas.js?ver=2.0.3.09152"></script>
+	<script src="{virtualPath}/js/hwMSC.js?ver=2.0.3.09152"></script>
+    <script src="{virtualPath}/js/vmdcore.js?ver=2.0.3.09152"></script>
+    <script src="{virtualPath}/js/vmdcomps.js?ver=2.0.3.09152"></script>
+    <script src="{virtualPath}/js/publicMethods.js?ver=2.0.3.09152"></script>
+    <script src="{virtualPath}/js/vmdreport.js?ver=2.0.3.09152"></script>
+    {workspacePath}
+
+    <script src="{virtualPath}/lib/ace/ace.js"></script>
+    <script src="{virtualPath}/lib/ace/mode-base.js" type="text/javascript"></script>
+    <script src="{virtualPath}/lib/ace/theme-xcode.js" type="text/javascript" ></script>
+    <script src="{virtualPath}/lib/ace/ext-language_tools.js"></script>
+    
+
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        .listleft,.listright{
+    
+    padding: 10px;
+    cursor: default
+}
+    </style>
+    <script>
+	    
+        vmd.virtualPath = '{virtualPath}';
+        
+        Ext.define("vmd.module.MyViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps([]),
+	xtype:"vmd.module.MyViewport",
+	layout:"border",
+	initComponent: function(){
+		function hwDataView_dblclick(sender,index,node,e){
+
+//
+
+
+
+
+
+var record=store.getAt(index) ;
+var name=record.get('name')
+
+store.remove(record);
+ // 创建record行记录。 
+var records= vmd.data.Record.create({"subsysname":name})  ;
+
+ // 往Store对象添加Records，并触发add事件。  
+ store1.add(records);
+}
+	
+		store=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"store","autoLoad":true,"storeConfig":"{\"id\":\"eQ9TXjYMJR\",\"callcode\":\"vmdCode\",\"url\":\"CDEServcie/project/info\",\"host\":\"\",\"isHwRest\":true,\"name\":\"项目信息\",\"getMethods\":[],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"xh\",\"type\":\"string\"},{\"name\":\"code\",\"type\":\"string\"},{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"category_id\",\"type\":\"string\"},{\"name\":\"ppdm_guid\",\"type\":\"string\"},{\"name\":\"row_changed_by\",\"type\":\"string\"},{\"name\":\"row_changed_date\",\"type\":\"datetime\"},{\"name\":\"row_created_by\",\"type\":\"string\"},{\"name\":\"row_created_date\",\"type\":\"datetime\"},{\"name\":\"row_effective_date\",\"type\":\"datetime\"},{\"name\":\"row_expiry_date\",\"type\":\"datetime\"},{\"name\":\"row_quality\",\"type\":\"string\"},{\"name\":\"effective_date\",\"type\":\"datetime\"},{\"name\":\"expiry_date\",\"type\":\"datetime\"}]}"});
+		store1=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"store1","autoLoad":true,"storeConfig":"{\"id\":\"eRtclh4YvA\",\"callcode\":\"vmdCode\",\"url\":\"CDEServcie/pt/hqzxt\",\"host\":\"\",\"isHwRest\":true,\"name\":\"获取平台子系统\",\"getMethods\":[],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"subsysname\",\"type\":\"string\"},{\"name\":\"subsysid\",\"type\":\"string\"},{\"name\":\"ver\",\"type\":\"string\"},{\"name\":\"ico\",\"type\":\"string\"},{\"name\":\"sysico\",\"type\":\"byte[]\"},{\"name\":\"dbconfigid\",\"type\":\"string\"},{\"name\":\"webserverspath\",\"type\":\"string\"},{\"name\":\"setupguid\",\"type\":\"string\"},{\"name\":\"modifydate\",\"type\":\"datetime\"},{\"name\":\"helppage\",\"type\":\"string\"},{\"name\":\"tag\",\"type\":\"string\"},{\"name\":\"enable\",\"type\":\"int16\"},{\"name\":\"remark\",\"type\":\"string\"},{\"name\":\"iswebsyssub\",\"type\":\"int16\"},{\"name\":\"ftpip\",\"type\":\"string\"},{\"name\":\"ftpport\",\"type\":\"string\"},{\"name\":\"ftppath\",\"type\":\"string\"},{\"name\":\"ftpuser\",\"type\":\"string\"},{\"name\":\"ftppwd\",\"type\":\"string\"},{\"name\":\"sysurltop\",\"type\":\"string\"},{\"name\":\"xh\",\"type\":\"int64\"},{\"name\":\"ieversion\",\"type\":\"string\"}]}"});
+
+
+		this.items=[
+			{
+				xtype:"panel",
+				id:"panel",
+				title:"Panel",
+				header:true,
+				border:true,
+				height:100,
+				region:"center",
+				layout:"fit",
+				items:[
+					{
+						xtype:"vmd.dataview",
+						id:"hwDataView1",
+						width:350,
+						height:270,
+						itemSelector:"li.info",
+						overClass:"info-hover",
+						selectedClass:"x-view-selected",
+						singleSelect:true,
+						multiSelect:false,
+						autoScroll:true,
+						tpl:"<ul>    <tpl for=\".\">        <li class=\"info listright\">            <h4>{subsysname}</h4>        </li>    </tpl></ul>",
+						data:"var data=[{\"id\":1,\"picname\":\"border-layout.gif\",\"name\":\"Border Layout\",\"desc\":\"方位布局\"},{\"id\":2,\"picname\":\"layout-accordion.gif\",\"name\":\"Accordion Layout\",\"desc\":\"手风琴布局\"},{\"id\":3,\"picname\":\"layout-anchor.gif\",\"name\":\"Accordion Layout\",\"desc\":\"百分比布局\"},{\"id\":4,\"picname\":\"layout-form.gif\",\"name\":\"Absolute Layout\",\"desc\":\"绝对定位布局\"},{\"id\":5,\"picname\":\"layout-column.gif\",\"name\":\"Column Layout\",\"desc\":\"列布局\"},{\"id\":6,\"picname\":\"layout-table.gif\",\"name\":\"Table Layout\",\"desc\":\"表格布局\"}];return data;",
+						store:store1
+					}
+				]
+			},
+			{
+				xtype:"panel",
+				id:"panel1",
+				title:"Panel",
+				header:true,
+				border:true,
+				height:100,
+				region:"west",
+				width:230,
+				layout:"fit",
+				items:[
+					{
+						xtype:"vmd.dataview",
+						id:"hwDataView",
+						width:350,
+						height:270,
+						itemSelector:"li.info",
+						overClass:"info-hover",
+						selectedClass:"x-view-selected",
+						singleSelect:true,
+						multiSelect:false,
+						autoScroll:true,
+						tpl:"<ul>    <tpl for=\".\">        <li class=\"info listleft\">            <h4>{id}</h4>            <h4>{name}</h4>        </li>    </tpl></ul>",
+						data:"var data=[{\"id\":1,\"picname\":\"border-layout.gif\",\"name\":\"Border Layout\",\"desc\":\"方位布局\"},{\"id\":2,\"picname\":\"layout-accordion.gif\",\"name\":\"Accordion Layout\",\"desc\":\"手风琴布局\"},{\"id\":3,\"picname\":\"layout-anchor.gif\",\"name\":\"Accordion Layout\",\"desc\":\"百分比布局\"},{\"id\":4,\"picname\":\"layout-form.gif\",\"name\":\"Absolute Layout\",\"desc\":\"绝对定位布局\"},{\"id\":5,\"picname\":\"layout-column.gif\",\"name\":\"Column Layout\",\"desc\":\"列布局\"},{\"id\":6,\"picname\":\"layout-table.gif\",\"name\":\"Table Layout\",\"desc\":\"表格布局\"}];return data;",
+						store:store,
+						dblclick:"hwDataView_dblclick",
+						listeners:{
+							dblclick:hwDataView_dblclick
+						}
+					}
+				]
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+	}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MyViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

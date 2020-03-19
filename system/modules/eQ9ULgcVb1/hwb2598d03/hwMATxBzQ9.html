@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>注册发布(带子页面模块注册发布)</title>
+	<!--基本样式-->
+    <link href="/css/common.css?ver=2.0.3.0908" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.3.0908" rel="stylesheet" />
+   
+    <link href="/design/css/icons.css?ver=2.0.3.0908" rel="stylesheet" />
+
+	<link href="/lib/dhtmlx/dhtmlx.css?ver=2.0.3.0908" rel="stylesheet" />
+	  <!--样式快捷索引表-->
+    <link href="/css/shortcut.css?ver=2.0.3.0908" rel="stylesheet" />
+    
+    <script src="/lib/labjs/LAB.min.js?ver=2.0.3.0908"></script>
+    <script src="/config.js?ver=2.0.3.0908"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.3.0908"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.3.0908"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.3.0908"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=2.0.3.0908"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.3.0908"></script>
+    <script src="/js/util.js?ver=2.0.3.0908"></script>
+    <script src="/lib/dhtmlx/dhtmlx.js?ver=2.0.3.0908"></script>
+	<script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.3.0908"></script>
+	<script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.3.0908"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.3.0908"></script>
+	<script src="/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.3.0908"></script>
+    <script src="/js/hwdas.js?ver=2.0.3.0908"></script>
+    <script src="/js/vmdcore.js?ver=2.0.3.0908"></script>
+    <script src="/js/vmdcomps.js?ver=2.0.3.0908"></script>
+    <script src="/js/publicMethods.js?ver=2.0.3.0908"></script>
+    <script src="/js/vmdreport.js?ver=2.0.3.0908"></script>
+    
+
+    <script src="/lib/ace/ace.js"></script>
+    <script src="/lib/ace/mode-base.js" type="text/javascript"></script>
+    <script src="/lib/ace/theme-xcode.js" type="text/javascript" ></script>
+    <script src="/lib/ace/ext-language_tools.js"></script>
+    
+
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        
+    </style>
+    <script>
+	    vmd.preivewMode=true;
+        vmd.virtualPath = '';
+        vmd.workspace={"workspaceid":"87965160-1346-484d-8808-8a5c310a30d0","projectid":"eQ9ULgcVb1","workflowIp":"","dataServiceIp":""}
+        Ext.define("vmd.module.MyViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps(["vmd.ux.PublishResource$1.0$PublishResource"]),
+	xtype:"vmd.module.MyViewport",
+	layout:"border",
+	afterrender:"MyViewport_afterrender",
+	beforerender:"MyViewport_beforerender",
+	listeners:{
+		vmdafterrender:function(){
+	this.MyViewport_afterrender(this)
+},
+		beforerender:function(){
+	this.MyViewport_beforerender(this)
+}
+	},
+	initComponent: function(){
+		var workspaceid = getUrlParam(workspaceid)
+if(workspaceid) {
+    vmd.core.getWorkSpaceServer(workspaceid);
+}
+//根据选择的平台4还是5 进行数据集动态刷新，并获取对应平台的子系统信息
+function loadSubSys(projectId) {
+    if(r_pt5.checked) {
+        pttype.setValue("5");
+        tree.leafImg = "/system/modules/eQ9ULgcVb1/img/folderClosed.gif";
+    } else {
+        pttype.setValue("4");
+        tree.leafImg = "/lib/dhtmlx/imgs/dhxtree_material/tree/model.png";
+    }
+    store.toRefresh(function() {
+        if(projectId) {
+            var selNode = tree.getNodeById(projectId);
+            if(selNode) {
+                tree.expandPath(selNode.getPath());
+                selNode.select();
+            }
+        }
+    });
+}
+
+function button_click(sender) {
+    //组织资源中心的对应关系
+    var listPublishResourceServers = [];
+    var objlistResourceNameIP = {};
+    for(var i = 0; i < listPublishResourceComps.length; i++) {
+        var Serversinfo = listPublishResourceComps[i].getText();
+        listPublishResourceServers.push(Serversinfo);
+    }
+    for(var i = 0; i < listResourceNameIP.length; i++) {
+        for(var j = 0; j < listPublishResourceServers.length; j++) {
+            if(listResourceNameIP[i].oldip == listPublishResourceServers[j].oldIP) {
+                listResourceNameIP[i].newip = listPublishResourceServers[j].newIP || listPublishResourceServers[j].oldIP
+                objlistResourceNameIP[listResourceNameIP[i].name] = "http://" + listResourceNameIP[i].newip + "/resource";
+                break;
+            }
+        }
+    }
+    //var mytree = hwTree;
+    //将节点信息传递到设计页面
+    var selId = tree.getSelNodeId(); //mytree.getSelectedItemId();
+    if(!selId) {
+        Ext.Msg.alert("提示", "请选择模块要注册到的子系统！", function() {})
+        return;
+    }
+    //组织注册的模块信息
+    var myPtree = parent.hwTree;
+    var selPId = parent.hwTree.getSelectedItemId();
+    var selNode = myPtree.itemObj[selPId];
+    var proId = selNode.projectId;
+    var data = [{
+        subsysid: selId,
+        moduleguid: selNode.id,
+        modulename: selNode.text,
+        moudelinfo: selNode.remark,
+        moduletype: 1,
+        ptdb: comlist.getValue() || "pt",
+        startname: "/release" + selNode.path + ".html",
+        enable: 1,
+        args: ""
+    }];
+    //根据是平台4还是平台5来进行不同的服务调用
+    var zcurl = "CDEServcie/pt/zcmk";
+    if(r_pt5.checked)
+        zcurl = "CDEServcie/pt/ptfivezcmk";
+
+    //虚拟目录获取
+    var virtualPath = "";
+    if(MyField.getValue() != "")
+        virtualPath = "/" + MyField.getValue();
+    //注册模块成功之后的逻辑处理 
+    var regSuccFun = function(result) {
+        var path = vmd.core.getVirtualPath() + "modules" + selNode.path + "_r.html";
+        var releasePath = "release" + selNode.path + ".html";
+        createReleaseFun(path, releasePath, selNode.id)
+        // vmd.core.createReleaseHtml(path, releasePath, virtualPath, function() {
+        //     //如果包含子页面，则对子页面进行递归处理
+        //     if(1 == 1) {} else {
+        //         Ext.Msg.alert("提示", "注册模块信息成功", function() {
+        //             parent.openWinFrom.hide();
+        //         })
+        //     }
+        // }, objlistResourceNameIP, selNode.projectId);
+        hwDas.copy("vmd", "modules/" + proId + "/img", "release/" + proId + "/img", function() {}, function(msg) {
+            console.log(msg)
+        });
+        hwDas.copy("vmd", "modules/" + proId + "/css", "release/" + proId + "/css", function() {}, function(msg) {
+            console.log(msg)
+        });
+        hwDas.copy("vmd", "modules/" + proId + "/js", "release/" + proId + "/js", function() {}, function(msg) {
+            console.log(msg)
+        });
+    }
+    //处理模块信息的递归处理
+    var createReleaseFun = function(path, releasePath, moduleid) {
+        vmd.core.createReleaseHtml(path, releasePath, virtualPath, function() {}, objlistResourceNameIP, selNode.projectId);
+        //调用服务获取当前模块是否存在子页面  通过moduleid进行服务处理
+        hwDas.get("CDEServcie/module/getchildmodule", {}, {
+            mainmoduleid: moduleid
+        }, function(result) {
+            if(result.data.length > 0 && result.data[0].size > 0) {
+                var count = 0,
+                    length = result.data[0].size;
+                for(var i = 0; i < result.data[0].size; i++) {
+                    var r_path = result.data[0].datas[i].filepath;
+                    var r_moduleid = result.data[0].datas[i].id;
+                    vmd.core.createReleaseHtml("modules" + r_path + "_r.html", "release" + r_path + ".html", virtualPath, function() {
+                        count++
+                        if(count == length)
+                            vmd.tip('注册模块成功！', 'success');
+                        // Ext.Msg.alert("提示", "注册模块信息成功", function() {
+                        //     parent.openWinFrom.hide();
+                        // })
+                    }, objlistResourceNameIP, selNode.projectId)
+                    //createReleaseFun( "modules" + r_path + "_r.html", "release" + r_path + ".html", r_moduleid)
+                }
+            } else {
+                vmd.tip('注册模块成功！', 'success');
+            }
+        }, function(msg) {
+            console.log(msg)
+        })
+    }
+    //调用服务进行平台模块注册
+    hwDas.ajax({
+        das: {
+            idedas: true
+        },
+        url: zcurl,
+        type: "save",
+        timeout: 50000,
+        data: data,
+        success: function(result) {
+            regSuccFun(result)
+        },
+        error: function(msg) {
+            Ext.Msg.alert("提示", "注册模块信息失败", function() {})
+            parent.openWinFrom.hide();
+        }
+    })
+
+    // 保存配置信息
+    var saveVmdConfig = function(filename, bodyStr) {
+        Ext.Ajax.request({
+            url: vmd.vmdUploadPath + 'FileService',
+            timeout: 50000,
+            success: function(result) {},
+            failure: function(result) {
+                Ext.Msg.alert('错误', '网络超时，保存项目配置信息失败！')
+            },
+            headers: {
+                FileName: 'release/' + selNode.projectId + "/" + filename,
+            },
+            params: {
+                body: bodyStr
+            }
+        })
+    }
+
+    var bodyStr = 'vmd.workspace={\n';
+    bodyStr += "dataServiceIp: \"" + (txt_dataserverip.getValue()) + "\",\n";
+    bodyStr += "workflowIp: \"" + (txt_workflowip.getValue()) + "\",\n";
+    bodyStr += "msgIp: \"" + (txt_msg.getValue()) + "\"\n";
+    bodyStr += '}' + "\n";;
+    if(txt_msg.getValue() != "") {
+        bodyStr += "hwMSG.host=\"" + (txt_msg.getValue()) + "\"\n";
+    }
+
+    if(txt_dataserverip.getValue() != "") {
+        bodyStr += "hwDas.hosts=\"" + (txt_dataserverip.getValue()) + "\"\n";
+    }
+    //处理项目的配置文件
+    saveVmdConfig("config.js", bodyStr);
+}
+
+function button1_click(sender) {
+    parent.openWinFrom.hide();
+}
+
+var listPublishResourceComps = []; //记录动态添加的组件列表。
+var listResourceIP = []; //记录当前模块所有的资源服务器地址
+var listResourceNameIP = []; //记录资源的名称和ip信息
+var r_pt5checked = false; //记录是否选中了pt5
+
+var defaultPtdb = "pt"
+
+function MyViewport_afterrender(sender) {
+
+
+    //先获取项目的发布配置信息，
+    var projectId = parent.btnProjectName.projectId; //"hw38ca28ed"; //vmd.workspace.projectid;
+    hwDas.get("DataServiceWorkSpace/projectInfo/projectreginfo", {}, {
+        projectid: projectId
+    }, function(result) {
+        var subsysid;
+        var resourceserver = [];
+        if(result.data && result.data.length > 0 && result.data[0].datas && result.data[0].datas.length > 0) {
+            if(result.data[0].datas[0].pttype == "5") { //处理设置的为平台4还是平台5，并选中对应的类型
+                r_pt5checked = true;
+                r_pt5.checked = true;
+                r_pt5.setValue(true);
+                r_pt4.checked = false;
+                r_pt4.setValue(false);
+            } else {
+                r_pt5checked = false;
+            }
+            //设置默认的数据源  初始化时，如数据源下来未加载完，则需要设置default 变量为对应的id，在下拉初始化完成后再设置
+            if(result.data[0].datas[0].ptdb == "" && result.data[0].datas[0].pttype == "5") {
+                comlist.setValue("newpt")
+                defaultPtdb = "newpt"
+            } else if(result.data[0].datas[0].ptdb == "") {
+                comlist.setValue("pt")
+                defaultPtdb = "pt"
+            } else {
+                comlist.setValue(result.data[0].datas[0].ptdb)
+                defaultPtdb = result.data[0].datas[0].ptdb;
+            }
+            //获取配置的项目发布的其他信息
+            subsysid = result.data[0].datas[0].subsysid;
+            txt_dataserverip.setValue(result.data[0].datas[0].dasserver)
+            txt_workflowip.setValue(result.data[0].datas[0].wfserver)
+            txt_msg.setValue(result.data[0].datas[0].msgserver)
+            MyField.setValue(result.data[0].datas[0].virtualdir)
+            resourceserver = Ext.decode(result.data[0].datas[0].resourceserver);
+        }
+        loadSubSys(subsysid);
+        //添加radio的check事件，在此处添加的原因为防止初始化时，设置radio选中会触发事件，调用loadSubSys，导致加载两次树
+        addCheckEvent();
+        //设置界面中文本框的虚拟目录
+        var vp = vmd.core.getVirtualPath().replace(window.location.origin + "/", "");
+        if(vp.lastIndexOf("/") > 0)
+            MyField.setValue(vp.substr(0, vp.lastIndexOf("/")));
+
+        //递归添加地址对应组件，并设置内容
+        //通过当前模块id获取配置的资源中心信息
+        hwDas.get("DataServiceWorkSpace/projectInfo/getResSerByModuleId", {}, {
+            module_id: parent.hwTree.getSelectedItemId() //"hw87960710" 
+        }, function(result) {
+            //如果配置了，则处理配置的资源中心地址
+            if(result.data && result.data.length > 0 && result.data[0].datas && result.data[0].datas.length > 0) {
+                //遍历 添加的资源地址  
+                for(var i = 0; i < result.data[0].datas.length; i++) {
+                    if(listResourceIP.indexOf(result.data[0].datas[i].resource_server_ip) < 0) {
+                        listResourceIP.push(result.data[0].datas[i].resource_server_ip);
+                        var ipresource = new vmd.ux.PublishResource({
+                            id: "PublishResource" + i,
+                            anchor: "100% "
+                        });
+                        //动态添加地址替换组件，根据有多少不同的地址进行添加
+                        palResource.add(ipresource)
+                        var newip = "";
+                        //获取替换的服务的新老地址
+                        for(var j = 0; j < resourceserver.length; j++) {
+                            if(resourceserver[j].oldip == result.data[0].datas[i].resource_server_ip)
+                                newip = resourceserver[j].newip;
+                        }
+                        //将新老地址赋给替换组件进行替换
+                        ipresource.setText(result.data[0].datas[i].resource_server_ip, newip, result.data[0].datas[i].fullname.replace('&&', '/'));
+                        listPublishResourceComps.push(ipresource)
+                    }
+                    listResourceNameIP.push({
+                        name: result.data[0].datas[i].fullname,
+                        oldip: result.data[0].datas[i].resource_server_ip,
+                        newip: ""
+                    })
+                }
+                PublishResource.hide();
+                palResource.onBodyResize()
+            } else { //如果没有设置资源中新，则读取本地默认的资源中心地址，处理逻辑与上述处理一致
+                //调用获取资源中新的公共方法
+                vmd.core.getModuleResourceServices(parent.hwTree.getSelectedItemId(), function(serverlist) {
+                    //遍历 默认的资源地址  
+                    for(var i = 0; i < serverlist.length; i++) {
+                        if(serverlist[i].children && serverlist[i].children.length > 0) {
+                            for(var ii = 0; ii < serverlist[i].children.length; ii++) {
+                                var fullname = serverlist[i].name + '&&' + serverlist[i].children[ii].name;
+                                if(listResourceIP.indexOf(serverlist[i].children[ii].address) < 0) {
+                                    listResourceIP.push(serverlist[i].children[ii].address);
+                                    var ipresource = new vmd.ux.PublishResource({
+                                        id: "PublishResource" + i + ii,
+                                        anchor: "100% "
+                                    });
+                                    //动态添加地址替换组件，根据有多少不同的地址进行添加
+                                    palResource.add(ipresource)
+                                    var newip = "";
+                                    //获取替换的服务的新老地址
+                                    for(var j = 0; j < resourceserver.length; j++) {
+                                        if(resourceserver[j].oldip == serverlist[i].children[ii].address)
+                                            newip = resourceserver[j].newip;
+                                    }
+                                    //将新老地址赋给替换组件进行替换
+                                    ipresource.setText(serverlist[i].children[ii].address, newip, fullname.replace('&&', '/'));
+                                    listPublishResourceComps.push(ipresource)
+                                }
+                                listResourceNameIP.push({
+                                    name: fullname,
+                                    oldip: serverlist[i].children[ii].address,
+                                    newip: ""
+                                })
+                            }
+                        }
+                    }
+                    PublishResource.hide();
+                    palResource.onBodyResize()
+                }, function(msg) {})
+            }
+        }, function(msg) {});
+    }, function(msg) {})
+}
+
+function addCheckEvent() {
+    r_pt4.on('check', function(radio, checked) {
+        changept(radio, checked);
+    })
+    r_pt5.on('check', function(radio, checked) {
+        changept(radio, checked);
+    })
+}
+
+function changept(snder, checked) {
+    if(r_pt5.checked) {
+        pttype.setValue("5");
+        tree.leafImg = "/system/modules/eQ9ULgcVb1/img/folderClosed.gif";
+    } else {
+        pttype.setValue("4");
+        tree.leafImg = "/lib/dhtmlx/imgs/dhxtree_material/tree/model.png";
+    }
+    store.toRefresh();
+    loadSubSys()
+}
+
+function r_pt5_afterrender(sender) {}
+
+function comlist_selectChanged(sender, combo, record, index) {
+    loadSubSys()
+}
+
+function store1_load(sender, records, options) {
+    //设置默认平台库
+    comlist.setValue(defaultPtdb)
+}
+
+function MyViewport_beforerender(sender) {
+    label1.hide();
+    MyField.hide();
+    panel2.height = 30;
+    div6.hide();
+    div3.hide();
+    div1.anchor = "100% 100%"
+    div1.doLayout()
+}
+			this.MyViewport_afterrender=MyViewport_afterrender;
+		this.MyViewport_beforerender=MyViewport_beforerender;
+		pttype=new vmd.var.variable({value:"return \"\""});
+
+		store=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"store","autoLoad":false,"storeConfig":"{\"id\":\"bl11rwaUwv\",\"callcode\":\"vmdCode\",\"url\":\"CDEServcie/pt/getSubSystem\",\"host\":\"\",\"isHwRest\":true,\"name\":\"获取子系统\",\"getMethods\":[{\"id\":\"pttype\",\"value1\":\"return pttype.getValue()\",\"value2\":\"\"},{\"id\":\"ptdb\",\"value1\":\"return comlist.getValue();\",\"value2\":\"\"}],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"subsysname\",\"type\":\"string\"},{\"name\":\"subsysid\",\"type\":\"string\"},{\"name\":\"parentid\",\"type\":\"string\"}]}"});
+		store1=new vmd.store.jsonStore({listeners:{load:function(){store1_load.apply(this,arguments);}},"xtype":"vmd.jsonStore","id":"store1","autoLoad":true,"cid":"vmdJsonStore","storeConfig":"{\"id\":\"madJo1582v\",\"callcode\":\"vmdCode\",\"url\":\"CDEServcie/pt/getdataresource\",\"host\":\"\",\"isHwRest\":true,\"name\":\"获取数据资源\",\"getMethods\":[{\"id\":\"datasource_id\",\"value1\":\"\",\"value2\":\"\"}],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"id\",\"type\":\"string\"},{\"name\":\"name\",\"type\":\"string\"}]}","load":"store1_load"});
+
+
+	 var subWin=new vmd.comp.SubWindow({view:{
+			xtype:"vmd.subwindow",
+			id:"subWin",
+			width:600,
+			height:400,
+			hide:true,
+			closable:true,
+			draggable:false,
+			maximizable:true,
+			modal:true,
+			resizable:true,
+			autoScroll:true,
+			closeAction:"close",
+			title:"test",
+			moduleId:"hwFe5Mdawe",
+			path:"/modules/eQ9ULgcVb1/hwb2598d03/hwMATxBzQ9/hwFe5Mdawe.vmd",
+			createTime:"2018-09-18 06:09:40"
+		},rootScope:this,isModule:true})
+		this.items=[
+			{
+				xtype:"panel",
+				id:"panel2",
+				title:"Panel",
+				header:false,
+				border:false,
+				height:54,
+				region:"north",
+				layout:"vbox",
+				style:"background-color: lightblue;",
+				bodyStyle:"background-color: lightblue;",
+				items:[
+					{
+						xtype:"vmd.div",
+						id:"div6",
+						autoEl:"div",
+						border:true,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						width:1400,
+						height:30,
+						x:0,
+						y:0,
+						style:"background-color: white;    width: 100%",
+						layout:"absolute",
+						items:[
+							{
+								xtype:"label",
+								id:"label5",
+								text:"平台库：",
+								x:235,
+								y:5,
+								height:20
+							},
+							{
+								xtype:"label",
+								id:"label4",
+								text:"平台类型：",
+								x:10,
+								y:5
+							},
+							{
+								xtype:"vmd.comlist",
+								id:"comlist",
+								width:130,
+								height:270,
+								x:290,
+								y:2,
+								style:"background-color: white;",
+								store:store1,
+								valueField:"id",
+								displayField:"name",
+								selectChanged:"comlist_selectChanged",
+								listeners:{
+									selectChanged:comlist_selectChanged
+								}
+							},
+							{
+								xtype:"radiostoregroup",
+								id:"hwRadioGroup",
+								width:200,
+								height:40,
+								labelField:"label",
+								valueField:"value",
+								checkedField:"checked",
+								boxFieldName:"myRadio",
+								x:75,
+								y:0,
+								items:[
+									{
+										xtype:"radio",
+										id:"r_pt4",
+										boxLabel:"平台4",
+										width:71,
+										checked:true,
+										x:0,
+										y:0
+									},
+									{
+										xtype:"radio",
+										id:"r_pt5",
+										boxLabel:"平台5",
+										width:69,
+										x:0,
+										y:0,
+										checked:false,
+										afterrender:"r_pt5_afterrender",
+										listeners:{
+											vmdafterrender:r_pt5_afterrender
+										}
+									}
+								]
+							}
+						]
+					},
+					{
+						xtype:"label",
+						id:"label",
+						text:"请选择要注册的子系统：",
+						x:20,
+						y:35,
+						margins:"5 0 0 10"
+					}
+				]
+			},
+			{
+				xtype:"panel",
+				id:"panel",
+				title:"Panel",
+				header:false,
+				border:false,
+				height:100,
+				region:"center",
+				layout:"border",
+				items:[
+					{
+						xtype:"panel",
+						id:"panel3",
+						title:"Panel",
+						header:false,
+						border:true,
+						height:619,
+						region:"center",
+						layout:"anchor",
+						items:[
+							{
+								xtype:"vmd.div",
+								id:"div1",
+								autoEl:"div",
+								border:true,
+								backgroundRepeat:"no-repeat",
+								backgroundPosition:"top left",
+								width:400,
+								height:50,
+								anchor:"100% 45%",
+								layout:"fit",
+								style:"padding-bottom: 8px;",
+								items:[
+									{
+										xtype:"vmd.treeex",
+										id:"tree",
+										width:350,
+										height:270,
+										hideRoot:true,
+										x:180,
+										y:10,
+										store:store,
+										parentField:"parentid",
+										valueField:"subsysid",
+										textField:"subsysname",
+										loadType:"全部加载",
+										rootValue:"0",
+										rootText:"子系统",
+										leafImg:"/system/modules/eQ9ULgcVb1/img/folderClosed.gif"
+									}
+								]
+							},
+							{
+								xtype:"vmd.div",
+								id:"div3",
+								autoEl:"div",
+								border:true,
+								backgroundRepeat:"no-repeat",
+								backgroundPosition:"top left",
+								width:400,
+								height:50,
+								anchor:"100% 55%",
+								layout:"border",
+								items:[
+									{
+										xtype:"vmd.div",
+										id:"div4",
+										autoEl:"div",
+										border:false,
+										backgroundRepeat:"no-repeat",
+										backgroundPosition:"top left",
+										width:400,
+										height:73,
+										region:"north",
+										layout:"column",
+										items:[
+											{
+												xtype:"label",
+												id:"label2",
+												text:"数据服务地址:",
+												x:8,
+												y:20
+											},
+											{
+												xtype:"textfield",
+												id:"txt_dataserverip",
+												allowBlank:true,
+												x:90,
+												y:10,
+												width:180,
+												columnWidth:0.5
+											},
+											{
+												xtype:"label",
+												id:"label3",
+												text:"工作流地址：",
+												x:310,
+												y:20
+											},
+											{
+												xtype:"textfield",
+												id:"txt_workflowip",
+												allowBlank:true,
+												x:390,
+												y:10,
+												width:180,
+												columnWidth:0.5
+											},
+											{
+												xtype:"label",
+												id:"label6",
+												text:"消息中心地址:",
+												x:310,
+												y:20
+											},
+											{
+												xtype:"textfield",
+												id:"txt_msg",
+												allowBlank:true,
+												x:390,
+												y:10,
+												width:180,
+												columnWidth:0.5
+											}
+										]
+									},
+									{
+										xtype:"vmd.div",
+										id:"div5",
+										autoEl:"div",
+										border:true,
+										backgroundRepeat:"no-repeat",
+										backgroundPosition:"top left",
+										width:400,
+										height:50,
+										region:"center",
+										layout:"border",
+										items:[
+											{
+												xtype:"vmd.div",
+												id:"div2",
+												autoEl:"div",
+												border:false,
+												backgroundRepeat:"no-repeat",
+												backgroundPosition:"top left",
+												width:400,
+												height:26,
+												anchor:"100% 10%",
+												layout:"absolute",
+												region:"north",
+												style:"background-color: lightblue;",
+												items:[
+													{
+														xtype:"label",
+														id:"title",
+														text:"   设置资源服务器：",
+														anchor:"",
+														height:20,
+														autoHeight:false,
+														width:100,
+														y:5,
+														x:5,
+														autoWidth:true
+													}
+												]
+											},
+											{
+												xtype:"vmd.div",
+												id:"DivResource",
+												autoEl:"div",
+												border:true,
+												backgroundRepeat:"no-repeat",
+												backgroundPosition:"top left",
+												width:400,
+												height:50,
+												anchor:"100% 30%",
+												layout:"fit",
+												region:"center",
+												items:[
+													{
+														xtype:"panel",
+														id:"palResource",
+														title:"Panel",
+														header:false,
+														border:false,
+														height:100,
+														layout:"anchor",
+														autoScroll:true,
+														items:[
+															{
+																xtype:"vmd.ux.PublishResource",
+																id:"PublishResource",
+																anchor:"100% "
+															}
+														]
+													}
+												]
+											}
+										]
+									}
+								]
+							}
+						]
+					},
+					{
+						xtype:"panel",
+						id:"panel4",
+						layoutConfig:{
+							align:"middle",
+							pack:"start"
+						},
+						title:"Panel",
+						header:false,
+						border:false,
+						height:35,
+						region:"south",
+						layout:"hbox",
+						items:[
+							{
+								xtype:"label",
+								id:"label1",
+								text:"虚拟目录：",
+								x:10,
+								y:10
+							},
+							{
+								xtype:"textfield",
+								id:"MyField",
+								allowBlank:true,
+								x:80,
+								y:5,
+								width:240
+							},
+							{
+								xtype:"label",
+								id:"label7",
+								text:"注：在项目配置信息中对注册发布的数据信息、资源、服务等进行设置。",
+								x:390,
+								y:20,
+								style:"color:red;font-weight: bold;"
+							}
+						]
+					}
+				]
+			},
+			{
+				xtype:"panel",
+				id:"panel1",
+				layoutConfig:{
+					align:"top",
+					pack:"center"
+				},
+				title:"Panel",
+				header:false,
+				border:false,
+				height:40,
+				region:"south",
+				layout:"hbox",
+				items:[
+					{
+						xtype:"vmd.button",
+						id:"button",
+						text:"注册",
+						type:"info",
+						size:"small",
+						region:"west",
+						click:"button_click",
+						listeners:{
+							click:button_click
+						}
+					},
+					{
+						xtype:"vmd.div",
+						id:"div",
+						autoEl:"div",
+						border:false,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						width:100,
+						height:50
+					},
+					{
+						xtype:"vmd.button",
+						id:"button1",
+						text:"取消",
+						type:"(none)",
+						size:"small",
+						click:"button1_click",
+						listeners:{
+							click:button1_click
+						}
+					}
+				]
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+	}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MyViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

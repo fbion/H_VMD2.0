@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>数据准备</title>
+	<!--基本样式-->
+    <link href="{vmdvirtualPath}/css/common.css?ver=2.0.4.190627" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="{vmdvirtualPath}/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.4.190627" rel="stylesheet" />
+   
+    <link href="{vmdvirtualPath}/design/css/icons.css?ver=2.0.4.190627" rel="stylesheet" />
+
+	<link href="{vmdvirtualPath}/lib/dhtmlx/dhtmlx.css?ver=2.0.4.190627" rel="stylesheet" />
+	  <!--样式快捷索引表-->
+    <link href="{vmdvirtualPath}/css/shortcut.css?ver=2.0.4.190627" rel="stylesheet" />
+    
+	{vmdprojectcssfiles}
+    
+    <script src="{vmdvirtualPath}/lib/labjs/LAB.min.js?ver=2.0.4.190627"></script>
+    <script src="{vmdvirtualPath}/config.js?ver=2.0.4.190627"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.4.190627"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.4.190627"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.4.190627"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/ext-all-debug.js?ver=2.0.4.190627"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.4.190627"></script>
+    <script src="{vmdvirtualPath}/js/util.js?ver=2.0.4.190627"></script>
+    <script src="{vmdvirtualPath}/lib/dhtmlx/dhtmlx.js?ver=2.0.4.190627"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.4.190627"></script>
+	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.4.190627"></script>
+    <script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.4.190627"></script>
+	<script src="{vmdvirtualPath}/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.4.190627"></script>
+    <script src="{vmdvirtualPath}/js/hwdas.js?ver=2.0.4.190627"></script>
+    <script src="{vmdvirtualPath}/js/vmdcore.js?ver=2.0.4.190627"></script>
+    <script src="{vmdvirtualPath}/js/vmdcomps.js?ver=2.0.4.190627"></script>
+    <script src="{vmdvirtualPath}/js/publicMethods.js?ver=2.0.4.190627"></script>
+    <script src="{vmdvirtualPath}/js/vmdreport.js?ver=2.0.4.190627"></script>
+ 	
+    {vmdworkspacePath}
+	{vmdprojectconfigjs}
+	<script src="{vmdvirtualPath}/lib/ace/ace.js?ver=2.0.4.190627" ></script>
+	<script src="{vmdvirtualPath}/lib/ace/mode-base.js?ver=2.0.4.190627" ></script>
+	<script src="{vmdvirtualPath}/lib/ace/theme-xcode.js?ver=2.0.4.190627" ></script>
+	<script src="{vmdvirtualPath}/lib/ace/ext-language_tools.js?ver=2.0.4.190627" ></script>
+	{vmdprojectjsfiles}
+    
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        
+    </style>
+    <script>
+	    
+        vmd.virtualPath = '{vmdvirtualPath}';
+        
+        Ext.define("vmd.module.MainViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps([]),
+	xtype:"vmd.module.MainViewport",
+	layout:"border",
+	afterrender:"MainViewport_afterrender",
+	initComponent: function(){
+		//初始化处理ace的api
+if (parent.init_def_platformControlData) {
+    parent.init_def_platformControlData();
+    def_platformControl = parent.def_platformControl;
+}
+if (parent.allPublicMethods)
+    window.allPublicMethods = parent.allPublicMethods;
+else
+    window.allPublicMethods = {};
+if (parent.publicMethodsType)
+    window.publicMethodsType = parent.publicMethodsType;
+else
+    window.publicMethodsType = {};
+if (parent.init_def_platformFun) {
+    parent.init_def_platformFun({
+        vmd: allPublicMethods
+    });
+    parent.init_def_platformVmd();
+    def_platformWidget = parent.def_platformWidget;
+}
+//ext框架类自动识别
+def_platformExtjs = parent.def_platformExtjs;
+var configs = parent.edValue;
+if (!configs.store) {
+    Ext.Msg.alert('未配置数据准备所需的数据集', '错误')
+    return
+}
+var storeObj = parent.xds.vmd.getStoreByDsName(configs.store, true)
+var storeConfigStr = storeObj.component.getConfigValue("storeConfig")
+var storeConfig = JSON.parse(storeConfigStr);
+var fileDic = storeConfig.fields;
+var paramDic = storeConfig.getMethods;
+//获取已配置的信息
+var sconfig = configs.dataConfig || "{}";
+var sconfigObj = JSON.parse(sconfig);
+var sparamconfigObj = sconfigObj.params || [];
+var sfielsconfigObj = sconfigObj.values || [];
+
+var paramgrid;
+var fieldgrid;
+var sfileDic = [];
+var sparamDic = [];
+for (var i = 0; i < fileDic.length; i++) {
+
+    var value = "";
+    for (var j = 0; j < sfielsconfigObj.length; j++) {
+        if (sfielsconfigObj[j].id == fileDic[i].name) {
+            value = sfielsconfigObj[j].value
+            break;
+        }
+    }
+    var row = {
+        xh: i + 1,
+        id: fileDic[i].name,
+        name: fileDic[i].cname,
+        type: fileDic[i].type,
+        value: value
+    }
+    sfileDic.push(row)
+}
+for (var i = 0; i < paramDic.length; i++) {
+    var value = "";
+    for (var j = 0; j < sparamconfigObj.length; j++) {
+        if (sparamconfigObj[j].id == paramDic[i].id) {
+            value = sparamconfigObj[j].value
+            break;
+        }
+    }
+    var row = {
+        xh: i + 1,
+        id: paramDic[i].id,
+        name: paramDic[i].type || "",
+        type: paramDic[i].type || "string",
+        value: value
+    }
+    sparamDic.push(row)
+}
+storeConfig.fields;
+var rows = [];
+var myParamDataStore = new dhtmlXDataStore();
+var myFieldDataStore = new dhtmlXDataStore();
+
+function div3_afterrender(sender) {}
+
+function MainViewport_afterrender(sender) {
+    //创建参数的网格
+    paramgrid = new dhtmlXGridObject(div3.el.dom);
+    paramgrid.setImagePath("/lib/dhtmlx/codebase/imgs/");
+    var header = "序号,参数id,参数名,参数类型,值";
+    var width = "80,100,120,100,150";
+    //var colType = "ro,ed,ch,ch,co,ed,ed,ed";
+    var colType = "ro,ro,ro,ro,txt";
+    var strType = "str,str,str,str,str";
+    var colId = "xh,id,name,type,value";
+    paramgrid.setHeader(header);
+    paramgrid.setInitWidths(width);
+    paramgrid.setColumnIds(colId)
+    paramgrid.setColTypes(colType)
+    //paramgrid.enableAutoHeight(true, null, true);
+    paramgrid.init();
+    myParamDataStore.parse(sparamDic);
+    paramgrid.sync(myParamDataStore)
+    paramgrid.setEditable(false)
+    paramgrid.attachEvent("onBeforeSelect", paramsrowSelect);
+    //创建字段配置的网格
+    fieldgrid = new dhtmlXGridObject(div5.el.dom);
+    fieldgrid.setImagePath("/lib/dhtmlx/codebase/imgs/");
+    var header1 = "序号,字段id,字段名称,参数类型,值";
+    var width1 = "80,100,120,100,150";
+    //var colType = "ro,ed,ch,ch,co,ed,ed,ed";
+    var colType1 = "ro,ro,ro,ro,txt";
+    var strType1 = "str,str,str,str,str";
+    var colId1 = "xh,id,name,type,value";
+    fieldgrid.setHeader(header1);
+    fieldgrid.setInitWidths(width1);
+    fieldgrid.setColumnIds(colId1)
+    fieldgrid.setColTypes(colType1)
+    //fieldgrid.enableAutoHeight(true, null, true);
+    fieldgrid.init();
+    myFieldDataStore.parse(sfileDic);
+    fieldgrid.sync(myFieldDataStore)
+    fieldgrid.setEditable(false)
+    fieldgrid.attachEvent("onBeforeSelect", fieldrowSelect);
+}
+
+function paramsrowSelect(new_row, old_row, new_col_index) {
+    if (new_col_index == "4") {
+        valueEditFrm(paramgrid, new_row, new_col_index, myParamDataStore);
+    }
+}
+
+function fieldrowSelect(new_row, old_row, new_col_index) {
+    if (new_col_index == "4") {
+        valueEditFrm(fieldgrid, new_row, new_col_index, myFieldDataStore);
+    }
+}
+
+function valueEditFrm(grid, rowId, cellInd, store) {
+    var mygrid = grid;
+    var win = new Ext.Window({
+        title: "参数值代码编辑",
+        modal: true,
+        maximized: false,
+        height: 400,
+        width: 500,
+        maximizable: true,
+        resizable: true,
+        bodyStyle: "background-color:#fff",
+        closeAction: 'close'
+    })
+    win.editor = new vmd.comp.Ace({
+        language: 'javascript'
+    })
+    win.add(win.editor);
+    //关闭
+    win.hidefn = function() {
+        var value = win.editor.getValue()
+        mygrid.cells(rowId, cellInd).setValue(value)
+        store.item(rowId).value = value
+    }
+    win.on('hide', win.hidefn);
+    var dValue = mygrid.cells(rowId, cellInd).getValue();
+    if (dValue == "") {
+        dValue = "//var date=new Date(dateTime.getValue()) //获取标准日期 \r\n" +
+            "//date.setDate(date.getDate()-1)//前移或后移天数  \r\n" +
+            "//date.setMonth(date.getMonth()+n)//前移或后移月数  \r\n" +
+            "//date.setFullYear(date.getFullYear()+n)//前移或后移年数  \r\n" +
+            "//value = vmd.Date.format(date,'Y-m-d')//返回查询日期  \r\n" +
+            "//value = vmd.Date.format(date,'Ym')//返回查询年月  \r\n" +
+            "//value = vmd.Date.format(date,'Y')//返回查询年度  \r\n" +
+            "//返回值 \r\n return \"\""
+    }
+    win.editor.value = dValue;
+    win.show();
+    Ext.defer(function() {
+        win.editor.focus();
+        win.editor.el.dom.click()
+    }, 100)
+}
+
+function button_click(sender, e) {
+    var params = []
+    var values = []
+    for (var i = 0; i < myFieldDataStore.data.order.length; i++) {
+        id = myFieldDataStore.data.order[i]
+        if (myFieldDataStore.data.pull[id].value != "")
+            values.push({
+                id: myFieldDataStore.data.pull[id].id,
+                value: myFieldDataStore.data.pull[id].value
+            });
+    }
+    for (var i = 0; i < myParamDataStore.data.order.length; i++) {
+        id = myParamDataStore.data.order[i]
+        if (myParamDataStore.data.pull[id].value != "")
+            params.push({
+                id: myParamDataStore.data.pull[id].id,
+                value: myParamDataStore.data.pull[id].value
+            });
+    }
+    // parent.xds.active.component.setConfig("config",{
+    //     params: params,
+    //      values: values
+    //  })
+    window.vmdReturnValue = Ext.encode({
+        params: params,
+        values: values
+    })
+    parent.edClose(true);
+}
+
+function div5_afterrender(sender) {
+
+}
+			this.MainViewport_afterrender=MainViewport_afterrender;
+
+
+
+		this.items=[
+			{
+				xtype:"vmd.div",
+				id:"div",
+				autoEl:"div",
+				border:false,
+				backgroundRepeat:"no-repeat",
+				backgroundPosition:"top left",
+				width:400,
+				height:50,
+				x:140,
+				y:70,
+				region:"center",
+				layout:"border",
+				items:[
+					{
+						xtype:"vmd.div",
+						id:"div5",
+						autoEl:"div",
+						border:false,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						width:400,
+						height:50,
+						region:"center",
+						autoScroll:false,
+						afterrender:"div5_afterrender",
+						listeners:{
+							vmdafterrender:div5_afterrender
+						}
+					},
+					{
+						xtype:"vmd.div",
+						id:"div6",
+						layoutConfig:{
+							align:"middle"
+						},
+						autoEl:"div",
+						border:false,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						width:400,
+						height:50,
+						region:"north",
+						layout:"hbox",
+						items:[
+							{
+								xtype:"label",
+								id:"label1",
+								text:"值定义：",
+								margins:"0 0 0 20",
+								style:"font-size: 14px;    font-weight: bold;    color: #5e5e5e;"
+							}
+						]
+					}
+				]
+			},
+			{
+				xtype:"vmd.div",
+				id:"div1",
+				autoEl:"div",
+				border:false,
+				backgroundRepeat:"no-repeat",
+				backgroundPosition:"top left",
+				width:400,
+				height:180,
+				x:260,
+				y:250,
+				region:"north",
+				layout:"border",
+				items:[
+					{
+						xtype:"vmd.div",
+						id:"div3",
+						autoEl:"div",
+						border:false,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						width:400,
+						height:50,
+						region:"center",
+						afterrender:"div3_afterrender",
+						listeners:{
+							vmdafterrender:div3_afterrender
+						}
+					},
+					{
+						xtype:"vmd.div",
+						id:"div4",
+						layoutConfig:{
+							align:"middle"
+						},
+						autoEl:"div",
+						border:false,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						width:400,
+						height:50,
+						region:"north",
+						layout:"hbox",
+						items:[
+							{
+								xtype:"label",
+								id:"label",
+								text:"条件设置：",
+								margins:"0 0 0 20",
+								style:"font-size: 14px;    font-weight: bold;    color: #5e5e5e;"
+							}
+						]
+					}
+				]
+			},
+			{
+				xtype:"vmd.div",
+				id:"div2",
+				layoutConfig:{
+					align:"middle",
+					pack:"end"
+				},
+				autoEl:"div",
+				border:true,
+				backgroundRepeat:"no-repeat",
+				backgroundPosition:"top left",
+				width:400,
+				height:50,
+				region:"south",
+				layout:"hbox",
+				style:"border-top: 1px ;",
+				items:[
+					{
+						xtype:"vmd.button",
+						id:"button",
+						text:"确定",
+						type:"primary",
+						size:"small",
+						margins:"0 30 0 0",
+						click:"button_click",
+						listeners:{
+							click:button_click
+						}
+					},
+					{
+						xtype:"vmd.ace",
+						id:"MyAce",
+						height:10,
+						width:10,
+						language:"javascript",
+						hidden:true
+					}
+				]
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+			me.on('afterrender',function(){ MainViewport_afterrender.call(me,me)})
+}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MainViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

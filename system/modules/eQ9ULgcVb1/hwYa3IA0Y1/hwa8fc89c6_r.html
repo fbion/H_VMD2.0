@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>单元格图形</title>
+	<!--基本样式-->
+    <link href="{virtualPath}/css/common.css?ver=2.0.3.0914" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="{virtualPath}/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.3.0914" rel="stylesheet" />
+   
+    <link href="{virtualPath}/design/css/icons.css?ver=2.0.3.0914" rel="stylesheet" />
+
+	<link href="{virtualPath}/lib/dhtmlx/dhtmlx.css?ver=2.0.3.0914" rel="stylesheet" />
+	  <!--样式快捷索引表-->
+    <link href="{virtualPath}/css/shortcut.css?ver=2.0.3.0914" rel="stylesheet" />
+    
+    <script src="{virtualPath}/lib/labjs/LAB.min.js?ver=2.0.3.0914"></script>
+    <script src="{virtualPath}/config.js?ver=2.0.3.0914"></script>
+    <script src="{virtualPath}/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.3.0914"></script>
+    <script src="{virtualPath}/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.3.0914"></script>
+    <script src="{virtualPath}/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.3.0914"></script>
+    <script src="{virtualPath}/lib/ext-3.4/ext-all-debug.js?ver=2.0.3.0914"></script>
+    <script src="{virtualPath}/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.3.0914"></script>
+    <script src="{virtualPath}/js/util.js?ver=2.0.3.0914"></script>
+    <script src="{virtualPath}/lib/dhtmlx/dhtmlx.js?ver=2.0.3.0914"></script>
+	<script src="{virtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.3.0914"></script>
+	<script src="{virtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.3.0914"></script>
+    <script src="{virtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.3.0914"></script>
+	<script src="{virtualPath}/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.3.0914"></script>
+    <script src="{virtualPath}/js/hwdas.js?ver=2.0.3.0914"></script>
+	<script src="{virtualPath}/js/hwMSC.js?ver=2.0.3.0914"></script>
+    <script src="{virtualPath}/js/vmdcore.js?ver=2.0.3.0914"></script>
+    <script src="{virtualPath}/js/vmdcomps.js?ver=2.0.3.0914"></script>
+    <script src="{virtualPath}/js/publicMethods.js?ver=2.0.3.0914"></script>
+    <script src="{virtualPath}/js/vmdreport.js?ver=2.0.3.0914"></script>
+    {workspacePath}
+
+    <script src="{virtualPath}/lib/ace/ace.js"></script>
+    <script src="{virtualPath}/lib/ace/mode-base.js" type="text/javascript"></script>
+    <script src="{virtualPath}/lib/ace/theme-xcode.js" type="text/javascript" ></script>
+    <script src="{virtualPath}/lib/ace/ext-language_tools.js"></script>
+    
+
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        
+    </style>
+    <script>
+	    
+        vmd.virtualPath = '{virtualPath}';
+        
+        Ext.define("vmd.module.MainViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps(["vmd.ux.GraphicType$1.0$GraphicType"]),
+	xtype:"vmd.module.MainViewport",
+	layout:"absolute",
+	beforerender:"MainViewport_beforerender",
+	listeners:{
+		beforerender:function(){
+	this.MainViewport_beforerender(this)
+}
+	},
+	initComponent: function(){
+		function cellGraphicType() {
+    this.displayMode = {
+            id: "displayMode",
+            value: "0",
+            type: "comlist"
+        },
+        this.picLayout = {
+            id: "picLayout",
+            value: "0",
+            type: "comlist"
+        },
+        this.source = {
+            id: "source",
+            value: "0",
+            type: "comlist"
+        },
+        this.control = {
+            id: "control",
+            value: "0",
+            type: "comlist"
+        },
+        this.excelExport = {
+            id: "excelExport",
+            value: "false",
+            type: "CheckBox"
+        }
+    //清空属性
+    this.clearInfo = function() {
+        this.displayMode.value = ""
+        this.picLayout.value = "";
+        this.source.value = ""
+        this.control.value = "";
+        this.excelExport.value = "false";
+    };
+
+    //设置值
+    this.setCellTextInfo = function(info, cell) {
+        this.displayMode.value = info.displayMode.value
+        this.picLayout.value = info.picLayout.value
+        this.source.value = info.source.value
+        this.control.value = info.control.value
+        this.excelExport.value = info.excelExport.value
+    };
+
+    // 根据id设置相应属性的值
+    this.setCellInfos = function(id, value) {
+        var c = this.getInfoByID(id);
+        if(c) {
+            if(c.type == "Text") {
+                c.value = value;
+            }
+            if(c.type == "CheckBox") {
+                c.checked = value;
+            }
+            if(c.type == "ComboBox") {
+                c.value = value;
+            }
+            if(c.type == "compound") {
+                c.value = value;
+            }
+            if(c.type == "comlist") {
+                c.value = value;
+            }
+            if(c.type == "comlist") {
+                c.value = value;
+            }
+            if(c.type == "radiostoregroup") {
+                c.value = value;
+            }
+            if(c.type == "ColorSelect") {
+                c.value = value;
+            }
+            if(c.type == "LineStyle") {
+                c.value = value;
+            }
+        }
+    };
+
+    //通过id获取属性
+    this.getInfoByID = function(id) {
+        if(this.displayMode.id == id) {
+            return this.displayMode;
+        }
+        if(this.picLayout.id == id) {
+            return this.picLayout;
+        }
+        if(this.source.id == id) {
+            return this.source;
+        }
+        if(this.control.id == id) {
+            return this.control;
+        }
+        if(this.excelExport.id == id) {
+            return this.excelExport;
+        }
+    }
+
+    //转换JSON串
+    this.cellInfoToJson = function() {
+        json = {
+            cellGraphicInfo: [{
+                displayMode: {
+                    id: 'displayMode',
+                    value: this.displayMode.value,
+                    type: 'comlist'
+                },
+                picLayout: {
+                    id: 'picLayout',
+                    value: this.picLayout.value,
+                    type: 'comlist'
+                },
+                source: {
+                    id: 'source',
+                    value: this.source.value,
+                    type: 'comlist'
+                },
+                control: {
+                    id: 'control',
+                    value: this.control.value,
+                    type: 'comlist'
+                },
+                excelExport: {
+                    id: 'excelExport',
+                    value: this.excelExport.value,
+                    type: 'CheckBox'
+                },
+
+            }]
+
+        }
+    }
+}
+var p = new cellGraphicType()
+
+function button_click(sender, e) {
+    p.displayMode.value = graphictype.getInfo("displayMode")
+    p.picLayout.value = graphictype.getInfo("picLayout")
+    p.source.value = graphictype.getInfo("source")
+    p.control.value = graphictype.getInfo("control")
+    p.excelExport.value = graphictype.getInfo("excelExport")
+    alert(p.displayMode.value + "," + p.picLayout.value + "," + p.source.value +
+        "," + p.control.value + "," + p.excelExport.value)
+
+}
+
+function button1_click(sender, e) {
+    p.displayMode.value = "0"
+    p.picLayout.value = "1"
+    p.source.value = "2"
+    p.control.value = "0"
+    p.excelExport.value = "true"
+    graphictype.setInfo(p, null)
+}
+
+function MainViewport_beforerender(sender) {
+    
+}
+
+function button3_click(sender, e) {
+    p.displayMode.value = graphictype.getInfo("displayMode")
+    p.picLayout.value = graphictype.getInfo("picLayout")
+    p.source.value = graphictype.getInfo("source")
+    p.control.value = graphictype.getInfo("control")
+    p.excelExport.value = graphictype.getInfo("excelExport")
+    p.cellInfoToJson()
+    alert(JSON.stringify(json))
+}
+
+function button2_click(sender,e){
+p.clearInfo()
+    graphictype.setInfo(p, null)
+}
+			this.MainViewport_beforerender=MainViewport_beforerender;
+
+
+
+		this.items=[
+			{
+				xtype:"vmd.ux.GraphicType",
+				id:"graphictype",
+				layout:"absolute",
+				x:120,
+				y:10
+			},
+			{
+				xtype:"vmd.button",
+				id:"button",
+				text:"取值",
+				type:"(none)",
+				size:"small",
+				x:530,
+				y:90,
+				click:"button_click",
+				listeners:{
+					click:button_click
+				}
+			},
+			{
+				xtype:"vmd.button",
+				id:"button1",
+				text:"传值",
+				type:"(none)",
+				size:"small",
+				x:530,
+				y:150,
+				click:"button1_click",
+				listeners:{
+					click:button1_click
+				}
+			},
+			{
+				xtype:"vmd.button",
+				id:"button2",
+				text:"clear",
+				type:"(none)",
+				size:"small",
+				x:530,
+				y:200,
+				click:"button2_click",
+				listeners:{
+					click:button2_click
+				}
+			},
+			{
+				xtype:"vmd.button",
+				id:"button3",
+				text:"json",
+				type:"(none)",
+				size:"small",
+				x:530,
+				y:250,
+				click:"button3_click",
+				listeners:{
+					click:button3_click
+				}
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+	}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MainViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

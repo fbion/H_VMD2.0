@@ -1,0 +1,111 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>init checkbox</title>
+	<meta charset="utf-8" />
+    <link href="../codebase/skins/dhtmlxcheckbox_dhx_skyblue.css" rel="stylesheet" />
+    <style>
+
+
+    </style>
+</head>
+<body>
+    <div id="check" style="height:50px;width:800px;border:1px solid #eee;"></div>
+    <br/>
+    <p>
+        获取值：
+        <input type="button" name="name" value="获取值" onclick="alert(checkbox.getValue())" />
+    </p>
+    <p>
+        获取值文本：
+        <input type="button" name="name" value="获取值" onclick="alert(checkbox.getText('，'))" />
+    </p>
+    <p>
+        设置值：
+        <input type="button" name="name" value="设置值为" onclick="checkbox.setValue(document.getElementById('v').value)" />
+        <input type="text" value="1,3,5,12" id="v"/>
+    </p>
+    <p>
+        启用/禁用：
+        <input type="button" name="name" value="启用" onclick="checkbox.enable()" />
+        <input type="button" name="name" value="禁用" onclick="checkbox.disable()" />
+    </p>
+    <p>
+        隐藏/显示：
+        <input type="button" name="name" value="隐藏" onclick="checkbox.hide()" />
+        <input type="button" name="name" value="显示" onclick="checkbox.show()" />
+    </p>
+    <script src="../../dhtmlxCommon/codebase/dhtmlxcommon.js"></script>
+    <script src="../codebase/dhtmlxcheckbox.js"></script>
+    <script src="../../dhtmlxDataStore/codebase/datastore_ext.js"></script>
+    <script src="../../dhtmlxDataStore/ext/datastore_checkbox.js"></script>
+
+    <script>
+        var myDataStore = new dhtmlXDataStore();
+        //myDataStore.parse([
+        //    { "value": "1", "text": "选项一", "checked": 0 },
+        //    { "value": "2", "text": "选项二", "checked": 1 },
+        //    { "value": "3", "text": "选项三", "checked": 1 },
+        //    { "value": "4", "text": "选项四", "checked": 0 },
+        //    { "value": "5", "text": "选项五", "checked": 0 },
+        //    { "value": "6", "text": "选项六", "checked": 0 },
+        //    { "value": "7", "text": "选项七", "checked": 0 },
+        //    { "value": "8", "text": "选项八", "checked": 0 },
+        //    { "value": "9", "text": "选项九", "checked": 0 },
+        //    { "value": "10", "text": "选项十", "checked": 0 },
+        //    { "value": "11", "text": "选项十一", "checked": 0 },
+        //    { "value": "12", "text": "选项十二", "checked": 0 },
+        //    { "value": "13", "text": "选项十三", "checked": 0 },
+        //    { "value": "14", "text": "选项十四", "checked": 0 },
+        //    { "value": "15", "text": "选项十五", "checked": 0 },
+        //    { "value": "16", "text": "选项十六", "checked": 0 },
+        //    { "value": "17", "text": "选项十七", "checked": 0 },
+        //    { "value": "18", "text": "选项十八", "checked": 0 }
+        //]);
+        myDataStore.parse([
+           { "value": "1", "text": "选项一" },
+           { "value": "2", "text": "选项二"},
+           { "value": "3", "text": "选项三"},
+           { "value": "4", "text": "选项四"},
+           { "value": "5", "text": "选项五"},
+           { "value": "6", "text": "选项六"},
+           { "value": "7", "text": "选项七"},
+           { "value": "8", "text": "选项八"},
+           { "value": "9", "text": "选项九"},
+           { "value": "10", "text": "选项十"},
+           { "value": "11", "text": "选项十一"},
+           { "value": "12", "text": "选项十二"},
+           { "value": "13", "text": "选项十三"},
+           { "value": "14", "text": "选项十四"},
+           { "value": "15", "text": "选项十五"},
+           { "value": "16", "text": "选项十六"},
+           { "value": "17", "text": "选项十七"},
+           { "value": "18", "text": "选项十八"}
+        ]);
+        var checkbox = new dhtmlXCheckBox("check", {      
+            //text: "text",
+            //value: "value",
+            //skin: "skyblue",
+            //enabled: true,//启用
+            //enableAll: true,//启用全选，默认启用
+            //data: [
+            //{ "value": "1", "text": "选项一", "checked": 1 },
+            //{ "value": "2", "text": "选项二", "checked": 1 },
+            //{ "value": "3", "text": "选项三", "checked": 0 },
+            //{ "value": "4", "text": "选项四", "checked": 0 },
+            //],
+            //mode: "radio"
+        });
+        //datastore加载
+        checkbox.sync(myDataStore, {text:"text",value:"value",checked:"checked",enabled:true, enableAll:true,mode:"checkbox"});
+        //值改变事件，返回新值
+        checkbox.attachEvent("onCheckChanged", function (newValue) {
+            console.log(newValue);
+        });
+        myDataStore.attachEvent("onStoreUpdated", function (id, data, mode) {
+            console.log(data.id + "==" + data.checked);
+        });
+    </script>
+</body>
+</html>

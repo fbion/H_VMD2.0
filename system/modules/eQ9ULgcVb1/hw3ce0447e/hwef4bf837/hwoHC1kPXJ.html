@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>资源管理登录页</title>
+	<!--基本样式-->
+    <link href="/css/common.css?ver=2.0.3.20190219" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.3.20190219" rel="stylesheet" />
+   
+    <link href="/design/css/icons.css?ver=2.0.3.20190219" rel="stylesheet" />
+
+	<link href="/lib/dhtmlx/dhtmlx.css?ver=2.0.3.20190219" rel="stylesheet" />
+	  <!--样式快捷索引表-->
+    <link href="/css/shortcut.css?ver=2.0.3.20190219" rel="stylesheet" />
+    
+    <script src="/lib/labjs/LAB.min.js?ver=2.0.3.20190219"></script>
+    <script src="/config.js?ver=2.0.3.20190219"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.3.20190219"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.3.20190219"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.3.20190219"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=2.0.3.20190219"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.3.20190219"></script>
+    <script src="/js/util.js?ver=2.0.3.20190219"></script>
+    <script src="/lib/dhtmlx/dhtmlx.js?ver=2.0.3.20190219"></script>
+	<script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.3.20190219"></script>
+	<script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.3.20190219"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.3.20190219"></script>
+	<script src="/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.3.20190219"></script>
+    <script src="/js/hwdas.js?ver=2.0.3.20190219"></script>
+	<script src="/js/hwMSC.js?ver=2.0.3.20190219"></script>
+    <script src="/js/vmdcore.js?ver=2.0.3.20190219"></script>
+    <script src="/js/vmdcomps.js?ver=2.0.3.20190219"></script>
+    <script src="/js/publicMethods.js?ver=2.0.3.20190219"></script>
+    <script src="/js/vmdreport.js?ver=2.0.3.20190219"></script>
+    
+
+    <script src="/lib/ace/ace.js"></script>
+    <script src="/lib/ace/mode-base.js" type="text/javascript"></script>
+    <script src="/lib/ace/theme-xcode.js" type="text/javascript" ></script>
+    <script src="/lib/ace/ext-language_tools.js"></script>
+    
+
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        
+    </style>
+    <script>
+	    vmd.preivewMode=true;
+        vmd.virtualPath = '';
+        vmd.workspace={"workspaceid":"254f1fb7-7079-48bf-bdd4-f7925e0eb4a3","workflowIp":"","dataServiceIp":"","msgIp":"","projectid":"eQ9ULgcVb1"}
+	vmd.resourceSettings={"测试&&资源中心服务器":"http://www.hanweikeji.com:8050/resource","测试&&服务器2":"http://192.168.1.202:8050/resource"}
+        Ext.define("vmd.module.MyViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps([]),
+	xtype:"vmd.module.MyViewport",
+	layout:"absolute",
+	afterrender:"MyViewport_afterrender",
+	initComponent: function(){
+		function button_click(sender) {
+
+    if(!username.getValue()) {
+        Ext.Msg.alert('提示', '用户名不能为空！', function() {
+            username.focus();
+        })
+        return
+    }
+    if(!userpwd.getValue()) {
+        Ext.Msg.alert('提示', '密码不能为空！', function() {
+            userpwd.focus();
+        })
+        return
+    }
+    //加载服务
+
+    var myMask = new Ext.LoadMask(Ext.getBody(), {
+        msg: "正在登录,请稍后...",
+        msgCls: 'z-index:10000;'
+    });
+    myMask.show();
+
+    //平台登录服务编写
+    hwDas.ajax({
+        das: { //是数据访问服务提供的接口必须要设置为true
+            idedas: false //如果不是定制的数据服务就填写idedas为false
+        },
+        url: "TokenAuth",
+        type: 'get',
+        timeout: 50000,
+        params: {
+            login: username.getValue(),
+            password: userpwd.getValue()
+        },
+        success: function(result) {
+            var data = result.data;
+            hwDas.token = data.token;
+            //存储cookie
+            Ext.util.Cookies.set('hwToken', data.token);
+            Ext.util.Cookies.set('userName', data.user.name);
+            Ext.util.Cookies.set('login', data.user.login);
+            Ext.util.Cookies.set('ecyLogin', data.user.ecyLogin || "");
+            //记录 登录用户是否拥有编辑主页面的权限
+            Ext.util.Cookies.set('userType', "vmdDesigner");
+            myMask.hide();
+            window.location.href = vmd.virtualPath + "/system/modules/eQ9ULgcVb1/hw3ce0447e/hwef4bf837/hw8EUFAFsa.html?r=" + new Date().getTime();
+        },
+        error: function(msg) {
+            Ext.Msg.alert('错误', msg)
+            myMask.hide()
+        }
+    })
+}
+
+function rememberpwd_afterrender(sender) {
+    var state = false;
+    rememberpwd.el.on('click', function(e) {
+        if(!state) {
+            rememberpwd.el.setStyle('background-position-x', '-27px');
+        } else {
+            rememberpwd.el.setStyle('background-position-x', '0px');
+        }
+        state = !state
+    })
+}
+
+//增加页面回车登录快捷操作
+function MyViewport_afterrender(sender) {
+    var map = new Ext.KeyMap(document, {
+            key: 13, // or Ext.EventObject.ENTER
+            fn: button_click,
+            scope: button
+        })
+        //默认记住密码
+    rememberpwd.el.setStyle('background-position-x', '-27px');
+    username.setValue('dbadmin');
+    userpwd.setValue('1');
+}
+
+
+
+function qq_afterrender(sender) {
+    qq.el.on('click', function() {
+        Ext.Msg.alert('提示', '功能研发中！')
+    })
+}
+			this.MyViewport_afterrender=MyViewport_afterrender;
+
+
+
+		this.items=[
+			{
+				xtype:"panel",
+				id:"top",
+				layoutConfig:{
+					pack:"center"
+				},
+				title:"Panel",
+				header:false,
+				border:false,
+				height:47,
+				x:0,
+				y:72,
+				layout:"hbox",
+				items:[
+					{
+						xtype:"vmd.div",
+						id:"MyContainer",
+						autoEl:"div",
+						border:false,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"center left",
+						width:800,
+						height:47,
+						backgroundImage:"/system/modules/eQ9ULgcVb1/img/resourceLogo.png",
+						items:[
+							{
+								xtype:"vmd.div",
+								id:"MyContainer1",
+								autoEl:"div",
+								border:false,
+								backgroundRepeat:"no-repeat",
+								backgroundPosition:"top left",
+								width:400,
+								height:47,
+								style:"margin-left: 50px",
+								items:[
+									{
+										xtype:"label",
+										id:"MyLabel",
+										text:"资源中心",
+										style:"font-size: 23px;    line-height: 47px"
+									},
+									{
+										xtype:"label",
+										id:"MyLabel1",
+										text:" V1.0.1",
+										cls:"margin_left5"
+									}
+								]
+							}
+						]
+					}
+				]
+			},
+			{
+				xtype:"vmd.div",
+				id:"center",
+				layoutConfig:{
+					pack:"center"
+				},
+				autoEl:"div",
+				border:true,
+				backgroundRepeat:"no-repeat",
+				backgroundPosition:"top left",
+				height:400,
+				x:0,
+				y:120,
+				style:"background:url('/system/img/login_bg.png') repeat",
+				layout:"hbox",
+				items:[
+					{
+						xtype:"vmd.div",
+						id:"MyContainer5",
+						autoEl:"div",
+						border:false,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						width:800,
+						height:400,
+						x:290,
+						y:640,
+						items:[
+							{
+								xtype:"vmd.div",
+								id:"right",
+								autoEl:"div",
+								border:false,
+								backgroundRepeat:"no-repeat",
+								backgroundPosition:"top left",
+								width:300,
+								height:321,
+								style:"float:right;margin-top:55px;;background:url('/system/img/login_box.png') no-repeat",
+								x:500,
+								y:520,
+								layout:"auto",
+								items:[
+									{
+										xtype:"vmd.div",
+										id:"username_img",
+										autoEl:"div",
+										border:false,
+										backgroundRepeat:"no-repeat",
+										backgroundPosition:"top left",
+										height:50,
+										style:"margin-top:80px;margin-left:20px;background:url('/system/img/login_user.png') no-repeat",
+										layout:"absolute",
+										items:[
+											{
+												xtype:"textfield",
+												id:"username",
+												allowBlank:true,
+												enableKeyEvents:true,
+												x:40,
+												y:5,
+												width:210,
+												height:30,
+												style:"border: 0;    background: none",
+												emptyText:"请输入用户名"
+											}
+										]
+									},
+									{
+										xtype:"vmd.div",
+										id:"userpwd_img",
+										autoEl:"div",
+										border:false,
+										backgroundRepeat:"no-repeat",
+										backgroundPosition:"top left",
+										height:50,
+										style:"margin-left: 20px;    background: url('/system/img/login_pwd.png') no-repeat",
+										layout:"absolute",
+										items:[
+											{
+												xtype:"textfield",
+												id:"userpwd",
+												allowBlank:false,
+												enableKeyEvents:true,
+												x:40,
+												y:5,
+												width:210,
+												height:30,
+												style:"border:0;background:none",
+												grow:false,
+												inputType:"password",
+												emptyText:"请输入密码",
+												validateOnBlur:false
+											}
+										]
+									},
+									{
+										xtype:"vmd.div",
+										id:"remember",
+										autoEl:"div",
+										border:false,
+										backgroundRepeat:"no-repeat",
+										backgroundPosition:"top left",
+										height:30,
+										style:"margin-top:10px;margin-left:20px;",
+										layout:"absolute",
+										items:[
+											{
+												xtype:"label",
+												id:"MyLabel3",
+												text:"记住密码",
+												x:23,
+												y:2
+											},
+											{
+												xtype:"vmd.div",
+												id:"rememberpwd",
+												autoEl:"div",
+												border:false,
+												backgroundRepeat:"no-repeat",
+												backgroundPosition:"top left",
+												width:22,
+												height:22,
+												x:0,
+												y:0,
+												style:"background: url('/system/img/checkbox.png') no-repeat;    color: red;",
+												afterrender:"rememberpwd_afterrender",
+												cls:"hand",
+												listeners:{
+													vmdafterrender:rememberpwd_afterrender
+												}
+											}
+										]
+									},
+									{
+										xtype:"vmd.div",
+										id:"loginbtn",
+										layoutConfig:{
+											align:"middle",
+											pack:"center",
+											scrollOffset:""
+										},
+										autoEl:"div",
+										border:false,
+										backgroundRepeat:"no-repeat",
+										backgroundPosition:"top left",
+										height:50,
+										layout:"hbox",
+										items:[
+											{
+												xtype:"vmd.button",
+												id:"button",
+												text:"登 &nbsp;&nbsp; 录",
+												type:"primary",
+												size:"(none)",
+												width:200,
+												click:"button_click",
+												listeners:{
+													click:button_click
+												}
+											}
+										]
+									},
+									{
+										xtype:"vmd.div",
+										id:"thirdpartlogin",
+										layoutConfig:{
+											align:"middle",
+											pack:"center"
+										},
+										autoEl:"div",
+										border:false,
+										backgroundRepeat:"no-repeat",
+										backgroundPosition:"top left",
+										height:40,
+										layout:"hbox",
+										items:[
+											{
+												xtype:"vmd.div",
+												id:"qq",
+												autoEl:"div",
+												border:false,
+												backgroundRepeat:"no-repeat",
+												backgroundPosition:"top left",
+												width:26,
+												height:29,
+												style:"background: url('/system/img/QQ.png');    background-repeat: round;    cursor: pointer",
+												afterrender:"qq_afterrender",
+												listeners:{
+													vmdafterrender:qq_afterrender
+												}
+											}
+										]
+									}
+								]
+							},
+							{
+								xtype:"vmd.div",
+								id:"left",
+								autoEl:"div",
+								border:false,
+								backgroundRepeat:"no-repeat",
+								backgroundPosition:"top left",
+								width:366,
+								height:304,
+								style:"float: right;    margin-right: 80px;    margin-top: 55px;",
+								x:90,
+								y:520,
+								backgroundImage:"/system/modules/eQ9ULgcVb1/img/resourcebaner1.png"
+							}
+						]
+					}
+				]
+			},
+			{
+				xtype:"panel",
+				id:"bottom",
+				layoutConfig:{
+					pack:"center",
+					align:"top"
+				},
+				title:"Panel",
+				header:false,
+				border:false,
+				height:20,
+				x:0,
+				y:540,
+				layout:"hbox",
+				items:[
+					{
+						xtype:"vmd.div",
+						id:"MyContainer6",
+						autoEl:"div",
+						border:false,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						width:20,
+						height:20,
+						style:"background:url('/system/img/hwico.png') no-repeat"
+					},
+					{
+						xtype:"label",
+						id:"MyLabel2",
+						text:"东营汉威石油技术开发有限公司"
+					}
+				]
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+			me.on('afterrender',function(){ MyViewport_afterrender.call(me,me)})
+}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MyViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

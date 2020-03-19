@@ -1,0 +1,1 @@
+{"imageServiceIp":"192.168.1.82:31255","imageHarborIp":"192.168.1.84"}

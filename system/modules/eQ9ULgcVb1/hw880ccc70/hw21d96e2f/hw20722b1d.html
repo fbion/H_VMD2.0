@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>列布局（Column layout）</title>
+    
+    <!--基本样式-->
+    <link href="/css/common.css" rel="stylesheet" />
+
+    <!--加载dhx组件-->
+    
+    <link href="/lib/ext-3.4/resources/css/ext-all.css" rel="stylesheet" />
+     <!--样式快捷索引表-->
+    <link href="/css/shortcut.css" rel="stylesheet" />
+    <link href="/lib/dhtmlx/dhtmlx.css" rel="stylesheet" />
+
+    <script src="/lib/labjs/LAB.min.js"></script>
+    <script src="/config.js"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js"></script>
+
+    <script src="/lib/dhtmlx/dhtmlx.js"></script>
+    <script src="/js/hwdas.js"></script>
+    <script src="/js/vmdcore.js"></script>
+    <script src="/js/vmdcomps.js"></script>
+    <style>
+        .x-viewport, .x-viewport body {
+            overflow:auto !important
+        }
+    </style>
+    <script>
+
+        Ext.define("vmd.module.MyViewport" ,{
+	extend:"Ext.Viewport",
+	xtype:"vmd.module.MyViewport",
+	layout:"border",
+	initComponent: function(){
+		this.items=[
+			{
+				xtype:"panel",
+				id:"MyPanel1",
+				title:"West",
+				header:true,
+				border:true,
+				height:100,
+				x:260,
+				y:260,
+				region:"west",
+				width:186,
+				split:true,
+				layout:"accordion",
+				items:[
+					{
+						xtype:"panel",
+						id:"MyPanel2",
+						title:"Accordion Item1",
+						header:true,
+						border:true,
+						height:100
+					},
+					{
+						xtype:"panel",
+						id:"MyPanel3",
+						title:"Accordion Item2",
+						header:true,
+						border:true,
+						height:100
+					},
+					{
+						xtype:"panel",
+						id:"MyPanel4",
+						title:"Accordion Item3",
+						header:true,
+						border:true,
+						height:100
+					}
+				]
+			},
+			{
+				xtype:"panel",
+				id:"MyPanel",
+				title:"Panel",
+				header:false,
+				border:true,
+				height:100,
+				x:200,
+				y:90,
+				region:"center",
+				layout:"column",
+				items:[
+					{
+						xtype:"panel",
+						id:"MyPanel5",
+						title:"A Panel",
+						header:true,
+						border:true,
+						height:259,
+						columnWidth:0.33,
+						unstyled:false,
+						titleCollapse:false,
+						style:"padding: 5px 0 5px 5px;",
+						bodyBorder:false
+					},
+					{
+						xtype:"panel",
+						id:"MyPanel6",
+						title:"A Panel",
+						header:true,
+						border:true,
+						height:258,
+						columnWidth:0.33,
+						width:309,
+						style:"padding: 5px 0 5px 5px;"
+					},
+					{
+						xtype:"panel",
+						id:"MyPanel7",
+						title:"Panel",
+						header:false,
+						border:false,
+						height:542,
+						columnWidth:0.33,
+						items:[
+							{
+								xtype:"panel",
+								id:"MyPanel8",
+								title:"A Panel",
+								header:true,
+								border:true,
+								height:258,
+								columnWidth:-0.3,
+								style:"padding: 5px 0 5px 5px;"
+							},
+							{
+								xtype:"panel",
+								id:"MyPanel9",
+								title:"Another Panel",
+								header:true,
+								border:true,
+								height:284,
+								style:"padding: 0 0 0 5px ;"
+							}
+						]
+					}
+				]
+			}
+		]
+		this.callParent();
+		vmd.core.moduleInit(this.items, this);
+			undefined
+	}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MyViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

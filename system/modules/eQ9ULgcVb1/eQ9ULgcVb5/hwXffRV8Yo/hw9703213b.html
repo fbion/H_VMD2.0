@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>查看日志信息</title>
+    <!--基本样式-->
+    <link href="/css/common.css?ver=vmd2.0.6.200119" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=vmd2.0.6.200119" rel="stylesheet" />
+    <link href="/design/css/icons.css?ver=vmd2.0.6.200119" rel="stylesheet" />
+    <link href="/lib/dhtmlx/skins/material/dhtmlx.css?ver=vmd2.0.6.200119" rel="stylesheet" />
+    <!--样式快捷索引表-->
+    <link href="/css/shortcut.css?ver=vmd2.0.6.200119" rel="stylesheet" />
+    <script src="/lib/labjs/LAB.min.js?ver=vmd2.0.6.200119"></script>
+    <script src="/config.js?ver=vmd2.0.6.200119"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=vmd2.0.6.200119"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=vmd2.0.6.200119"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=vmd2.0.6.200119"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=vmd2.0.6.200119"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=vmd2.0.6.200119"></script>
+    <script src="/js/util.js?ver=vmd2.0.6.200119"></script>
+    <script src="/lib/dhtmlx/codebase/dhtmlx.js?ver=vmd2.0.6.200119"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=vmd2.0.6.200119"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=vmd2.0.6.200119"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=vmd2.0.6.200119"></script>
+    <script src="/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=vmd2.0.6.200119"></script>
+    <script src="/js/hwdas.js?ver=vmd2.0.6.200119"></script>
+    <script src="/js/vmdcore.js?ver=vmd2.0.6.200119"></script>
+    <script src="/js/vmdcomps.js?ver=vmd2.0.6.200119"></script>
+    <script src="/js/publicMethods.js?ver=vmd2.0.6.200119"></script>
+    <script src="/js/vmdreport.js?ver=vmd2.0.6.200119"></script>
+    <script src="/system/modules/eQ9ULgcVb1/project.config.js"></script>
+    <style> </style>
+    <style type="text/css" id="vmdcss"> </style>
+    <script>
+        vmd.previewMode = true;
+        vmd.virtualPath = '';
+        vmd.workspace = {
+            "workspaceid": "edc85d3f-846b-481d-b546-5b52f73398b0",
+            "workflowIp": "",
+            "dataServiceIp": "",
+            "msgIp": "",
+            "projectid": "eQ9ULgcVb1"
+        }
+        vmd.resourceSettings = {
+            "资源中心&&资源中心服务器": "http://www.hanweikeji.com:10050/resource"
+        }
+        vmd.projectInfo = {
+            "projectId": "eQ9ULgcVb1",
+            "workflowIp": "",
+            "dataServiceIp": "",
+            "msgIp": "",
+            "todoIp": "",
+            "authIp": "",
+            "docIp": "",
+            "reoprtIp": "",
+            "reportIp": "",
+            "logIp": ""
+        }
+        Ext.define("vmd.module.MainViewport", {
+            extend: "vmd.comp.viewport",
+            requires: vmd.getCmpDeps([]),
+            xtype: "vmd.module.MainViewport",
+            layout: "absolute",
+            initComponent: function() {
+                function hwDiv_afterrender(sender) {
+                    var hwFao = new HwFao(vmd.getUrlParam("serverIp"), "dockerImages");
+                    hwFao.read(vmd.getUrlParam("file"), function(result) {
+                        hwDiv.update(result.data)
+                    }, function() {})
+                }
+                this.items = [{
+                    xtype: "vmd.div",
+                    id: "hwDiv",
+                    autoEl: "div",
+                    border: true,
+                    backgroundRepeat: "no-repeat",
+                    backgroundPosition: "top left",
+                    width: 350,
+                    height: 230,
+                    x: 10,
+                    y: 10,
+                    afterrender: "hwDiv_afterrender",
+                    listeners: {
+                        vmdafterrender: hwDiv_afterrender
+                    }
+                }]
+                this.callParent();
+                var me = this;
+                vmd.core.moduleInit(this.items, this);
+            }
+        })
+        Ext.onReady(function() {
+            Ext.create('vmd.module.MainViewport', {
+                renderTo: document.body
+            })
+        })
+    </script>
+</head>
+
+<body> </body>
+
+</html>

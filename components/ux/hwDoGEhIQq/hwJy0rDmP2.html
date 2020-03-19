@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<!--<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />-->
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>基层人员工作台</title>
+    
+    <!--基本样式-->
+    <link href="/css/common.css?ver=2.0.3.0920" rel="stylesheet" />
+
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.3.0920" rel="stylesheet" />
+    <link href="/design/css/icons.css?ver=2.0.3.0920" rel="stylesheet" />
+
+	<link href="/lib/dhtmlx/dhtmlx.css?ver=2.0.3.0920" rel="stylesheet" />
+	  <!--样式快捷索引表-->
+    <link href="/css/shortcut.css?ver=2.0.3.0920" rel="stylesheet" />
+    
+     <script src="/lib/labjs/LAB.min.js?ver=2.0.3.0920"></script>
+    <script src="/config.js?ver=2.0.3.0920"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.3.0920"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.3.0920"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.3.0920"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=2.0.3.0920"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.3.0920"></script>
+	<script src="/js/util.js?ver=2.0.3.0920"></script>
+	 <script src="/lib/dhtmlx/dhtmlx.js?ver=2.0.3.0920"></script>
+    <script src="/chart/libs/jquery/jquery-1.10.2.js?ver=2.0.3.0920"></script>
+    <script src="/chart/js/hwAPI.js?ver=2.0.3.0920"></script>
+
+    <script src="/js/hwdas.js?ver=2.0.3.0920"></script>
+	<script src="/js/hwMSC.js?ver=2.0.3.0920"></script>
+    <script src="/js/vmdcore.js?ver=2.0.3.0920"></script>
+    <script src="/js/vmdcomps.js?ver=2.0.3.0920"></script>
+    <script src="/js/vmdchart.js?ver=2.0.3.0920"></script>
+	 <script src="/js/publicMethods.js?ver=2.0.3.0920"></script>
+    <script src="/release/12efebd0-5bd2-4d64-8582-fe88888e55ac/config.js"></script>
+    
+
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        body{
+    overflow: hidden !important;
+    font-size: 14px !important;
+}
+.x-grid3-row td, .x-grid3-summary-row td{
+    font-size: 14px !important;
+}
+
+a{
+   text-decoration:none; 
+}
+a:link {
+    color: blue; text-decoration:none;
+    
+}
+a:active:{
+    color: red;
+    } 
+/*a:visited {
+    color:purple;text-decoration:none;
+    
+} */
+a:hover {
+    color: red; text-decoration:underline;
+    
+} 
+.magin-down{
+   margin-bottom: 20px !important; 
+}
+    </style>
+    <script>
+        vmd.virtualPath = '';
+        
+        Ext.define("vmd.module.MyViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps(["vmd.ux.ComponentsTab$1.0$ComponentsTab","vmd.ux.NoticeBulletinSn$1.0$NoticeBulletinSn","vmd.ux.DutyTaskCompletionSn$1.0$DutyTaskCompletionSn"]),
+	xtype:"vmd.module.MyViewport",
+	layoutConfig:{
+		align:"center",
+		pack:"center",
+		scrollOffset:10
+	},
+	layout:"vbox",
+	height:800,
+	width:1100,
+	autoScroll:true,
+	style:"overflow: hidden;",
+	initComponent: function(){
+		function chart_afterrender(sender) {
+    var now = new Date;
+    var year = now.getFullYear();
+    var month = (now.getMonth() + 1).toString();
+    var day = (now.getDate()).toString();
+    if(month.length == 1) {
+        month = "0" + month;
+    }
+    if(day.length == 1) {
+        day = "0" + day;
+    }
+    var dateTime = year + "-" + month + "-" + day;
+    kssj.setValue(dateTime);
+    jssj.setValue(dateTime);
+    chart.query();
+}
+			kssj=new vmd.var.variable({});
+		jssj=new vmd.var.variable({});
+
+		人员任务统计=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"人员任务统计","autoLoad":false,"cid":"vmdJsonStore","storeConfig":"{\"id\":\"mc4re9BMdn\",\"callcode\":\"vmdCode\",\"url\":\"XXHTS/schedule/taskmanager/workbench/userschecount\",\"host\":\"\",\"isHwRest\":true,\"name\":\"人员任务统计\",\"getMethods\":[{\"id\":\"userlogin\",\"value1\":\"\",\"value2\":\"\",\"defaultvalue\":\"\"},{\"id\":\"ksrq\",\"value1\":\"return kssj.getValue();\",\"value2\":\"\",\"defaultvalue\":\"\"},{\"id\":\"jsrq\",\"value1\":\"return jssj.getValue();\",\"value2\":\"\",\"defaultvalue\":\"\"}],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"rq\",\"type\":\"string\"},{\"name\":\"zs\",\"type\":\"decimal\"},{\"name\":\"zcwc\",\"type\":\"decimal\"}]}"});
+
+
+		this.items=[
+			{
+				xtype:"panel",
+				id:"panel",
+				title:"Panel",
+				header:false,
+				border:true,
+				height:330,
+				width:1160,
+				margins:"10px 0 0 0",
+				layout:"border",
+				items:[
+					{
+						xtype:"panel",
+						id:"panel3",
+						title:"Panel",
+						header:false,
+						border:true,
+						height:313,
+						region:"west",
+						width:580,
+						layout:"fit",
+						items:[
+							{
+								xtype:"vmd.ux.ComponentsTab",
+								id:"ComponentsTab",
+								layout:"fit"
+							}
+						]
+					},
+					{
+						xtype:"panel",
+						id:"panel4",
+						title:"Panel",
+						header:false,
+						border:true,
+						height:332,
+						region:"center",
+						layout:"fit",
+						margins:"0 0 0 10px",
+						items:[
+							{
+								xtype:"vmd.ux.NoticeBulletinSn",
+								id:"NoticeBulletinSn",
+								layout:"fit",
+								callcode:"snqtscdd",
+								orgschecount:"XXHTS/schedule/taskmanager/workbench/orgschecount"
+							}
+						]
+					}
+				]
+			},
+			{
+				xtype:"panel",
+				id:"panel1",
+				title:"当班任务完成情况",
+				header:false,
+				border:true,
+				height:300,
+				region:"west",
+				width:1160,
+				margins:"10px 0 10px 0",
+				items:[
+					{
+						xtype:"vmd.ux.DutyTaskCompletionSn",
+						id:"dutytaskcompletionsn",
+						layout:"fit",
+						height:298,
+						schedule:"XXHTS/schedule/taskmanager/schedandwo/schedule",
+						userInfo:"platform/v1/UserManage",
+						callcode:"snqtscdd"
+					}
+				]
+			},
+			{
+				xtype:"panel",
+				id:"panel5",
+				title:"个人任务执行统计",
+				header:true,
+				border:true,
+				height:300,
+				width:1160,
+				layout:"fit",
+				margins:"0 0 10px 0",
+				padding:"5",
+				ctCls:"magin-down",
+				cls:"magin-down",
+				items:[
+					{
+						xtype:"vmd.chart",
+						id:"chart",
+						text:"chart",
+						relativepath:"Resources//Report",
+						size:"small",
+						nousedataset:false,
+						path:"个人任务执行统计曲线.xml",
+						dsnames:"人员任务统计",
+						afterrender:"chart_afterrender",
+						listeners:{
+							vmdafterrender:chart_afterrender
+						}
+					}
+				]
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+	}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MyViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

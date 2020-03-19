@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>网格虚拟字段属性设置</title>
+    <!--基本样式-->
+    <link href="/css/common.css?ver=vmd2.0.4.190810" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=vmd2.0.4.190810" rel="stylesheet" />
+    <link href="/design/css/icons.css?ver=vmd2.0.4.190810" rel="stylesheet" />
+    <link href="/lib/dhtmlx/skins/material/dhtmlx.css?ver=vmd2.0.4.190810" rel="stylesheet" />
+    <!--样式快捷索引表-->
+    <link href="/css/shortcut.css?ver=vmd2.0.4.190810" rel="stylesheet" />
+    <script src="/lib/labjs/LAB.min.js?ver=vmd2.0.4.190810"></script>
+    <script src="/config.js?ver=vmd2.0.4.190810"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=vmd2.0.4.190810"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=vmd2.0.4.190810"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=vmd2.0.4.190810"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=vmd2.0.4.190810"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=vmd2.0.4.190810"></script>
+    <script src="/js/util.js?ver=vmd2.0.4.190810"></script>
+    <script src="/lib/dhtmlx/codebase/dhtmlx.js?ver=vmd2.0.4.190810"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=vmd2.0.4.190810"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=vmd2.0.4.190810"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=vmd2.0.4.190810"></script>
+    <script src="/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=vmd2.0.4.190810"></script>
+    <script src="/js/hwdas.js?ver=vmd2.0.4.190810"></script>
+    <script src="/js/vmdcore.js?ver=vmd2.0.4.190810"></script>
+    <script src="/js/vmdcomps.js?ver=vmd2.0.4.190810"></script>
+    <script src="/js/publicMethods.js?ver=vmd2.0.4.190810"></script>
+    <script src="/js/vmdreport.js?ver=vmd2.0.4.190810"></script>
+    <script src="/system/modules/eQ9ULgcVb1/project.config.js"></script>
+    <style> </style>
+    <style type="text/css" id="vmdcss">
+        .designer-input ::-webkit-scrollbar {
+            width: 12px;
+            height: 12px;
+        }
+
+        .designer-input ::-webkit-scrollbar-track {
+            background: whiteSmoke;
+            -webkit-box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .designer-input ::-webkit-scrollbar-thumb {
+            background: #c5c5c5;
+            border-radius: 10px;
+            border: whiteSmoke solid 3px;
+        }
+
+        .designer-input ::-webkit-scrollbar-thumb:hover {
+            background: #b5b5b5;
+        }
+    </style>
+    <script>
+        vmd.previewMode = true;
+        vmd.virtualPath = '';
+        vmd.workspace = {
+            "workspaceid": "254f1fb7-7079-48bf-bdd4-f7925e0eb4a3",
+            "workflowIp": "",
+            "dataServiceIp": "",
+            "msgIp": "",
+            "projectid": "eQ9ULgcVb1"
+        }
+        vmd.resourceSettings = {
+            "测试&&资源中心服务器": "http://www.hanweikeji.com:8050/resource"
+        }
+        vmd.projectInfo = {
+            "projectId": "eQ9ULgcVb1",
+            "workflowIp": "",
+            "dataServiceIp": "",
+            "msgIp": "",
+            "todoIp": "",
+            "authIp": "",
+            "docIp": "",
+            "reoprtIp": "",
+            "reportIp": "",
+            "logIp": ""
+        }
+        Ext.define("vmd.module.MainViewport", {
+            extend: "vmd.comp.viewport",
+            requires: vmd.getCmpDeps(["vmd.ux.GridvirtualCol$1.0$GridvirtualCol"]),
+            xtype: "vmd.module.MainViewport",
+            layout: "border",
+            cls: "designer-input",
+            afterrender: "MainViewport_afterrender",
+            initComponent: function() {
+                //初始化处理ace的api
+                if (parent.init_def_platformControlData) {
+                    parent.init_def_platformControlData();
+                    def_platformControl = parent.def_platformControl;
+                }
+                if (parent.allPublicMethods)
+                    window.allPublicMethods = parent.allPublicMethods;
+                else
+                    window.allPublicMethods = {};
+                if (parent.publicMethodsType)
+                    window.publicMethodsType = parent.publicMethodsType;
+                else
+                    window.publicMethodsType = {};
+                if (parent.init_def_platformFun) {
+                    parent.init_def_platformFun({
+                        vmd: allPublicMethods
+                    });
+                    parent.init_def_platformVmd();
+                    def_platformWidget = parent.def_platformWidget;
+                }
+                //ext框架类自动识别
+                def_platformExtjs = parent.def_platformExtjs;
+                // var util = new ide.ext.DataInputUtils(page, )
+                var page = this;
+                page.fieldInfo = parent.addVirtualColWin && parent.addVirtualColWin.params.inst;
+                if (!page.fieldInfo) {
+                    page.fieldInfo = {}
+                    page.fieldInfo.fileInfo = {}
+                    page.fieldInfo.events = {}
+                }
+
+                function button_click(sender, e) {
+                    parent.addVirtualColWin.setBack(gridvirtualcol.getFiledInfo(), true)
+                }
+
+                function button1_click(sender, e) {
+                    parent.addVirtualColWin.setBack(gridvirtualcol.getFiledInfo(), false)
+                }
+
+                function getBase(comp, type) {
+                    if (type == 'grid') {
+                        for (var i = 0; i < comp.form.settings.fields.length; i++) {
+                            if (comp.grid.settings.fields[comp.grid.activeNo].dictionary.name == comp.form.settings.fields[i].dictionary.name) {
+                                page.no = i;
+                                return comp.grid.settings.fields[comp.grid.activeNo];
+                            }
+                        }
+                    } else {
+                        for (var i = 0; i < comp.grid.settings.fields.length; i++) {
+                            if (comp.form.settings.fields[comp.form.activeNo].dictionary.name == comp.grid.settings.fields[i].dictionary.name) {
+                                page.no = i;
+                                return comp.form.settings.fields[comp.form.activeNo];
+                            }
+                        }
+                    }
+                }
+
+                function MainViewport_afterrender(sender) {
+                    debugger
+                    gridvirtualcol.setFileInfo(page.fieldInfo)
+                }
+                this.MainViewport_afterrender = MainViewport_afterrender;
+                this.items = [{
+                        xtype: "panel",
+                        id: "panel",
+                        title: "Panel",
+                        header: false,
+                        border: false,
+                        height: 100,
+                        x: 80,
+                        y: 90,
+                        layout: "fit",
+                        region: "center",
+                        items: [{
+                            xtype: "vmd.ux.GridvirtualCol",
+                            id: "gridvirtualcol",
+                            layout: "border"
+                        }]
+                    },
+                    {
+                        xtype: "panel",
+                        id: "panel1",
+                        title: "Panel",
+                        header: false,
+                        border: false,
+                        height: 45,
+                        region: "south",
+                        layout: "border",
+                        bodyStyle: "border-top:1px solid #ddd;",
+                        items: [{
+                                xtype: "vmd.div",
+                                id: "div1",
+                                layoutConfig: {
+                                    align: "middle"
+                                },
+                                autoEl: "div",
+                                border: false,
+                                backgroundRepeat: "no-repeat",
+                                backgroundPosition: "top left",
+                                width: 400,
+                                height: 50,
+                                region: "center",
+                                layout: "hbox"
+                            },
+                            {
+                                xtype: "vmd.div",
+                                id: "div",
+                                layoutConfig: {
+                                    align: "middle"
+                                },
+                                autoEl: "div",
+                                border: false,
+                                backgroundRepeat: "no-repeat",
+                                backgroundPosition: "top left",
+                                width: 150,
+                                height: 50,
+                                region: "east",
+                                layout: "hbox",
+                                items: [{
+                                        xtype: "vmd.button",
+                                        id: "button",
+                                        text: "确定",
+                                        type: "primary",
+                                        size: "small",
+                                        click: "button_click",
+                                        hidden: false,
+                                        listeners: {
+                                            click: button_click
+                                        }
+                                    },
+                                    {
+                                        xtype: "vmd.button",
+                                        id: "button1",
+                                        text: "关闭",
+                                        type: "(none)",
+                                        size: "small",
+                                        margins: "0 20 0 10",
+                                        click: "button1_click",
+                                        hidden: false,
+                                        listeners: {
+                                            click: button1_click
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+                this.callParent();
+                var me = this;
+                vmd.core.moduleInit(this.items, this);
+                me.on('afterrender', function() {
+                    MainViewport_afterrender.call(me, me)
+                })
+            }
+        })
+        Ext.onReady(function() {
+            Ext.create('vmd.module.MainViewport', {
+                renderTo: document.body
+            })
+        })
+    </script>
+</head>
+
+<body> </body>
+
+</html>

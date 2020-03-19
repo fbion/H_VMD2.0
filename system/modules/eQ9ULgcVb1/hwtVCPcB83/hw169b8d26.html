@@ -1,0 +1,1242 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>版本生成发布</title>
+    <!--基本样式-->
+    <link href="/css/common.css?ver=vmd2.0.5.200306" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=vmd2.0.5.200306" rel="stylesheet" />
+    <link href="/design/css/icons.css?ver=vmd2.0.5.200306" rel="stylesheet" />
+    <link href="/lib/dhtmlx/skins/material/dhtmlx.css?ver=vmd2.0.5.200306" rel="stylesheet" />
+    <!--样式快捷索引表-->
+    <link href="/css/shortcut.css?ver=vmd2.0.5.200306" rel="stylesheet" />
+    <script src="/lib/labjs/LAB.min.js?ver=vmd2.0.5.200306"></script>
+    <script src="/config.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=vmd2.0.5.200306"></script>
+    <script src="/js/util.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/dhtmlx/codebase/dhtmlx.js?ver=vmd2.0.5.200306"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=vmd2.0.5.200306"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=vmd2.0.5.200306"></script>
+    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=vmd2.0.5.200306"></script>
+    <script src="/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=vmd2.0.5.200306"></script>
+    <script src="/js/hwdas.js?ver=vmd2.0.5.200306"></script>
+    <script src="/js/vmdcore.js?ver=vmd2.0.5.200306"></script>
+    <script src="/js/vmdcomps.js?ver=vmd2.0.5.200306"></script>
+    <script src="/js/publicMethods.js?ver=vmd2.0.5.200306"></script>
+    <script src="/js/vmdreport.js?ver=vmd2.0.5.200306"></script>
+    <script src="/system/modules/eQ9ULgcVb1/project.config.js"></script>
+    <script src="/lib/ueditor/ueditor.config.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ueditor/ueditor.all.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ueditor/lang/zh-cn/zh-cn.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ueditor/kityformula-plugin/addKityFormulaDialog.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ueditor/kityformula-plugin/getKfContent.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ueditor/kityformula-plugin/defaultFilterFix.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ueditor/ueditor.config.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ueditor/ueditor.all.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ueditor/lang/zh-cn/zh-cn.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ueditor/kityformula-plugin/addKityFormulaDialog.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ueditor/kityformula-plugin/getKfContent.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ueditor/kityformula-plugin/defaultFilterFix.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ueditor/ueditor.config.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ueditor/ueditor.all.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ueditor/lang/zh-cn/zh-cn.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ueditor/kityformula-plugin/addKityFormulaDialog.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ueditor/kityformula-plugin/getKfContent.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ueditor/kityformula-plugin/defaultFilterFix.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ueditor/ueditor.config.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ueditor/ueditor.all.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ueditor/lang/zh-cn/zh-cn.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ueditor/kityformula-plugin/addKityFormulaDialog.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ueditor/kityformula-plugin/getKfContent.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ueditor/kityformula-plugin/defaultFilterFix.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ueditor/ueditor.config.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ueditor/ueditor.all.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ueditor/lang/zh-cn/zh-cn.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ueditor/kityformula-plugin/addKityFormulaDialog.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ueditor/kityformula-plugin/getKfContent.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ueditor/kityformula-plugin/defaultFilterFix.js?ver=vmd2.0.5.200306"></script>
+    <style> </style>
+    <style type="text/css" id="vmdcss">
+        .aaaaa .x-tab-strip-top .x-tab-strip-active .x-tab-right {
+            background-color: #42b983
+        }
+
+        .aaaaa .x-tab-strip-active span.x-tab-strip-text {
+            color: white;
+            font-weight: bold;
+        }
+    </style>
+    <script>
+        vmd.previewMode = true;
+        vmd.virtualPath = '';
+        vmd.workspace = {
+            "workspaceid": "1174c7d2-f008-4f84-bb61-1845b5d28814",
+            "workflowIp": "",
+            "dataServiceIp": "",
+            "msgIp": "",
+            "projectid": "eQ9ULgcVb1"
+        }
+        vmd.resourceSettings = {
+            "资源中心&&资源中心服务器": "http://www.hanweikeji.com:10050/resource"
+        }
+        vmd.projectInfo = {
+            "projectId": "eQ9ULgcVb1",
+            "workflowIp": "",
+            "dataServiceIp": "",
+            "msgIp": "",
+            "todoIp": "",
+            "authIp": "",
+            "docIp": "",
+            "reoprtIp": "",
+            "reportIp": "",
+            "logIp": ""
+        }
+        Ext.define("vmd.module.MainViewport", {
+            extend: "vmd.comp.viewport",
+            requires: vmd.getCmpDeps(["vmd.ux.Uploader$1.0$Uploader"]),
+            xtype: "vmd.module.MainViewport",
+            layout: "border",
+            afterrender: "MainViewport_afterrender",
+            initComponent: function() {
+                function hwText_beforerender(sender) {}
+
+                function hwText_afterrender(sender) {
+                    hwText.setValue("2.0.4.190627")
+                }
+
+                function hwText1_afterrender(sender) {
+                    var myDate = new Date();
+                    hwText1.setValue("vmd2.0.6." + myDate.format('ymd'))
+                }
+                var hwFao = new HwFao(vmd.MicService.getReportIp(), "version");
+                var hwFao1 = new HwFao(vmd.MicService.getReportIp(), "vmd");
+
+                function button_click(sender, e) {
+                    var path = hwText1.getValue();
+                    var myMask = new Ext.LoadMask(Ext.getBody(), {
+                        msg: "正在发布新版本" + path + ",请稍后...",
+                        msgCls: 'z-index:10000;'
+                    });
+                    myMask.show();
+                    var str = hwRichTextEditor.getContent() || " "
+                    var wlist = "";
+                    var warr = [];
+                    var p = function() {
+                        //将版本号写到版本文件中
+                        hwFao.write("VMD2.0.4/NewVersion.txt", hwText1.getValue(), function() {
+                            hwFao.write("VMD2.0.4/白.txt", wlist, function() {
+                                hwFao1.write("version.txt", hwText1.getValue(), function() {
+                                    hwFao1.write("update_show.txt", str, function() { //调用服务，发布新版本
+                                        $.support.cors = true;
+                                        $.ajax({
+                                            url: "http://www.hanweikeji.com:10052/create_public_files",
+                                            type: "post",
+                                            dataType: 'json',
+                                            contentType: 'application/json',
+                                            success: function(data) {
+                                                myMask.hide()
+                                                hwFao.write("VMD2.0.4/" + hwText1.getValue() + "/system/vmdVersion.json", 'vmdVerionInfo:{"ideVersion":"' + hwText1.getValue().replace('vmd', '') + '","publish":true}', function() {})
+                                                alert("发布新版本成功！")
+                                                document.location.reload()
+                                            },
+                                            error: function(returndata) {
+                                                myMask.hide()
+                                                alert("发布新版本失败！" + JSON.stringify(returndata))
+                                            }
+                                        });
+                                    }, function() {})
+                                })
+                            }, function() {})
+                            hwFao1.write("vmdVersion.json", 'vmdVerionInfo:{"ideVersion":"' + hwText1.getValue().replace('vmd', '') + '","publish":false}', function() {})
+                        }, function() {})
+                        //写更新日志
+                        hwFao.write("VMD2.0.4/update.txt", str, function() {}, function() {})
+                    }
+                    //写白名单
+                    hwDas.get("CDEServcie/expProject/getwhitelist", {}, {}, function(res) {
+                        for (var i = 0; i < res.data[0].datas.length; i++) {
+                            warr.push(res.data[0].datas[i].path)
+                        }
+                        wlist = warr.join("\r\n")
+                        p()
+                    }, function() {})
+                    updateIDE();
+                    updateRun();
+                }
+
+                function button1_click(sender, e) {
+                    uploadFun("VMD2.0.4\\数据服务接口", function(fileList) {
+                        if (fileList.length > 0) {
+                            hwFao.write("VMD2.0.4\\数据服务接口\\newFile.txt", fileList[0].title, function() {}, function() {})
+                        }
+                    })
+                }
+
+                function button3_click(sender, e) {
+                    uploadFun("数据访问服务\\" + hwText3.getValue(), function(fileList) {
+                        if (fileList.length > 0) {
+                            hwFao.write("数据访问服务\\newFile.txt", fileList[0].title, function() {}, function() {})
+                        }
+                    })
+                }
+
+                function MainViewport_afterrender(sender) {}
+
+                function uploadFun(path, callback) {
+                    var uploader = hwUploader.getUploader();
+                    var uploaderwin = new vmd.window({
+                        items: hwUploader,
+                        auto: false,
+                        height: 500,
+                        width: 655,
+                        maximizable: false,
+                        resizable: false,
+                        closeAction: 'hide',
+                        title: "文件上传"
+                    })
+                    hwUploader.show()
+                    uploaderwin.show();
+                    uploaderwin.hide(); //上传接口
+                    uploader.upload(vmdSettings.dataServiceIp, path, uploaderwin, function(fileList) {
+                        if (callback) {
+                            callback.apply(me, [fileList])
+                        }
+                        //上传成功回调
+                    }, "version")
+                }
+
+                function button5_click(sender, e) {
+                    uploadFun("工作流\\" + hwText5.getValue(), function(fileList) {
+                        if (fileList.length > 0) {
+                            hwFao.write("工作流\\newFile.txt", fileList[0].title, function() {}, function() {})
+                        }
+                    })
+                }
+
+                function button9_click(sender, e) {
+                    uploadFun("消息中心\\" + hwText8.getValue(), function(fileList) {
+                        if (fileList.length > 0) {
+                            hwFao.write("消息中心\\newFile.txt", fileList[0].title, function() {}, function() {})
+                        }
+                    })
+                }
+
+                function button7_click(sender, e) {
+                    uploadFun("文档中心\\" + hwText7.getValue(), function(fileList) {
+                        if (fileList.length > 0) {
+                            hwFao.write("文档中心\\newFile.txt", fileList[0].title, function() {}, function() {})
+                        }
+                    })
+                }
+
+                function panel2_afterrender(sender) {
+                    hwFao.read("VMD2.0.4/NewVersion.txt", function(result) {
+                        hwText.setValue(result.data)
+                        hwLabel20.setText(result.data)
+                        button10.setText("发布" + result.data + "的docker镜像")
+                    }, function() {})
+                }
+
+                function hwRichTextEditor_aftershow(sender, value, text) {
+                    hwFao.read("VMD2.0.4/update.txt", function(result) {
+                        hwRichTextEditor.setContent(result.data)
+                    }, function() {})
+                }
+
+                function hwRichTextEditor_afterrender(sender) {}
+
+                function panel3_afterrender(sender) {}
+                //设置默认值
+                function hwMyTabs_tabchange(sender, tab) {
+                    if (tab.id == "panel3" && !tab.isRender) {
+                        hwFao.read("数据访问服务/NewVersion.txt", function(result) {
+                            hwText2.setValue(result.data)
+                        }, function() {})
+                        hwFao.read("数据访问服务/update.txt", function(result) {
+                            hwRichTextEditor1.setContent(result.data)
+                        }, function() {})
+                    }
+                    if (tab.id == "panel4" && !tab.isRender) {
+                        hwFao.read("工作流/NewVersion.txt", function(result) {
+                            hwText4.setValue(result.data)
+                        }, function() {})
+                        hwFao.read("工作流/update.txt", function(result) {
+                            hwRichTextEditor2.setContent(result.data)
+                        }, function() {})
+                    }
+                    if (tab.id == "panel5" && !tab.isRender) {
+                        hwFao.read("消息中心/NewVersion.txt", function(result) {
+                            hwText9.setValue(result.data)
+                        }, function() {})
+                        hwFao.read("消息中心/update.txt", function(result) {
+                            hwRichTextEditor3.setContent(result.data)
+                        }, function() {})
+                    }
+                    if (tab.id == "panel6" && !tab.isRender) {
+                        hwFao.read("文档中心/NewVersion.txt", function(result) {
+                            hwText6.setValue(result.data)
+                        }, function() {})
+                        hwFao.read("文档中心/update.txt", function(result) {
+                            hwRichTextEditor4.setContent(result.data)
+                        }, function() {})
+                    }
+                    tab.isRender = true
+                }
+                //数据访问服务 发布
+                function button2_click(sender, e) {
+                    var str = hwRichTextEditor1.getContent() || " "
+                    hwFao.write("数据访问服务/NewVersion.txt", hwText3.getValue(), function() {}, function() {})
+                    hwFao.write("数据访问服务/update.txt", str, function() {}, function() {})
+                }
+                //工作流 发布
+                function button4_click(sender, e) {
+                    var str = hwRichTextEditor2.getContent() || " "
+                    hwFao.write("工作流/NewVersion.txt", hwText5.getValue(), function() {}, function() {})
+                    hwFao.write("工作流/update.txt", str, function() {}, function() {})
+                }
+                //消息中心 发布
+                function button8_click(sender, e) {
+                    var str = hwRichTextEditor3.getContent() || " "
+                    hwFao.write("消息中心/NewVersion.txt", hwText8.getValue(), function() {}, function() {})
+                    hwFao.write("消息中心/update.txt", str, function() {}, function() {})
+                }
+                //文档中心 发布
+                function button6_click(sender, e) {
+                    var str = hwRichTextEditor4.getContent() || " "
+                    hwFao.write("文档中心/NewVersion.txt", hwText7.getValue(), function() {}, function() {})
+                    hwFao.write("文档中心/update.txt", str, function() {}, function() {})
+                }
+
+                function panel_afterrender(sender) {
+                    var hwFao = new HwFao(vmdSettings.dataServiceIp, "version"); //地址:端口和存储标识(服务管理员分配)
+                    hwFao.getDirs("vmd2.0.4", 'Dir', function(result) {
+                        if (result.data && result.data.length > 0) {
+                            for (var i = 0; i < result.data.length; i++) {
+                                if (result.data[i].type == 'Dir' && result.data[i].name.indexOf('vmd2.0') >= 0) {
+                                    var cpanel = new Ext.Panel({
+                                        height: 45,
+                                        width: 300,
+                                        layout: "hbox",
+                                        border: false,
+                                        items: [{
+                                                xtype: "label",
+                                                id: "MyLabel",
+                                                width: 150,
+                                                text: result.data[i].name,
+                                                style: 'font-size:14px;font-weight:bold;',
+                                                margins: '10 10 10 10'
+                                            },
+                                            {
+                                                xtype: 'vmd.button',
+                                                icon: 'document',
+                                                text: '下载',
+                                                width: 70,
+                                                type: 'text',
+                                                style: 'margin-left:10px',
+                                                downName: result.data[i].name + "_full.tar.gz",
+                                                handler: function(e) {
+                                                    var path = "/version/VMD2.0.4/" + this.downName;
+                                                    window.open(path, '_self')
+                                                }
+                                            }
+                                        ]
+                                    })
+                                    panel.add(cpanel);
+                                }
+                            }
+                        }
+                        panel.doLayout()
+                    }, function(msg) {
+                        Tips.tips("获取文件数据失败", "error");
+                    });
+                }
+                var verReplaceFn = function(str) {
+                    str = str.replace(/(<script.*?><\/script>)|(<link.*\s+href=(?:"[^"]*"|'[^']*')[^<]*>)/g,
+                        function(codestr) {
+                            var pref = '';
+                            if (codestr.indexOf('.js') != -1) pref = '.js';
+                            if (codestr.indexOf('.css') != -1) pref = '.css';
+                            codestr = codestr.replace(/((\.js)|(\.css))(\?ver=[vmd\d\.]+)*/g,
+                                pref + '?ver=' + hwText1.getValue());
+                            return codestr;
+                        })
+                    return str;
+                }
+                var Version = {
+                    config: 'config.js',
+                    designPath: 'design/default.html',
+                    modulePreviewPath: 'run/default.html',
+                    reportPreviewPath: 'run/report.html',
+                    report2_2PreviewPath: 'run/report2_2.html',
+                    chartPreviewPath: 'run/chart.html',
+                    reportchartPreviewPath: 'run/reportchart.html',
+                    verInfo: {},
+                    previewState: {
+                        module: false,
+                        // report: false,
+                        report2_2: false,
+                        chart: false
+                    },
+                    updatePreviewVer: function(path, callback) {
+                        vmd.getFileStr(path, function(data) {
+                            var str;
+                            str = verReplaceFn(data);
+                            vmd.saveVmd(path, str, function() {
+                                callback && callback();
+                            })
+                        })
+                    }
+                }
+
+                function updateIDE(sender, e) {
+                    var path = Version.designPath;
+                    var cfgpath = Version.config;
+                    vmd.getFileStr(path, function(data) {
+                        var str;
+                        str = verReplaceFn(data);
+                        vmd.saveVmd(path, str, function() {})
+                    })
+                    vmd.getFileStr(cfgpath, function(data) {
+                        var str;
+                        var versionstr = 'vmdSettings.vmdVersion="{_ver}"';
+                        var vmdVersion = versionstr.format({
+                            _ver: hwText1.getValue()
+                        })
+                        str = data.replace(/vmdSettings.vmdVersion\s*=\s*"[\w.:\d]+"/g, vmdVersion);
+                        vmd.saveVmd(cfgpath, str)
+                    })
+                }
+
+                function updateRun(sender, e) {
+                    for (var key in Version.previewState) {
+                        Version.previewState[key] = false;
+                    }
+                    Version.updatePreviewVer(Version.modulePreviewPath, function() {
+                        Version.previewState.module = true;
+                    })
+                    // Version.updatePreviewVer(Version.reportPreviewPath, function() {
+                    //     Version.previewState.report = true;
+                    // })
+                    Version.updatePreviewVer(Version.report2_2PreviewPath, function() {
+                        Version.previewState.report2_2 = true;
+                    })
+                    Version.updatePreviewVer(Version.chartPreviewPath, function() {
+                        Version.previewState.chart = true;
+                    })
+                    Version.updatePreviewVer(Version.reportchartPreviewPath, function() {
+                        Version.previewState.reportchart = true;
+                    })
+                    vmd.taskRunner(function() {
+                        var state = true;
+                        for (var key in Version.previewState) {
+                            state *= Version.previewState[key];
+                        }
+                        return state;
+                    }, function() {})
+                }
+                var imageServer = "";
+                var imageFileService = "";
+                var ver_path = "";
+                var imageList = [];
+
+                function getImageInfo() {
+                    hwFao1.read("imageService.txt", function(result) {
+                            var imageConfig = JSON.parse(result.data)
+                            imageServer = imageConfig.imageServiceIp || result.data
+                            if (!imageServer) {
+                                myMask.hide();
+                                Ext.Msg.alert("提示", "请先配置镜像服务地址后再操作！", function() {})
+                                return;
+                            }
+                            //通过镜像服务获取文件服务地址
+                            hwDas.ajax({
+                                url: "http://" + imageServer + "/VMDCI/initService",
+                                type: 'get',
+                                timeout: 20000,
+                                success: function(data) {
+                                    if (!data.result) {
+                                        myMask.hide();
+                                        Ext.Msg.alert("提示", "获取镜像服务所需的文件服务地址失败！", function() {});
+                                        return;
+                                    }
+                                    imageFileService = data.data
+                                    if (!imageFileService) {
+                                        myMask.hide();
+                                        Ext.Msg.alert("提示", "获取镜像服务所需的文件服务地址失败！", function() {});
+                                        return;
+                                    }
+                                    //获取镜像列表
+                                },
+                                error: function(returndata) {
+                                    myMask.hide();
+                                    Ext.Msg.alert("提示", JSON.stringify(returndata), function() {});
+                                }
+                            })
+                        },
+                        function() {
+                            myMask.hide();
+                            Ext.Msg.alert("提示", "请先配置镜像服务地址后再操作！", function() {})
+                        })
+                    //获取版本发布的文件的存储目录 
+                    hwDas.ajax({
+                        url: "http://" + (vmdSettings.vmdFileServiceIp || vmdSettings.dataServiceIp) + "/FasService/File/version/getmarkpath",
+                        type: 'get',
+                        timeout: 20000,
+                        success: function(data) {
+                            ver_path = data.data;
+                        },
+                        error: function(data) {
+                            myMask.hide();
+                            Ext.Msg.alert("提示", "获取版本文件发布路径失败！", function() {});
+                            //获取版本发布的文件的存储目录  
+                        }
+                    })
+                }
+                getImageInfo()
+                //生成镜像
+                function button10_click(sender, e) {
+                    if (!imageFileService || !imageServer || !ver_path) {
+                        Ext.Msg.alert("提示", "获取镜像服务或镜像文件服务地址或vmd版本发布存储目录失败！请从镜像配置中配置后再刷新页面！")
+                        return
+                    }
+                    var myMask = new Ext.LoadMask(Ext.getBody(), {
+                        msg: "正在发布新版本" + hwText.getValue() + "的镜像,请稍后...",
+                        msgCls: 'z-index:10000;'
+                    });
+                    myMask.show();
+                    //获取镜像的服务地址
+                    var ExpModulesInfo = {
+                        fileSerIp: imageFileService,
+                        imageSerIp: imageServer,
+                        image_ver: hwText.getValue(),
+                        vmd_verPath: ver_path,
+                        imageType: 1,
+                        vmdToken: Cookie.get("hwToken"),
+                        info: hwRichTextEditor.getContent() || ""
+                    }
+                    //获取镜像列表
+                    var checkImage = function() {
+                        vmd.ajax({
+                            url: "http://" + imageServer + "/VMDCI/searchImage/vmdrun:" + hwText.getValue(),
+                            type: 'post',
+                            timeout: 20000,
+                            success: function(data) {
+                                if (data && data.result) {
+                                    deleteImage(data.data || []);
+                                } else {
+                                    myMask.hide();
+                                    Ext.Msg.alert("提示", "发布失败！检索镜像失败！" + data.msg || data.data)
+                                }
+                            },
+                            error: function() {
+                                myMask.hide();
+                                Ext.Msg.alert("提示", "发布失败！")
+                            }
+                        })
+                    }
+                    var deleteImage = function(imageTag) {
+                        if (imageTag.length <= 0) {
+                            createfunction();
+                        } else {
+                            vmd.ajax({
+                                url: "http://" + imageServer + "/VMDCI/deleteImage/" + imageTag[0].ImageName,
+                                type: 'post',
+                                timeout: 20000,
+                                success: function(data) {
+                                    if (data && data.result) {
+                                        createfunction();
+                                    } else {
+                                        myMask.hide();
+                                        Ext.Msg.alert("提示", "发布失败！初始化镜像任务失败！" + data.msg || data.data)
+                                    }
+                                },
+                                error: function() {
+                                    myMask.hide();
+                                    Ext.Msg.alert("提示", "发布失败！")
+                                }
+                            })
+                        }
+                    }
+                    var createfunction = function() {
+                        hwDas.ajax({
+                            url: "http://" + imageServer + "/VMDCI/vmdrun/" + hwText.getValue(),
+                            type: 'post',
+                            timeout: 20000,
+                            success: function(data) {
+                                if ((data && data.result) || (data && data.data.indexOf("服务器已有相同任务目录") >= 0)) {
+                                    imagePublish();
+                                } else {
+                                    myMask.hide();
+                                    Ext.Msg.alert("提示", "发布失败！初始化镜像任务失败！" + data.msg || data.data)
+                                }
+                            },
+                            error: function() {
+                                myMask.hide();
+                                Ext.Msg.alert("提示", "发布失败，初始化镜像任务失败！")
+                            }
+                        })
+                    }
+                    var imagePublish = function() {
+                        //后台提取打包文件
+                        vmd.ajax({
+                            url: "/expandimp/api/ImagePublish",
+                            type: 'post',
+                            timeout: 10 * 60 * 1000,
+                            data: ExpModulesInfo,
+                            success: function(result) {
+                                if (result && result.type == "success") {
+                                    buildImage()
+                                } else {
+                                    myMask.hide();
+                                    Ext.Msg.alert("提示", "提取上传vmd基础文件失败！" + result.msg || result.data + "")
+                                }
+                            },
+                            error: function(msg) {
+                                myMask.hide();
+                                Ext.Msg.alert("提示", "提取上传vmd基础文件失败！")
+                            }
+                        })
+                    }
+                    var buildImage = function() {
+                        vmd.ajax({
+                            url: "http://" + imageServer + "/VMDCI/vmdrun/build/" + hwText.getValue(),
+                            type: 'post',
+                            timeout: 10 * 60 * 1000,
+                            data: {
+                                BuildContent: hwText.getValue() + '.tar.gz',
+                                BuildAuthor: vmd.getUserId(),
+                                BuildImage: "vmdrun:" + hwText.getValue()
+                            },
+                            success: function(data) {
+                                if (data && data.result) {
+                                    var imagehwFao = new HwFao(imageFileService, "vmdcicd");
+                                    //获取历史版本的更新日志信息
+                                    imagehwFao.write("data/vmd/" + hwText.getValue() + "/update.txt", hwRichTextEditor.getContent() || " ", function(result) {}, function() {})
+                                    myMask.hide();
+                                    Ext.Msg.alert("提示", "发布成功！")
+                                } else {
+                                    myMask.hide();
+                                    Ext.Msg.alert("提示", "创建镜像失败！")
+                                }
+                            },
+                            error: function(msg) {
+                                myMask.hide();
+                                Ext.Msg.alert("提示", "创建镜像失败！")
+                            }
+                        })
+                    }
+                    checkImage()
+                }
+                this.MainViewport_afterrender = MainViewport_afterrender;
+                this.items = [{
+                        xtype: "tabpanel",
+                        id: "hwMyTabs",
+                        activeTab: 0,
+                        height: 150,
+                        width: 500,
+                        region: "center",
+                        tabchange: "hwMyTabs_tabchange",
+                        cls: "aaaaa",
+                        listeners: {
+                            tabchange: hwMyTabs_tabchange
+                        },
+                        items: [{
+                                xtype: "panel",
+                                id: "panel2",
+                                title: "VMD2.0",
+                                header: true,
+                                border: true,
+                                height: 100,
+                                layout: "border",
+                                afterrender: "panel2_afterrender",
+                                listeners: {
+                                    vmdafterrender: panel2_afterrender
+                                },
+                                items: [{
+                                        xtype: "vmd.div",
+                                        id: "hwDiv",
+                                        autoEl: "div",
+                                        border: true,
+                                        backgroundRepeat: "no-repeat",
+                                        backgroundPosition: "top left",
+                                        width: 620,
+                                        height: 50,
+                                        x: 140,
+                                        y: 90,
+                                        region: "center",
+                                        layout: "absolute",
+                                        style: "font-size:14px;",
+                                        items: [{
+                                                xtype: "label",
+                                                id: "hwLabel3",
+                                                text: "上一版本：",
+                                                x: 30,
+                                                y: 60,
+                                                style: "font-size:14px;"
+                                            },
+                                            {
+                                                xtype: "textfield",
+                                                id: "hwText",
+                                                allowBlank: true,
+                                                enableKeyEvents: true,
+                                                x: 140,
+                                                y: 55,
+                                                beforerender: "hwText_beforerender",
+                                                afterrender: "hwText_afterrender",
+                                                readOnly: true,
+                                                listeners: {
+                                                    beforerender: hwText_beforerender,
+                                                    vmdafterrender: hwText_afterrender
+                                                }
+                                            },
+                                            {
+                                                xtype: "label",
+                                                id: "hwLabel5",
+                                                text: "要发布的版本号：",
+                                                x: 30,
+                                                y: 110
+                                            },
+                                            {
+                                                xtype: "textfield",
+                                                id: "hwText1",
+                                                allowBlank: true,
+                                                enableKeyEvents: true,
+                                                x: 140,
+                                                y: 105,
+                                                afterrender: "hwText1_afterrender",
+                                                listeners: {
+                                                    vmdafterrender: hwText1_afterrender
+                                                }
+                                            },
+                                            {
+                                                xtype: "label",
+                                                id: "hwLabel6",
+                                                text: "更新日志：",
+                                                x: 30,
+                                                y: 160
+                                            },
+                                            {
+                                                xtype: "vmd.button",
+                                                id: "button",
+                                                text: "发布新版本",
+                                                type: "primary",
+                                                size: "large",
+                                                x: 300,
+                                                y: 90,
+                                                click: "button_click",
+                                                width: 130,
+                                                listeners: {
+                                                    click: button_click
+                                                }
+                                            },
+                                            {
+                                                xtype: "vmd.richTextEditor",
+                                                id: "hwRichTextEditor",
+                                                height: 300,
+                                                width: 750,
+                                                zIndex: 100,
+                                                x: 40,
+                                                y: 190,
+                                                aftershow: "hwRichTextEditor_aftershow",
+                                                afterrender: "hwRichTextEditor_afterrender",
+                                                listeners: {
+                                                    aftershow: hwRichTextEditor_aftershow,
+                                                    vmdafterrender: hwRichTextEditor_afterrender
+                                                }
+                                            },
+                                            {
+                                                xtype: "vmd.button",
+                                                id: "button1",
+                                                text: "其它依赖信息",
+                                                type: "primary",
+                                                size: "large",
+                                                x: 450,
+                                                y: 90,
+                                                click: "button1_click",
+                                                width: 130,
+                                                listeners: {
+                                                    click: button1_click
+                                                }
+                                            },
+                                            {
+                                                xtype: "label",
+                                                id: "hwLabel",
+                                                text: "包含数据服务接口、数据库脚本、复合组件等资源及功能的更新",
+                                                x: 610,
+                                                y: 90,
+                                                width: 210,
+                                                style: "color:red;"
+                                            },
+                                            {
+                                                xtype: "vmd.button",
+                                                id: "button10",
+                                                text: "发布vmd2.0.6.200119的镜像",
+                                                type: "primary",
+                                                size: "large",
+                                                x: 300,
+                                                y: 40,
+                                                width: 280,
+                                                click: "button10_click",
+                                                listeners: {
+                                                    click: button10_click
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        xtype: "vmd.div",
+                                        id: "hwDiv1",
+                                        autoEl: "div",
+                                        border: true,
+                                        backgroundRepeat: "no-repeat",
+                                        backgroundPosition: "top left",
+                                        width: 250,
+                                        height: 50,
+                                        x: 370,
+                                        y: 200,
+                                        region: "east",
+                                        layout: "fit",
+                                        items: [{
+                                            xtype: "panel",
+                                            id: "panel",
+                                            title: "历史版本",
+                                            header: true,
+                                            border: true,
+                                            height: 100,
+                                            layout: "vbox",
+                                            style: "font-size:14px;",
+                                            afterrender: "panel_afterrender",
+                                            listeners: {
+                                                vmdafterrender: panel_afterrender
+                                            },
+                                            items: [{
+                                                xtype: "label",
+                                                id: "hwLabel4",
+                                                text: "历史版本只提供全量包下载",
+                                                style: "font-size:14px;color:red;"
+                                            }]
+                                        }]
+                                    }
+                                ]
+                            },
+                            {
+                                xtype: "panel",
+                                id: "panel3",
+                                title: "数据服务",
+                                header: true,
+                                border: true,
+                                height: 100,
+                                layout: "absolute",
+                                style: "font-size: 14px",
+                                afterrender: "panel3_afterrender",
+                                listeners: {
+                                    vmdafterrender: panel3_afterrender
+                                },
+                                items: [{
+                                        xtype: "label",
+                                        id: "hwLabel7",
+                                        text: "上一版本：",
+                                        x: 30,
+                                        y: 60
+                                    },
+                                    {
+                                        xtype: "label",
+                                        id: "hwLabel8",
+                                        text: "要发布的版本：",
+                                        x: 30,
+                                        y: 110,
+                                        height: 20
+                                    },
+                                    {
+                                        xtype: "textfield",
+                                        id: "hwText2",
+                                        allowBlank: true,
+                                        enableKeyEvents: true,
+                                        x: 140,
+                                        y: 50,
+                                        readOnly: true
+                                    },
+                                    {
+                                        xtype: "textfield",
+                                        id: "hwText3",
+                                        allowBlank: true,
+                                        enableKeyEvents: true,
+                                        x: 140,
+                                        y: 100
+                                    },
+                                    {
+                                        xtype: "vmd.button",
+                                        id: "button2",
+                                        text: "发布新版本",
+                                        type: "primary",
+                                        size: "large",
+                                        x: 320,
+                                        y: 90,
+                                        click: "button2_click",
+                                        listeners: {
+                                            click: button2_click
+                                        }
+                                    },
+                                    {
+                                        xtype: "vmd.button",
+                                        id: "button3",
+                                        text: "上传数据服务",
+                                        type: "primary",
+                                        size: "large",
+                                        x: 460,
+                                        y: 90,
+                                        click: "button3_click",
+                                        listeners: {
+                                            click: button3_click
+                                        }
+                                    },
+                                    {
+                                        xtype: "label",
+                                        id: "hwLabel9",
+                                        text: "更新日志:",
+                                        x: 30,
+                                        y: 160,
+                                        height: 20
+                                    },
+                                    {
+                                        xtype: "vmd.richTextEditor",
+                                        id: "hwRichTextEditor1",
+                                        height: 300,
+                                        width: 750,
+                                        zIndex: 100,
+                                        x: 40,
+                                        y: 190
+                                    }
+                                ]
+                            },
+                            {
+                                xtype: "panel",
+                                id: "panel4",
+                                title: "工作流",
+                                header: true,
+                                border: true,
+                                height: 100,
+                                layout: "absolute",
+                                style: "font-size: 14px",
+                                items: [{
+                                        xtype: "label",
+                                        id: "hwLabel10",
+                                        text: "上一版本：",
+                                        x: 30,
+                                        y: 60
+                                    },
+                                    {
+                                        xtype: "label",
+                                        id: "hwLabel11",
+                                        text: "要发布的版本：",
+                                        x: 30,
+                                        y: 110
+                                    },
+                                    {
+                                        xtype: "label",
+                                        id: "hwLabel12",
+                                        text: "更新日志：",
+                                        x: 30,
+                                        y: 160
+                                    },
+                                    {
+                                        xtype: "vmd.richTextEditor",
+                                        id: "hwRichTextEditor2",
+                                        height: 300,
+                                        width: 750,
+                                        zIndex: 100,
+                                        x: 40,
+                                        y: 190
+                                    },
+                                    {
+                                        xtype: "textfield",
+                                        id: "hwText4",
+                                        allowBlank: true,
+                                        enableKeyEvents: true,
+                                        x: 140,
+                                        y: 55,
+                                        readOnly: true
+                                    },
+                                    {
+                                        xtype: "textfield",
+                                        id: "hwText5",
+                                        allowBlank: true,
+                                        enableKeyEvents: true,
+                                        x: 140,
+                                        y: 105
+                                    },
+                                    {
+                                        xtype: "vmd.button",
+                                        id: "button4",
+                                        text: "发布新版本",
+                                        type: "primary",
+                                        size: "large",
+                                        x: 320,
+                                        y: 90,
+                                        click: "button4_click",
+                                        listeners: {
+                                            click: button4_click
+                                        }
+                                    },
+                                    {
+                                        xtype: "vmd.button",
+                                        id: "button5",
+                                        text: "上传工作流",
+                                        type: "primary",
+                                        size: "large",
+                                        x: 460,
+                                        y: 90,
+                                        click: "button5_click",
+                                        listeners: {
+                                            click: button5_click
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                xtype: "panel",
+                                id: "panel5",
+                                title: "消息中心",
+                                header: true,
+                                border: true,
+                                height: 100,
+                                layout: "absolute",
+                                style: "font-size: 14px",
+                                items: [{
+                                        xtype: "label",
+                                        id: "hwLabel13",
+                                        text: "上一版本:",
+                                        x: 30,
+                                        y: 60
+                                    },
+                                    {
+                                        xtype: "label",
+                                        id: "hwLabel14",
+                                        text: "要发布的版本：",
+                                        x: 30,
+                                        y: 110
+                                    },
+                                    {
+                                        xtype: "label",
+                                        id: "hwLabel15",
+                                        text: "更新日志：",
+                                        x: 30,
+                                        y: 160
+                                    },
+                                    {
+                                        xtype: "vmd.richTextEditor",
+                                        id: "hwRichTextEditor3",
+                                        height: 300,
+                                        width: 750,
+                                        zIndex: 100,
+                                        x: 40,
+                                        y: 190
+                                    },
+                                    {
+                                        xtype: "textfield",
+                                        id: "hwText8",
+                                        allowBlank: true,
+                                        enableKeyEvents: true,
+                                        x: 140,
+                                        y: 105
+                                    },
+                                    {
+                                        xtype: "textfield",
+                                        id: "hwText9",
+                                        allowBlank: true,
+                                        enableKeyEvents: true,
+                                        x: 140,
+                                        y: 55,
+                                        readOnly: true
+                                    },
+                                    {
+                                        xtype: "vmd.button",
+                                        id: "button8",
+                                        text: "发布新版本",
+                                        type: "primary",
+                                        size: "large",
+                                        x: 320,
+                                        y: 90,
+                                        click: "button8_click",
+                                        listeners: {
+                                            click: button8_click
+                                        }
+                                    },
+                                    {
+                                        xtype: "vmd.button",
+                                        id: "button9",
+                                        text: "上传消息中心",
+                                        type: "primary",
+                                        size: "large",
+                                        x: 460,
+                                        y: 90,
+                                        click: "button9_click",
+                                        listeners: {
+                                            click: button9_click
+                                        }
+                                    }
+                                ]
+                            },
+                            {
+                                xtype: "panel",
+                                id: "panel6",
+                                title: "文档中心",
+                                header: true,
+                                border: true,
+                                height: 100,
+                                layout: "absolute",
+                                style: "font-size: 14px",
+                                items: [{
+                                        xtype: "label",
+                                        id: "hwLabel16",
+                                        text: "上一版本：",
+                                        x: 30,
+                                        y: 60
+                                    },
+                                    {
+                                        xtype: "label",
+                                        id: "hwLabel17",
+                                        text: "要发布的版本：",
+                                        x: 30,
+                                        y: 110
+                                    },
+                                    {
+                                        xtype: "textfield",
+                                        id: "hwText6",
+                                        allowBlank: true,
+                                        enableKeyEvents: true,
+                                        x: 140,
+                                        y: 55,
+                                        readOnly: true
+                                    },
+                                    {
+                                        xtype: "textfield",
+                                        id: "hwText7",
+                                        allowBlank: true,
+                                        enableKeyEvents: true,
+                                        x: 140,
+                                        y: 105
+                                    },
+                                    {
+                                        xtype: "vmd.button",
+                                        id: "button6",
+                                        text: "发布新版本",
+                                        type: "primary",
+                                        size: "large",
+                                        x: 320,
+                                        y: 90,
+                                        click: "button6_click",
+                                        listeners: {
+                                            click: button6_click
+                                        }
+                                    },
+                                    {
+                                        xtype: "vmd.button",
+                                        id: "button7",
+                                        text: "上传文档中心",
+                                        type: "primary",
+                                        size: "large",
+                                        x: 460,
+                                        y: 90,
+                                        click: "button7_click",
+                                        listeners: {
+                                            click: button7_click
+                                        }
+                                    },
+                                    {
+                                        xtype: "label",
+                                        id: "hwLabel18",
+                                        text: "更新日志:",
+                                        x: 30,
+                                        y: 160
+                                    },
+                                    {
+                                        xtype: "vmd.richTextEditor",
+                                        id: "hwRichTextEditor4",
+                                        height: 300,
+                                        width: 750,
+                                        zIndex: 100,
+                                        x: 40,
+                                        y: 190
+                                    }
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        xtype: "vmd.div",
+                        id: "hwDiv2",
+                        layoutConfig: {
+                            align: "center",
+                            pack: "center"
+                        },
+                        autoEl: "div",
+                        border: true,
+                        backgroundRepeat: "no-repeat",
+                        backgroundPosition: "top left",
+                        width: 400,
+                        height: 76,
+                        region: "north",
+                        layout: "vbox",
+                        items: [{
+                                xtype: "label",
+                                id: "hwLabel19",
+                                text: "vmd2.0版本自动化版本发布",
+                                width: 271,
+                                style: "font-size: 20px;"
+                            },
+                            {
+                                xtype: "label",
+                                id: "hwLabel20",
+                                text: "VMD2.0.4.190706",
+                                margins: "10 0 0 0"
+                            }
+                        ]
+                    },
+                    {
+                        xtype: "vmd.div",
+                        id: "div",
+                        autoEl: "div",
+                        border: true,
+                        backgroundRepeat: "no-repeat",
+                        backgroundPosition: "top left",
+                        width: 0,
+                        height: 50,
+                        region: "west",
+                        layout: "absolute",
+                        items: [{
+                            xtype: "vmd.ux.Uploader",
+                            id: "hwUploader",
+                            layout: "fit",
+                            x: 130,
+                            y: 20,
+                            hidden: true
+                        }]
+                    }
+                ]
+                this.callParent();
+                var me = this;
+                vmd.core.moduleInit(this.items, this);
+                me.on('afterrender', function() {
+                    MainViewport_afterrender.call(me, me)
+                })
+            }
+        })
+        Ext.onReady(function() {
+            Ext.create('vmd.module.MainViewport', {
+                renderTo: document.body
+            })
+        })
+    </script>
+</head>
+
+<body> </body>
+
+</html>

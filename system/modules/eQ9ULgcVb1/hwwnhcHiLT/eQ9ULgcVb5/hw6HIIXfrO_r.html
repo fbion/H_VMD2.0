@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>注册发布(含资源地址)</title>
+	<!--基本样式-->
+    <link href="{virtualPath}/css/common.css?ver=2.0.3.0710" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="{virtualPath}/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.3.0710" rel="stylesheet" />
+   
+    <link href="{virtualPath}/design/css/icons.css?ver=2.0.3.0710" rel="stylesheet" />
+
+	<link href="{virtualPath}/lib/dhtmlx/dhtmlx.css?ver=2.0.3.0710" rel="stylesheet" />
+	  <!--样式快捷索引表-->
+    <link href="{virtualPath}/css/shortcut.css?ver=2.0.3.0710" rel="stylesheet" />
+    
+    <script src="{virtualPath}/lib/labjs/LAB.min.js?ver=2.0.3.0710"></script>
+    <script src="{virtualPath}/config.js?ver=2.0.3.0710"></script>
+    <script src="{virtualPath}/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.3.0710"></script>
+    <script src="{virtualPath}/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.3.0710"></script>
+    <script src="{virtualPath}/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.3.0710"></script>
+    <script src="{virtualPath}/lib/ext-3.4/ext-all-debug.js?ver=2.0.3.0710"></script>
+    <script src="{virtualPath}/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.3.0710"></script>
+    <script src="{virtualPath}/js/util.js?ver=2.0.3.0710"></script>
+    <script src="{virtualPath}/lib/dhtmlx/dhtmlx.js?ver=2.0.3.0710"></script>
+	<script src="{virtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.3.0710"></script>
+	<script src="{virtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.3.0710"></script>
+    <script src="{virtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.3.0710"></script>
+	<script src="{virtualPath}/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.3.0710"></script>
+    <script src="{virtualPath}/js/hwdas.js?ver=2.0.3.0710"></script>
+    <script src="{virtualPath}/js/vmdcore.js?ver=2.0.3.0710"></script>
+    <script src="{virtualPath}/js/vmdcomps.js?ver=2.0.3.0710"></script>
+    <script src="{virtualPath}/js/publicMethods.js?ver=2.0.3.0710"></script>
+    <script src="{virtualPath}/js/vmdreport.js?ver=2.0.3.0710"></script>
+    {workspacePath}
+
+    <script src="{virtualPath}/lib/ace/ace.js"></script>
+    <script src="{virtualPath}/lib/ace/mode-base.js" type="text/javascript"></script>
+    <script src="{virtualPath}/lib/ace/theme-xcode.js" type="text/javascript" ></script>
+    <script src="{virtualPath}/lib/ace/ext-language_tools.js"></script>
+    
+
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        
+    </style>
+    <script>
+        vmd.virtualPath = '{virtualPath}';
+        
+        Ext.define("vmd.module.MyViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps(["vmd.ux.PublishResource$1.0$PublishResource"]),
+	xtype:"vmd.module.MyViewport",
+	layout:"border",
+	afterrender:"MyViewport_afterrender",
+	listeners:{
+		vmdafterrender:function(){
+	this.MyViewport_afterrender(this)
+}
+	},
+	initComponent: function(){
+		var workspaceid = getUrlParam(workspaceid)
+if(workspaceid) {
+    vmd.core.getWorkSpaceServer(workspaceid);
+}
+
+function hwTree_afterrender(sender) {
+
+}
+
+function loadSubSys(projectId) {
+    
+    //初始化数据
+    myMask = new Ext.LoadMask(Ext.getCmp("hwTree").el, {
+        msg: "数据加载中,请稍后...",
+        msgCls: 'z-index:10000;'
+    });
+    myMask.show();
+    var mytree = hwTree;
+    mytree.deleteChildItems(0);
+    mytree.loadJSONObject({
+        id: 0,
+        text: "我的项目",
+        item: []
+    });
+    //mytree.enableRadioButtons(true)
+    //mytree.enableSingleRadioMode(true) 
+    var getSubSysUrl = "CDEServcie/pt/hqzxt";
+    if(r_pt5.checked)
+        getSubSysUrl = "CDEServcie/pt/getptfivesystem";
+    hwDas.ajax({
+        das: {
+            idedas: true
+        },
+        url: getSubSysUrl,
+        type: 'get',
+        timeout: 50000,
+        params: {},
+        success: function(result) {
+            var datajson = result.data[0].datas;
+            for(var i = 0; i < datajson.length; i++) {
+                mytree.insertNewChild(0, datajson[i].subsysid, datajson[i].subsysname);
+                mytree.setItemImage2(datajson[i].subsysid, "tree/model.png", "tree/model.png", "tree/model.png");
+            }
+            //设置选中
+            if(projectId)
+                mytree.selectItem(projectId);
+            myMask.hide();
+        },
+        error: function(msg) {
+            myMask.hide();
+            Ext.Msg.alert("提示", "获取平台子系统信息失败", function() {})
+        }
+    })
+}
+
+function button_click(sender) {
+    var listPublishResourceServers = [];
+    var objlistResourceNameIP = {};
+    for(var i = 0; i < listPublishResourceComps.length; i++) {
+        var Serversinfo = listPublishResourceComps[i].getText();
+        listPublishResourceServers.push(Serversinfo);
+    }
+
+    for(var i = 0; i < listResourceNameIP.length; i++) {
+        for(var j = 0; j < listPublishResourceServers.length; j++) {
+            if(listResourceNameIP[i].oldip == listPublishResourceServers[j].oldIP) {
+                listResourceNameIP[i].newip = listPublishResourceServers[j].newIP || listPublishResourceServers[j].oldIP
+                objlistResourceNameIP[listResourceNameIP[i].name] = "http://" + listResourceNameIP[i].newip + "/resource";
+                break;
+            }
+        }
+    }
+
+    var mytree = hwTree;
+    //将节点信息传递到设计页面
+    var selId = mytree.getSelectedItemId();
+    var myPtree = parent.hwTree;
+    var selPId = parent.hwTree.getSelectedItemId();
+    var selNode = myPtree.itemObj[selPId];
+    var proId = selNode.projectId;
+    var data = [{
+        subsysid: selId,
+        moduleguid: selNode.id,
+        modulename: selNode.text,
+        moudelinfo: selNode.remark,
+        moduletype: 1,
+        startname: "/release" + selNode.path + ".html",
+        enable: 1,
+        args: ""
+    }];
+    var zcurl = "CDEServcie/pt/zcmk";
+    if(r_pt5.checked)
+        zcurl = "CDEServcie/pt/ptfivezcmk";
+    hwDas.ajax({
+        das: {
+            idedas: true
+        },
+        url: zcurl,
+        type: "save",
+        timeout: 50000,
+        data: data,
+        success: function(result) {
+            myMask.msg = "正在发布页面！";
+            var path = vmd.core.getVirtualPath() + "modules" + selNode.path + "_r.html";
+            var releasePath = "release" + selNode.path + ".html";
+            var virtualPath = "";
+            if(MyField.getValue() != "")
+                virtualPath = "/" + MyField.getValue();
+            vmd.core.createReleaseHtml(path, releasePath, virtualPath, function() {
+                myMask.hide();
+                Ext.Msg.alert("提示", "注册模块信息成功", function() {
+                    parent.openWinFrom.hide();
+                })
+            }, objlistResourceNameIP, selNode.projectId);
+            hwDas.copy("vmd", "modules/" + proId + "/img", "release/" + proId + "/img", function() {}, function() {});
+            hwDas.copy("vmd", "modules/" + proId + "/css", "release/" + proId + "/css", function() {}, function() {});
+            hwDas.copy("vmd", "modules/" + proId + "/js", "release/" + proId + "/js", function() {}, function() {});
+        },
+        error: function(msg) {
+            myMask.hide();
+            Ext.Msg.alert("提示", "注册模块信息失败", function() {})
+            parent.openWinFrom.hide();
+        }
+    })
+
+    // 保存配置信息
+    var saveVmdConfig = function(filename, bodyStr) {
+        Ext.Ajax.request({
+            url: vmd.vmdUploadPath + 'FileService',
+            timeout: 50000,
+            success: function(result) {},
+            failure: function(result) {
+                Ext.Msg.alert('错误', '网络超时，保存项目配置信息失败！')
+                myMask.hide()
+            },
+            headers: {
+                FileName: 'release/' + selNode.projectId + "/" + filename,
+            },
+            params: {
+                body: bodyStr
+            }
+        })
+    }
+
+    var bodyStr = 'vmd.workspace={\n';
+    bodyStr += "dataServiceIp: \"" + (txt_dataserverip.getValue()) + "\",\n";
+    bodyStr += "workflowIp: \"" + (txt_workflowip.getValue()) + "\"\n";
+    bodyStr += '}';
+    //处理项目的配置文件
+    saveVmdConfig("config.js", bodyStr);
+
+}
+
+function button1_click(sender) {
+
+    parent.openWinFrom.hide();
+
+}
+
+var listPublishResourceComps = []; //记录动态添加的组件列表。
+var listResourceIP = []; //记录当前模块所有的资源服务器地址
+var listResourceNameIP = []; //记录资源的名称和ip信息
+var r_pt5checked = false; //记录是否选中了pt5
+
+function MyViewport_afterrender(sender) {
+    var projectId = parent.btnProjectName.projectId; //vmd.workspace.projectid;
+    hwDas.get("DataServiceWorkSpace/projectInfo/projectreginfo", {}, {
+        projectid: projectId
+    }, function(result) {
+        var subsysid;
+        var resourceserver = [];
+        if(result.data && result.data.length > 0 && result.data[0].datas && result.data[0].datas.length > 0) {
+            if(result.data[0].datas[0].pttype == "5") {
+                r_pt5checked = true;
+                r_pt5.checked = true;
+                r_pt5.setValue(true);
+                r_pt4.checked = false;
+                r_pt4.setValue(false);
+            } else {
+                r_pt5checked = false;
+            }
+            subsysid = result.data[0].datas[0].subsysid;
+            txt_dataserverip.setValue(result.data[0].datas[0].dasserver)
+            txt_workflowip.setValue(result.data[0].datas[0].wfserver)
+            MyField.setValue(result.data[0].datas[0].virtualdir)
+            resourceserver = Ext.decode(result.data[0].datas[0].resourceserver);
+        }
+        loadSubSys(subsysid);
+        //添加radio的check事件，在此处添加的原因为防止初始化时，设置radio选中会触发事件，调用loadSubSys，导致加载两次树
+        addCheckEvent();
+
+        var vp = vmd.core.getVirtualPath().replace(window.location.origin + "/", "");
+        if(vp.lastIndexOf("/") > 0)
+            MyField.setValue(vp.substr(0, vp.lastIndexOf("/")));
+
+        //递归添加地址对应组件，并设置内容
+        hwDas.get("DataServiceWorkSpace/projectInfo/getResSerByModuleId", {}, {
+            module_id: parent.hwTree.getSelectedItemId()
+        }, function(result) {
+            if(result.data && result.data.length > 0 && result.data[0].datas && result.data[0].datas.length > 0) {
+                for(var i = 0; i < result.data[0].datas.length; i++) {
+                    if(listResourceIP.indexOf(result.data[0].datas[i].resource_server_ip) < 0) {
+                        listResourceIP.push(result.data[0].datas[i].resource_server_ip);
+                        var ipresource = new vmd.ux.PublishResource({
+                            id: "PublishResource" + i,
+                            anchor: "100% "
+                        });
+                        palResource.add(ipresource)
+
+                        var newip = "";
+                        for(var j = 0; j < resourceserver.length; j++) {
+                            if(resourceserver[j].oldip == result.data[0].datas[i].resource_server_ip)
+                                newip = resourceserver[j].newip;
+                        }
+
+                        ipresource.setText(result.data[0].datas[i].resource_server_ip, newip, result.data[0].datas[i].fullname.replace('&&', '/'));
+                        listPublishResourceComps.push(ipresource)
+                    }
+                    listResourceNameIP.push({
+                        name: result.data[0].datas[i].fullname,
+                        oldip: result.data[0].datas[i].resource_server_ip,
+                        newip: ""
+                    })
+                }
+                PublishResource.hide();
+                palResource.onBodyResize()
+            }
+        }, function(msg) {});
+    }, function(msg) {})
+}
+
+function addCheckEvent() {
+    r_pt4.on('check', function(radio, checked) {
+        changept(radio, checked);
+    })
+    r_pt5.on('check', function(radio, checked) {
+        changept(radio, checked);
+    })
+}
+
+function changept(snder, checked) {
+    {
+        loadSubSys()
+    }
+}
+			this.MyViewport_afterrender=MyViewport_afterrender;
+
+
+
+		this.items=[
+			{
+				xtype:"panel",
+				id:"panel2",
+				title:"Panel",
+				header:false,
+				border:false,
+				height:29,
+				region:"north",
+				layout:"absolute",
+				style:"background-color: lightblue;",
+				bodyStyle:"background-color: lightblue;",
+				items:[
+					{
+						xtype:"label",
+						id:"label",
+						text:"请选择要注册的子系统：",
+						x:5,
+						y:5
+					},
+					{
+						xtype:"radiostoregroup",
+						id:"hwRadioGroup",
+						width:200,
+						height:40,
+						labelField:"label",
+						valueField:"value",
+						checkedField:"checked",
+						boxFieldName:"myRadio",
+						x:150,
+						y:0,
+						items:[
+							{
+								xtype:"radio",
+								id:"r_pt4",
+								boxLabel:"平台4",
+								width:71,
+								checked:true,
+								afterrender:"r_pt4_afterrender",
+								x:0,
+								y:0
+							},
+							{
+								xtype:"radio",
+								id:"r_pt5",
+								boxLabel:"平台5",
+								width:69,
+								afterrender:"r_pt5_afterrender",
+								x:15,
+								y:0,
+								checked:false
+							}
+						]
+					}
+				]
+			},
+			{
+				xtype:"panel",
+				id:"panel",
+				title:"Panel",
+				header:false,
+				border:false,
+				height:100,
+				region:"center",
+				layout:"border",
+				items:[
+					{
+						xtype:"panel",
+						id:"panel3",
+						title:"Panel",
+						header:false,
+						border:true,
+						height:619,
+						region:"center",
+						layout:"anchor",
+						items:[
+							{
+								xtype:"vmd.div",
+								id:"div1",
+								autoEl:"div",
+								border:true,
+								backgroundRepeat:"no-repeat",
+								backgroundPosition:"top left",
+								width:400,
+								height:50,
+								anchor:"100% 50%",
+								layout:"fit",
+								style:"padding-bottom: 8px;",
+								items:[
+									{
+										xtype:"vmd.tree",
+										id:"hwTree",
+										skin:"material",
+										width:300,
+										height:200,
+										isdesign:false,
+										style:"margin-left: 5px;    margin-top: 5px;    margin-bottom: 10px;    margin-right: 10px;    padding-bottom: 10px;",
+										afterrender:"hwTree_afterrender",
+										region:"center",
+										columnWidth:1,
+										anchor:"100% 60%",
+										listeners:{
+											vmdafterrender:hwTree_afterrender
+										}
+									}
+								]
+							},
+							{
+								xtype:"vmd.div",
+								id:"div3",
+								autoEl:"div",
+								border:true,
+								backgroundRepeat:"no-repeat",
+								backgroundPosition:"top left",
+								width:400,
+								height:50,
+								anchor:"100% 50%",
+								layout:"border",
+								items:[
+									{
+										xtype:"vmd.div",
+										id:"div4",
+										autoEl:"div",
+										border:false,
+										backgroundRepeat:"no-repeat",
+										backgroundPosition:"top left",
+										width:400,
+										height:38,
+										region:"north",
+										layout:"column",
+										items:[
+											{
+												xtype:"label",
+												id:"label2",
+												text:"数据服务地址:",
+												x:8,
+												y:20
+											},
+											{
+												xtype:"textfield",
+												id:"txt_dataserverip",
+												allowBlank:true,
+												x:90,
+												y:10,
+												width:180,
+												columnWidth:0.5
+											},
+											{
+												xtype:"label",
+												id:"label3",
+												text:"工作流地址：",
+												x:310,
+												y:20
+											},
+											{
+												xtype:"textfield",
+												id:"txt_workflowip",
+												allowBlank:true,
+												x:390,
+												y:10,
+												width:180,
+												columnWidth:0.5
+											}
+										]
+									},
+									{
+										xtype:"vmd.div",
+										id:"div5",
+										autoEl:"div",
+										border:true,
+										backgroundRepeat:"no-repeat",
+										backgroundPosition:"top left",
+										width:400,
+										height:50,
+										region:"center",
+										layout:"border",
+										items:[
+											{
+												xtype:"vmd.div",
+												id:"div2",
+												autoEl:"div",
+												border:false,
+												backgroundRepeat:"no-repeat",
+												backgroundPosition:"top left",
+												width:400,
+												height:29,
+												anchor:"100% 10%",
+												layout:"absolute",
+												region:"north",
+												style:"background-color: lightblue;",
+												items:[
+													{
+														xtype:"label",
+														id:"title",
+														text:"   设置资源服务器：",
+														anchor:"",
+														height:20,
+														autoHeight:false,
+														width:100,
+														y:5,
+														x:5,
+														autoWidth:true
+													}
+												]
+											},
+											{
+												xtype:"vmd.div",
+												id:"DivResource",
+												autoEl:"div",
+												border:true,
+												backgroundRepeat:"no-repeat",
+												backgroundPosition:"top left",
+												width:400,
+												height:50,
+												anchor:"100% 30%",
+												layout:"fit",
+												region:"center",
+												items:[
+													{
+														xtype:"panel",
+														id:"palResource",
+														title:"Panel",
+														header:false,
+														border:false,
+														height:100,
+														layout:"anchor",
+														autoScroll:true,
+														items:[
+															{
+																xtype:"vmd.ux.PublishResource",
+																id:"PublishResource",
+																anchor:"100% "
+															}
+														]
+													}
+												]
+											}
+										]
+									}
+								]
+							}
+						]
+					},
+					{
+						xtype:"panel",
+						id:"panel4",
+						title:"Panel",
+						header:false,
+						border:false,
+						height:50,
+						region:"south",
+						layout:"absolute",
+						items:[
+							{
+								xtype:"label",
+								id:"label1",
+								text:"虚拟目录：",
+								x:10,
+								y:10
+							},
+							{
+								xtype:"textfield",
+								id:"MyField",
+								allowBlank:true,
+								x:80,
+								y:10,
+								width:240
+							}
+						]
+					}
+				]
+			},
+			{
+				xtype:"panel",
+				id:"panel1",
+				layoutConfig:{
+					align:"top",
+					pack:"center"
+				},
+				title:"Panel",
+				header:false,
+				border:false,
+				height:40,
+				region:"south",
+				layout:"hbox",
+				items:[
+					{
+						xtype:"vmd.button",
+						id:"button",
+						text:"注册",
+						type:"info",
+						size:"small",
+						region:"west",
+						click:"button_click",
+						listeners:{
+							click:button_click
+						}
+					},
+					{
+						xtype:"vmd.div",
+						id:"div",
+						autoEl:"div",
+						border:false,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						width:100,
+						height:50
+					},
+					{
+						xtype:"vmd.button",
+						id:"button1",
+						text:"取消",
+						type:"(none)",
+						size:"small",
+						click:"button1_click",
+						listeners:{
+							click:button1_click
+						}
+					}
+				]
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+	}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MyViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>
