@@ -36,62 +36,62 @@
     function WellSymbolDraw(ecModel, api) {
         var self = this;
         api.on('click', function(e){
-            var data = self._data;
-            var seriesModel = data.hostModel;
-            var allowSelect = seriesModel.get('allowSelect');
-            if(allowSelect === false){
-                return;
-            }
-            var seriesType = e.seriesType;
-            var target = e.event.target;
-            var event = e.event.event;
-            if(seriesType == "wellSymbol"){
-                target = target._tag == 'name' ? target : target.parent.parent;
-            }
-            var targetSeriesIndex = target.parent.seriesIndex;
-            if(e.componentType == "series" && targetSeriesIndex === seriesModel.seriesIndex){
-                //已经被选中
-                var dataIndex = target.parent.dataIndex;
-                var id = data.getId(dataIndex);
-                if(WellManager.checkSelected(id)){
-                    // self._clearSelect(
-                    //     filter(self.selectIndexs, function(item){
-                    //         return item != dataIndex;
-                    //     })
-                    // );
-                    // if(indexOf(self.selectSubIndexs, dataIndex) == -1){
-                    //     self.selectSubIndexs.push(dataIndex);
-                    // };
-                    // self._selectSub(target);
-                    return;
-                }
-                if(!event.ctrlKey){
-                    WellManager.clearSelect();
-                }
-                WellManager.createWellSelect(id);
-            }
-            else{
-                WellManager.clearSelect();
-            }
+            // var data = self._data;
+            // var seriesModel = data.hostModel;
+            // var allowSelect = seriesModel.get('allowSelect');
+            // if(allowSelect === false){
+            //     return;
+            // }
+            // var seriesType = e.seriesType;
+            // var target = e.event.target;
+            // var event = e.event.event;
+            // if(seriesType == "wellSymbol"){
+            //     target = target._tag == 'name' ? target : target.parent.parent;
+            // }
+            // var targetSeriesIndex = target.parent.seriesIndex;
+            // if(e.componentType == "series" && targetSeriesIndex === seriesModel.seriesIndex){
+            //     //已经被选中
+            //     var dataIndex = target.parent.dataIndex;
+            //     var id = data.getId(dataIndex);
+            //     if(WellManager.checkSelected(id)){
+            //         // self._clearSelect(
+            //         //     filter(self.selectIndexs, function(item){
+            //         //         return item != dataIndex;
+            //         //     })
+            //         // );
+            //         // if(indexOf(self.selectSubIndexs, dataIndex) == -1){
+            //         //     self.selectSubIndexs.push(dataIndex);
+            //         // };
+            //         // self._selectSub(target);
+            //         return;
+            //     }
+            //     if(!event.ctrlKey){
+            //         WellManager.clearSelect();
+            //     }
+            //     WellManager.createWellSelect(id);
+            // }
+            // else{
+            //     WellManager.clearSelect();
+            // }
         });
 
         api.on('brushSelected', function (params) {
-            var seriesModel = self._data.hostModel;
-            var allowSelect = seriesModel.get('allowSelect');
-            if(allowSelect === false){
-                return;
-            }
-            var selectedSeries = params.batch[0].selected;
-            var selectedWell = filter(selectedSeries, function(item){
-                return item.seriesId == seriesModel.id;
-            });
-            var selectIndexs = (selectedWell && selectedWell[0] && selectedWell[0].dataIndex) || [];
-
-            WellManager.clearSelect();
-            each(selectIndexs, function(idx){
-                var id = self._data.getId(idx);
-                WellManager.createWellSelect(id);
-            });
+            // var seriesModel = self._data.hostModel;
+            // var allowSelect = seriesModel.get('allowSelect');
+            // if(allowSelect === false){
+            //     return;
+            // }
+            // var selectedSeries = params.batch[0].selected;
+            // var selectedWell = filter(selectedSeries, function(item){
+            //     return item.seriesId == seriesModel.id;
+            // });
+            // var selectIndexs = (selectedWell && selectedWell[0] && selectedWell[0].dataIndex) || [];
+            //
+            // WellManager.clearSelect();
+            // each(selectIndexs, function(idx){
+            //     var id = self._data.getId(idx);
+            //     WellManager.createWellSelect(id);
+            // });
         });
     }
 
@@ -379,7 +379,7 @@
         return WellManager.getGroup(ecModel);
     };
 
-    wellSymbolDrawProto.remove = function (ecModel) {
+    wellSymbolDrawProto.remove = function (ecModel, api) {
         var data = this._data;
         if (data) {
             data.eachItemGraphicEl(function (wellGroup, idx) {

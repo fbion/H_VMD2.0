@@ -253,12 +253,10 @@
 			"data": [],
 			"isArea": true,
 			"areaStyle": {
-				"normal": {
-					"color": "#F2EADF",
-					"show": true,
-					"formatter": "{b}",
-					"position": "right"
-				}
+				"color": "#F2EADF",
+				"show": true,
+				"formatter": "{b}",
+				"position": "right"
 			}
 		},
 		{
@@ -268,12 +266,10 @@
 			"data": [],
 			"isArea": true,
 			"areaStyle": {
-				"normal": {
-					"color": "rgb(255,254,212)",
-					"show": true,
-					"formatter": "{b}",
-					"position": "right"
-				}
+				"color": "rgb(255,254,212)",
+				"show": true,
+				"formatter": "{b}",
+				"position": "right"
 			}
 		},
 		{
@@ -283,12 +279,10 @@
 			"data": [],
 			"isArea": true,
 			"areaStyle": {
-				"normal": {
-					"color": "rgb(255,225,174)",
-					"show": true,
-					"formatter": "{b}",
-					"position": "right"
-				}
+				"color": "rgb(255,225,174)",
+				"show": true,
+				"formatter": "{b}",
+				"position": "right"
 			}
 		},
 
@@ -296,10 +290,8 @@
 			"type": "faultLine",
 			"name": "断层",
 			"lineStyle": {
-				"normal": {
-					"type": "faultLine",
-					"color": "red"
-				}
+				"type": "faultLine",
+				"color": "red"
 			},
 			"data": [ ]
 		},
@@ -309,11 +301,9 @@
 			"data": [],
 			"polyline": true,
 			"lineStyle": {
-				"normal":{
-					"color": "#000000",
-					"width": 1,
-					"opacity": 0.3
-				}
+				"color": "#000000",
+				"width": 1,
+				"opacity": 0.3
 			}
 		},
 		{
@@ -321,11 +311,9 @@
 			"name": "尖灭线",
 			"data": [ ],
 			"lineStyle": {
-				"normal": {
-					"type": "pinchLine",
-					"color": "black",
-					"width": 1
-				}
+				"type": "pinchLine",
+				"color": "black",
+				"width": 1
 			}
 		},
 		{
@@ -334,10 +322,8 @@
 			"applyDataTo": ["探明开发储量区"],
 			"data": [ ],
 			"lineStyle": {
-				"normal": {
-					"color": "#3b14ff",
-					"width": 2
-				}
+				"color": "#3b14ff",
+				"width": 2
 			}
 		},
 		{
@@ -346,10 +332,8 @@
 			"applyDataTo": ["评价滚动储量区"],
 			"data": [ ],
 			"lineStyle": {
-				"normal": {
-					"color": "#7b0094",
-					"width": 2
-				}
+				"color": "#7b0094",
+				"width": 2
 			}
 		},
 		{
@@ -357,27 +341,16 @@
 			"name": "油井井位",
 			"scale": 0.2,
 			"label": {
-				"normal": {
-					"color": "black",
-					"show": true,
-					"formatter": "{b}",
-					"position": "right"
-				}
+				"color": "black",
+				"show": true,
+				"formatter": "{b}",
+				"position": "right"
 			},
+
+			"progressiveThreshold":100,
+			"progressive":1,
 			"data": [ ],
 			"symbolSize": 15
-		},
-		{
-			"type": "wellLabel",
-			"name": "井口温度",
-			"itemStyle": {
-				"normal": {
-					"color": "#009e2f",
-					"show": true,
-					"formatter": "{b}"
-				}
-			},
-			"data": []
 		}
 	]
 }

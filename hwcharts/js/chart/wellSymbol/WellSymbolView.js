@@ -139,7 +139,7 @@ Vmd.define('hwchart.chart.wellSymbol.WellSymbolView', {
         },
 
         remove: function (ecModel, api) {
-            this._symbolDraw && this._symbolDraw.remove(api);
+            this._symbolDraw && this._symbolDraw.remove(ecModel, api);
             this._symbolDraw = null;
         },
 
