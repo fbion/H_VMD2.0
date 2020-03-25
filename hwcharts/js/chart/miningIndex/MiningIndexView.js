@@ -25,15 +25,29 @@ Vmd.define('hwchart.chart.miningIndex.MiningIndexView', {
 }, function () {
     var MiningIndexDraw = hwchart.chart.helper.MiningIndexDraw;
     var ChartView = hwchart.view.Chart;
-   
+    var wellDrawFinished = false;
+    var isincrementalRender = 0;
     var pointsLayout = hwchart.layout.points;
     var MiningIndexView= ChartView.extend({
         type: 'miningIndex',
         init: function (ecModel, api) {
+            var self = this;
             this.MiningIndexDraw = new MiningIndexDraw(ecModel, api);
+            api.on('incrementalRenderFinished',function(params) {
+                if(isincrementalRender ===0){
+                    self._finished = false;
+                    self.renderTask._dirty = true;
+                    self.renderTask.perform({
+                        step:self.seriesModel.getProgressive()
+                    });
+                    wellDrawFinished = true;
+                    isincrementalRender++;
+                }
+            });
         },
         render: function (seriesModel, ecModel, api) {
-           
+            var self = this;
+            self.seriesModel = seriesModel;
             if (!this.__hasFetchData) {
                 api.dispatchAction({
                     type: 'fetchData',
@@ -53,10 +67,24 @@ Vmd.define('hwchart.chart.miningIndex.MiningIndexView', {
 
             var data = seriesModel.getData();
             var MiningIndexDraw = this.MiningIndexDraw;
-            var hasUpdate = MiningIndexDraw.updateData(ecModel,data);
+            MiningIndexDraw.updateData(ecModel,data);
             this.group.add(MiningIndexDraw.group);
+            
         },
+        incrementalPrepareRender: function (seriesModel, ecModel, api) {
+            var data = seriesModel.getData();
 
+            var MiningIndexDraw = this.MiningIndexDraw;
+
+            MiningIndexDraw.incrementalPrepareUpdate(data);
+            this._finished = false;
+            //wellDrawFinished = false;
+        },
+        incrementalRender: function (taskParams, seriesModel) {
+            this.MiningIndexDraw.incrementalUpdate(taskParams, seriesModel.getData(),wellDrawFinished);
+
+            this._finished = taskParams.end === seriesModel.getData().count();
+        },
         // updateTransform: function (seriesModel, ecModel, api) {
         //     var data = seriesModel.getData();
 

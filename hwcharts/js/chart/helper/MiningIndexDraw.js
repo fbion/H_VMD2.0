@@ -15,7 +15,7 @@ Vmd.define('hwchart.chart.helper.MiningIndexDraw', {
     var ComposeSymbol = hwchart.chart.helper.ComposeSymbol;
     var indexDataStorage = hwchart.util.indexDataStorage;
     //var ComposeIndex = hwchart.chart.helper.ComposeIndex;
-
+    //var wellDrawFinished = false;
     /**
      * @constructor
      * @alias module:echarts/chart/helper/SymbolDraw
@@ -25,8 +25,6 @@ Vmd.define('hwchart.chart.helper.MiningIndexDraw', {
         var self = this;
         this.group = new graphic.Group();
         this._symbolCtor = ComposeSymbol;
-        //this.indexCtor  = ComposeIndex;
-
         // 选中状态相关
         this.selectIndexs = [];
         this.selectSubIndexs = [];
@@ -90,6 +88,16 @@ Vmd.define('hwchart.chart.helper.MiningIndexDraw', {
                 self._createSelect(idx);
             });
         });
+        // api.on('incrementalRenderFinished',function(params) {
+        //     console.log(self._seriesScope)
+        //     // if(self._seriesScope&&self._seriesScope.dataTask){
+        //     //     self._seriesScope.dataTask._dirty = true;
+        //     //     var context = self._seriesScope.dataTask.context;
+        //     //     var Task =self._seriesScope.dataTask;
+        //     //     Task.perform();
+        //     // }
+        //     wellDrawFinished = true;
+        // });
     }
 
     var miningIndexDrawProto = MiningIndexDraw.prototype;
@@ -104,7 +112,9 @@ Vmd.define('hwchart.chart.helper.MiningIndexDraw', {
         group.add(selectEl);
         this.selectIndexs.push(idx);
     }
-
+    miningIndexDrawProto.getGroup = function (ecModel) {
+        return WellManager.getGroup(ecModel);
+    };
     miningIndexDrawProto._selectSub = function (el) {
         var group = el.parent;
         var selectBorder = zrUtil.filter(group._children, function(item){
@@ -202,7 +212,7 @@ Vmd.define('hwchart.chart.helper.MiningIndexDraw', {
         
         data.diff(oldData)
             .add(function (newIdx) {
-                if (WellManager.checkSymbolShow(data.getId(newIdx))&&isShow) {
+                if (WellManager.checkSymbolShow(data, newIdx)&&isShow) {
                    
                     var indexEl = self._drawEl(data, newIdx);
                    
@@ -211,12 +221,13 @@ Vmd.define('hwchart.chart.helper.MiningIndexDraw', {
                     
                     data.setItemGraphicEl(newIdx, indexEl);
 
-                    var point = WellManager.getWellLayout(data.getId(newIdx));
+                    var point = WellManager.getWellLayout(data,newIdx);
                     var id = data.getId(newIdx);
-                    var itemLayout = WellManager.getLayoutPosition(id, indexEl, point, position, 0, [-20,50], zoomScale);
-                    indexEl.attr('position', itemLayout);
-                    group.add(indexEl);
-                   
+                    if(point){
+                        var itemLayout = WellManager.getLayoutPosition(data,newIdx, indexEl, point, position, 0, [-20,50], zoomScale);
+                        indexEl.attr('position', itemLayout);
+                        group.add(indexEl);
+                    }
                 }
                 _hasUpdate = true;
             })
@@ -224,7 +235,7 @@ Vmd.define('hwchart.chart.helper.MiningIndexDraw', {
 
                 var indexEl = oldData.getItemGraphicEl(oldIdx);
 
-                if (!WellManager.checkSymbolShow(data.getId(newIdx))) {
+                if (!WellManager.checkSymbolShow(data,newIdx) || !isShow) {
                     group.remove(indexEl);
                     return;
                 }
@@ -237,14 +248,14 @@ Vmd.define('hwchart.chart.helper.MiningIndexDraw', {
 
                     data.setItemGraphicEl(newIdx, indexEl);
                     //console.log(indexEl)
-                    var point = WellManager.getWellLayout(data.getId(newIdx));
+                    var point = WellManager.getWellLayout(data,newIdx);
                     var id = data.getId(newIdx);
-                    var itemLayout = WellManager.getLayoutPosition(id, indexEl, point, position, 0, [-20,50], zoomScale);
-                    indexEl.attr('position', itemLayout);
-                    group.add(indexEl);
-                    
+                    if(point){
+                        var itemLayout = WellManager.getLayoutPosition(data,newIdx, indexEl, point, position, 0, [-20,50], zoomScale);
+                        indexEl.attr('position', itemLayout);
+                        group.add(indexEl);
+                    }
                 }else{
-
                     indexEl._state = '';
                     if(dataChange || indexEl._children.length==0){
                         group.remove(indexEl);
@@ -253,12 +264,13 @@ Vmd.define('hwchart.chart.helper.MiningIndexDraw', {
                     }
 
                     indexEl.attr('scale', [zoomScale,zoomScale]);
-                    var point = WellManager.getWellLayout(data.getId(newIdx));
+                    var point = WellManager.getWellLayout(data,newIdx);
                     var id = data.getId(newIdx);
-                    var itemLayout = WellManager.getLayoutPosition(id, indexEl, point, position, 0, [-20,50], zoomScale);
-                    indexEl.attr('position', itemLayout);
-                    group.add(indexEl);
-                    
+                    if(point){
+                        var itemLayout = WellManager.getLayoutPosition(data,newIdx, indexEl, point, position, 0, [-20,50], zoomScale);
+                        indexEl.attr('position', itemLayout);
+                        group.add(indexEl);
+                    }
                 }
                 
                 data.setItemGraphicEl(newIdx, indexEl);
@@ -279,6 +291,58 @@ Vmd.define('hwchart.chart.helper.MiningIndexDraw', {
 
         this._data = data;
         return _hasUpdate;
+    };
+    miningIndexDrawProto.incrementalPrepareUpdate = function (data) {
+        this._seriesScope = makeSeriesScope(data);
+        this._data = null;
+        this.group.removeAll();
+        wellDrawFinished = false;
+    };
+
+    miningIndexDrawProto.incrementalUpdate = function (taskParams, data, wellDrawFinished) {
+        if(!wellDrawFinished){
+            return false;
+        }
+        var self = this;
+        var group = self.group;
+        //opt = normalizeUpdateOpt(opt);
+
+        function updateIncrementalAndHover(el) {
+            if (!el.isGroup) {
+                el.incremental = el.useHoverLayer = true;
+            }
+        }
+        
+        var seriesModel = data.hostModel;
+       
+        var ecModel = seriesModel.ecModel;
+        var scale = seriesModel.get('scale');
+        var geo = ecModel.getComponent('geo');
+        var zoom = geo.coordinateSystem._zoom;
+        var zoomScale = !isNaN(scale) ? Math.min(scale * zoom, 1) : 1;
+        var position = seriesModel.get('position')
+        var isShow = seriesModel.get('show')
+
+        for (var idx = taskParams.start; idx < taskParams.end; idx++) {
+            var indexEl = this._drawEl(data, idx);
+            //var symbolSize = data.getItemVisual(idx, 'symbolSize');
+            // //经过避让算法后需要显示井符号
+            if (WellManager.checkSymbolShow(data,idx)&&isShow) {
+                indexEl.attr('z', 9);
+                indexEl.attr('scale', [zoomScale,zoomScale]);
+                data.setItemGraphicEl(idx, indexEl);
+
+                data.setItemGraphicEl(idx, indexEl);
+                //console.log(indexEl)
+                var point = WellManager.getWellLayout(data,idx);
+               
+                if(point){
+                    var itemLayout = WellManager.getLayoutPosition(data,idx, indexEl, point, position, 0, [-20,50], zoomScale);
+                    indexEl.attr('position', itemLayout);
+                    group.add(indexEl);
+                }
+            }
+        }
     };
    // 绘制符合符号
     miningIndexDrawProto._drawEl = function (data, idx,isChange) {
@@ -318,6 +382,7 @@ Vmd.define('hwchart.chart.helper.MiningIndexDraw', {
     }
      // 绘制柱形指标符号
      miningIndexDrawProto.creatColumnSymbol = function(data,idx,symbolId,isChange){
+         
         var rawDataItem = data.getRawDataItem(idx);
         if(rawDataItem.ColumnSymbol && !isChange){
             return rawDataItem.ColumnSymbol
@@ -506,7 +571,7 @@ Vmd.define('hwchart.chart.helper.MiningIndexDraw', {
     };
     // 绘制伞形开采指标
     miningIndexDrawProto.creatShapeSymbol = function(data,idx,symbolId,isChange){
-        debugger
+        
         var type = 2;
         var rawDataItem = data.getRawDataItem(idx);
         //console.log(rawDataItem)
@@ -786,7 +851,19 @@ Vmd.define('hwchart.chart.helper.MiningIndexDraw', {
             }
         }
     };
-
+    function makeSeriesScope(data) {
+        return data.hostModel;
+        // return {
+        //     itemStyle: seriesModel.getModel('itemStyle').getItemStyle(['color']),
+        //     hoverItemStyle: seriesModel.getModel('emphasis.itemStyle').getItemStyle(),
+        //     symbolRotate: seriesModel.get('symbolRotate'),
+        //     symbolOffset: seriesModel.get('symbolOffset'),
+        //     hoverAnimation: seriesModel.get('hoverAnimation'),
+        //     labelModel: seriesModel.getModel('label'),
+        //     hoverLabelModel: seriesModel.getModel('emphasis.label'),
+        //     cursorStyle: seriesModel.get('cursor')
+        // };
+    }
     hwchart.chart.helper.MiningIndexDraw = MiningIndexDraw;
 })
 

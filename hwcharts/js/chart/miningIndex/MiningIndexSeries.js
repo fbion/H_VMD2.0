@@ -22,15 +22,55 @@ Vmd.define('hwchart.chart.miningIndex.MiningIndexSeries', {
     var n = 0;
     var createListFromArray = hwchart.chart.helper.createListFromArray;
     var SeriesModel = hwchart.model.Series;
-
+    function preprocessOption(seriesOpt) {
+        var data = seriesOpt.data;
+        if (data && data[0]) {
+            
+        }
+    }
     MiningIndexSeries= SeriesModel.extend({
 
         type: 'series.miningIndex',
 
         dependencies: ['grid', 'polar'],
+        init: function (option) {
+            // Not using preprocessor because mergeOption may not have series.type
+            preprocessOption(option);
+            MiningIndexSeries.superApply(this, 'init', arguments);
 
+        },
         getInitialData: function (option, ecModel) { // 获取初始数据
             return createListFromArray(option.data, this, ecModel);
+        },
+        mergeOption: function (option) {
+            preprocessOption(option);
+            MiningIndexSeries.superApply(this, 'mergeOption', arguments);
+        },
+
+        getInitialData: function (option, ecModel) {
+            return createListFromArray(this.getSource(), this, {
+                useEncodeDefaulter: true
+            });
+        },
+        getProgressive: function () {
+            var progressive = this.option.progressive;
+
+            if (progressive == null) {
+                // PENDING
+                return this.option.large ? 5e3 : this.get('progressive');
+            }
+
+            return progressive;
+        },
+        getProgressiveThreshold: function () {
+            var progressiveThreshold = this.option.progressiveThreshold;
+
+            if (progressiveThreshold == null) {
+                // PENDING
+                return this.option.large ? 1e4 : this.get('progressiveThreshold');
+            }
+
+            return progressiveThreshold;
         },
 
         brushSelector: 'point',
@@ -42,7 +82,7 @@ Vmd.define('hwchart.chart.miningIndex.MiningIndexSeries', {
             legendHoverLink: true,
             scale:0.1,
 
-            progressive: 0,
+            //progressive: 100,
 
             // Cartesian coordinate system
             // xAxisIndex: 0,
@@ -66,6 +106,7 @@ Vmd.define('hwchart.chart.miningIndex.MiningIndexSeries', {
             //     opacity: 1
             // }
         }
+
     });
 
     hwchart.chart.miningIndex.MiningIndexSeries = MiningIndexSeries;
