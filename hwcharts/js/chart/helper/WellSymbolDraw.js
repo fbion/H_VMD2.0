@@ -73,7 +73,7 @@
             else{
                 WellManager.clearSelect();
             }
-        })
+        });
 
         api.on('brushSelected', function (params) {
             var seriesModel = self._data.hostModel;
@@ -200,7 +200,7 @@
                 if (WellManager.needsDrawSymbol(data, newIdx, symbolSize, zoomScale)) {
 
                     data.setItemGraphicEl(newIdx, wellGroup);
-                    WellManager.setSymbolShow(data.getId(newIdx), true);
+                    WellManager.setSymbolShow(data, newIdx, true);
                     WellManager.addWellSymbol(data, newIdx);
 
                     var nameEl = labelShow && self._drawName(data, newIdx, seriesScope);
@@ -222,7 +222,7 @@
                     var moveType = WellManager.checkMoveType(point, payload);
                     if(moveType == 'screenOut'){
                         WellManager.removeWellSymbol(oldData, newIdx);
-                        WellManager.setSymbolShow(oldData.getId(newIdx), false);
+                        WellManager.setSymbolShow(oldData, newIdx, false);
                         return;
                     }
                     else if(moveType == 'screenIn'){
@@ -240,7 +240,7 @@
                     if(zoomType == 'zoomIn'){
                         if (!WellManager.needsDrawSymbol(data, newIdx, symbolSize, zoomScale)) {
                             WellManager.removeWellSymbol(oldData, newIdx);
-                            WellManager.setSymbolShow(oldData.getId(newIdx), false);
+                            WellManager.setSymbolShow(oldData, newIdx, false);
                             return;
                         }
                     }
@@ -248,14 +248,14 @@
                         if(WellManager.checkSymbolShow(data.getId(newIdx))){
                             if(!WellManager.isPointInBody(point)){
                                 WellManager.removeWellSymbol(oldData, newIdx);
-                                WellManager.setSymbolShow(oldData.getId(newIdx), false);
+                                WellManager.setSymbolShow(oldData, newIdx, false);
                                 return;
                             }
                         }
                         else{
                             if (!WellManager.needsDrawSymbol(data, newIdx, symbolSize, zoomScale)) {
                                 WellManager.removeWellSymbol(oldData, newIdx);
-                                WellManager.setSymbolShow(oldData.getId(newIdx), false);
+                                WellManager.setSymbolShow(oldData, newIdx, false);
                                 return;
                             }
                         }
@@ -264,7 +264,7 @@
                 else{
                     if (!WellManager.needsDrawSymbol(data, newIdx, symbolSize, zoomScale)) {
                         WellManager.removeWellSymbol(oldData, newIdx);
-                        WellManager.setSymbolShow(oldData.getId(newIdx), false);
+                        WellManager.setSymbolShow(oldData, newIdx, false);
                         return;
                     }
                 }
@@ -278,7 +278,7 @@
                 }
 
                 data.setItemGraphicEl(newIdx, wellGroup);
-                WellManager.setSymbolShow(data.getId(newIdx), true);
+                WellManager.setSymbolShow(data, newIdx, true);
 
                 WellManager.addWellSymbol(data, newIdx);
                 var nameEl = wellGroup.childAt(1);
@@ -301,7 +301,7 @@
                 var wellGroup = oldData.getItemGraphicEl(oldIdx);
                 wellGroup && wellGroup.fadeOut(function () {
                     WellManager.removeWellSymbol(oldData, oldIdx);
-                    WellManager.setSymbolShow(oldData.getId(oldIdx), false);
+                    WellManager.setSymbolShow(oldData, oldIdx, false);
                 });
             })
             .execute();
@@ -328,8 +328,11 @@
 
     wellSymbolDrawProto.incrementalPrepareUpdate = function (data) {
         this._seriesScope = makeSeriesScope(data);
+        var seriesModel = data.hostModel;
+        var ecModel = seriesModel.ecModel;
+
         this._data = null;
-        this.getGroup().removeAll();
+        this.getGroup(ecModel).removeAll();
     };
 
     wellSymbolDrawProto.incrementalUpdate = function (taskParams, data, opt) {
@@ -356,7 +359,7 @@
             // //经过避让算法后需要显示井符号
             if (WellManager.needsDrawSymbol(data, idx, symbolSize, zoomScale)) {
                 data.setItemGraphicEl(idx, wellGroup);
-                WellManager.setSymbolShow(data.getId(idx), true);
+                WellManager.setSymbolShow(data, idx, true);
 
                 WellManager.addWellSymbol(data, idx);
 
@@ -372,18 +375,18 @@
         }
     };
 
-    wellSymbolDrawProto.getGroup = function (enableAnimation) {
-        return WellManager.getGroup();
+    wellSymbolDrawProto.getGroup = function (ecModel) {
+        return WellManager.getGroup(ecModel);
     };
 
-    wellSymbolDrawProto.remove = function (enableAnimation) {
+    wellSymbolDrawProto.remove = function (ecModel) {
         var data = this._data;
         if (data) {
             data.eachItemGraphicEl(function (wellGroup, idx) {
                 WellManager.removeWellSymbol(data, idx);
             });
         } else {
-            this.getGroup().removeAll();
+            this.getGroup(ecModel).removeAll();
         }
     };
 

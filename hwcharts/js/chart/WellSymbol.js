@@ -36,5 +36,10 @@ Vmd.define('hwchart.chart.WellSymbol', {
     hwcharts.registerVisual(visualSymbol('wellSymbol', '', 'composeSymbol'));
     hwcharts.registerLayout(layoutPoints('wellSymbol')); // Down sample after filter
 
+    hwcharts.registerAction({
+        type: 'incrementalRenderFinished',
+        event: 'incrementalRenderFinished',
+        update: 'none'
+    }, zrUtil.noop);
     
 })

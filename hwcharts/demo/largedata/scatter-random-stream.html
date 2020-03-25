@@ -5,15 +5,15 @@
     <title></title>
     <meta charset="utf-8" />
     <!--<script src="../js/core/base.js"></script>-->
-    <script src="/js/core/base.min.js"></script>
+    <script src="../../js/core/base.min.js"></script>
 
-    <script src="/js/core/base-ext.js"></script>
+    <script src="../../js/core/base-ext.js"></script>
     <!--zrender-->
-    <script src="/lib/zrender/dist/zrender.js"></script>
-    <script src="/lib/jquery.min.js"></script>
+    <script src="../../../lib/zrender/zrender.js"></script>
+    <script src="../../../lib/jquery/jquery.min.js"></script>
     <!--hwchart-->
-    <script src="/js/hwcharts.js"></script>
-    <script src="/demo/lib/frameInsight.js"></script>
+    <script src="../../js/hwcharts.js"></script>
+    <script src="../lib/frameInsight.js"></script>
 </head>
 <body>
     <style>
@@ -90,13 +90,8 @@
                  'hwchart.chart.Map',
                  'hwchart.chart.Scatter',
                  'hwchart.component.Title',
-                 'hwchart.component.Legend',
                  'hwchart.component.Geo',
-                 'hwchart.component.VisualMap',
-                 'hwchart.component.MarkPoint',
-                 'hwchart.component.Tooltip',
-                  'hwchart.component.Toolbox',
-                  'hwchart.component.DataZoom'
+                 'hwchart.component.VisualMap'
 
                 ], function () {
 
@@ -111,11 +106,6 @@
                             feature: {
                                 dataZoom: {}
                             }
-                        },
-                        legend: {
-                            orient: 'vertical',
-                            left: 'left',
-                            data: ['pm2.5' /* ,'pm10' */]
                         },
                         // ???
                         // visualMap: {

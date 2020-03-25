@@ -71,12 +71,23 @@ Vmd.define('hwchart.chart.wellSymbol.WellSymbolView', {
             symbolDraw.incrementalPrepareUpdate(data);
             this._finished = false;
         },
-        incrementalRender: function (taskParams, seriesModel, ecModel) {
+        incrementalRender: function (taskParams, seriesModel, ecModel, api, payload) {
             this._symbolDraw.incrementalUpdate(taskParams, seriesModel.getData(), {
                 clipShape: this._getClipShape(seriesModel)
             });
 
             this._finished = taskParams.end === seriesModel.getData().count();
+
+            if(this._finished){
+                api.dispatchAction({
+                    type: 'incrementalRenderFinished',
+                    id: seriesModel.id,
+                    mainType: seriesModel.mainType,
+                    name: seriesModel.name,
+                    seriesIndex:seriesModel.seriesIndex,
+                    subType: seriesModel.subType
+                });
+            }
         },
 
         updateTransform: function (seriesModel, ecModel, api) {
@@ -123,7 +134,7 @@ Vmd.define('hwchart.chart.wellSymbol.WellSymbolView', {
                 this.group.removeAll();
             }
 
-            this.group.add(symbolDraw.getGroup());
+            this.group.add(symbolDraw.getGroup(ecModel));
             return symbolDraw;
         },
 
@@ -132,8 +143,8 @@ Vmd.define('hwchart.chart.wellSymbol.WellSymbolView', {
             this._symbolDraw = null;
         },
 
-        dispose: function () {
-            WellManager.dispose()
+        dispose: function (ecModel, api) {
+            WellManager.dispose(ecModel, api)
         }
     });
 

@@ -52,22 +52,25 @@
 				"dydm": "",
 				"jb":""
 			}
+		},
+		"ds13":{
+			"type":0,
+			"url":"txwebh/txweb/djjwrsj",
+			"params":{
+				"type": "0"
+			}
 		}
 	},
 	"seriesMapping":[
-		{	"seriesName": "断层",
-			"source":"ds5",
-			"fields":["id","", "type","wallid","walltype","x","y"]
-		},
 		{
 			"source":"ds1",
 			"seriesName": "油井井位",
 			"fields":["jh","jm","jb","x","y"]
 		},
 		{
-			"source":"ds3",
-			"seriesName": "探明开发储量区边界",
-			"fields":["id","x","y","maxx","minx","maxy","miny"]
+			"source":"ds13",
+			"seriesName": "井口温度",
+			"fields":["jh","value"]
 		}
 	],
 	"title": {
@@ -103,12 +106,10 @@
 			"name": "油井井位",
 			"show":true,
 			"label": {
-				"normal":{
-					"color": "black",
-					"show": true,
-					"formatter": "{b}",
-					"position": "right"
-				}
+				"color": "black",
+				"show": true,
+				"formatter": "{b}",
+				"position": "right"
 			},
 			"progressiveThreshold":100,
 			"progressive":10,

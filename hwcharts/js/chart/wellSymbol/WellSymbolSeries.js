@@ -31,6 +31,12 @@ Vmd.define('hwchart.chart.wellSymbol.WellSymbolSeries', {
     function preprocessOption(seriesOpt) {
         var data = seriesOpt.data;
         if (data && data[0]) {
+            // if(seriesOpt.name == "油井井位"){
+            //     seriesOpt.data = seriesOpt.data.slice(0, 2000);
+            // }
+            // else{
+            //     seriesOpt.data = seriesOpt.data.slice(2000, 4000);
+            // }
             // seriesOpt.data = seriesOpt.data.slice(0, 30);
             // seriesOpt.data = filter(data, function(item){
             //     return item.name == '新891' || item.name == '新892' || item.name == '新893' || item.name == '新894' || item.name == '新895'

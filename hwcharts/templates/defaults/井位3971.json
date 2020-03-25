@@ -125,6 +125,11 @@
 			"fields":["jh","jm","jb","x","y"]
 		},
 		{
+			"source":"ds1",
+			"seriesName": "水井井位",
+			"fields":["jh","jm","jb","x","y"]
+		},
+		{
 			"source":"ds12",
 			"seriesName": "油井井轨迹",
 			"fields":["jh","jk_x","jk_y","jd_x","jd_y","a_x","a_y","b_x","b_y"]
@@ -214,13 +219,27 @@
 			"name": "油井井位",
 			"scale":0.2,
 			"label": {
-				"normal":{
-					"color": "black",
-					"show": true,
-					"formatter": "{b}",
-					"position": "right"
-				}
+				"color": "black",
+				"show": true,
+				"formatter": "{b}",
+				"position": "right"
 			},
+			"progressiveThreshold":1000,
+			"progressive": 50,
+			"data": [],
+			"symbolSize": 15
+		},
+		{
+			"type": "wellSymbol",
+			"name": "水井井位",
+			"scale":0.2,
+			"label": {
+				"color": "red",
+				"show": true,
+				"formatter": "{b}",
+				"position": "left"
+			},
+			"progressiveThreshold":1000,
 			"progressive": 100,
 			"data": [],
 			"symbolSize": 15

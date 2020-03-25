@@ -1,5 +1,6 @@
 Vmd.define('hwchart.chart.helper.WellManager', {
     requires: [
+        'hwchart.util.model',
         'hwchart.util.graphic',
         'hwchart.util.layout',
         'hwchart.util.format',
@@ -12,31 +13,43 @@ Vmd.define('hwchart.chart.helper.WellManager', {
     var graphic = hwchart.util.graphic;
     var layout = hwchart.util.layout;
     var kdTree = hwchart.data.kdTree;
+    var _model = hwchart.util.model;
+    var makeInner = _model.makeInner;
 
-    var group = new graphic.Group();
 
     var kdtree = null;
-
-    var nameList = []; //序列名称
-    var series = [];
-    var datas = [];
-
-    var wellPositionMap = {}; //井的位置
-    var seriesModelMap = {}; //井对应的序列model
-
-    var showSymbolIds = []; //显示的井的id
-
-    var _graphicEls = {};
-    var _graphicSymbols = {};
-    var _graphicNames = {};
-
-    var selectedWellIds = [];
-    var selectedGraphics = [];
-
     var selectedPadding = 8;
     var selectedLineWidth = 1;
 
+    var inner = makeInner();
+
+    var aaaa = {};
+
     hwchart.chart.helper.WellManager = {
+
+        reset:function(ecModel){
+            var props = inner(ecModel);
+
+            props.group = new graphic.Group();
+
+            props.nameList = []; //序列名称
+            props.series = [];
+            props.datas = [];
+
+            props.wellPositionMap = {}; //井的位置
+            props.seriesModelMap = {}; //井对应的序列model
+
+            props.showSymbolIds = []; //显示的井的id
+
+            props._graphicEls = {};
+            props._graphicSymbols = {};
+            props._graphicNames = {};
+
+            props.selectedWellIds = [];
+            props.selectedGraphics = [];
+
+            props.hasInit = true;
+        },
 
         /**
          * 初始化序列数据
@@ -44,24 +57,31 @@ Vmd.define('hwchart.chart.helper.WellManager', {
          */
         setData: function (data) {
             var seriesModel = data.hostModel;
-            var name = seriesModel.name;
-            var index = zrUtil.indexOf(nameList, name);
-            if(index == -1){
-                nameList.push(name);
-                index = nameList.length - 1;
+            var ecModel = seriesModel.ecModel;
+
+            var props = inner(ecModel);
+            if(!props.hasInit){
+                this.reset(ecModel);
             }
 
-            series[index] = seriesModel;
-            datas[index] = data;
+            var name = seriesModel.name;
+            var index = zrUtil.indexOf(props.nameList, name);
+            if(index == -1){
+                props.nameList.push(name);
+                index = props.nameList.length - 1;
+            }
+
+            props.series[index] = seriesModel;
+            props.datas[index] = data;
 
             var points = [];
-            zrUtil.each(datas, function(itemData){
+            zrUtil.each(props.datas, function(itemData){
 				// 20200211 修改
                 var itemRawData = itemData._rawData._data;
                 points = points.concat(itemRawData);
                 zrUtil.each(itemRawData, function(item){
-                    wellPositionMap[item.id] = item.value;
-                    seriesModelMap[item.id] = itemData.hostModel;
+                    props.wellPositionMap[item.id] = item.value;
+                    props.seriesModelMap[item.id] = itemData.hostModel;
                 });
             });
         },
@@ -85,8 +105,9 @@ Vmd.define('hwchart.chart.helper.WellManager', {
          * @param id
          * @returns {boolean}
          */
-        checkSymbolShow: function(id){
-            return zrUtil.indexOf(showSymbolIds, id) !== -1;
+        checkSymbolShow: function(ecModel, id){
+            var props = inner(ecModel);
+            return zrUtil.indexOf(props.showSymbolIds, id) !== -1;
         },
 
         checkMoveType: function(point, payload){
@@ -101,7 +122,10 @@ Vmd.define('hwchart.chart.helper.WellManager', {
         },
 
         isPointInBody: function(point){
-            return layout.isPointInBody(point);
+            if(point && !isNaN(point[0]) && !isNaN(point[1])){
+                return layout.isPointInBody(point);
+            }
+            return false;
         },
 
         /**
@@ -109,12 +133,14 @@ Vmd.define('hwchart.chart.helper.WellManager', {
          * @param id
          * @returns {null}
          */
-        getWellLayout: function(id){
-            if(!this.checkSymbolShow(id)){
+        getWellLayout: function(ecModel, id){
+            if(!this.checkSymbolShow(ecModel, id)){
                 return null;
             }
-            var position = wellPositionMap[id];
-            var seriesModel = seriesModelMap[id];
+            var props = inner(ecModel);
+
+            var position = props.wellPositionMap[id];
+            var seriesModel = props.seriesModelMap[id];
             var coordSys = seriesModel && seriesModel.coordinateSystem;
             if(position  && coordSys){
                 return coordSys.dataToPoint(position);
@@ -131,8 +157,13 @@ Vmd.define('hwchart.chart.helper.WellManager', {
          * @param zoomScale
          * @returns {boolean}
          */
-        checkCrash: function(data, idx, point, size, zoomScale){
+        checkCrash: function(data, idx, point, size, zoomScale) {
             return false;
+
+            var seriesModel = data.hostModel;
+            var ecModel = seriesModel.ecModel;
+            var props = inner(ecModel);
+
             if(!point || !size || !layout.isPointInBody(point)){
                 return false;
             }
@@ -140,11 +171,11 @@ Vmd.define('hwchart.chart.helper.WellManager', {
 
             //跟已经显示的进行比较
             var symbolSize = size[0];
-            for(var i = 0; i < showSymbolIds.length; i++){
-                if(id == showSymbolIds[i]){
+            for(var i = 0; i < props.showSymbolIds.length; i++){
+                if(id == props.showSymbolIds[i]){
                     continue;
                 }
-                var itemLayout = this.getWellLayout(showSymbolIds[i]);
+                var itemLayout = this.getWellLayout(ecModel, props.showSymbolIds[i]);
                 if(itemLayout && layout.isPointInBody(itemLayout)){
                     //碰撞
                     if((point[0] - size[0] / 2) < (itemLayout[0] + symbolSize / 2) &&
@@ -156,30 +187,7 @@ Vmd.define('hwchart.chart.helper.WellManager', {
                     }
                 }
             }
-            // for(var i = 0; i < datas.length; i++){
-            //     var itemData = datas[i];
-            //     if(!itemData){
-            //         continue;
-            //     }
-            //     var indices = itemData.indices;
-            //     for(var j = 0; j < indices.length; j++){
-            //         var index = indices[j];
-            //         var graphicEl = itemData.getItemGraphicEl(index);
-            //         var itemLayout = itemData.getItemLayout(index);
-            //         if(id == itemData.getId(index) || !graphicEl || !this.checkSymbolShow(itemData.getId(index)) || !layout.isPointInBody(itemLayout)){
-            //             continue;
-            //         }
-            //         var symbolSize = itemData.getItemVisual(index, 'symbolSize')
-            //         //碰撞
-            //         if((point[0] - size[0] / 2) < (itemLayout[0] + symbolSize * zoomScale / 2) &&
-            //             (point[0] + size[0] / 2) > (itemLayout[0] - symbolSize * zoomScale / 2) &&
-            //             (point[1] - size[1] / 2) < (itemLayout[1] + symbolSize * zoomScale / 2) &&
-            //             (point[1] + size[1] / 2) > (itemLayout[1] - symbolSize * zoomScale / 2)
-            //         ){
-            //             return true;
-            //         }
-            //     }
-            // }
+
             return false;
         },
 
@@ -193,19 +201,18 @@ Vmd.define('hwchart.chart.helper.WellManager', {
          */
         needsDrawSymbol: function(data, idx, symbolSize, zoomScale) {
             var point = data.getItemLayout(idx);
-
-            if(!layout.isPointInBody(point)){
+            if(!point || isNaN(point[0]) || isNaN(point[1]) || !layout.isPointInBody(point)){
                 return false;
             }
             // this.buildKdTree();
             return !this.checkCrash(data, idx, point, [symbolSize * zoomScale, symbolSize * zoomScale], zoomScale);
         },
 
-        getLayoutPosition: function(id, el, point, position, distance, offset, zoomScale){
+        getLayoutPosition: function(ecModel, id, el, point, position, distance, offset, zoomScale){
             
             offset = formatUtil.normalizeCssArray(offset || 0);
-
-            var symbolGraphic = _graphicSymbols[id];
+            var props = inner(ecModel);
+            var symbolGraphic = props._graphicSymbols[id];
             var symbolBoundRect = symbolGraphic && symbolGraphic.getBoundingRect();
             var symbolScale = symbolGraphic && symbolGraphic.scale;
             var elBoundRect = el && el.getBoundingRect();
@@ -241,11 +248,15 @@ Vmd.define('hwchart.chart.helper.WellManager', {
             var id = data.getId(idx);
             var el = data.getItemGraphicEl(idx);
 
-            var itemGroup = _graphicEls[id];
+            var seriesModel = data.hostModel;
+            var ecModel = seriesModel.ecModel;
+            var props = inner(ecModel);
+
+            var itemGroup = props._graphicEls[id];
             if(itemGroup){
-                group.remove(itemGroup)
+                props.group.remove(itemGroup)
             }
-            itemGroup = _graphicEls[id] = new graphic.Group();
+            itemGroup = props._graphicEls[id] = new graphic.Group();
             // if(!itemGroup){
             //     itemGroup = _graphicEls[id] = new graphic.Group();
             // }
@@ -254,12 +265,12 @@ Vmd.define('hwchart.chart.helper.WellManager', {
 
             el.attr('position', itemLayout);
 
-            _graphicSymbols[id] = el.childAt(0);
+            props._graphicSymbols[id] = el.childAt(0);
             itemGroup.add(el);
-            group.add(itemGroup);
+            props.group.add(itemGroup);
 
-            var idx = zrUtil.indexOf(selectedWellIds, id);
-            var selectEl = selectedGraphics[idx];
+            var idx = zrUtil.indexOf(props.selectedWellIds, id);
+            var selectEl = props.selectedGraphics[idx];
             if(selectEl) {
                 var shape = itemGroup.getBoundingRect();
                 selectEl.attr('shape', {
@@ -280,8 +291,11 @@ Vmd.define('hwchart.chart.helper.WellManager', {
         removeWellSymbol: function(data, idx){
             var id = data.getId(idx);
             var el = data.getItemGraphicEl(idx);
+            var seriesModel = data.hostModel;
+            var ecModel = seriesModel.ecModel;
 
-            var itemGroup = _graphicEls[id];
+            var props = inner(ecModel);
+            var itemGroup = props._graphicEls[id];
             if(itemGroup && el){
                 itemGroup.remove(el);
             }
@@ -298,7 +312,10 @@ Vmd.define('hwchart.chart.helper.WellManager', {
          */
         addWellEl: function(data, idx, el, parentGroup, point, position, distance, offset, zoomScale){
             var id = data.getId(idx);
-            if(!this.checkSymbolShow(id)){
+            var seriesModel = data.hostModel;
+            var ecModel = seriesModel.ecModel;
+
+            if(!this.checkSymbolShow(ecModel, id)){
                 return;
             }
             parentGroup = parentGroup || _graphicEls[id];
@@ -306,7 +323,7 @@ Vmd.define('hwchart.chart.helper.WellManager', {
                 return;
             }
 
-            var itemLayout = this.getLayoutPosition(id, el, point, position, distance, offset, zoomScale);
+            var itemLayout = this.getLayoutPosition(ecModel, id, el, point, position, distance, offset, zoomScale);
             el.attr('position', itemLayout);
 
             parentGroup.add(el);
@@ -315,7 +332,11 @@ Vmd.define('hwchart.chart.helper.WellManager', {
 
         removeWellEl: function(data, idx){
             var id = data.getId(idx);
-            var itemGroup = _graphicEls[id];
+            var seriesModel = data.hostModel;
+            var ecModel = seriesModel.ecModel;
+
+            var props = inner(ecModel);
+            var itemGroup = props._graphicEls[id];
             if(itemGroup){
                 itemGroup.removeAll();
             }
@@ -326,21 +347,29 @@ Vmd.define('hwchart.chart.helper.WellManager', {
          * @param id
          * @param show
          */
-        setSymbolShow: function(id, show){
-            if(show && !this.checkSymbolShow(id)){
-                showSymbolIds.push(id);
+        setSymbolShow: function(data, idx, show){
+            var id = data.getId(idx);
+            var seriesModel = data.hostModel;
+            var ecModel = seriesModel.ecModel;
+            var props = inner(ecModel);
+            if(show && !this.checkSymbolShow(ecModel, id)){
+                props.showSymbolIds.push(id);
             }
-            else if(!show && this.checkSymbolShow(id)){
-                showSymbolIds.remove(id);
+            else if(!show && this.checkSymbolShow(ecModel, id)){
+                props.showSymbolIds.remove(id);
             }
         },
 
-        checkSelected: function(id){
-            return zrUtil.indexOf(selectedWellIds, id) !== -1;
+        checkSelected: function(ecModel, id){
+            return;
+            var props = inner(ecModel);
+            return zrUtil.indexOf(props.selectedWellIds, id) !== -1;
         },
 
-        createWellSelect: function (id) {
-            var itemGroup = _graphicEls[id];
+        createWellSelect: function (ecModel, id) {
+            return;
+            var props = inner(ecModel);
+            var itemGroup = props._graphicEls[id];
             if(!itemGroup){
                 return;
             }
@@ -369,49 +398,35 @@ Vmd.define('hwchart.chart.helper.WellManager', {
                 .start();
             selectEl._tag = 'select';
 
-            group.add(selectEl);
-            selectedWellIds.push(id);
-            selectedGraphics[selectedWellIds.length - 1] = selectEl;
+            props.group.add(selectEl);
+            props.selectedWellIds.push(id);
+            props.selectedGraphics[props.selectedWellIds.length - 1] = selectEl;
         },
 
-        clearSelect: function(clearIds){
-            if(clearIds){
-                return;
-            }
-            var len = selectedWellIds.length;
-            for(var i = 0; i < selectedWellIds.length; i++){
-                var sub = selectedGraphics[i];
-                group.remove(sub);
-            }
-            selectedWellIds = [];
-            selectedGraphics = [];
+        clearSelect: function(ecModel, clearIds){
+            // if(clearIds){
+            //     return;
+            // }
+            // var props = inner(ecModel);
+            // var len = props.selectedWellIds.length;
+            // for(var i = 0; i < props.selectedWellIds.length; i++){
+            //     var sub = props.selectedGraphics[i];
+            //     props.group.remove(sub);
+            // }
+            // props.selectedWellIds = [];
+            // props.selectedGraphics = [];
         },
 
         /*
         * 获取容器
          */
-        getGroup: function(){
-            return group;
+        getGroup: function(ecModel){
+            var props = inner(ecModel);
+            return props.group;
         },
 
-        dispose: function(){
-
-            nameList = []; //序列名称
-            series = [];
-            datas = [];
-
-            wellPositionMap = {}; //井的位置
-            seriesModelMap = {}; //井对应的序列model
-
-            showSymbolIds = []; //显示的井的id
-
-            _graphicEls = {};
-            _graphicSymbols = {};
-            _graphicNames = {};
-
-            selectedWellIds = [];
-            selectedGraphics = [];
+        dispose: function(ecModel, api){
+            this.reset(ecModel);
         }
     };
-   
 })
