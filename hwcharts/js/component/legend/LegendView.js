@@ -125,8 +125,12 @@
                 height: mainRect.height
             }, positionInfo), viewportSize, padding);
             this.group.attr('position', [layoutRect.x - mainRect.x, layoutRect.y - mainRect.y]); // Render background after group is layout.
-
-            this.group.add(this._backgroundEl = makeBackground(mainRect, legendModel));
+			
+			var legendData = legendModel.getData();
+			if(legendData.length > 0)
+			{
+				this.group.add(this._backgroundEl = makeBackground(mainRect, legendModel));	
+			}
 
             // 20200212:图例的定位与同步缩放
             this.updateTransform(legendModel, ecModel, api);

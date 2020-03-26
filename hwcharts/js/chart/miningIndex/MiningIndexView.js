@@ -27,24 +27,10 @@ Vmd.define('hwchart.chart.miningIndex.MiningIndexView', {
     var ChartView = hwchart.view.Chart;
     var wellDrawFinished = false;
     var isincrementalRender = 0;
-    var pointsLayout = hwchart.layout.points;
+
     var MiningIndexView= ChartView.extend({
         type: 'miningIndex',
-        init: function (ecModel, api) {
-            var self = this;
-            this.MiningIndexDraw = new MiningIndexDraw(ecModel, api);
-            api.on('incrementalRenderFinished',function(params) {
-                if(isincrementalRender ===0){
-                    self._finished = false;
-                    self.renderTask._dirty = true;
-                    self.renderTask.perform({
-                        step:self.seriesModel.getProgressive()
-                    });
-                    wellDrawFinished = true;
-                    isincrementalRender++;
-                }
-            });
-        },
+
         render: function (seriesModel, ecModel, api) {
             var self = this;
             self.seriesModel = seriesModel;
@@ -66,22 +52,22 @@ Vmd.define('hwchart.chart.miningIndex.MiningIndexView', {
             }
 
             var data = seriesModel.getData();
-            var MiningIndexDraw = this.MiningIndexDraw;
-            MiningIndexDraw.updateData(ecModel,data);
-            this.group.add(MiningIndexDraw.group);
+
+            var miningIndexDraw = this._updateSymbolDraw(data, seriesModel, ecModel, api);
+            miningIndexDraw.updateData(ecModel,data);
             
         },
         incrementalPrepareRender: function (seriesModel, ecModel, api) {
             var data = seriesModel.getData();
 
-            var MiningIndexDraw = this.MiningIndexDraw;
+            var miningIndexDraw = this._miningIndexDraw;
 
-            MiningIndexDraw.incrementalPrepareUpdate(data);
+            miningIndexDraw.incrementalPrepareUpdate(data);
             this._finished = false;
             //wellDrawFinished = false;
         },
         incrementalRender: function (taskParams, seriesModel) {
-            this.MiningIndexDraw.incrementalUpdate(taskParams, seriesModel.getData(),wellDrawFinished);
+            this._miningIndexDraw.incrementalUpdate(taskParams, seriesModel.getData());
 
             this._finished = taskParams.end === seriesModel.getData().count();
         },
@@ -95,7 +81,7 @@ Vmd.define('hwchart.chart.miningIndex.MiningIndexView', {
         //         res.progress({ start: 0, end: data.count() }, data);
         //     }
 
-        //     this.MiningIndexDraw.updateLayout(data);
+        //     this._miningIndexDraw.updateLayout(data);
         // },
 
         // _updateGroupTransform: function (seriesModel) {
@@ -105,18 +91,31 @@ Vmd.define('hwchart.chart.miningIndex.MiningIndexView', {
         //         this.group.decomposeTransform();
         //     }
         // },
-        
+
+        _updateSymbolDraw: function (data, seriesModel, ecModel, api) {
+            var miningIndexDraw = this._miningIndexDraw;
+
+            if (!miningIndexDraw) {
+                miningIndexDraw && miningIndexDraw.remove();
+                miningIndexDraw = this._miningIndexDraw = new MiningIndexDraw(ecModel, api, this);
+                this.group.removeAll();
+            }
+
+            this.group.add(miningIndexDraw.group);
+            return miningIndexDraw;
+        },
+
         updateLayout: function (seriesModel, ecModel, api) {
             var data =seriesModel.getData();
             data.dataChanged = false
             if(data){
-                this.MiningIndexDraw.updateData(ecModel,data);
+                this._miningIndexDraw.updateData(ecModel,data);
             }
             
         },
 
         remove: function (ecModel, api) {
-            this.MiningIndexDraw && this.MiningIndexDraw.remove(api);
+            this._miningIndexDraw && this._miningIndexDraw.remove(api);
         },
 
         dispose: function () {}

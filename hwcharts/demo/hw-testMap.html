@@ -26,8 +26,8 @@ under the License.
 
     <script src="../js/core/base-ext.js"></script>
     <!--zrender-->
-    <script src="../lib/zrender/dist/zrender.js"></script>
-    <script src="../lib/jquery.min.js"></script>
+    <script src="../../lib/zrender/zrender.js"></script>
+    <script src="../../lib/jquery/jquery.min.js"></script>
     <!--hwchart-->
     <script src="../js/hwcharts.js"></script>
 </head>
@@ -59,15 +59,13 @@ testMap
             //'hwchart.component.MarkPoint'
         ], function () {
 
-            $.get('../lib/map/rectJson.json', function (rectJson) {
+            $.get('../map/rectJson.json', function (rectJson) {
                 if (typeof rectJson === 'string') {
                     rectJson = eval('(' + rectJson + ')');
                 }
-                hwcharts.registerMap('testMap', rectJson);
                 chart = hwcharts.init(document.getElementById('main'), null, {});
-                chart.on('fetchData', function (opt) {
-                    debugger
-                })
+
+                hwcharts.registerMap('testMap', rectJson);
                 chart.setOption({
                     geo: [{
                         map: 'testMap',
@@ -141,31 +139,6 @@ testMap
                     ]
                 });
             });
-
-
-            window.setTimeout(function () {
-                chart.setOption({
-                    series: [{
-                        name: 'wellTrace',
-                        data: [{
-                            wellId: 'Gd010',
-                            wellMasterId: '',
-                            wellMasterName: '',
-                            coords: [[102.9199, 30.4663], [101.9199, 29.4663], [102.9199, 28.4663]]
-                        }, {
-                            wellId: 'Gd010',
-                            wellMasterId: '',
-                            wellMasterName: '',
-                            coords: [[102.9199, 30.4663], [104.9199, 28.4663]]
-                        }, {
-                            wellId: 'Gd011',
-                            wellMasterId: '',
-                            wellMasterName: '',
-                            coords: [[112.9199, 40.4663], [113.9199, 38.4663]]
-                        }]
-                    }]
-                })
-            }, 500)
         })
     });
 

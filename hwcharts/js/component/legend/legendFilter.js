@@ -20,7 +20,6 @@ Vmd.define('hwchart.component.legend.legendFilter', {
         //         return true;
         //     });
         // }
-		
 		var layerModels = api.getChart().seriesSelected;
 		
 		if(layerModels){

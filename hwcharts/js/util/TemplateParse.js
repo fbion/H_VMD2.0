@@ -135,30 +135,6 @@ Vmd.define('hwchart.util.TemplateParse',{
             if(brushComponent.areas){
                 chart.trigger('chartregionselected', brushComponent.areas[0].range,selected);
             }
-
-            // chart.dispatchAction({
-            //      type:'',
-            //      areas: brushComponent.areas,
-            //      selected: brushComponent.selected
-
-            // })
-
-            //清空选中区域
-            //chart.dispatchAction({
-            //    type: 'brush',
-            //    // Clear all areas of all brush components.
-            //    areas: []
-            //});
-            
-            //window.setTimeout(function () {
-            //    chart.dispatchAction({
-            //        type: 'brush',
-            //        // Clear all areas of all brush components.
-            //        areas: []
-            //    });
-            //},500)
-           
-            
         })
     },
     /**
@@ -425,6 +401,7 @@ Vmd.define('hwchart.util.TemplateParse',{
         }
     },
     updateLayer:function(tpl){
+       
         var me = this;
         //me.chart.ShowSeries = [];
         me.chart.seriesSelected = {};
@@ -432,7 +409,12 @@ Vmd.define('hwchart.util.TemplateParse',{
         series.forEach(function(item,i){
             item.index = i;
             //me.chart.ShowSeries.push(item.index);
-            me.chart.seriesSelected[item.name] = true;
+            if(item.show ==undefined){
+                me.chart.seriesSelected[item.name] = true;
+            }else{
+                me.chart.seriesSelected[item.name] = item.show;
+            }
+            
             if(me.Layers){
                 me.setSerier(me.Layers,item)
             }
@@ -495,8 +477,12 @@ Vmd.define('hwchart.util.TemplateParse',{
                 hwcharts.registerMap(mapName, rectJson);
             })
         }
+        options.series.sort(me.sortRule_h);
         this.chart.setOption(options);
     },
+    sortRule_h: function(a, b) {
+		return parseFloat(a.z) - parseFloat(b.z);
+	},
       /**
     *@desc 获取json
     *@param {string} url 请求地址

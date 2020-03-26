@@ -61,10 +61,20 @@ Vmd.define('hwchart.chart.wellSymbol.WellSymbolView', {
             });
 
             this._finished = true;
+
+            api.dispatchAction({
+                type: 'incrementalRenderFinished',
+                id: seriesModel.id,
+                mainType: seriesModel.mainType,
+                name: seriesModel.name,
+                seriesIndex:seriesModel.seriesIndex,
+                subType: seriesModel.subType
+            });
         },
 
         incrementalPrepareRender: function (seriesModel, ecModel, api) {
             var data = seriesModel.getData();
+            WellManager.setData(data);
 
             var symbolDraw = this._updateSymbolDraw(data, seriesModel, ecModel, api);
 

@@ -50,7 +50,7 @@
         var zoomScale = !isNaN(scale) ? Math.min(scale * zoom, 1) : 1;
 
         var seriesScope = {
-            itemStyle: seriesModel.getModel('itemStyle.normal').getItemStyle(['color']),
+            itemStyle: seriesModel.getModel('itemStyle').getItemStyle(['color']),
             hoverItemStyle: seriesModel.getModel('itemStyle.emphasis').getItemStyle(),
             symbolRotate: seriesModel.get('symbolRotate'),
             symbolOffset: seriesModel.get('symbolOffset'),
@@ -59,11 +59,11 @@
             labelModel: seriesModel.getModel('label.normal'),
             hoverLabelModel: seriesModel.getModel('label.emphasis')
         };
-
+        var isShow = seriesModel.get('itemStyle.show');
         data.diff(oldData)
             .add(function (newIdx) {
                 var rawDataItem = data.getRawDataItem(newIdx);
-                if (WellManager.checkSymbolShow(data.getId(newIdx))) {
+                if (WellManager.checkSymbolShow(data,newIdx)&&isShow) {
                     var elStyle = {};
                     graphic.setText(elStyle, seriesModel.getModel('itemStyle.normal'), data.getItemVisual(newIdx, 'color'));
                     elStyle = zrUtil.defaults(self._getTextStyle(data), elStyle);
@@ -77,7 +77,7 @@
                     data.setItemGraphicEl(newIdx, labelEl);
 
                     labelEl._position = WellManager.addWellEl(data, newIdx, labelEl, null,
-                        WellManager.getWellLayout(data.getId(newIdx)),
+                        WellManager.getWellLayout(data,newIdx),
                         seriesModel.get('itemStyle.normal.position'),
                         seriesModel.get('itemStyle.normal.distance'),
                         seriesModel.get('itemStyle.normal.offset'),
@@ -87,7 +87,7 @@
             .update(function (newIdx, oldIdx) {
                 var labelEl = oldData.getItemGraphicEl(oldIdx);
                 var rawDataItem = data.getRawDataItem(newIdx);
-                if (!WellManager.checkSymbolShow(data.getId(newIdx))) {
+                if (!WellManager.checkSymbolShow(data,newIdx)||!isShow) {
                     WellManager.removeWellEl(data, newIdx);
                     return;
                 }
@@ -110,7 +110,7 @@
                 data.setItemGraphicEl(newIdx, labelEl);
 
                 labelEl._position = WellManager.addWellEl(data, newIdx, labelEl, null,
-                    WellManager.getWellLayout(data.getId(newIdx)),
+                    WellManager.getWellLayout(data,newIdx),
                     seriesModel.get('itemStyle.normal.position'),
                     seriesModel.get('itemStyle.normal.distance'),
                     seriesModel.get('itemStyle.normal.offset'),

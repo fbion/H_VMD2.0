@@ -75,11 +75,7 @@
             var ptLeftTop = geo.coordinateSystem.dataToPoint([_boudingRect.x, _boudingRect.y + _boudingRect.height]);
             var ptRightBtm = geo.coordinateSystem.dataToPoint([_boudingRect.x + _boudingRect.width, _boudingRect.y]);
 
-            var grect = this.group.getBoundingRect();
-
-			
-
-				
+            var grect = this.group.getBoundingRect();				
 
             var posHori = visualMapModel.get('posHori');
             var posVert = visualMapModel.get('posVert');
@@ -96,13 +92,13 @@
             }
 
             if (posVert == "top") {
-                this.group.position[1] = ptLeftTop[1];
+                this.group.position[1] = ptLeftTop[1] + grect.height * zoomFactor;
             }
             else if (posVert == "middle") {
                 this.group.position[1] = (ptLeftTop[1] + ptRightBtm[1]) / 2 - (grect.height / 2) * zoomFactor;
             }
             else if (posVert == "bottom") {
-                this.group.position[1] = ptRightBtm[1] - grect.height * zoomFactor;
+                this.group.position[1] = ptRightBtm[1];
             }
 		},
 
@@ -190,6 +186,12 @@
                 width: api.getWidth(),
                 height: api.getHeight()
             });
+        },
+
+        updateTransform: function (componentModel, ecModel, api, payload) {
+            
+            this.doRender.apply(this, arguments);
+            this.updatePos(componentModel, ecModel);
         },
 
         /**

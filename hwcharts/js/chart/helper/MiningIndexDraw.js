@@ -15,13 +15,14 @@ Vmd.define('hwchart.chart.helper.MiningIndexDraw', {
     var ComposeSymbol = hwchart.chart.helper.ComposeSymbol;
     var indexDataStorage = hwchart.util.indexDataStorage;
     //var ComposeIndex = hwchart.chart.helper.ComposeIndex;
-    //var wellDrawFinished = false;
+    var isincrementalRender = 0;
+    var wellDrawFinished = false;
     /**
      * @constructor
      * @alias module:echarts/chart/helper/SymbolDraw
      * @param {module:zrender/graphic/Group} [symbolCtor]
      */
-    function MiningIndexDraw(ecModel, api) {
+    function MiningIndexDraw(ecModel, api, view) {
         var self = this;
         this.group = new graphic.Group();
         this._symbolCtor = ComposeSymbol;
@@ -88,16 +89,17 @@ Vmd.define('hwchart.chart.helper.MiningIndexDraw', {
                 self._createSelect(idx);
             });
         });
-        // api.on('incrementalRenderFinished',function(params) {
-        //     console.log(self._seriesScope)
-        //     // if(self._seriesScope&&self._seriesScope.dataTask){
-        //     //     self._seriesScope.dataTask._dirty = true;
-        //     //     var context = self._seriesScope.dataTask.context;
-        //     //     var Task =self._seriesScope.dataTask;
-        //     //     Task.perform();
-        //     // }
-        //     wellDrawFinished = true;
-        // });
+        api.on('incrementalRenderFinished',function(params) {
+            if(isincrementalRender === 0){
+                view._finished = false;
+                view.renderTask._dirty = true;
+                view.renderTask.perform({
+                    step: view.seriesModel.getProgressive()
+                });
+                wellDrawFinished = true;
+                isincrementalRender++;
+            }
+        });
     }
 
     var miningIndexDrawProto = MiningIndexDraw.prototype;
@@ -299,7 +301,7 @@ Vmd.define('hwchart.chart.helper.MiningIndexDraw', {
         wellDrawFinished = false;
     };
 
-    miningIndexDrawProto.incrementalUpdate = function (taskParams, data, wellDrawFinished) {
+    miningIndexDrawProto.incrementalUpdate = function (taskParams, data) {
         if(!wellDrawFinished){
             return false;
         }

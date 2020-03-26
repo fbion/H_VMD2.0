@@ -769,7 +769,7 @@ Vmd.define('hwchart.util.DataParse',{
                     obj.shortName.push(v.shortName)
                     obj.maxHr.push(v.maxHr ||70)
                     obj.minHr.push(v.minHr||2)
-                    obj.isShow.push(v.show)
+                    obj.isShow.push()
                     obj.labelIsShow.push(v.labelIsShow)
                     obj.nameIsShow.push(v.nameIsShow)
                     obj.companyIsShow.push(v.companyIsShow)

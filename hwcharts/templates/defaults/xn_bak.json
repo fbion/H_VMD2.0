@@ -243,7 +243,7 @@
 		{
 			"type": "isoArea",
 			"name": "等温区",
-			"dependentSeries": ["油井井位","井口温度"],
+			"dependentSeries": ["油井井位","油压"],
 			"data": [],
 			"dense": 5
 		},
@@ -347,10 +347,19 @@
 				"position": "right"
 			},
 
-			"progressiveThreshold":100,
+			"progressiveThreshold":1000,
 			"progressive":1,
 			"data": [ ],
 			"symbolSize": 15
+		},{
+			"type": "wellLabel",
+			"name": "油压",
+			"label": {
+				"color": "black",
+				"show": true,
+				"formatter": "{b}",
+				"position": "right"
+			}
 		}
 	]
 }

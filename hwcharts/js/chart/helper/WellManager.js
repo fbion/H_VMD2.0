@@ -28,7 +28,7 @@ Vmd.define('hwchart.chart.helper.WellManager', {
         reset:function(ecModel){
             var props = inner(ecModel);
 
-            props.group = new graphic.Group();
+            props.group ? props.group.removeAll() : (props.group = new graphic.Group()) ;
 
             props.nameList = []; //序列名称
             props.series = [];
@@ -335,7 +335,8 @@ Vmd.define('hwchart.chart.helper.WellManager', {
             if(!this.checkSymbolShow(data, idx)){
                 return;
             }
-            parentGroup = parentGroup || _graphicEls[id];
+            var props = inner(ecModel);
+            parentGroup = parentGroup || props._graphicEls[id];
             if(!parentGroup){
                 return;
             }
@@ -440,6 +441,7 @@ Vmd.define('hwchart.chart.helper.WellManager', {
          */
         getGroup: function(ecModel){
             var props = inner(ecModel);
+            props.group = props.group || new graphic.Group();
             return props.group;
         },
 
