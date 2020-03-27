@@ -211,6 +211,9 @@
 
                     wellGroup.attr('scale', [zoomScale, zoomScale]);
                 }
+                else{
+                    //WellManager.setSymbolShow(data, newIdx, false);
+                }
             })
             .update(function (newIdx, oldIdx) {
                 var point = data.getItemLayout(newIdx);
@@ -282,7 +285,7 @@
 
                 WellManager.addWellSymbol(data, newIdx);
                 var nameEl = wellGroup.childAt(1);
-                if(!nameEl){
+                if(!nameEl && labelShow){
                     nameEl = self._drawName(data, newIdx, seriesScope);
                 }
                 else if(nameEl && dirty){
@@ -371,6 +374,9 @@
 
                 wellGroup.attr('scale', [zoomScale, zoomScale]);
                 data.setItemGraphicEl(idx, wellGroup);
+            }
+            else{
+                //WellManager.setSymbolShow(data, idx, false);
             }
         }
     };

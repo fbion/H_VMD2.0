@@ -14,6 +14,8 @@
     <!--hwdas-->
     <script src="../js/hwDas.js"></script>
     <script src="../data/inc_data.js"></script>
+    <script src="../data/inc_index.js"></script>
+    <script src="../data/inc_symbol.js"></script>
     <style>
         html, body, #main
         {
@@ -22,11 +24,81 @@
             width: 100%;
             height: 100%;
         }
+
+        #snapshot {
+            position: fixed;
+            right: 10px;
+            bottom: 10px;
+            width: 200px;
+            height: 200px;
+            background: #fff;
+            border: 5px solid rgba(0,0,0,0.5);
+        }
     </style>
 </head>
 <body oncontextmenu="return false">
     <div id="main"></div>
+    <img id="snapshot" />
     <script>
+        function genSymData (data, flag){
+            var genSymbolData = [];
+
+            for(var i = 0; i < data.length; i++){
+                var data1 = data[i];
+                genSymbolData.push(data1);
+                if(i == data.length - 1){
+                    break;
+                }
+                var data2 =  data[i + 1];
+                var chu = parseInt(1 + Math.random() * 5);
+                var x = data1.value[0] + (data1.value[0] - data2.value[0]) / chu;//18431633.14285714,18449979.977142856
+                var y = data1.value[1] + (data1.value[1] - data2.value[1]) / chu;//3456134.6272754576,3468030.3427245426
+
+                if(x < 18431633.14285714 || x > 18449979.977142856){
+                    x = data1.value[0] + (data2.value[0] - data1.value[0]);
+                }
+                if(y < 3456134.6272754576 || y > 3468030.3427245426){
+                    y = data1.value[1] + (data2.value[1] - data1.value[1])
+                }
+
+                genSymbolData.push({
+                    id: data1.id + flag,
+                    name: data1.name + flag,
+                    symbol: data1.symbol,
+                    value: [x, y]
+                })
+            }
+
+            for(var i = 0; i < 100; i++){
+                var x = parseFloat((18431633.14285714 + Math.random() * (18449979.977142856 - 18431633.14285714)).toFixed(9));
+                var y = parseFloat((3456134.6272754576 + Math.random() * (3468030.3427245426 - 3456134.6272754576)).toFixed(9));
+                genSymbolData.push({
+                    id: flag + i,
+                    name: flag + i,
+                    symbol: "11",
+                    value: [x, y]
+                })
+            }
+            return genSymbolData;
+        }
+        function genIndData (data, flag){
+            var genIndexData = [];
+
+            for(var i = 0; i < data.length; i++){
+                genIndexData.push(data[i]);
+                var data1 = Vmd.clone(data[i]);
+                data1.id = data1.id + flag;
+                genIndexData.push(data1);
+            }
+
+            // for(var i = 0; i < 2000; i++){
+            //     var data1 = Vmd.clone(data[0]);
+            //     data1.id = flag + i;
+            //     genIndexData.push(data1);
+            // }
+
+            return genIndexData;
+        }
         Vmd.onReady(function () {
 
            Vmd.require([
@@ -43,7 +115,8 @@
                 'hwchart.component.Title',
                 'hwchart.chart.MiningIndex',
                 'hwchart.chart.IsoArea',
-                'hwchart.component.VisualMap'
+                'hwchart.component.VisualMap',
+               'hwchart.component.FrameNew'
 
 
            ], function () {
@@ -76,9 +149,9 @@
                            "show":true,
                            "inRange":{
                                "color":[
-                                   "RGB(0,0,255)",
-                                   "RGB(0,255,0)",
-                                   "RGB(255,0,0)"
+                                   "RGB(255,245,255)",
+                                   "RGB(245,255,255)",
+                                   "RGB(255,255,245)"
                                ]
                            },
                            "hoverLink":true,
@@ -241,7 +314,7 @@
                                "formatter":"{b}",
                                "position":"right"
                            },
-                           "data":wellSymbolData,
+                           "data":genSymData(genSymData(wellSymbolData, "A"), "B"),//wellSymbolData,
                            "dirty":true,
                            "filter":{
                                "type":"char",
@@ -249,7 +322,7 @@
                                "preChars":""
                            },
                            "progressiveThreshold":100,
-                           "progressive":10,
+                           "progressive":20,
                            "symbolSize":15,
                            "index":3
                        },
@@ -261,7 +334,7 @@
                            "position":"leftTop",
                            "eidt":true,
                            "z":4,
-                           "data":kczb,
+                           "data":genIndData(genIndData(kczb, "A"), "B"),
                            "toopTip":{
                                "show":true
                            },
@@ -341,7 +414,7 @@
                                }
                            ],
                            "progressiveThreshold":100,
-                           "progressive":0,
+                           "progressive":10,
                            "name":"43fd0294-c1c0-4023-b976-fc3b1d5a108d",
                            "index":4
                        }
@@ -378,6 +451,12 @@
                    }
                };
                chart.setOption(options);
+
+               chart.on('finished', function () {
+                   var url = chart.getDataURL();
+                   var snapshotEl = document.getElementById('snapshot');
+                   snapshotEl.src = url;
+               });
           })
         });
     </script>

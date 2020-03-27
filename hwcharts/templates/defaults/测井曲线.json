@@ -15,7 +15,7 @@
 	"seriesMapping":[
         {
             "source":"ds1",
-            "seriseName": "SW2-1井-测井解释图"
+            "seriesName": "SW2-1井-测井解释图"
         }
     ],
 	"series": [

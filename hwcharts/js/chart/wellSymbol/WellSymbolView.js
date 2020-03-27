@@ -74,6 +74,7 @@ Vmd.define('hwchart.chart.wellSymbol.WellSymbolView', {
 
         incrementalPrepareRender: function (seriesModel, ecModel, api) {
             var data = seriesModel.getData();
+
             WellManager.setData(data);
 
             var symbolDraw = this._updateSymbolDraw(data, seriesModel, ecModel, api);

@@ -94,11 +94,11 @@ Vmd.define('hwchart.chart.helper.MiningIndexDraw', {
                 view._finished = false;
                 view.renderTask._dirty = true;
                 view.renderTask.perform({
-                    step: view.seriesModel.getProgressive()
+                    step: view.__model.getProgressive()
                 });
-                wellDrawFinished = true;
                 isincrementalRender++;
             }
+            wellDrawFinished = true;
         });
     }
 
@@ -298,7 +298,6 @@ Vmd.define('hwchart.chart.helper.MiningIndexDraw', {
         this._seriesScope = makeSeriesScope(data);
         this._data = null;
         this.group.removeAll();
-        wellDrawFinished = false;
     };
 
     miningIndexDrawProto.incrementalUpdate = function (taskParams, data) {

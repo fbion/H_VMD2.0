@@ -25,8 +25,6 @@ Vmd.define('hwchart.chart.miningIndex.MiningIndexView', {
 }, function () {
     var MiningIndexDraw = hwchart.chart.helper.MiningIndexDraw;
     var ChartView = hwchart.view.Chart;
-    var wellDrawFinished = false;
-    var isincrementalRender = 0;
 
     var MiningIndexView= ChartView.extend({
         type: 'miningIndex',
@@ -57,15 +55,16 @@ Vmd.define('hwchart.chart.miningIndex.MiningIndexView', {
             miningIndexDraw.updateData(ecModel,data);
             
         },
+
         incrementalPrepareRender: function (seriesModel, ecModel, api) {
             var data = seriesModel.getData();
 
-            var miningIndexDraw = this._miningIndexDraw;
+            var miningIndexDraw = this._updateSymbolDraw(data, seriesModel, ecModel, api);
 
             miningIndexDraw.incrementalPrepareUpdate(data);
             this._finished = false;
-            //wellDrawFinished = false;
         },
+
         incrementalRender: function (taskParams, seriesModel) {
             this._miningIndexDraw.incrementalUpdate(taskParams, seriesModel.getData());
 
@@ -96,7 +95,6 @@ Vmd.define('hwchart.chart.miningIndex.MiningIndexView', {
             var miningIndexDraw = this._miningIndexDraw;
 
             if (!miningIndexDraw) {
-                miningIndexDraw && miningIndexDraw.remove();
                 miningIndexDraw = this._miningIndexDraw = new MiningIndexDraw(ecModel, api, this);
                 this.group.removeAll();
             }
