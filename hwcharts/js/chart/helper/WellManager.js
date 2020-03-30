@@ -71,17 +71,6 @@ Vmd.define('hwchart.chart.helper.WellManager', {
 
             props.series[index] = seriesModel;
             props.datas[index] = data;
-
-            // var points = [];
-            // zrUtil.each(props.datas, function(itemData){
-			// 	// 20200211 修改
-            //     var itemRawData = itemData._rawData._data;
-            //     points = points.concat(itemRawData);
-            //     zrUtil.each(itemRawData, function(item){
-            //         props.wellPositionMap[item.id] = item.value;
-            //         props.seriesModelMap[item.id] = itemData.hostModel;
-            //     });
-            // });
         },
 
         buildKdTree: function(){

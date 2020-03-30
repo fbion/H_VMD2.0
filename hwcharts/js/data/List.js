@@ -1405,7 +1405,7 @@
                 keep = cb.call(context, val, i);
             } else {
                 for (var k = 0; k < dimSize; k++) {
-                    value[k] = this._getFast(dim0, rawIdx);
+                    value[k] = this._getFast(dimensions[k], rawIdx);
                 }
 
                 value[k] = i;

@@ -21,7 +21,8 @@ Vmd.define('hwchart.chart.WellSymbol', {
         'hwchart.chart.wellSymbol.WellSymbolSeries',
         'hwchart.chart.wellSymbol.WellSymbolView',
         'hwchart.visual.symbol',
-        'hwchart.layout.points'
+        'hwchart.layout.points',
+        'hwchart.processor.geoDataFilter'
     ]
 
 }, function (LineChart) {
@@ -31,10 +32,14 @@ Vmd.define('hwchart.chart.WellSymbol', {
     var visualSymbol = hwchart.visual.symbol;
 
     var layoutPoints = hwchart.layout.points;
+    var geoDataFilter = hwchart.processor.geoDataFilter;
 
     // In case developer forget to include grid component
+    // hwcharts.registerVisual(geoDataFilter('wellSymbol'));
     hwcharts.registerVisual(visualSymbol('wellSymbol', '', 'composeSymbol'));
     hwcharts.registerLayout(layoutPoints('wellSymbol')); // Down sample after filter
+
+    hwcharts.registerProcessor(hwcharts.PRIORITY.PROCESSOR.STATISTIC, geoDataFilter('wellSymbol'));
 
     hwcharts.registerAction({
         type: 'incrementalRenderFinished',
