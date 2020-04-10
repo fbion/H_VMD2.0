@@ -14,7 +14,7 @@ xds["vmd.ux.ContentProperty"] = Ext.extend(xds.Component, {
     isContainer: false,
      //扩展组件依赖资源加载
     requireCss: [],
-    requireJs: ["lib/ace/ace.js?ver=vmd2.0.5.191031","lib/ace/mode-base.js?ver=vmd2.0.5.191031","lib/ace/theme-xcode.js?ver=vmd2.0.5.191031","lib/ace/ext-language_tools.js?ver=vmd2.0.5.191031"],
+    requireJs: ["lib/ace/ace.js?ver=vmd2.0.7.200328","lib/ace/mode-base.js?ver=vmd2.0.7.200328","lib/ace/theme-xcode.js?ver=vmd2.0.7.200328","lib/ace/ext-language_tools.js?ver=vmd2.0.7.200328"],
 	requireCmpType:'',
     //默认属性设置
     defaultConfig: {"layout":"fit"},
@@ -22,6 +22,8 @@ xds["vmd.ux.ContentProperty"] = Ext.extend(xds.Component, {
 
         return true;
     },
+	//属性面板
+    
     //标准属性设置
     configs: [
          {

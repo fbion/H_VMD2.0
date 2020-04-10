@@ -14,15 +14,27 @@ copyright：Copyright © 1999-2019, hwkj, All Rights Reserved
 //启用动态加载模式
 Ext.Loader.setConfig({
     enabled: true,
-    disableCaching:false,
+    //disableCaching:false,
     paths: { //'类名前缀':'所在路径'  
         'ide': '../design',
-        'core': '../js'
+        'core': '../js',
+        'vmd.base': bootPATH + 'js/base',
+        'vmd.d': bootPATH + 'design',
+        'vmd.proxy': bootPATH + 'js/proxy',
+        'hwcharts': bootPATH + 'hwcharts/js/hwcharts.js',
+        'hwchart': bootPATH + 'hwcharts/js'
     }
 });
 //设计时全局对象
 window.designer = {};
-
+//兼容web图形框架
+if (typeof Vmd == 'undefined') {
+    Vmd = {};
+    Ext.apply(Vmd, {
+        define: Ext.define,
+        Loader: Ext.Loader
+    })
+}
 //if (typeof vmdSettings != 'underfined')
 //    vmdSettings.vmdUploadPath = 'http://' + vmdSettings.dataServiceIp + /DataService/;
 //默认为模块开发
@@ -94,6 +106,36 @@ designer.WindowButton = {
     Close: "关闭",
     Cancel: "取消"
 }
+
+designer.ComponentDeps = {
+    rule: {
+        'vmd.d.webchart.*': 'hwcharts',
+		'vmd.webchart.*': 'hwcharts'
+    },
+    test: function (rule, cmpName) {
+        if (!rule) return false;
+        var _rule = rule.replace('*', '').replace(/\./g, '\\.');
+        var reg = new RegExp(_rule + '[a-zA-Z]');
+        if (reg.test(cmpName)) return true;
+        return false;
+
+    },
+    testAll: function (cmplist) {
+        var list = [];
+        var me = this;
+        Ext.each(cmplist, function (cmpName) {
+
+            for (var ruleName in me.rule) {
+                var target = me.rule[ruleName];
+                if (me.test(ruleName, cmpName) && list.indexOf(target) == -1) {
+                    list.push(target);
+                }
+            }
+
+        }, me)
+        return list;
+    }
+}
 Ext.BLANK_IMAGE_URL = "/design/images/s.gif";
 Ext.layout.BorderLayout.WARN = false;
 Ext.layout.BorderLayout.Region.prototype.floatingZIndex = 65000;
@@ -108,6 +150,7 @@ xds.vmd = {
     },
     //存放canvas的快照列表
     canvaslist: new Ext.util.MixedCollection(),
+    cmpdeps: [],
     //序列化结构
     layoutStr: "",
     //comps: {},
@@ -191,9 +234,9 @@ xds.vmd = {
     cmpList: {
         list: [],
         map: new StringMap(),
-        getVerByName: function(name) {
+        getVerByName: function (name) {
 
-            var targetCmp = Ext.Array.findBy(this.list, function(item, i) {
+            var targetCmp = Ext.Array.findBy(this.list, function (item, i) {
                 return item.name == name
             })
             if (targetCmp) return {
@@ -202,15 +245,15 @@ xds.vmd = {
             };
             return null;
         },
-        getInfoByName: function(name) {
-            var targetCmp = Ext.Array.findBy(this.list, function(item, i) {
+        getInfoByName: function (name) {
+            var targetCmp = Ext.Array.findBy(this.list, function (item, i) {
                 return item.name == name
             })
             if (targetCmp) return targetCmp;
             return null
         }
     },
-    clear: function() {
+    clear: function () {
         //this.comps = {};
         this.layoutStr = "";
         this.workflow = "";
@@ -221,7 +264,7 @@ xds.vmd = {
 
     },
     //隐藏遮罩功能
-    hideFilm: function(parentNode) {
+    hideFilm: function (parentNode) {
         var t = document.getElementById("film-for-" + parentNode.id);
         if (t) {
             var designerCmp = parentNode.component;
@@ -239,28 +282,28 @@ xds.vmd = {
         }
     },
     //禁用html属性
-    isDisableHtmlProp: function() {
+    isDisableHtmlProp: function () {
         if (vmd.getUrlParam('type') == 'ux' && !vmd.getUrlParam('debugger')) return true;
         return false;
     },
-    isDisableProp: function() {
+    isDisableProp: function () {
         return this.isDisableHtmlProp();
     },
-    getPreviewPath: function() {
+    getPreviewPath: function () {
         return this.tplList[this.tplType].previewPath;
     },
-    getReleasePath: function() {
+    getReleasePath: function () {
 
         //return this.tplList[this.tplType].releasePath + "?r=" + new Date().getTime();
         return this.tplList[this.tplType].releasePath;
     },
-    setTplType: function(type) {
+    setTplType: function (type) {
         this.tplType = type || "module";
     },
-    findByCid: function(cls) {
+    findByCid: function (cls) {
         var root = xds.inspector.root.childNodes[0];
         var cmp;
-        var find = function(node) {
+        var find = function (node) {
 
             if (node.component && node.component.cid == cls) {
 
@@ -283,10 +326,10 @@ xds.vmd = {
         return cmp;
 
     },
-    isExistReportAndChart: function() {
+    isExistReportAndChart: function () {
         var root = xds.inspector.root.childNodes[0];
         var cmp = {};
-        var find = function(node) {
+        var find = function (node) {
 
             if (node.component && (node.component.cid == 'vmdReport' || node.component.requireCmpType == 'report')) {
                 cmp.isReport = true;
@@ -311,7 +354,7 @@ xds.vmd = {
         return cmp;
 
     },
-    getModuleCmpType: function() {
+    getModuleCmpType: function () {
         var info = this.isExistReportAndChart();
         var type;
         if (info.isReport) {
@@ -322,18 +365,23 @@ xds.vmd = {
         if (info.isReport && info.isChart) type = 'reportchart';
         return type;
     },
-    getProjectPath: function() {
+    getProjectPath: function () {
         var path = getUrlParam('path') || '';
         //return 	path.replace(/(?<=[system|/]?modules\/\w+\/).+/,'');
-        return path.replace(/(?<=[system|/]?modules\/(\w|-)+\/).+/, ''); //增加对guid中间带-的支持
+        // return path.replace(/(?<=[system|/]?modules\/(\w|-)+\/).+/, ''); //增加对guid中间带-的支持
+
+        var replaceStr = path.replace(/([system|/]?modules\/(\w|-)+\/)(?=.+)/, '');
+        var url = path.replace(replaceStr, '');
+        return url;
+
         //return path.replace(/(?<=[system|/]?modules\/[\w\-]+\/).+/, ''); //增加对guid中间带-的支持
     },
-    getProjectConfigPath: function() {
+    getProjectConfigPath: function () {
         var path = vmd.virtualPath + "/" + this.getProjectPath() + xds.vmd.project.extConfigName;
         return path;
 
     },
-    openUxControllerjs: function(cmp) {
+    openUxControllerjs: function (cmp) {
         var path = cmp.id;
         var projectPath = '';
         if (!this.isUx()) {
@@ -361,13 +409,13 @@ xds.vmd = {
         });
         var me = this;
         init_def_platformControlData();
-        aceWin.closeFn = function() {
+        aceWin.closeFn = function () {
 
             var val = aceWin.val;
             if (aceWin.script == val) {
                 return;
             }
-            Ext.Msg.confirm("提示", "脚本已改变是否保存?", function(btn) {
+            Ext.Msg.confirm("提示", "脚本已改变是否保存?", function (btn) {
                 if (btn == 'no') return;
 
                 if (val.trim()) {
@@ -384,10 +432,10 @@ xds.vmd = {
         aceWin.val = xds.vmd.controllerEvents;
         aceWin.show();
     },
-    findAllByCid: function(cls) {
+    findAllByCid: function (cls) {
         var root = xds.inspector.root.childNodes[0];
         var cmp = [];
-        var find = function(node) {
+        var find = function (node) {
 
             if (node.component && node.component.cid == cls) {
 
@@ -410,7 +458,7 @@ xds.vmd = {
         return cmp;
 
     },
-    checkCid: function() {
+    checkCid: function () {
         //tooltip删除
         vmd('#tooltip').remove();
         var returnobj = {
@@ -472,7 +520,7 @@ xds.vmd = {
      * @param {String} eventName 事件名称
      * @param {String} eventMethod 事件定义的方法
      */
-    addEventForDesignerCmp: function(cmp, eventName, eventMethod) {
+    addEventForDesignerCmp: function (cmp, eventName, eventMethod) {
         var d_cmp = cmp;
         var d_cmpConfigs = d_cmp.configs;
         d_cmpConfigs.add(new xds.Config.types['string']({
@@ -484,10 +532,10 @@ xds.vmd = {
         }));
         d_cmp.setConfig(eventName, eventMethod);
     },
-    removeEventForDesignerCmp: function(cmp, eventName) {
+    removeEventForDesignerCmp: function (cmp, eventName) {
         cmp.setConfig(eventName, '');
     },
-    setCmpListMap: function(data) {
+    setCmpListMap: function (data) {
         var ux = xds.vmd.ux;
         xds.vmd.cmpList.list = data;
         xds.vmd.cmpList.map = new StringMap();
@@ -495,7 +543,7 @@ xds.vmd = {
         var cmpList = [];
         var cmpPathPref = '../' + ux.paths.cmp;
         var cmpIdePathPref = '../' + ux.paths.ide;
-        Ext.each(data, function(item, i) {
+        Ext.each(data, function (item, i) {
             //优化需要加版本路径
             var r = Math.random();
             var name = item.name,
@@ -511,7 +559,7 @@ xds.vmd = {
         if (cmpList.length > 0) xds.vmd.cmpList.map.put('all', cmpList);
     },
     /*ide初始化*/
-    init: function() {
+    init: function () {
 
         var me = this;
         var ux = xds.vmd.ux;
@@ -520,7 +568,7 @@ xds.vmd = {
         Ext.applyIf(xds.vmd.tplList, vmd.ideTpl);
         //读取组件的配置文件
         //this.isCheckFileExist(ux.cmpListPath, function(data) {
-        this.readCmpList(ux.cmpListPath, function(data) {
+        this.readCmpList(ux.cmpListPath, function (data) {
             if (!data) {
                 //加载模块
                 me.initModule()
@@ -571,11 +619,11 @@ xds.vmd = {
         })
 
     },
-    setDesigerMode: function() {
+    setDesigerMode: function () {
         var type = xds.vmd.params.type();
         designer.mode = type || 'module';
     },
-    setDesignCode: function(codeStr) {
+    setDesignCode: function (codeStr) {
         //增加controllerjs cdoe
         if (this.isUx()) {
             codeStr = xds.vmd.controllerEvents + '\n' + codeStr;
@@ -595,13 +643,13 @@ xds.vmd = {
         arr.push(codeStr);
         return arr.join('\n');
     },
-    getCmpJSCssfiles: function(cmpList) {
+    getCmpJSCssfiles: function (cmpList) {
         var me = this;
         var jsfiles = [],
             cssfiles = [];
         var designerCmpsInfo = xds.Registry.all.map;
         if (cmpList) {
-            Ext.each(cmpList, function(cls) {
+            Ext.each(cmpList, function (cls) {
                 var cmp = designerCmpsInfo[cls];
                 cmp && me.addDepJsCss(cmp.prototype, jsfiles, cssfiles);
             })
@@ -619,13 +667,13 @@ xds.vmd = {
         };
     },
 
-    loadCmpJSCssfiles: function(callback, cmpList) {
+    loadCmpJSCssfiles: function (callback, cmpList) {
         var filelist = xds.vmd.getCmpJSCssfiles(cmpList);
         var cmprescss = filelist.css || [];
         var cmpresjs = filelist.js || [];
         if (cmprescss.length > 0) LazyLoad.css(cmprescss);
         if (cmpresjs.length > 0) {
-            LazyLoad.js(cmpresjs, function() {
+            LazyLoad.js(cmpresjs, function () {
                 //设计模式下动态加载复合组件以后扩展runDepUxs
                 callback && callback();
             })
@@ -633,7 +681,7 @@ xds.vmd = {
             callback && callback();
         }
     },
-    initModule: function() {
+    initModule: function () {
         var me = this;
         //加载基础组件的扩展包及复合组件的资源包
         /* var baseExtJs = [], baseExtCss = [], uxExtJs = [], uxExtCss = [];
@@ -654,7 +702,7 @@ xds.vmd = {
 
         me._initModule();
     },
-    _initModule: function() {
+    _initModule: function () {
 
         var type = xds.vmd.params.type();
         var me = this;
@@ -673,7 +721,7 @@ xds.vmd = {
                 if (uxpath.indexOf(vmd.componentPath) == -1) {
                     uxpath = vmd.componentPath + "vmd/" + uxpath;
                 }
-                this.isCheckFileExist(uxpath, function(data) {
+                this.isCheckFileExist(uxpath, function (data) {
 
                     //if (data) xds.project.loadVmdFile(uxpath);
                     if (data) me.loadVmdFile(uxpath);
@@ -688,9 +736,9 @@ xds.vmd = {
             var path = xds.vmd.params.path(),
                 modulepath = tplpath || path;
             if (tplpath) {
-                vmd.isCheckFileExist(path, function(data) {
+                vmd.isCheckFileExist(path, function (data) {
 
-                    if (!data.data) {
+                    if (!data) {
                         modulepath = tplpath;
                     } else modulepath = path;
                     me.loadVmdFile(modulepath);
@@ -711,7 +759,7 @@ xds.vmd = {
         document.title = title;
 
     },
-    loadVmdFile: function(path, callback) {
+    loadVmdFile: function (path, callback) {
         var me = this;
         if (!vmd.vmdUploadPath) {
             Ext.Msg.alert('出错', '请检查服务配置config.js')
@@ -731,7 +779,7 @@ xds.vmd = {
 
         myMask.show();
         xds.vmd.serializeStr = "";
-        vmd.core.readFile(filename, function(result) {
+        vmd.core.readFile(filename, function (result) {
             var res;
             try {
                 res = Ext.util.JSON.decode(result.responseText);
@@ -747,21 +795,20 @@ xds.vmd = {
             try {
 
                 xds.vmd.serializeStr = res.data;
-                // callback && callback();
 
                 var loadjs = me.getDepUxs();
                 //优化：先按需加载复合组件
                 if (loadjs.length > 0)
-                    LazyLoad.js(loadjs, function() {
+                    LazyLoad.js(loadjs, function () {
                         //复合组件依赖资源加载
-                        xds.vmd.loadCmpJSCssfiles(function() {
+                        xds.vmd.loadCmpJSCssfiles(function () {
                             //加载模块树
-                            xds.toolbox.loadUserTypes2();
-                            xds.project.loadVmdFile();
+                            xds.project.load();
+
                         })
                     })
                 else {
-                    xds.vmd.loadCmpJSCssfiles(function() {
+                    xds.vmd.loadCmpJSCssfiles(function () {
                         xds.project.loadVmdFile();
                     })
                 }
@@ -771,13 +818,13 @@ xds.vmd = {
                 Ext.Msg.alert('反序列化失败', ex.message)
             }
         },
-            function(result) {
+            function (result) {
                 myMask.hide();
                 Ext.Msg.alert('加载失败', '错误' + result.status + '：' + result.statusText + "<p>" + "请检查数据服务是否启动!");
             })
 
     },
-    getDepUxs: function() {
+    getDepUxs: function () {
         var data = Ext.decode(xds.vmd.serializeStr);
         var ux = xds.vmd.ux;
         var cmpList = [];
@@ -788,10 +835,10 @@ xds.vmd = {
         var cmpMap = xds.vmd.cmpList.map;
         var that = this;
 
-        var _loadPublicCmps = function() {
+        var _loadPublicCmps = function () {
             vmd.loadPublicCmps = vmd.loadPublicCmps || [];
             //添加公共组件
-            vmd.loadPublicCmps.forEach(function(name) {
+            vmd.loadPublicCmps.forEach(function (name) {
                 var cls = uxpref + name;
                 if (deps.indexOf(cls) == -1) {
                     that._getCmpPathByCls(cls, cmpList, deps);
@@ -799,9 +846,9 @@ xds.vmd = {
             })
         }
 
-        var checkNode = function(nodes) {
+        var checkNode = function (nodes) {
 
-            Ext.each(nodes, function(node) {
+            Ext.each(nodes, function (node) {
                 var cmp = node;
                 var cls = cmp.cid;
                 if (cls.indexOf(uxpref) == 0 && deps.indexOf(cls) == -1) {
@@ -821,7 +868,7 @@ xds.vmd = {
 	                    cmpList.push(cmpIdePath);*/
                         that._getCmpPathByCls(cls, cmpList, deps);
 
-                    } catch (ex) {}
+                    } catch (ex) { }
 
                 }
                 checkNode(node.cn);
@@ -837,9 +884,9 @@ xds.vmd = {
             var page = Ext.decode(data.vmdlayout);
             var dom = page.components[0];
 
-            var subWinDom = (function() {
+            var subWinDom = (function () {
                 var node;
-                Ext.each(page.components, function(item) {
+                Ext.each(page.components, function (item) {
                     if (item.cid == 'vmdsubviewport') {
                         node = item;
                         return false;
@@ -867,7 +914,7 @@ xds.vmd = {
 
 
     },
-    getUxDepJsCss: function() {
+    getUxDepJsCss: function () {
 
         var uxrequirejs = [],
             uxrequirecss = [];
@@ -879,19 +926,19 @@ xds.vmd = {
         //获取资源引用
         var jsarr = xds.resource.getJsData();
         var cssarr = xds.resource.getCssData();
-        Ext.each(jsarr, function(item, index) {
+        Ext.each(jsarr, function (item, index) {
             item.path && uxrequirejs.push(item.path);
         })
-        Ext.each(cssarr, function(item, index) {
+        Ext.each(cssarr, function (item, index) {
             item.path && uxrequirecss.push(item.path);
         })
         //去重加去除版本号
         uxrequirejs = Ext.Array.unique(uxrequirejs);
         uxrequirecss = Ext.Array.unique(uxrequirecss);
-        Ext.each(uxrequirejs, function(path, index) {
+        Ext.each(uxrequirejs, function (path, index) {
             uxrequirejs[index] = path.replace(/\?ver=[\d.]+/, '');
         })
-        Ext.each(uxrequirecss, function(path, index) {
+        Ext.each(uxrequirecss, function (path, index) {
             uxrequirecss[index] = path.replace(/\?ver=[\d.]+/, '');
         })
         return {
@@ -899,7 +946,7 @@ xds.vmd = {
             css: uxrequirecss
         }
     },
-    _getCmpPathByCls: function(cls, cmpList, deps) {
+    _getCmpPathByCls: function (cls, cmpList, deps) {
 
 
         cmpList = cmpList || [];
@@ -924,13 +971,13 @@ xds.vmd = {
     },
     params: {
 
-        id: function() {
+        id: function () {
             return getUrlParam('id') || getUrlParam('uxid');
         },
-        name: function() {
+        name: function () {
             return getUrlParam('name');
         },
-        path: function() {
+        path: function () {
             var path = getUrlParam('path');
 
             if (path && path.indexOf('/modules') == 0) {
@@ -943,16 +990,16 @@ xds.vmd = {
             }
             return path;
         },
-        tplPath: function() {
+        tplPath: function () {
             return getUrlParam('tplPath') || getUrlParam('tplpath');
         },
-        tplType: function() {
+        tplType: function () {
             return getUrlParam('tplType');
         },
-        vmdMode: function() {
+        vmdMode: function () {
             return getUrlParam('vmdMode') || getUrlParam('vmdmode');
         },
-        savePath: function() {
+        savePath: function () {
             var path = getUrlParam('savePath') || getUrlParam('savepath');
 
             if (path && path.indexOf('/modules') == 0) {
@@ -962,43 +1009,43 @@ xds.vmd = {
             }
             return path;
         },
-        debug: function() {
+        debug: function () {
             return getUrlParam('debugger');
         },
-        type: function() {
+        type: function () {
             return getUrlParam('type') || getUrlParam('Type');
         },
-        ver: function() {
+        ver: function () {
             return getUrlParam('ver') || '1.0';
         },
-        workspaceId: function() {
+        workspaceId: function () {
             return getUrlParam('workspaceid') || '';
         },
-        extmode: function() {
+        extmode: function () {
 
             return getUrlParam('extmode') || '';
         },
-        uxName:function(){
-            return 'vmd.ux.'+this.name();
+        uxName: function () {
+            return 'vmd.ux.' + this.name();
         },
-        uxType:function(){
+        uxType: function () {
             return getUrlParam('uxtype') || getUrlParam('uxType');
         }
 
     },
-    getUrlParam: function(param) {
+    getUrlParam: function (param) {
         var params = Ext.urlDecode(location.search.substring(1));
         return param ? (params[param] ? params[param] : '') : '';
     },
-    isExtMode: function() {
+    isExtMode: function () {
 
         if (this.getUrlParam('extmode') || vmd._testextmode) return true;
     },
     //查找根节点组件的分类 type=cid
-    getRootNodeByVmdType: function(type) {
+    getRootNodeByVmdType: function (type) {
         var node;
         if (!type) return;
-        Ext.each(xds.inspector.root.childNodes, function(item, index) {
+        Ext.each(xds.inspector.root.childNodes, function (item, index) {
             var cid = item.component && item.component.cid;
             if (type == cid) {
                 node = item;
@@ -1007,10 +1054,10 @@ xds.vmd = {
         })
         return node;
     },
-    getRootNode: function(type) {
+    getRootNode: function (type) {
         //获取布局结构树的组件分类
         var node, subViewNode;
-		var _node;
+        var _node;
         switch (type) {
             case "dataset":
             case "vmddataset":
@@ -1054,87 +1101,87 @@ xds.vmd = {
         }
         return node;
     },
-	getStoreNames: function() {
+    getStoreNames: function () {
         var names = [];
         var storeRoot = xds.vmd.getRootNode("dataset");
-        storeRoot && storeRoot.eachChild(function(n) {
-			if(n.component && n.component.cid  == 'vmdDataSet') {
-				n.eachChild(function(n1) {
-					if(n1.component && n1.component.cid == 'vmdJsonStore') names.push(n1.id);
-				}, this);
-			}else{			
-				if(n.component && n.component.cid == 'vmdJsonStore') names.push(n.id);
-			}	
-		}, this)
+        storeRoot && storeRoot.eachChild(function (n) {
+            if (n.component && n.component.cid == 'vmdDataSet') {
+                n.eachChild(function (n1) {
+                    if (n1.component && n1.component.cid == 'vmdJsonStore') names.push(n1.id);
+                }, this);
+            } else {
+                if (n.component && n.component.cid == 'vmdJsonStore') names.push(n.id);
+            }
+        }, this)
         return names;
     },
-	getStoreByDsName: function(dsName, isOject) {
+    getStoreByDsName: function (dsName, isOject) {
         var r_store;
         if (!dsName)
             return r_store;
         var storeRoot = xds.vmd.getRootNode("dataset");
-        storeRoot && storeRoot.eachChild(function(n) {			
-			if(n.component && n.component.cid  == 'vmdDataSet') {
-				n.eachChild(function(n1) {
-					if(n1.component && n1.component.getConfig()) {
-						if(n1.component.getConfig().dsName == dsName || dsName == n1.id) {
-							if(isOject) r_store = n1;
-							else r_store = n1.id;
-							return false;
-						}
-					}
-				})
-			}else{	
-				if (n.component && n.component.getConfig()) {
-					if (n.component.getConfig().dsName == dsName || dsName == n.id) {
-						if (isOject) r_store = n;
-						else r_store = n.id;
-						return false;
-					}
-				}
-			}
+        storeRoot && storeRoot.eachChild(function (n) {
+            if (n.component && n.component.cid == 'vmdDataSet') {
+                n.eachChild(function (n1) {
+                    if (n1.component && n1.component.getConfig()) {
+                        if (n1.component.getConfig().dsName == dsName || dsName == n1.id) {
+                            if (isOject) r_store = n1;
+                            else r_store = n1.id;
+                            return false;
+                        }
+                    }
+                })
+            } else {
+                if (n.component && n.component.getConfig()) {
+                    if (n.component.getConfig().dsName == dsName || dsName == n.id) {
+                        if (isOject) r_store = n;
+                        else r_store = n.id;
+                        return false;
+                    }
+                }
+            }
         }, this);
         return r_store;
     },
-    getVarNames: function() { //2017-12-29 (chengtao)添加  获取所有的数据集名称
+    getVarNames: function () { //2017-12-29 (chengtao)添加  获取所有的数据集名称
         var names = [];
         var storeRoot = xds.vmd.getRootNode("variable");
-        storeRoot && storeRoot.eachChild(function(n) {
+        storeRoot && storeRoot.eachChild(function (n) {
             names.push(n.id);
         }, this);
         return names;
     },
-    getStoreFieldNames: function(name) { //2017-12-29 (chengtao)添加  获取所有的数据集的字段名称
+    getStoreFieldNames: function (name) { //2017-12-29 (chengtao)添加  获取所有的数据集的字段名称
         var names = [];
         /*var storeRoot = xds.vmd.getRootNode("dataset");
         var storeNode = storeRoot.findChildBy(function() {
             return this.id == name;
         });*/
-		var storeNode=this.getStoreByDsName(name,true)
-        storeNode && storeNode.eachChild(function(c) {
+        var storeNode = this.getStoreByDsName(name, true)
+        storeNode && storeNode.eachChild(function (c) {
             names.push(c.text);
         }, this);
         return names;
     },
-    getMenuNames: function() { //20180504 成兵(chengbing)添加  获取所有的菜单名称
+    getMenuNames: function () { //20180504 成兵(chengbing)添加  获取所有的菜单名称
 
         var names = [];
         var storeRoot = xds.vmd.findAllByCid("vmdMenu");
-        storeRoot && storeRoot.forEach(function(n) {
+        storeRoot && storeRoot.forEach(function (n) {
             names.push(n.id);
         }, this);
         return names;
     },
     //通过cid获取设计时组件id集合
-    getCmpIdsByCid: function(cid) {
+    getCmpIdsByCid: function (cid) {
         var names = [];
         var storeRoot = xds.vmd.findAllByCid(cid);
-        storeRoot && storeRoot.forEach(function(n) {
+        storeRoot && storeRoot.forEach(function (n) {
             names.push(n.id);
         }, this);
         return names;
     },
-    _addNode: function(cont) {
+    _addNode: function (cont) {
         cont = cont || {
             cid: 'vmdJsonStore',
             dataSource: '这是测试数据'
@@ -1158,7 +1205,7 @@ xds.vmd = {
             instacne: b
         });
     },
-    _addNodeByParent: function(conf, parent) {
+    _addNodeByParent: function (conf, parent) {
         if (typeof parent == "string") {
             parent = this.getTreeNodeById(parent);
         }
@@ -1171,10 +1218,10 @@ xds.vmd = {
 
         this.tempNode.push(xds.inspector.restore(conf, parent));
     },
-    addNode: function(item, parent) {
-        this.tempNode=[];
+    addNode: function (item, parent) {
+        this.tempNode = [];
         if (typeof item == "object") {
-            Ext.each(item, function(obj) {
+            Ext.each(item, function (obj) {
                 if (parent)
                     this._addNodeByParent(obj, parent);
                 else
@@ -1185,26 +1232,26 @@ xds.vmd = {
         }
         return this.tempNode;
     },
-    deleteNodeById: function() {
+    deleteNodeById: function () {
 
     },
-    deleteChildNodeById: function(id) {
+    deleteChildNodeById: function (id) {
         var parentNode = this.getTreeNodeById(id);
         var child = parentNode.childNodes;
         for (var i = child.length - 1; i >= 0; i--) {
             parentNode.removeChild(child[i]);
         }
     },
-    getTreeNodeById: function(id) {
+    getTreeNodeById: function (id) {
         return xds.inspector.nodeHash[id];
 
     },
     /*树节点可以重复通过name*/
-    repeatRootTypes: function() {
+    repeatRootTypes: function () {
         return ['datafield', 'gridcolumn', 'booleancolumn', 'checkcolumn', 'numbercolumn', 'datecolumn', 'templatecolumn', 'vmdWorkFlowNodeVar', 'vmdWorkFlowNode']
     },
     /*控制工具箱分类是否显示*/
-    isCategoryCollapse: function(name) {
+    isCategoryCollapse: function (name) {
         //默认节点
         var node = ['Grid', 'Toolbar'];
         if (node.indexOf(name) != -1) {
@@ -1212,7 +1259,7 @@ xds.vmd = {
         }
         return false;
     },
-    newUxInterface: function() {
+    newUxInterface: function () {
         var interfacevmd = xds.vmd.ux.data.interface;
         var newvmd = {
             "components": [{
@@ -1228,12 +1275,12 @@ xds.vmd = {
         var interfaceProject = new xds.Project(interfacevmd);
         interfaceProject.interfaceOpen();
     },
-    setUxContrllerDefaultValue: function() {
+    setUxContrllerDefaultValue: function () {
         var cls = xds.vmd.params.name();
         cls = cls.substring(0, 1).toLowerCase() + cls.substring(1);
         if (cls) {
             xds.vmd.controllerEvents = ["Ext.define(\'vmd.ux." + cls + ".Controller\', {",
-                "    xtype: \'vmd.ux." + cls + ".Controller\',",
+            "    xtype: \'vmd.ux." + cls + ".Controller\',",
                 "    constructor: function(options) {",
                 "        ",
                 "    }",
@@ -1241,7 +1288,7 @@ xds.vmd = {
             ].join("\n");
         }
     },
-    newResource: function() {
+    newResource: function () {
         var resvmd = xds.vmd.resource.data.res;
 
         var newvmd = {
@@ -1274,7 +1321,7 @@ xds.vmd = {
             } else {
                 if (this.isUx()) {
                     var ishas = false;
-                    Ext.each(resvmd.components[1].cn, function(item) {
+                    Ext.each(resvmd.components[1].cn, function (item) {
                         switch (item.id) {
                             case 'controller.js':
                                 ishas = true;
@@ -1292,7 +1339,7 @@ xds.vmd = {
                 } else {
                     //通用project.config.js配置
                     var ishas = false;
-                    Ext.each(resvmd.components[1].cn, function(item) {
+                    Ext.each(resvmd.components[1].cn, function (item) {
                         switch (item.id) {
                             case xds.vmd.project.extConfigName:
                                 ishas = true;
@@ -1317,13 +1364,13 @@ xds.vmd = {
         var resproject = new xds.Project(resvmd);
         resproject.resourceOpen();
     },
-    checkProjectConfigjs: function() {
+    checkProjectConfigjs: function () {
         var projectPath = this.getProjectPath() + this.project.extConfigName;
         //var time=new Date().getTime();
-        this.isCheckFileExist2(projectPath, function(info) {
+        this.isCheckFileExist2(projectPath, function (info) {
             if (info.errMsg && info.errCode == 204) {
                 //文件不存在，动态创建
-                vmd.core.writeFile(projectPath, '', function(info) {
+                vmd.core.writeFile(projectPath, '', function (info) {
                     //console.log(new Date().getTime()-time)
                 })
             }
@@ -1331,7 +1378,7 @@ xds.vmd = {
 
     },
     //新建复合组件
-    _newUxCmp: function() {
+    _newUxCmp: function () {
         //当前设计模式为复合组件开发
         designer.mode = "ux";
         xds.vmd.clear();
@@ -1341,14 +1388,14 @@ xds.vmd = {
         var name = xds.vmd.params.path() || '';
         name = name.replace('.vmd', '') || 'MyPanel';
         var me = this;
-        xds.project.close(function() {
+        xds.project.close(function () {
             //var content = {
             //    "components": [{ "cid": "uxpanel", "id":name, "layoutConfig": {}, "userConfig": { "layout": "absolute", "header": false,"width":600,"height":350} }
             //    , { "cid": "vmduxprops" }, { "cid": "vmduxmethods" }, { "cid": "vmduxevents" }
             //    ]
             //};
-            var cid='uxpanel';
-            if(xds.vmd.isPropPanel()) cid='uxpanelsettings';
+            var cid = 'uxpanel';
+            if (xds.vmd.isPropPanel()) cid = 'uxpanelsettings';
             xds.vmd.ux.data.view = {
                 "components": [{
                     "cid": cid,
@@ -1365,8 +1412,8 @@ xds.vmd = {
 
             //自定义对外属性、方法、事件
 
-            var a = new xds.Project(xds.vmd.ux.data.view);
-            a.open();
+            var project = new xds.Project(xds.vmd.ux.data.view);
+            project.open();
             //接口树加载
             me.newUxInterface();
             //资源树加载
@@ -1374,53 +1421,53 @@ xds.vmd = {
 
         })
     },
-    newUxCmp: function() {
+    newUxCmp: function () {
         var me = this;
         var loadjs = me.getDepUxs();
         //优化：先按需加载复合组件
         if (loadjs.length > 0)
-            LazyLoad.js(loadjs, function() {
+            LazyLoad.js(loadjs, function () {
                 //加载模块树
-                xds.vmd.loadCmpJSCssfiles(function() {
+                xds.vmd.loadCmpJSCssfiles(function () {
                     xds.toolbox.loadUserTypes2();
                     me._newUxCmp();
                 })
             })
         else {
-            xds.vmd.loadCmpJSCssfiles(function() {
+            xds.vmd.loadCmpJSCssfiles(function () {
                 me._newUxCmp();
             })
         }
     },
-    getDisabledContextMenu: function() {
-        return ['viewport', 'uxpanel', 'uxpanelsettings','vmdrescsss', 'vmdresjss', 'vmdresimgs'];
+    getDisabledContextMenu: function () {
+        return ['viewport', 'uxpanel', 'uxpanelsettings', 'vmdrescsss', 'vmdresjss', 'vmdresimgs'];
 
     },
-    isDisabledContextMenu: function(cid) {
+    isDisabledContextMenu: function (cid) {
         var disabledMenu = this.getDisabledContextMenu();
         if (disabledMenu.indexOf(cid) != -1) return true;
         return false;
     },
-    isOnlyNewActionMenu: function(cid) {
+    isOnlyNewActionMenu: function (cid) {
         var menu = ['vmduxprops', 'vmduxmethods', 'vmduxevents'];
         if (menu.indexOf(cid) != -1) return true;
         return false;
     },
-    varAndDatasetMenu: function(cid) {
+    varAndDatasetMenu: function (cid) {
         var menu = ['vmddataset', 'vmdvariable', 'vmduxevents'];
         if (menu.indexOf(cid) != -1) return true;
         return false;
     },
-    getToolbarHideCategory: function() {
+    getToolbarHideCategory: function () {
 
-        if (xds.vmd.params.type() == 'ux') return ['变量', '数据集','数据', '工作流', '窗口', '微服务'];
+        if (xds.vmd.params.type() == 'ux') return ['变量', '数据集', '数据', '工作流', '窗口', '微服务'];
 
         return null
     },
 
-    isCheckFileExist: function(path, callback) {
+    isCheckFileExist: function (path, callback) {
         var url = vmd.vmdUploadPath + 'FileService?FileName=' + path;
-        vmd.core.readFile(path, function(result) {
+        vmd.core.readFile(path, function (result) {
             var data = Ext.decode(result.responseText);
             if (data.errMsg) {
                 console.log(data.errMsg)
@@ -1428,37 +1475,37 @@ xds.vmd = {
             data = Ext.decode(data.data);
 
             callback && callback(data)
-        }, function(result) {
+        }, function (result) {
 
             Ext.Msg.alert('加载失败', '错误' + result.status + '：' + result.statusText)
         })
 
     },
-    isCheckFileExist2: function(path, callback) {
+    isCheckFileExist2: function (path, callback) {
         var url = vmd.vmdUploadPath + 'FileService?FileName=' + path;
-        vmd.core.readFile(path, function(result) {
+        vmd.core.readFile(path, function (result) {
             var data = Ext.decode(result.responseText);
             callback && callback(data)
-        }, function(result) {
+        }, function (result) {
 
             Ext.Msg.alert('加载失败', '错误' + result.status + '：' + result.statusText)
         })
 
     },
-    readCmpList: function(path, callback) {
+    readCmpList: function (path, callback) {
         var url = bootPATH + vmdSettings.componentPath + "list.js";
         vmd.getJSON(url, {
             random: Math.random()
-        }, function(data) {
+        }, function (data) {
 
             callback && callback(data);
             //异步处理将list缓存到本地
-            Ext.defer(function() {
+            Ext.defer(function () {
                 LocalData.set('componentList', Ext.encode(data))
             }, 10)
 
         })
-            .error(function(state) {
+            .error(function (state) {
                 //处理对误删listjs的处理
                 if (state.status == 404) {
                     var listdata = LocalData.get('componentList');
@@ -1470,7 +1517,7 @@ xds.vmd = {
                             //服务器list文件恢复
                             var listpath = vmdSettings.componentPath + "list.js";
                             var errorpath = vmdSettings.componentPath + "error.txt";
-                            vmd.core.writeFile(listpath, listdata, function() {})
+                            vmd.core.writeFile(listpath, listdata, function () { })
                             var erortxt = "{login}登录，操作{modulename}进行了恢复，时间：{createtime},模块路径：{modulepath}";
                             erortxt = erortxt.format({
                                 login: Cookie.get('hwLogin') || '',
@@ -1478,22 +1525,22 @@ xds.vmd = {
                                 createtime: date('Y-m-d H:i:s', new Date()),
                                 modulepath: xds.vmd.params.path()
                             })
-                            vmd.core.writeFile(errorpath, erortxt, function() {})
+                            vmd.core.writeFile(errorpath, erortxt, function () { })
                         }
-                    } catch (ex) {}
+                    } catch (ex) { }
 
                 }
             })
 
     },
-    isCheckUxhasSelf: function() {
+    isCheckUxhasSelf: function () {
         var root = xds.inspector.root.firstChild;
         var isHasSelf = false;
         if (designer.mode != "ux") return isHasSelf;
         var uxName = designer.prefix.cmp + xds.vmd.params.path().replace('.vmd', '');
-        var checkNode = function(nodes) {
+        var checkNode = function (nodes) {
 
-            Ext.each(nodes, function(node) {
+            Ext.each(nodes, function (node) {
                 var cmp = node.component;
                 if (cmp.cid == uxName) {
                     isHasSelf = true;
@@ -1507,12 +1554,12 @@ xds.vmd = {
         checkNode(root.childNodes);
         return isHasSelf
     },
-    getCmpDeps: function() {
+    getCmpDeps: function () {
         var root = xds.inspector.root.firstChild;
         var deps = [];
-        var checkNode = function(nodes) {
+        var checkNode = function (nodes) {
 
-            Ext.each(nodes, function(node) {
+            Ext.each(nodes, function (node) {
                 var cmp = node.component;
                 if (cmp.cid.indexOf(designer.prefix.cmp) != -1 && deps.indexOf(cmp.cid) == -1) {
                     //构造带有版本号的路径
@@ -1547,32 +1594,32 @@ xds.vmd = {
 
     },
     //判断是否复合组件模式
-    isUx: function() {
+    isUx: function () {
         var mode = designer.mode;
         if (mode == 'ux') {
             return true;
         }
         return false;
     },
-    isStore: function(cmp) {
+    isStore: function (cmp) {
         if (cmp.cid == 'vmdJsonStore') return true;
         return false
     },
-    getUxPropNode: function() {
+    getUxPropNode: function () {
         return xds.interface.root.childNodes[0];
     },
-    getUxMethodNode: function() {
+    getUxMethodNode: function () {
         return xds.interface.root.childNodes[1];
     },
-    getUxEventNode: function() {
+    getUxEventNode: function () {
         return xds.interface.root.childNodes[2];
     },
-    addPropGroupNodes: function(data) {
+    addPropGroupNodes: function (data) {
         var node = this.getUxPropNode();
         if (!node) return;
         this._addNodes(data, node, 'uxpropgroup', true);
     },
-    addPropNodes: function(data) {
+    addPropNodes: function (data) {
         var node = this.getUxPropNode();
         if (!node) return;
         //var createConf = function (obj) {
@@ -1592,7 +1639,7 @@ xds.vmd = {
         var newData = [];
         var me = this;
         me._group = {}
-        Ext.each(data, function(item) {
+        Ext.each(data, function (item) {
             if (item.group) {
                 //var _data = { id: item.group, cid: 'uxpropgroup' };
                 if (!me._group[item.group]) {
@@ -1612,23 +1659,23 @@ xds.vmd = {
         this._addNodes(newData, node, 'uxprop');
 
     },
-    addMethodNodes: function(data) {
+    addMethodNodes: function (data) {
         var node = this.getUxMethodNode();
         if (!node) return;
 
         this._addNodes(data, node, 'uxmethod');
 
     },
-    addEventNodes: function(data) {
+    addEventNodes: function (data) {
         var node = this.getUxEventNode();
         if (!node) return;
 
         this._addNodes(data, node, 'uxevent');
 
     },
-    _addNodes: function(data, node, cid, isNoRemoveAll) {
+    _addNodes: function (data, node, cid, isNoRemoveAll) {
 
-        var createConf = function(obj) {
+        var createConf = function (obj) {
             var newObj = {
                 cid: obj.cid || cid,
                 id: obj.id,
@@ -1639,7 +1686,7 @@ xds.vmd = {
             Ext.apply(newObj.userConfig, obj);
             if (obj.cn) {
                 newObj.cn = [];
-                Ext.each(obj.cn, function(item) {
+                Ext.each(obj.cn, function (item) {
                     item = createConf(item);
                     newObj.cn.push(item);
                 })
@@ -1650,7 +1697,7 @@ xds.vmd = {
         }
         if (!isNoRemoveAll) node.removeAll();
 
-        Ext.each(data, function(item) {
+        Ext.each(data, function (item) {
             // node.leaf = false
             item = createConf(item);
             xds.interface.restore(item, node);
@@ -1659,7 +1706,7 @@ xds.vmd = {
         node.expand()
 
     },
-    getPropsData: function() {
+    getPropsData: function () {
         var data = []
         var node = this.getUxPropNode()
         if (!node) return data;
@@ -1678,7 +1725,7 @@ xds.vmd = {
         return data;
 
     },
-    getMethodsData: function() {
+    getMethodsData: function () {
 
         var data = []
         var node = this.getUxMethodNode();
@@ -1687,7 +1734,7 @@ xds.vmd = {
 
         return data;
     },
-    getEventsData: function() {
+    getEventsData: function () {
 
         var data = []
         var node = this.getUxEventNode();
@@ -1696,12 +1743,12 @@ xds.vmd = {
 
         return data;
     },
-    _getData: function(node) {
+    _getData: function (node) {
         var data = [];
         var _data = node.component.getInternals(true);
         if (_data.cn) {
             var tempData = Ext.decode(Ext.encode(_data.cn));
-            Ext.each(tempData, function(item) {
+            Ext.each(tempData, function (item) {
                 var obj = {};
                 obj.id = item.id;
                 Ext.apply(obj, item.userConfig)
@@ -1711,13 +1758,13 @@ xds.vmd = {
         return data;
 
     },
-    _getData2: function(node) {
+    _getData2: function (node) {
         var data = [];
         var _data = node.component.getInternals(true);
         if (_data.cn) {
             var tempData = Ext.decode(Ext.encode(_data.cn));
-            var di = function(nodes, scope) {
-                Ext.each(nodes, function(item) {
+            var di = function (nodes, scope) {
+                Ext.each(nodes, function (item) {
 
                     if (item.cn) di(item.cn, item);
                     else if (item.cid == 'uxprop') {
@@ -1737,13 +1784,13 @@ xds.vmd = {
         return data;
 
     },
-    getConfigByName: function(cid, name) {
+    getConfigByName: function (cid, name) {
         var obj = {};
         var d = xds.Registry.get(cid);
         if (!cid) return obj;
         var configs = d.configs.items;
 
-        Ext.each(configs, function(item) {
+        Ext.each(configs, function (item) {
             if (item.name == name) {
                 obj = item;
                 return false;
@@ -1753,10 +1800,10 @@ xds.vmd = {
         return obj;
 
     },
-    getAllCmpsByNode: function(node, nodeList) {
+    getAllCmpsByNode: function (node, nodeList) {
         nodeList = nodeList || [];
         var me = this;
-        Ext.each(node.childNodes, function(item) {
+        Ext.each(node.childNodes, function (item) {
             var obj = {
                 cmpId: item.id
             };
@@ -1764,14 +1811,14 @@ xds.vmd = {
             me.getAllCmpsByNode(item, nodeList);
         })
     },
-    getServMap: function() {
+    getServMap: function () {
         var list = this.resource.serverList;
         var map = {};
-        list.forEach(function(item, index) {
+        list.forEach(function (item, index) {
             // map[item.name] = item;
             var serverList = item.children;
             if (serverList) {
-                serverList.forEach(function(_item) {
+                serverList.forEach(function (_item) {
                     map[item.name + "&&" + _item.name] = _item;
                 })
             }
@@ -1779,7 +1826,7 @@ xds.vmd = {
         return map;
     },
 
-    getServList: function() {
+    getServList: function () {
         var map = this.getServMap();
         var arr = [];
         for (var key in map) {
@@ -1787,14 +1834,14 @@ xds.vmd = {
         }
         return arr;
     },
-    getServerList2: function() {
+    getServerList2: function () {
         var list = this.resource.serverList;
         var map = {};
-        list.forEach(function(item, index) {
+        list.forEach(function (item, index) {
             // map[item.name] = item;
             var serverList = item.children;
             if (serverList) {
-                serverList.forEach(function(_item) {
+                serverList.forEach(function (_item) {
                     var _format = "http://{ip}/{vmdvirtualPath}";
                     var path = _format.format({
                         ip: _item.address,
@@ -1806,17 +1853,17 @@ xds.vmd = {
         })
         return map;
     },
-    getVirtualPathByServName: function(name) {
+    getVirtualPathByServName: function (name) {
         var map = this.getServMap();
         var serInfo = map[name];
         if (!serInfo) return "";
         return this._getVirtualPath(map[name].address, map[name].virtualPath);
     },
-    _getResDataByCategory: function(data, isAddVer, isWithVar) {
+    _getResDataByCategory: function (data, isAddVer, isWithVar) {
         var arr = [];
         var that = this;
         var cache = true;
-        data && data.forEach(function(item, index) {
+        data && data.forEach(function (item, index) {
             if (designer.mode == 'ux') {
                 if (!item.absolutePath) return false;
                 var path = item.absolutePath.format({
@@ -1840,41 +1887,41 @@ xds.vmd = {
         })
         return arr;
     },
-    getResStylesheet: function(isWithVar) {
+    getResStylesheet: function (isWithVar) {
         var cssfiles = [],
             tempArr = [],
             _cssfiles = '';
         cssfiles = xds.vmd.getResCssFiles(true, isWithVar);
-        cssfiles.forEach(function(item) {
+        cssfiles.forEach(function (item) {
             var _css = '<link href="' + item + '" rel="stylesheet" />';
             tempArr.push(_css);
         })
         _cssfiles = tempArr.join('\n\t');
         return _cssfiles;
     },
-    getResByFileTypeFromProject: function(type) {
+    getResByFileTypeFromProject: function (type) {
         var res = []
         if (typeof projectResourceInfo != 'undefined' && Ext.isArray(projectResourceInfo)) {
 
-            Ext.each(projectResourceInfo, function(item) {
+            Ext.each(projectResourceInfo, function (item) {
                 if (item.ext == type) res.push(item);
             })
         }
         return res;
     },
-    getResScript: function(isWithVar) {
+    getResScript: function (isWithVar) {
         var jsfiles = [],
             tempArr = [],
             _jsfiles = '';
         jsfiles = xds.vmd.getResJsFiles(true, isWithVar);
-        jsfiles && jsfiles.forEach(function(item) {
+        jsfiles && jsfiles.forEach(function (item) {
             var _js = '<script src="' + item + '" ></script>';
             tempArr.push(_js);
         })
         _jsfiles = tempArr.join('\n\t');
         return _jsfiles;
     },
-    getResJsFiles: function(isAddVer, isWithVar) {
+    getResJsFiles: function (isAddVer, isWithVar) {
         var arr = [];
         if (!xds.resource) return null;
         //模块资源
@@ -1890,7 +1937,7 @@ xds.vmd = {
         // if (arr.length == 0) return null;
         return arr;
     },
-    getJsFiles: function() {
+    getJsFiles: function () {
         var jsfiles = [];
         //脚本资源加载顺序
         //工区configjs>项目configjs>组件依赖脚本js>项目资源引用js>模块资源引用js
@@ -1912,7 +1959,7 @@ xds.vmd = {
         //if (jsfiles.length == 0) return null;
         return jsfiles;
     },
-    getCssFiles: function() {
+    getCssFiles: function () {
         var cssfiles = [];
         //加载资源中心的资源
         var rescssfiles = this.getResCssFiles();
@@ -1923,7 +1970,7 @@ xds.vmd = {
         //if (cssfiles.length == 0) return null;
         return cssfiles;
     },
-    getResCssFiles: function(isAddVer, isWithVar) {
+    getResCssFiles: function (isAddVer, isWithVar) {
         var arr = [];
         if (!xds.resource) return arr;
         //模块资源
@@ -1938,16 +1985,16 @@ xds.vmd = {
         arr = this._getResDataByCategory(cssData, isAddVer, isWithVar);
         return arr;
     },
-    getUrlname: function(url) {
+    getUrlname: function (url) {
         if (!url) return '';
         url = url.split('?')[0];
         var urlSlashCount = url.split('/').length;
         return url.split('/')[urlSlashCount - 1].toLowerCase();
     },
-    _addDepJsCss: function(d_cmp, jsarr, cssarr, isParse) {
+    _addDepJsCss: function (d_cmp, jsarr, cssarr, isParse) {
         var me = this;
         if (Ext.isArray(d_cmp.requireJs) && d_cmp.requireJs.length > 0) {
-            Ext.each(d_cmp.requireJs, function(js) {
+            Ext.each(d_cmp.requireJs, function (js) {
                 //增加版本号
                 var _js = js;
                 if (_js.indexOf('?') == -1) _js = _js + '?ver=' + vmd.vmdVersion;
@@ -1966,7 +2013,7 @@ xds.vmd = {
             })
         }
         if (Ext.isArray(d_cmp.requireCss) && d_cmp.requireCss.length > 0) {
-            Ext.each(d_cmp.requireCss, function(css) {
+            Ext.each(d_cmp.requireCss, function (css) {
                 var _css = css;
                 if (_css.indexOf('?') == -1) _css = _css + '?ver=' + vmd.vmdVersion;
                 else _css = _css + '&ver=' + vmd.vmdVersion;
@@ -1984,28 +2031,28 @@ xds.vmd = {
         }
     },
     //通过虚拟目录得到实际的脚本和样式地址
-    addDepJsCss: function(d_cmp, jsarr, cssarr) {
+    addDepJsCss: function (d_cmp, jsarr, cssarr) {
         this._addDepJsCss(d_cmp, jsarr, cssarr, true);
     },
-    getCmpPathList: function(resourceArr) {
+    getCmpPathList: function (resourceArr) {
         var me = this;
         var _arr = [];
-        Ext.each(resourceArr, function(_path) {
+        Ext.each(resourceArr, function (_path) {
             var path = _path.replace(/\?ver=[\d.]+/g, '');
             _arr.push(path);
         })
         return _arr;
     },
-    getFilenameList: function(resourceArr) {
+    getFilenameList: function (resourceArr) {
         var me = this;
         var _arr = [];
-        Ext.each(resourceArr, function(item) {
+        Ext.each(resourceArr, function (item) {
             var filename1 = me.getUrlname(item);
             _arr.push(filename1);
         })
         return _arr;
     },
-    getCmpDepJsCssFiles: function() {
+    getCmpDepJsCssFiles: function () {
         var that = this;
         var jsarr = [],
             cssarr = [];
@@ -2013,8 +2060,8 @@ xds.vmd = {
         var excpCmpCid = ['vmddataset', 'vmdvariable'];
         var rootnodes = xds.inspector.root.childNodes;
 
-        var addjsfiles = function(nodes) {
-            Ext.each(nodes, function(cmp, index) {
+        var addjsfiles = function (nodes) {
+            Ext.each(nodes, function (cmp, index) {
                 var d_cmp = cmp.component;
                 if (!d_cmp) return;
                 //不加载数据集和变量
@@ -2031,14 +2078,14 @@ xds.vmd = {
             js: jsarr
         };
     },
-    getCmpReleaseJsCssFiles: function(isRelease, notag) {
+    getCmpReleaseJsCssFiles: function (isRelease, notag) {
         //notag  不带标签
         var files = this.getCmpDepJsCssFiles();
         var jsfiles = files.js;
         var cssfiles = files.css;
         var _jsfiles = [],
             _cssfiles = [];
-        var replaceFiles = function(path, type) {
+        var replaceFiles = function (path, type) {
             //替换处理逻辑
             var _path = path;
             if (path.indexOf('http://') == -1 && path.indexOf('https://') == -1) {
@@ -2056,11 +2103,11 @@ xds.vmd = {
             }
             return _path;
         }
-        Ext.each(jsfiles, function(_js) {
+        Ext.each(jsfiles, function (_js) {
             _js = replaceFiles(_js, 'js');
             _jsfiles.push(_js);
         })
-        Ext.each(cssfiles, function(_css) {
+        Ext.each(cssfiles, function (_css) {
             _css = replaceFiles(_css, 'css');
             _cssfiles.push(_css);
         })
@@ -2070,15 +2117,15 @@ xds.vmd = {
         }
 
     },
-    _getVirtualPath: function(ip, path) {
+    _getVirtualPath: function (ip, path) {
         return "http://" + ip + "/" + path + "/";
     },
-    resizeSubView: function() {
-        var getTopNode = function(node, topNode) {
+    resizeSubView: function () {
+        var getTopNode = function (node, topNode) {
             var _node = topNode;
             if (!node.bubble) return;
             if (topNode && topNode.component.cid.toLowerCase() == "vmdsubviewport") {
-                node.bubble(function(node) {
+                node.bubble(function (node) {
                     var cmp = node.component;
                     if (cmp) {
                         if (cmp.cid.toLowerCase() == "vmdsubview") {
@@ -2098,7 +2145,7 @@ xds.vmd = {
 
             var nodeCmp = topNode.component;
             if (nodeCmp && nodeCmp.cid.toLowerCase() == 'vmdsubview') {
-                Ext.defer(function() {
+                Ext.defer(function () {
                     var viewCmp = Ext.getCmp(nodeCmp.activeCmpId);
                     var size = viewCmp && viewCmp.getOuterSize();
                     if (size) {
@@ -2118,15 +2165,15 @@ xds.vmd = {
 
         }
     },
-    saveSubWindow: function() {
+    saveSubWindow: function () {
         var activeDesginCmp = xds.active.component;
         if (activeDesginCmp) activeDesginCmp.save();
     },
-    replaceResVars: function(repstr, servMap) {
+    replaceResVars: function (repstr, servMap) {
         var str = "";
         var that = this;
 
-        str = repstr.replace(/\{\S+\&\&[^/\s]+}/g, function(path) {
+        str = repstr.replace(/\{\S+\&\&[^/\s]+}/g, function (path) {
             var rep = {};
             var name = path.replace('{', '').replace('}', '');
             var _servMap;
@@ -2154,10 +2201,10 @@ xds.vmd = {
         return str;
     },
     //布局树下根节点显示的组件cid
-    getRootNodeCmpList: function() {
+    getRootNodeCmpList: function () {
         return ["vmdWorkFlow", "vmdHwDMC", "vmdHwAMC", "vmdHwEMC", "vmdHwUMC", "vmdHwLGC", "vmdHwTDC", "vmdHwMSC"];
     },
-    getCmpRequires: function(list) {
+    getCmpRequires: function (list) {
         if (!vmd.getCmpDeps) vmd.getCmpDeps = xds.vmd.getCmpRequires;
         var deps = []
         var path = "";
@@ -2168,14 +2215,14 @@ xds.vmd = {
 
         return list;
     },
-    getPreviewDepUxs: function() {
+    getPreviewDepUxs: function () {
         var previewDepUxs = [];
         var excpCmpCid = ['vmddataset', 'vmdvariable'];
         //处理加载基础组件依赖的复合组件
         var rootnodes = xds.inspector.root.childNodes;
 
-        var addjsfiles = function(nodes) {
-            Ext.each(nodes, function(cmp, index) {
+        var addjsfiles = function (nodes) {
+            Ext.each(nodes, function (cmp, index) {
                 var d_cmp = cmp.component;
                 if (!d_cmp) return;
                 //不加载数据集和变量
@@ -2198,17 +2245,64 @@ xds.vmd = {
     *@desc 属性面板设置的判断
     *@return {boolean}  
     **/
-    isPropPanel:function(){
-        if(this.params.uxType()=='1') return true;
+    isPropPanel: function () {
+        if (this.params.uxType() == '1') return true;
         return false;
+    },
+	/**
+	*@desc 获取动态加载的组件列表
+	*@param {array} cids-组件cid数组
+	*@param {string} type-组件的属性类型
+	*/
+    getDynamicCmpList: function (cids,type) {
+        //处理动态加载依赖项（vmd规范的插件）
+
+       var clsmgr = function (alias) {
+			var registerCmp = Ext.ComponentMgr.types[alias.replace('widget.', '')];
+			return Ext.ClassManager.maps.aliasToName[alias] || registerCmp && registerCmp.$className || '';
+       }
+        var type = type||'xcls';
+      
+        var Deps = designer.ComponentDeps;
+        var cmpdeps =cids||xds.vmd.cmpdeps;
+		var cmpList = [];
+		
+		Ext.each(cmpdeps, function (cmpName) {
+			var d = xds.Registry.get(cmpName);
+			var dcmpXls = d && d.prototype[type];
+			// if(!eval(dcmpXls)) cmpList.push(dcmpXls)
+			if(type=='dtype'){
+				var cls=clsmgr('widget.'+dcmpXls);
+				//有定义xtype类型
+				if(!cls){
+					//dcls读取组件设计时的class
+					if(d&&d.prototype['dcls']){
+						cmpList.push(d.prototype['dcls'])
+					}else{
+						cmpList.push(dcmpXls)
+					}	
+				}
+				
+			}else{
+				cmpList.push(dcmpXls)
+			}
+			
+		})
+		
+		var preLoadCmps = Deps.testAll(cmpList);
+		var newList=[];
+		if(preLoadCmps.length>0) newList.push(preLoadCmps);
+		if(cmpList.length>0) newList.push(cmpList);
+	
+		return newList;
     }
 
-
+    //@end
 };
 xds.types = {};
 xds.configs = {};
 xds.addEvents("init", "newcomponent");
-xds.create = function(b) {
+xds.create = function (b) {
     var a = xds.Registry.get(b.cid);
 
     try {
@@ -2220,7 +2314,7 @@ xds.create = function(b) {
         xds.vmd.loading.hide();
     }
 };
-xds.copy = function(e) {
+xds.copy = function (e) {
     var d = {};
     if (!e) {
         return d
@@ -2243,9 +2337,9 @@ xds.copy = function(e) {
     }
     return d
 };
-xds.initConfigs = function(c, e) {
+xds.initConfigs = function (c, e) {
     var d = e[c];
-    e[c] = new Ext.util.MixedCollection(false, function(g) {
+    e[c] = new Ext.util.MixedCollection(false, function (g) {
         return g.name
     });
     if (d) {
@@ -2255,23 +2349,23 @@ xds.initConfigs = function(c, e) {
     }
 };
 if (!Array.prototype.contains) {
-    Array.prototype.contains = function(a) {
+    Array.prototype.contains = function (a) {
         return this.indexOf(a) !== -1
     }
-}(function() {
+} (function () {
     var c = Ext.Component.prototype.afterRender;
     var a = null;
     Ext.Component.override({
         filmCls: "",
         infoCls: "",
-        afterRender: function() {
+        afterRender: function () {
             c.apply(this, arguments);
             if (this.viewerNode) {
                 this.createFilm();
                 this.initDesigner()
             }
         },
-        createFilm: function() {
+        createFilm: function () {
             if (!a) {
                 a = Ext.getCmp("canvas")
             }
@@ -2299,13 +2393,13 @@ if (!Array.prototype.contains) {
                 this.on("destroy", this.destroyDesigner, this)
             }
         },
-        onFilmClick: function() {
+        onFilmClick: function () {
             xds.fireEvent("componentclick", {
                 component: this.viewerNode.attributes.config,
                 node: this.viewerNode
             })
         },
-        syncFilm: function() {
+        syncFilm: function () {
             var e;
             if (this.film && (e = this.getFilmEl())) {
                 var d = e.getRegion();
@@ -2337,17 +2431,17 @@ if (!Array.prototype.contains) {
                 this.film.lastRegion = d
             }
         },
-        getFilmEl: function() {
+        getFilmEl: function () {
             var d = this.getPositionEl();
             if (this.fieldLabel) {
                 return this.el.up(".x-form-item") || d
             }
             return d
         },
-        destroyDesigner: function() {
+        destroyDesigner: function () {
             this.film && this.film.remove()
         },
-        createFloater: function(g, e, d) {
+        createFloater: function (g, e, d) {
             this.film.createChild({
                 cls: "xds-floater",
                 cn: {
@@ -2372,10 +2466,10 @@ if (!Array.prototype.contains) {
                 }
             })
         },
-        initDesigner: function() {}
+        initDesigner: function () { }
     });
     var b = Ext.form.Field.prototype.initEvents;
-    Ext.form.Field.prototype.initEvents = function() {
+    Ext.form.Field.prototype.initEvents = function () {
         b.apply(this, arguments);
         if (this.bindTo) {
             var d = this.bindTo;
@@ -2386,7 +2480,7 @@ if (!Array.prototype.contains) {
             }
             this.setValue(d.get ? d.get(this) : g);
             this.on(d.event || "change", d.set ||
-                function() {
+                function () {
                     var h = this.getValue();
                     if (h === d.clear) {
                         h = undefined
@@ -2399,7 +2493,7 @@ if (!Array.prototype.contains) {
         }
     }
 })();
-Ext.tree.TreeNode.prototype.setNodeId = function(c) {
+Ext.tree.TreeNode.prototype.setNodeId = function (c) {
     var b = this;
     this.id = c;
     this.attributes.id = c;
@@ -2412,13 +2506,13 @@ Ext.tree.TreeNode.prototype.setNodeId = function(c) {
         a.nodeHash[c] = this
     }
 };
-(function() {
+(function () {
     var a = Ext.lib.Event;
     var b = a.addListener;
-    a.suspend = function() {
+    a.suspend = function () {
         a.addListener = a.on = Ext.emptyFn
     };
-    a.resume = function() {
+    a.resume = function () {
         a.addListener = a.on = b
     }
 })();
@@ -2429,7 +2523,7 @@ Ext.menu.Menu2 = Ext.extend(Ext.Container, {
     defaultAlign: "tl-bl?",
     allowOtherMenus: false,
     hidden: true,
-    constructor: function(a) {
+    constructor: function (a) {
         if (Ext.isArray(a)) {
             a = {
                 items: a
@@ -2440,7 +2534,7 @@ Ext.menu.Menu2 = Ext.extend(Ext.Container, {
         Ext.menu.MenuMgr.register(this);
         Ext.menu.Menu.superclass.constructor.call(this)
     },
-    onRender: function(b, a) {
+    onRender: function (b, a) {
         if (!b) {
             b = Ext.getBody()
         }
@@ -2477,10 +2571,10 @@ Ext.menu.Menu2 = Ext.extend(Ext.Container, {
         this.ul.on("mouseover", this.onMouseOver, this);
         this.ul.on("mouseout", this.onMouseOut, this)
     },
-    getLayoutTarget: function() {
+    getLayoutTarget: function () {
         return this.ul
     },
-    renderItem: function(g, b, e) {
+    renderItem: function (g, b, e) {
         if (g && !g.rendered) {
             var a = document.createElement("li");
             a.className = "x-menu-list-item";
@@ -2505,7 +2599,7 @@ Ext.menu.Menu2 = Ext.extend(Ext.Container, {
             }
         }
     },
-    autoWidth: function() {
+    autoWidth: function () {
         var d = this.el,
             c = this.ul;
         if (!d) {
@@ -2522,7 +2616,7 @@ Ext.menu.Menu2 = Ext.extend(Ext.Container, {
             }
         }
     },
-    delayAutoWidth: function() {
+    delayAutoWidth: function () {
         if (this.el) {
             if (!this.awTask) {
                 this.awTask = new Ext.util.DelayedTask(this.autoWidth, this)
@@ -2530,20 +2624,20 @@ Ext.menu.Menu2 = Ext.extend(Ext.Container, {
             this.awTask.delay(20)
         }
     },
-    findTargetItem: function(b) {
+    findTargetItem: function (b) {
         var a = b.getTarget(".x-menu-list-item", this.ul, true);
         if (a && a.menuItemId) {
             return this.items.get(a.menuItemId)
         }
     },
-    onClick: function(b) {
+    onClick: function (b) {
         var a;
         if (a = this.findTargetItem(b)) {
             a.onClick(b);
             this.fireEvent("click", this, a, b)
         }
     },
-    setActiveItem: function(a, b) {
+    setActiveItem: function (a, b) {
         if (a != this.activeItem) {
             if (this.activeItem) {
                 this.activeItem.deactivate()
@@ -2556,7 +2650,7 @@ Ext.menu.Menu2 = Ext.extend(Ext.Container, {
             }
         }
     },
-    tryActivate: function(g, e) {
+    tryActivate: function (g, e) {
         var b = this.items;
         for (var c = g, a = b.length; c >= 0 && c < a; c += e) {
             var d = b.get(c);
@@ -2567,7 +2661,7 @@ Ext.menu.Menu2 = Ext.extend(Ext.Container, {
         }
         return false
     },
-    onMouseOver: function(b) {
+    onMouseOver: function (b) {
         var a;
         if (a = this.findTargetItem(b)) {
             if (a.canActivate && !a.disabled) {
@@ -2576,7 +2670,7 @@ Ext.menu.Menu2 = Ext.extend(Ext.Container, {
         }
         this.fireEvent("mouseover", this, b, a)
     },
-    onMouseOut: function(b) {
+    onMouseOut: function (b) {
         var a;
         if (a = this.findTargetItem(b)) {
             if (a == this.activeItem && a.shouldDeactivate(b)) {
@@ -2586,7 +2680,7 @@ Ext.menu.Menu2 = Ext.extend(Ext.Container, {
         }
         this.fireEvent("mouseout", this, b, a)
     },
-    show: function(b, c, a) {
+    show: function (b, c, a) {
         this.parentMenu = a;
         if (!this.el) {
             this.render()
@@ -2594,7 +2688,7 @@ Ext.menu.Menu2 = Ext.extend(Ext.Container, {
         this.fireEvent("beforeshow", this);
         this.showAt(this.el.getAlignToXY(b, c || this.defaultAlign), a, false)
     },
-    showAt: function(c, b, a) {
+    showAt: function (c, b, a) {
         this.parentMenu = b;
         if (!this.el) {
             this.render()
@@ -2609,17 +2703,17 @@ Ext.menu.Menu2 = Ext.extend(Ext.Container, {
         this.focus();
         this.fireEvent("show", this)
     },
-    focus: function() {
+    focus: function () {
         if (!this.hidden) {
             this.doFocus.defer(50, this)
         }
     },
-    doFocus: function() {
+    doFocus: function () {
         if (!this.hidden) {
             this.focusEl.focus()
         }
     },
-    hide: function(a) {
+    hide: function (a) {
         if (this.el && this.isVisible()) {
             this.fireEvent("beforehide", this);
             if (this.activeItem) {
@@ -2634,7 +2728,7 @@ Ext.menu.Menu2 = Ext.extend(Ext.Container, {
             this.parentMenu.hide(true)
         }
     },
-    add: function() {
+    add: function () {
         var c = arguments,
             b = c.length,
             g;
@@ -2663,26 +2757,26 @@ Ext.menu.Menu2 = Ext.extend(Ext.Container, {
         }
         return g
     },
-    getEl: function() {
+    getEl: function () {
         if (!this.el) {
             this.render()
         }
         return this.el
     },
-    addSeparator: function() {
+    addSeparator: function () {
         return this.addItem(new Ext.menu.Separator())
     },
-    addElement: function(a) {
+    addElement: function (a) {
         return this.addItem(new Ext.menu.BaseItem(a))
     },
-    addItem: function(a) {
+    addItem: function (a) {
         Ext.menu.Menu.superclass.add.call(this, a);
         if (this.rendered) {
             this.doLayout()
         }
         return a
     },
-    addMenuItem: function(a) {
+    addMenuItem: function (a) {
         if (!(a instanceof Ext.menu.Item)) {
             if (typeof a.checked == "boolean") {
                 a = new Ext.menu.CheckItem(a)
@@ -2692,23 +2786,23 @@ Ext.menu.Menu2 = Ext.extend(Ext.Container, {
         }
         return this.addItem(a)
     },
-    addText: function(a) {
+    addText: function (a) {
         return this.addItem(new Ext.menu.TextItem(a))
     },
-    insert: function(a, b) {
+    insert: function (a, b) {
         Ext.menu.Menu.superclass.insert.apply(this, arguments);
         if (this.rendered) {
             this.doLayout()
         }
         return b
     },
-    remove: function(a) {
+    remove: function (a) {
         Ext.menu.Menu.superclass.remove.call(this, a, true);
         if (this.rendered) {
             this.doLayout()
         }
     },
-    removeAll: function() {
+    removeAll: function () {
         if (this.items) {
             var a;
             while (a = this.items.first()) {
@@ -2716,7 +2810,7 @@ Ext.menu.Menu2 = Ext.extend(Ext.Container, {
             }
         }
     },
-    onDestroy: function() {
+    onDestroy: function () {
         Ext.menu.Menu.superclass.onDestroy.apply(this, arguments);
         Ext.menu.MenuMgr.unregister(this);
         if (this.keyNav) {
@@ -2727,12 +2821,12 @@ Ext.menu.Menu2 = Ext.extend(Ext.Container, {
         }
     }
 });
-Ext.menu.MenuNav2 = function(a) {
+Ext.menu.MenuNav2 = function (a) {
     Ext.menu.MenuNav.superclass.constructor.call(this, a.el);
     this.scope = this.menu = a
 };
 Ext.extend(Ext.menu.MenuNav2, Ext.KeyNav, {
-    doRelay: function(c, b) {
+    doRelay: function (c, b) {
         var a = c.getKey();
         if (!this.menu.activeItem && c.isNavKeyPress() && a != c.SPACE && a != c.RETURN) {
             this.menu.tryActivate(0, 1);
@@ -2740,28 +2834,28 @@ Ext.extend(Ext.menu.MenuNav2, Ext.KeyNav, {
         }
         return b.call(this.scope || this, c, this.menu)
     },
-    up: function(b, a) {
+    up: function (b, a) {
         if (!a.tryActivate(a.items.indexOf(a.activeItem) - 1, -1)) {
             a.tryActivate(a.items.length - 1, -1)
         }
     },
-    down: function(b, a) {
+    down: function (b, a) {
         if (!a.tryActivate(a.items.indexOf(a.activeItem) + 1, 1)) {
             a.tryActivate(0, 1)
         }
     },
-    right: function(b, a) {
+    right: function (b, a) {
         if (a.activeItem) {
             a.activeItem.expandMenu(true)
         }
     },
-    left: function(b, a) {
+    left: function (b, a) {
         a.hide();
         if (a.parentMenu && a.parentMenu.activeItem) {
             a.parentMenu.activeItem.activate()
         }
     },
-    enter: function(b, a) {
+    enter: function (b, a) {
         if (a.activeItem) {
             b.stopPropagation();
             a.activeItem.onClick(b);
@@ -2771,7 +2865,7 @@ Ext.extend(Ext.menu.MenuNav2, Ext.KeyNav, {
     }
 });
 Ext.grid.GridView.override({
-    focusCell: function(c, a, b) {
+    focusCell: function (c, a, b) {
         this.syncFocusEl(this.ensureVisible(c, a, b));
         if (Ext.isGecko) {
             this.focusEl.focus()
@@ -2779,7 +2873,7 @@ Ext.grid.GridView.override({
             this.focusEl.focus.defer(1, this.focusEl)
         }
     },
-    resolveCell: function(e, c, d) {
+    resolveCell: function (e, c, d) {
         if (typeof e != "number") {
             e = e.rowIndex
         }
@@ -2803,7 +2897,7 @@ Ext.grid.GridView.override({
             cell: a
         }
     },
-    getResolvedXY: function(a) {
+    getResolvedXY: function (a) {
         if (!a) {
             return null
         }
@@ -2812,7 +2906,7 @@ Ext.grid.GridView.override({
             d = a.row;
         return e ? Ext.fly(e).getXY() : [b.scrollLeft + this.el.getX(), Ext.fly(d).getY()]
     },
-    syncFocusEl: function(d, a, c) {
+    syncFocusEl: function (d, a, c) {
         var b = d;
         if (!Ext.isArray(b)) {
             d = Math.min(d, Math.max(0, this.getRows().length - 1));
@@ -2820,7 +2914,7 @@ Ext.grid.GridView.override({
         }
         this.focusEl.setXY(b || this.scroller.getXY())
     },
-    ensureVisible: function(u, g, e) {
+    ensureVisible: function (u, g, e) {
         var s = this.resolveCell(u, g, e);
         if (!s || !s.row) {
             return
@@ -2866,7 +2960,7 @@ Ext.grid.GridView.override({
 //begin  (chengtao) 2018-01-09 添加 扩展容器组件 实现容器内组件的数据绑定功能
 Ext.override(Ext.Container, {
     editing: false,
-    bindDataStore: function(store, index) {
+    bindDataStore: function (store, index) {
         this.bindStore = store;
         if (this.bindStore) {
             if (this.bindStore !== store && this.bindStore.autoDestroy) {
@@ -2909,7 +3003,7 @@ Ext.override(Ext.Container, {
         }
         return this;
     },
-    setCompValues: function(values) {
+    setCompValues: function (values) {
         this.bindValues = values;
         var field, id;
         var me = this;
@@ -2918,13 +3012,13 @@ Ext.override(Ext.Container, {
                 field.setValue(values[id]);
                 field.originalValue = field.getValue();
                 if (!field.hasListener("change")) {
-                    field.on("change", function(a, b, c) {
+                    field.on("change", function (a, b, c) {
                         if (typeof a == 'object') {
                             this.onValueChange(a.id, b);
                             //暂时特殊处理
                             if (this.component.cid == 'vmdSubView') {
                                 if (a.id == "vmd-prop-width" || a.id == "vmd-prop-height") {
-                                    Ext.defer(function() {
+                                    Ext.defer(function () {
                                         var resize = me.component.node._wh
                                         xds.props.setValue('width', resize.width)
                                         xds.props.setValue('height', resize.height)
@@ -2938,7 +3032,7 @@ Ext.override(Ext.Container, {
                     }, this);
                 }
                 if (!field.hasListener("check")) {
-                    field.on("check", function(a, b, c) {
+                    field.on("check", function (a, b, c) {
                         if (typeof a == 'object') {
                             this.onValueChange(a.id, b);
                         } else {
@@ -2947,7 +3041,7 @@ Ext.override(Ext.Container, {
                     }, this);
                 }
                 if (!field.hasListener("select")) {
-                    field.on("select", function(a, b, c) {
+                    field.on("select", function (a, b, c) {
                         if (typeof a == 'object') {
                             this.onValueChange(a.id, a.getValue());
                         } else {
@@ -2961,7 +3055,7 @@ Ext.override(Ext.Container, {
         }
         return this;
     },
-    onStoreUpdate: function(ds, record, e) {
+    onStoreUpdate: function (ds, record, e) {
         if (this.editing && e != Ext.data.Record.REJECT && record == this.dataRecord) { //2018-01-25
             return;
         }
@@ -2981,7 +3075,7 @@ Ext.override(Ext.Container, {
             }
         }
     },
-    onStoreClear: function(ds, records, index) {
+    onStoreClear: function (ds, records, index) {
         return
         if (this.editing) {
             return;
@@ -2994,7 +3088,7 @@ Ext.override(Ext.Container, {
             this.setCompValues(values);
         }
     },
-    onStoreRemove: function(store, record, index) {
+    onStoreRemove: function (store, record, index) {
         return
         if (this.editing) {
             return;
@@ -3016,7 +3110,7 @@ Ext.override(Ext.Container, {
             }
         }
     },
-    onValueChange: function(id, value) {
+    onValueChange: function (id, value) {
         if (this.bindValues) {
             {
                 if (this.bindIndex) {
@@ -3038,7 +3132,7 @@ Ext.override(Ext.Container, {
 });
 //重写FormPanel的findById方法,可以查找到内部组件
 Ext.override(Ext.form.FormPanel, {
-    findById: function(id) {
+    findById: function (id) {
         return this.getForm().findField(id);
     }
 });
@@ -3053,14 +3147,14 @@ xds.PropPanel = Ext.extend(Ext.Container, {
     cacheSizes: false,
     border: false,
     layout: "fit",
-    constructor: function(a) {
+    constructor: function (a) {
         this.propStore = a;
         xds.PropPanel.superclass.constructor.call(this);
     },
-    initComponent: function() {
+    initComponent: function () {
         xds.PropPanel.superclass.initComponent.call(this);
     },
-    setComponent: function(a, b) {
+    setComponent: function (a, b) {
         //要加载样式
         Ext.util.CSS.removeStyleSheet("vmdcss")
         Ext.util.CSS.createStyleSheet(vmd.replaceResVars(xds.vmd.css), "vmdcss")
@@ -3069,16 +3163,16 @@ xds.PropPanel = Ext.extend(Ext.Container, {
         this.add(b);
         this.doLayout();
     },
-    clear: function() {
+    clear: function () {
         delete this.component;
     },
-    onRender: function() {
+    onRender: function () {
         xds.PropPanel.superclass.onRender.apply(this, arguments);
     },
-    expand: function() {
+    expand: function () {
 
     },
-    collapse: function() {
+    collapse: function () {
 
     }
 });
@@ -3094,7 +3188,7 @@ xds.PropertyRecord = Ext.data.Record.create([{
     type: "string"
 }, "value", "group"]);
 //组件属性store
-xds.PropertyStore = function() {
+xds.PropertyStore = function () {
     this.store = new Ext.data.GroupingStore({
         recordType: xds.PropertyRecord,
         groupField: "group"
@@ -3104,24 +3198,24 @@ xds.PropertyStore = function() {
 };
 Ext.extend(xds.PropertyStore, Ext.util.Observable, {
     showCommon: true,
-    getConfigByType: function(b, a) {
+    getConfigByType: function (b, a) {
         if (b == "Common") {
             return this.component.getConfigObject(a)
         }
         var c = this.component["get" + b + "Configs"]();
         return c.map[a]
     },
-    getConfig: function(a) {
+    getConfig: function (a) {
         if (a.configType) {
             return this.getConfigByType(a.configType, a.data.name)
         }
         return this.component.getConfigObject(a.data.name)
     },
-    getConfigAt: function(a) {
+    getConfigAt: function (a) {
 
         return this.getConfig(this.store.getAt(a))
     },
-    setComponent: function(p, d) {
+    setComponent: function (p, d) {
         this.component = p;
         this.store.removeAll();
         this.store.loadRecords({
@@ -3129,16 +3223,16 @@ Ext.extend(xds.PropertyStore, Ext.util.Observable, {
         }, {}, true);
 
     },
-    onUpdate: function(f, a, e) {
+    onUpdate: function (f, a, e) {
         if (e == Ext.data.Record.EDIT) {
             var b = a.data.value;
             var c = a.modified.value;
 
             if (a.data.name == "id" && (xds.inspector.nodeHash[b] || b == 'name' || !/^[a-z_A-Z]\w+$/.test(b))) {
                 //mafei id重复
-                if(!xds.inspector.nodeHash[b]&&xds.active&&xds.vmd.isStore(xds.active.component)&&/^[\u4e00-\u9fa5\w]+$/.test(b)){
+                if (!xds.inspector.nodeHash[b] && xds.active && xds.vmd.isStore(xds.active.component) && /^[\u4e00-\u9fa5\w]+$/.test(b)) {
                     this.getConfig(a).setValue(this.component, b);
-                }else{
+                } else {
                     a.reject();
                     return
                 }
@@ -3158,7 +3252,7 @@ Ext.extend(xds.PropertyStore, Ext.util.Observable, {
             a.commit();
         }
     },
-    rejectChange: function(record) {
+    rejectChange: function (record) {
 
         var activeCmp = this.component;
         var cmpConfig = activeCmp.config;
@@ -3171,7 +3265,7 @@ Ext.extend(xds.PropertyStore, Ext.util.Observable, {
 });
 //end
 
-Ext.ux.SelectBox = function(a) {
+Ext.ux.SelectBox = function (a) {
     this.searchResetDelay = 1000;
     a = a || {};
     a = Ext.apply(a || {}, {
@@ -3189,13 +3283,13 @@ Ext.ux.SelectBox = function(a) {
 };
 Ext.extend(Ext.ux.SelectBox, Ext.form.ComboBox, {
     lazyInit: false,
-    initEvents: function() {
+    initEvents: function () {
         Ext.ux.SelectBox.superclass.initEvents.apply(this, arguments);
         //this.el.on("keydown", this.keySearch, this, true);
         this.cshTask = new Ext.util.DelayedTask(
             this.clearSearchHistory, this)
     },
-    keySearch: function(f, d, b) {
+    keySearch: function (f, d, b) {
         var a = f.getKey();
         var c = String.fromCharCode(a);
         var g = 0;
@@ -3230,14 +3324,14 @@ Ext.extend(Ext.ux.SelectBox, Ext.form.ComboBox, {
         this.search(this.displayField, c, g);
         this.cshTask.delay(this.searchResetDelay)
     },
-    onRender: function(b, a) {
+    onRender: function (b, a) {
         this.store.on("load", this.calcRowsPerPage, this);
         Ext.ux.SelectBox.superclass.onRender.apply(this, arguments);
         if (this.mode == "local") {
             this.calcRowsPerPage()
         }
     },
-    onSelect: function(a, c, b) {
+    onSelect: function (a, c, b) {
         if (this.fireEvent("beforeselect", this, a, c) !== false) {
             this.setValue(a.data[this.valueField || this.displayField]);
             if (!b) {
@@ -3247,7 +3341,7 @@ Ext.extend(Ext.ux.SelectBox, Ext.form.ComboBox, {
             this.fireEvent("select", this, a, c)
         }
     },
-    render: function(a) {
+    render: function (a) {
         Ext.ux.SelectBox.superclass.render.apply(this, arguments);
         if (Ext.isSafari) {
             this.el.swallowEvent("mousedown", true)
@@ -3255,13 +3349,13 @@ Ext.extend(Ext.ux.SelectBox, Ext.form.ComboBox, {
         this.el.unselectable();
         this.innerList.unselectable();
         this.trigger.unselectable();
-        this.innerList.on("mouseup", function(d, c, b) {
+        this.innerList.on("mouseup", function (d, c, b) {
             if (c.id && c.id == this.innerList.id) {
                 return
             }
             this.onViewClick()
         }, this);
-        this.innerList.on("mouseover", function(d, c, b) {
+        this.innerList.on("mouseover", function (d, c, b) {
             if (c.id && c.id == this.innerList.id) {
                 return
             }
@@ -3271,35 +3365,35 @@ Ext.extend(Ext.ux.SelectBox, Ext.form.ComboBox, {
             this.cshTask.delay(this.searchResetDelay)
         }, this);
         this.trigger.un("click", this.onTriggerClick, this);
-        this.trigger.on("mousedown", function(d, c, b) {
+        this.trigger.on("mousedown", function (d, c, b) {
             d.preventDefault();
             this.onTriggerClick()
         }, this);
-        this.on("collapse", function(d, c, b) {
+        this.on("collapse", function (d, c, b) {
             Ext.getDoc().un("mouseup", this.collapseIf, this)
         }, this, true);
-        this.on("expand", function(d, c, b) {
+        this.on("expand", function (d, c, b) {
             Ext.getDoc().on("mouseup", this.collapseIf, this)
         }, this, true)
     },
-    clearSearchHistory: function() {
+    clearSearchHistory: function () {
         this.lastSelectedIndex = 0;
         this.lastSearchTerm = false
     },
-    selectFirst: function() {
+    selectFirst: function () {
         this.focusAndSelect(this.store.data.first())
     },
-    selectLast: function() {
+    selectLast: function () {
         this.focusAndSelect(this.store.data.last())
     },
-    selectPrevPage: function() {
+    selectPrevPage: function () {
         if (!this.rowHeight) {
             return
         }
         var a = Math.max(this.selectedIndex - this.rowsPerPage, 0);
         this.focusAndSelect(this.store.getAt(a))
     },
-    selectNextPage: function() {
+    selectNextPage: function () {
         if (!this.rowHeight) {
             return
         }
@@ -3307,7 +3401,7 @@ Ext.extend(Ext.ux.SelectBox, Ext.form.ComboBox, {
             this.store.getCount() - 1);
         this.focusAndSelect(this.store.getAt(a))
     },
-    search: function(c, b, d) {
+    search: function (c, b, d) {
         c = c || this.displayField;
         this.lastSearchTerm = b;
         var a = this.store.find.apply(this.store, arguments);
@@ -3315,12 +3409,12 @@ Ext.extend(Ext.ux.SelectBox, Ext.form.ComboBox, {
             this.focusAndSelect(a)
         }
     },
-    focusAndSelect: function(a) {
+    focusAndSelect: function (a) {
         var b = typeof a === "number" ? a : this.store.indexOf(a);
         this.select(b, this.isExpanded());
         this.onSelect(this.store.getAt(a), b, this.isExpanded())
     },
-    calcRowsPerPage: function() {
+    calcRowsPerPage: function () {
         if (this.store.getCount()) {
             this.rowHeight = Ext.fly(this.view.getNode(0)).getHeight();
             this.rowsPerPage = this.maxHeight / this.rowHeight
@@ -3336,7 +3430,7 @@ Ext.ux.SelectBoxEx = Ext.extend(Ext.ux.SelectBox, {
 })
 
 //扩展MultiComboBox begin  (chengtao) 2017-12-29
-Ext.ux.MultiComboBox = function(a) {
+Ext.ux.MultiComboBox = function (a) {
     this.searchResetDelay = 1000;
     a = a || {};
     a = Ext.apply(a || {}, {
@@ -3352,13 +3446,13 @@ Ext.ux.MultiComboBox = function(a) {
 };
 Ext.extend(Ext.ux.MultiComboBox, Ext.form.MultiComboBox, {
     lazyInit: false,
-    initEvents: function() {
+    initEvents: function () {
         Ext.ux.MultiComboBox.superclass.initEvents.apply(this, arguments);
         this.el.on("keydown", this.keySearch, this, true);
         this.cshTask = new Ext.util.DelayedTask(
             this.clearSearchHistory, this)
     },
-    keySearch: function(f, d, b) {
+    keySearch: function (f, d, b) {
         var a = f.getKey();
         var c = String.fromCharCode(a);
         var g = 0;
@@ -3393,31 +3487,31 @@ Ext.extend(Ext.ux.MultiComboBox, Ext.form.MultiComboBox, {
         this.search(this.displayField, c, g);
         this.cshTask.delay(this.searchResetDelay)
     },
-    onRender: function(b, a) {
+    onRender: function (b, a) {
         this.store.on("load", this.calcRowsPerPage, this);
         Ext.ux.MultiComboBox.superclass.onRender.apply(this, arguments);
         if (this.mode == "local") {
             this.calcRowsPerPage()
         }
     },
-    clearSearchHistory: function() {
+    clearSearchHistory: function () {
         this.lastSelectedIndex = 0;
         this.lastSearchTerm = false
     },
-    selectFirst: function() {
+    selectFirst: function () {
         this.focusAndSelect(this.store.data.first())
     },
-    selectLast: function() {
+    selectLast: function () {
         this.focusAndSelect(this.store.data.last())
     },
-    selectPrevPage: function() {
+    selectPrevPage: function () {
         if (!this.rowHeight) {
             return
         }
         var a = Math.max(this.selectedIndex - this.rowsPerPage, 0);
         this.focusAndSelect(this.store.getAt(a))
     },
-    selectNextPage: function() {
+    selectNextPage: function () {
         if (!this.rowHeight) {
             return
         }
@@ -3425,7 +3519,7 @@ Ext.extend(Ext.ux.MultiComboBox, Ext.form.MultiComboBox, {
             this.store.getCount() - 1);
         this.focusAndSelect(this.store.getAt(a))
     },
-    search: function(c, b, d) {
+    search: function (c, b, d) {
         c = c || this.displayField;
         this.lastSearchTerm = b;
         var a = this.store.find.apply(this.store, arguments);
@@ -3433,12 +3527,12 @@ Ext.extend(Ext.ux.MultiComboBox, Ext.form.MultiComboBox, {
             this.focusAndSelect(a)
         }
     },
-    focusAndSelect: function(a) {
+    focusAndSelect: function (a) {
         var b = typeof a === "number" ? a : this.store.indexOf(a);
         this.select(b, this.isExpanded());
         this.onSelect(this.store.getAt(a), b, this.isExpanded())
     },
-    calcRowsPerPage: function() {
+    calcRowsPerPage: function () {
         if (this.store.getCount()) {
             this.rowHeight = Ext.fly(this.view.getNode(0)).getHeight();
             this.rowsPerPage = this.maxHeight / this.rowHeight
@@ -3453,7 +3547,7 @@ xds.FlyoutSelect = Ext.extend(Ext.ux.SelectBox, {
     listClass: "x-combo-list-small",
     width: 120,
     displayField: "text",
-    initComponent: function() {
+    initComponent: function () {
         this.store = new Ext.data.SimpleStore({
             fields: ["text"],
             expandData: true,
@@ -3462,7 +3556,7 @@ xds.FlyoutSelect = Ext.extend(Ext.ux.SelectBox, {
         delete this.data;
         xds.FlyoutSelect.superclass.initComponent.call(this)
     },
-    initList: function() {
+    initList: function () {
         Ext.form.ComboBox.prototype.initList.call(this);
         this.list.setZIndex(80005)
     }
@@ -3476,7 +3570,7 @@ Ext.ux.TileView = Ext.extend(Ext.DataView, {
     itemDescription: "description",
     itemIconCls: "iconCls",
     itemSelector: "dd",
-    initComponent: function() {
+    initComponent: function () {
         this.tpl = new Ext.XTemplate(this.getMarkup(), {
             getCategory: this.getCategory,
             openCategory: this.openCategory,
@@ -3484,7 +3578,7 @@ Ext.ux.TileView = Ext.extend(Ext.DataView, {
         });
         Ext.ux.TileView.superclass.initComponent.call(this)
     },
-    getMarkup: function() {
+    getMarkup: function () {
         return [
             '<div class="x-tile-ct">',
             '<tpl for=".">',
@@ -3502,7 +3596,7 @@ Ext.ux.TileView = Ext.extend(Ext.DataView, {
             "</div>"
         ].join("")
     },
-    openCategory: function(b, c, d) {
+    openCategory: function (b, c, d) {
         var a = this.getCategory(b);
         if (this.lastCat != a) {
             this.lastCat = a;
@@ -3510,10 +3604,10 @@ Ext.ux.TileView = Ext.extend(Ext.DataView, {
         }
         return false
     },
-    getCategory: function(a) {
+    getCategory: function (a) {
         return a[this.view.categoryName]
     },
-    onClick: function(b) {
+    onClick: function (b) {
 
         var a = b.getTarget("h2", 3, true);
         if (a) {
@@ -3538,10 +3632,10 @@ xds.MoreField = Ext.extend(Ext.BoxComponent, {
     fieldClass: "x-form-text",
     isFormField: true,
     value: undefined,
-    getName: function() {
+    getName: function () {
         return this.name || this.id
     },
-    onRender: function(c, a) {
+    onRender: function (c, a) {
         xds.MoreField.superclass.onRender.call(this, c, a);
         if (!this.el) {
             var b = this.getAutoCreate();
@@ -3555,55 +3649,55 @@ xds.MoreField = Ext.extend(Ext.BoxComponent, {
         this.initValue()
     },
     onMoreClick: Ext.emptyFn,
-    afterRender: function(b, a) {
+    afterRender: function (b, a) {
         xds.MoreField.superclass.afterRender.call(this);
         this.originalValue = this.getRawValue()
     },
-    initValue: function() {
+    initValue: function () {
         if (this.value !== undefined) {
             this.setValue(this.value)
         }
     },
-    isDirty: function() {
+    isDirty: function () {
         return false
     },
-    isValid: function() {
+    isValid: function () {
         return true
     },
-    validate: function() {
+    validate: function () {
         return true
     },
-    processValue: function(a) {
+    processValue: function (a) {
         return a
     },
-    validateValue: function(a) {
+    validateValue: function (a) {
         return true
     },
     reset: Ext.emptyFn,
     markInvalid: Ext.emptyFn,
     clearInvalid: Ext.emptyFn,
-    getRawValue: function() {
+    getRawValue: function () {
         return this.value
     },
-    getValue: function() {
+    getValue: function () {
         return this.value
     },
-    setRawValue: function(a) {
+    setRawValue: function (a) {
         this.value = a;
         if (this.valueEl) {
             this.valueEl.dom.innerHTML = a
         }
     },
-    setValue: function(a) {
+    setValue: function (a) {
         this.setRawValue(a)
     }
 });
 Ext.reg("morefield", xds.MoreField);
 xds.Project = Ext.extend(Ext.util.Observable, {
-    constructor: function(a) {
+    constructor: function (a) {
         Ext.apply(this, a)
     },
-    save: function(a, b) {
+    save: function (a, b) {
 
         if (xds.vmd.isCheckUxhasSelf()) {
             Ext.Msg.alert('提示', '复合组件不能包含自身！');
@@ -3615,7 +3709,7 @@ xds.Project = Ext.extend(Ext.util.Observable, {
         }
         xds.File.saveProject(this.getData(), a, b)
     },
-    getCmpSaveMethod: function() {
+    getCmpSaveMethod: function () {
         var allcmps = xds.inspector.nodeHash;
         var beforesavelist = [];
         var savelist = []
@@ -3632,21 +3726,60 @@ xds.Project = Ext.extend(Ext.util.Observable, {
             saveList: savelist
         }
     },
-    _dobeforesave: function(list) {
+    _dobeforesave: function (list) {
 
-        Ext.each(list, function(cmp) {
+        Ext.each(list, function (cmp) {
 
             cmp.beforeSave()
         })
     },
-    _dosave: function(list) {
-        Ext.each(list, function(cmp) {
+    _dosave: function (list) {
+        Ext.each(list, function (cmp) {
 
             cmp.save()
         })
 
     },
-    saveVmd: function() {
+    _getPropPanelCmpList: function () {
+        var list = [];
+        for (var key in xds.inspector.nodeHash) {
+            var cmp = xds.inspector.nodeHash[key];
+            if (cmp.component && cmp.component.isPropPanel) list.push(cmp.component);
+        }
+        return list;
+    },
+    //保存组件模板
+    saveCmpTpl: function (callback) {
+
+        var dcmp = this._getPropPanelCmpList();
+        var asyncCount = dcmp.length;
+        Ext.each(dcmp, function (item) {
+
+            cmp = item.getExtComponent();
+            if (!cmp||!cmp.onSave) {
+                asyncCount--
+            } else {
+                cmp.onSave(function (data) {
+                    asyncCount--
+                });
+                //增加对组件依赖的存储
+                if (xds.vmd.cmpdeps.indexOf(item.cid) == -1) xds.vmd.cmpdeps.push(item.cid)
+            }
+        })
+        vmd.taskRunner(function () {
+            if (asyncCount == 0) return true;
+        }, function () {
+            callback && callback();
+        }, 50, 2000, true)
+    },
+    saveVmd: function () {
+
+        var me = this;
+        this.saveCmpTpl(function () {
+            me._saveVmd();
+        })
+    },
+    _saveVmd: function () {
 
         var saveEvent = this.getCmpSaveMethod();
 
@@ -3659,11 +3792,19 @@ xds.Project = Ext.extend(Ext.util.Observable, {
             this.save();
             //this._dosave(saveEvent.saveList);
         }
+        //异步执行模板保存
+        //this.saveCmpTpl();
     },
-    saveAs: function(a, b) {
+    saveAs: function (a, b) {
         xds.File.saveProjectAs(this.getData(), a, b)
     },
-    preview: function() {
+    preview: function () {
+        var me = this;
+        this.saveCmpTpl(function () {
+            me._preview();
+        })
+    },
+    _preview: function () {
         //修改集成功能的模版类型
 
         if (xds.vmd.isCheckUxhasSelf()) {
@@ -3691,7 +3832,7 @@ xds.Project = Ext.extend(Ext.util.Observable, {
             maskStyle: 'opacity:0.8',
             draggable: false,
             listeners: {
-                move: function(me, x, y) {
+                move: function (me, x, y) {
                     me.moveZone(me, x, y);
                 }
             }
@@ -3700,17 +3841,17 @@ xds.Project = Ext.extend(Ext.util.Observable, {
 
         //增加报表和曲线的预览保存
         var reportSaveState = false;
-        if (Ext.isFunction(xds.vmd.saveReport) && designerSate.isReport) xds.vmd.saveReport(function() {
+        if (Ext.isFunction(xds.vmd.saveReport) && designerSate.isReport) xds.vmd.saveReport(function () {
             reportSaveState = true;
         });
         else reportSaveState = true;
 
 
         if (!designerSate.isModule) {
-            vmd.taskRunner(function() {
+            vmd.taskRunner(function () {
                 if (designerSate.isReport) return reportSaveState;
                 else return true;
-            }, function() {
+            }, function () {
                 xds.fireEvent('vmdpreview');
                 pre.show();
             })
@@ -3720,7 +3861,7 @@ xds.Project = Ext.extend(Ext.util.Observable, {
         }
         //pre.maximize()
     },
-    _workflowAddNode: function(node, root) {
+    _workflowAddNode: function (node, root) {
         //工作流节点特殊处理
         //全局变量处理
         if (node.userConfig) {
@@ -3771,7 +3912,7 @@ xds.Project = Ext.extend(Ext.util.Observable, {
             }*/
 
             //删除工作流节点下的变量
-            Ext.each(node.cn, function(item) {
+            Ext.each(node.cn, function (item) {
                 delete item.cn
             })
 
@@ -3782,8 +3923,8 @@ xds.Project = Ext.extend(Ext.util.Observable, {
         //节点变量处理
 
     },
-    open: function() {
-        if (typeof(xds.Project.file) != 'undefined')
+    open: function () {
+        if (typeof (xds.Project.file) != 'undefined')
             xds.File.setTitle(xds.Project.file.nativePath);
         else
             xds.File.setTitle("New Project");
@@ -3812,7 +3953,7 @@ xds.Project = Ext.extend(Ext.util.Observable, {
         }
 
     },
-    interfaceOpen: function() {
+    interfaceOpen: function () {
 
         if (designer.mode == 'ux') {
             xds.interface.root.beginUpdate();
@@ -3830,7 +3971,7 @@ xds.Project = Ext.extend(Ext.util.Observable, {
 
         }
     },
-    resourceOpen: function() {
+    resourceOpen: function () {
 
 
         xds.resource.root.beginUpdate();
@@ -3847,7 +3988,7 @@ xds.Project = Ext.extend(Ext.util.Observable, {
 
 
     },
-    getData: function() {
+    getData: function () {
         var b = {
             name: this.name,
             file: this.file,
@@ -3861,7 +4002,7 @@ xds.Project = Ext.extend(Ext.util.Observable, {
         }
         return b
     },
-    getData2: function() {
+    getData2: function () {
         var b = {
             name: this.name,
             file: this.file,
@@ -3875,7 +4016,7 @@ xds.Project = Ext.extend(Ext.util.Observable, {
         }
         return b
     },
-    getResourceData: function() {
+    getResourceData: function () {
         var b = {
             name: this.name,
             file: this.file,
@@ -3889,14 +4030,14 @@ xds.Project = Ext.extend(Ext.util.Observable, {
         }
         return b
     },
-    viewJoson: function() {
+    viewJoson: function () {
         var a = new xds.CJsonWindow({
             title: '查看JSON代码',
             jdb: this.getJson()
         })
         a.show();
     },
-    getJson: function() {
+    getJson: function () {
         var a = xds.inspector.root;
         var c = a.firstChild;
         var b = {
@@ -3914,7 +4055,7 @@ xds.Project = Ext.extend(Ext.util.Observable, {
         //var b=this.getData();
 
         function parse_store(o) {
-            if (typeof(o.cn) != 'undefined') {
+            if (typeof (o.cn) != 'undefined') {
                 o.fields = o.cn;
                 delete o.cn;
             }
@@ -3924,12 +4065,12 @@ xds.Project = Ext.extend(Ext.util.Observable, {
             if (o.xtype == 'grid') {
                 o.columns = [];
             }
-            if (typeof(o.cn) != 'undefined') {
+            if (typeof (o.cn) != 'undefined') {
                 var i = 0;
                 var len = o.cn.length;
                 var moved = 0;
                 while (i < len) {
-                    if (typeof(o.cn[i].dock) != 'undefined') {
+                    if (typeof (o.cn[i].dock) != 'undefined') {
                         o[o.cn[i].dock] = o.cn[i].cn || [];
                         delete o.cn[i];
                         moved++;
@@ -3966,35 +4107,35 @@ xds.Project = Ext.extend(Ext.util.Observable, {
                 } else {
                     delete o.cn;
                 }
-                if (typeof(o.items) != 'undefined') {
+                if (typeof (o.items) != 'undefined') {
                     len = o.items.length;
                     for (var i = 0; i < len; i++) {
-                        if (typeof(o.items[i]) != 'undefined')
+                        if (typeof (o.items[i]) != 'undefined')
                             parse_object(o.items[i]);
                     }
                 }
-                if (typeof(o.tbar) != 'undefined') {
+                if (typeof (o.tbar) != 'undefined') {
                     len = o.tbar.length;
                     for (var i = 0; i < len; i++) {
-                        if (typeof(o.tbar[i]) != 'undefined')
+                        if (typeof (o.tbar[i]) != 'undefined')
                             parse_object(o.tbar[i]);
                     }
                 }
-                if (typeof(o.fbar) != 'undefined') {
+                if (typeof (o.fbar) != 'undefined') {
                     len = o.fbar.length;
                     for (var i = 0; i < len; i++) {
-                        if (typeof(o.fbar[i]) != 'undefined')
+                        if (typeof (o.fbar[i]) != 'undefined')
                             parse_object(o.fbar[i]);
                     }
                 }
-                if (typeof(o.bbar) != 'undefined') {
+                if (typeof (o.bbar) != 'undefined') {
                     len = o.bbar.length;
                     for (var i = 0; i < len; i++) {
-                        if (typeof(o.bbar[i]) != 'undefined')
+                        if (typeof (o.bbar[i]) != 'undefined')
                             parse_object(o.bbar[i]);
                     }
                 }
-                if (typeof(o.store) != 'undefined') {
+                if (typeof (o.store) != 'undefined') {
                     //20171122
                     // if (typeof (o.store) != 'object')
                     //    delete o.store;
@@ -4006,10 +4147,10 @@ xds.Project = Ext.extend(Ext.util.Observable, {
         }
         return (b.components);
     },
-    setData: function(a) {
+    setData: function (a) {
         Ext.apply(this, a)
     },
-    doClose: function() {
+    doClose: function () {
         var a = xds.inspector.root;
         while (a.firstChild) {
             var b = a.removeChild(a.firstChild);
@@ -4018,7 +4159,7 @@ xds.Project = Ext.extend(Ext.util.Observable, {
         delete xds.Project.file
         xds.canvas.clear()
     },
-    close: function(a, b) {
+    close: function (a, b) {
         var msg = "是否要保存这个" + (designer.mode == "module" ? '模块' : '复合组件') + "?";
         var layoutStr = Ext.encode(xds.project.getData());
         //增加调用关闭接口
@@ -4040,13 +4181,13 @@ xds.Project = Ext.extend(Ext.util.Observable, {
                     title: "温馨提示",
                     msg: msg,
                     buttons: isClose ? Ext.Msg.YESNO : Ext.Msg.YESNOCANCEL,
-                    fn: function(c) {
+                    fn: function (c) {
 
                         if (c == "yes") {
                             xds.vmd.layoutStr = layoutStr;
 
                             this.save({
-                                callback: function() {
+                                callback: function () {
                                     // this.doClose()
 
                                     if (isClose) {
@@ -4088,7 +4229,7 @@ xds.Project = Ext.extend(Ext.util.Observable, {
             }
         }
     },
-    loadInspector: function(vmdStr) {
+    loadInspector: function (vmdStr) {
 
         var a = new xds.Project(vmdStr);
         a.open()
@@ -4101,8 +4242,106 @@ xds.Project = Ext.extend(Ext.util.Observable, {
         }
 
     },
+	/**
+	*@desc 异步动态加载插件
+	*@param {array} vmdcmpdeps 组件设计时cid列表
+	*@param {string} type 设计时类型 xcls||dtype
+	*@param  {function} callback 回调函数
+	*/
+    loadAsyncPlugins: function (vmdcmpdeps, type, callback) {
+
+        var matchRule;
+        type = type || 'dtype';
+        var asyncCallback = function () { }
+        var Deps = designer.ComponentDeps;
+
+        if (vmdcmpdeps) {
+
+            var cmpList = [];
+            Ext.each(vmdcmpdeps, function (cmpName) {
+                var d = xds.Registry.get(cmpName);
+                var dcmpXls = d && d.prototype[type];
+                // if(!eval(dcmpXls)) cmpList.push(dcmpXls)
+                cmpList.push(dcmpXls)
+            })
+
+
+            if (cmpList.length > 0) {
+                //需要增加前置依赖
+                var preLoadCmps = Deps.testAll(cmpList);
+                if (preLoadCmps.length > 0) {
+                    Ext.require(preLoadCmps, function () {
+                        Ext.require(cmpList, function () {
+                            callback && callback();
+                        })
+                    })
+                } else {
+                    Ext.require(cmpList, function () {
+                        callback && callback();
+                    })
+                }
+
+            } else {
+                callback && callback();
+            }
+        } else {
+            callback && callback();
+        }
+
+    },
+    load: function () {
+        var vmdInfo = Ext.decode(xds.vmd.serializeStr);
+        this.loadAsyncPlugins(vmdInfo.vmdcmpdeps, 'dtype', function () {
+            xds.toolbox.loadUserTypes2();
+            xds.project.loadVmdFile();
+        })
+
+    },
+    //测试用
+    loadTest: function () {
+
+        var vmdInfo = Ext.decode(xds.vmd.serializeStr);
+        if (vmdInfo.vmdcmpdeps) {
+
+            var cmpList = [];
+            Ext.each(vmdInfo.vmdcmpdeps, function (cmpName) {
+                var d = xds.Registry.get(cmpName);
+                var dcmpXls = d.prototype.dtype;
+                // if(!eval(dcmpXls)) cmpList.push(dcmpXls)
+                cmpList.push(dcmpXls)
+            })
+
+            if (cmpList.length > 0) {
+                //需要增加前置依赖
+                var chartflag = Ext.Array.findBy(cmpList, function (name) {
+                    return /vmd\.d\.webchart\.\w+/.test(name)
+                })
+                if (chartflag) {
+                    Ext.require('hwcharts', function () {
+                        Ext.require(cmpList, function () {
+                            xds.toolbox.loadUserTypes2();
+                            xds.project.loadVmdFile();
+                        })
+                    })
+                } else {
+                    Ext.require(cmpList, function () {
+                        xds.toolbox.loadUserTypes2();
+                        xds.project.loadVmdFile();
+                    })
+                }
+
+            } else {
+                xds.toolbox.loadUserTypes2();
+                xds.project.loadVmdFile();
+            }
+        } else {
+            xds.toolbox.loadUserTypes2();
+            xds.project.loadVmdFile();
+        }
+
+    },
     /*拆分两个功能块*/
-    loadVmdFile: function(path) {
+    loadVmdFile: function (path) {
 
         var me = this;
 
@@ -4192,12 +4431,410 @@ xds.Project = Ext.extend(Ext.util.Observable, {
         //myMask.hide();
         xds.vmd.loading.hide();
         //20171201工作流处理
-        Ext.require('ide.ext.workflow', function() {
+        /*Ext.require('ide.ext.workflow', function () {
             ide.ext.workflow.init(layout);
-        });
+        });*/
 
     },
-    saveVmdFile: function(path, bodyStr, callback, callbackInfo, settings) {
+
+    _saveUxFile: function (path, bodyStr, callback, callbackInfo, settings) {
+        var id = xds.vmd.params.id();
+        var myMask = new Ext.LoadMask(Ext.getBody(), {
+            msg: "正在保存中,请稍后...",
+            msgCls: 'z-index:70000;'
+        });
+
+        var vmdXds = xds.vmd;
+        if (!path) {
+            Ext.Msg.alert('提示', '违法操作，无法保存，请从正确的地址进入！')
+            return
+        }
+        myMask.show();
+        //默认保存登录测试页面
+        var filename = path;
+        var tastList = {
+            vmdState: false,
+            jsState: false,
+            configState: false
+
+        }
+
+        filename = path;
+        //存储组件的总配置文件，便于左侧树的加载（usercontrols/config.js）
+        //designer.prefix.cmp;
+        if (filename) filename = filename.replace(/.vmd$/, '');
+        var root = xds.inspector.root.childNodes[0].component;
+        var name = filename || root.id;
+
+        var vmdpath, jspath, idepath, savePref, cmpVer = xds.vmd.params.ver();
+        cmpVer = cmpVer + '/';
+        var cmpDir = name.toLowerCase() + '/';
+        //完整相对路径
+        vmdpath = vmdXds.ux.paths.vmd + name + '.vmd';
+        jspath = vmdXds.ux.paths.cmp + name + '.js';
+        //增加版本号
+        jspath = vmdXds.ux.paths.cmp + cmpDir + cmpVer + name + '.js';
+        idepath = vmdXds.ux.paths.ide + name + '.js';
+
+
+        var runner = new Ext.util.TaskRunner();
+
+        var taskRun = function () {
+            //vmd文件和js及config保存成功后才提示
+            if (tastList.vmdState && tastList.jsState && tastList.configState) {
+                Ext.Msg.alert('提示', '保存成功！', function () {
+                    if (callback && !callbackInfo.isShow) {
+                        window.close()
+                    }
+                });
+                runner.stop(task); //停止 任务
+                if (callback) callback();
+            }
+
+        }
+        var task = {
+            run: taskRun,
+            interval: 100,
+            duration: 10000
+        }
+        runner.start(task);
+
+        //进行保存验证(读取config.js)，先判断数据库中是否有该组件（path为空时），并提示是否覆盖
+
+        var cmpListPath = vmdXds.ux.cmpListPath;
+        var url = vmd.vmdUploadPath + 'FileService?FileName=' + cmpListPath
+        var cmpList = [];
+
+        //复合组件资源加载
+        designer.requirejs = [];
+        designer.requirecss = [];
+        var vmdrequirecss = [],
+            vmdrequirejs = [];
+        var listinfo = xds.vmd.getUxDepJsCss();
+        vmdrequirecss = listinfo.css;
+        vmdrequirejs = listinfo.js;
+        designer.uxrequirejs = vmdrequirejs;
+        designer.uxrequirecss = vmdrequirecss;
+
+        var saveVmd = function (filename, bodyStr, taskName, callback) {
+            vmd.core.writeFile(filename, bodyStr, function (result) {
+                var res = Ext.util.JSON.decode(result.responseText);
+                if (res.errMsg) {
+                    //vmdstate = true;
+                    tastList[taskName] = true;
+                    myMask.hide();
+                    Ext.Msg.alert('错误', res.errMsg);
+                    return;
+                }
+                //Ext.Msg.alert('提示', '保存成功！');
+                //vmdstate = true;
+                tastList[taskName] = true;
+                myMask.hide();
+
+                if (callback) callback();
+            }, function (result) {
+                //vmdstate = true;
+                tastList[taskName] = true;
+                Ext.Msg.alert('错误', '网络超时，保存失败！')
+                myMask.hide()
+            })
+
+        }
+        var saveUx = function () {
+            //1、保存复合组件描述文件
+            saveVmd(vmdpath, bodyStr, "vmdState")
+
+            //2、保存复合组件的js文件
+            var page = xds.project.getJson()[0];
+
+            //序列化属性面板设置
+            var uxpropersettings = {
+                panelName: page.panelName,
+                bindCmp: page.bindCmp,
+                panelWidth: page.panelWidth,
+                bindCmpVersion: page.bindCmpVersion
+            }
+            if (xds.vmd.isPropPanel()) {
+                delete page.panelName;
+                delete page.bindCmp;
+                delete page.panelWidth;
+                delete page.bindCmpVersion;
+            }
+            var codeStr = SourceX.JonsScript(page);
+            codeStr = xds.vmd.controllerEvents + '\n' + codeStr;
+            codeStr = beautifier.js(codeStr, {
+                "max_preserve_newlines": "-1"
+            });
+            saveVmd(jspath, codeStr, "jsState");
+
+            //3、保存复合组件的ide的属性设置
+            //先加载组件模块
+            Ext.Ajax.request({
+                type: 'get',
+                url: 'templete/ux.js',
+                success: function (result) {
+
+                    var str = result.responseText;
+
+                    var defineProps = "",
+                        propsArr = [],
+                        propdata, eventData, methodData, defalutConfigs = {};
+                    propdata = xds.vmd.getPropsData();
+                    methodData = xds.vmd.getMethodsData();
+                    eventData = xds.vmd.getEventsData();
+                    Ext.each(propdata, function (item) {
+                        //if (!item.uxcid) return false;
+                        var d = {},
+                            dvalue;
+                        if (item.uxcid) {
+                            d = xds.vmd.getConfigByName(item.uxcid, item.bindValue);
+                            //组件设计时的默认值
+                            var ideconfig = xds.Registry.all.map[item.uxcid].prototype;
+                            dvalue = ideconfig.defaultConfig;
+                        }
+                        var obj = {};
+                        obj.name = item.id;
+                        obj.group = item.group || "设计";
+                        obj.ctype = d.ctype || (item.cmptype == 'combo' ? 'string' : item.cmptype) || "string";
+                        if (item.cmptype == 'store' || item.cmptype == 'storeField') {
+                            obj.ctype = 'string';
+                            d.editor = 'options';
+                            d.edConfig = {
+                                type: item.cmptype
+                            }
+                            if (item.cmptype == 'storeField') {
+                                d.edConfig.cname = item.storesource;
+                                //字段多选
+                                if (item.storefield_multi) d.editor = 'multiOptions';
+                            }
+                        }
+                        if (d.editor) {
+                            obj.editor = d.editor;
+                            if (d.options) obj.options = d.options;
+                            if (d.edConfig) obj.edConfig = Ext.clone(d.edConfig);
+                            if (d.edConfig && d.edConfig.type == "store") {
+
+                                //ideconfig._bindStoreName=obj.name;
+                                if (!xds.vmd.ux.propmap) xds.vmd.ux.propmap = {};
+                                item.bindCmp && (xds.vmd.ux.propmap[item.bindCmp] = obj.name);
+                            }
+                            //重置store
+                            if (d.edConfig && d.edConfig.type == "storeField") {
+                                //d.edConfig.cname=ideconfig._bindStoreName||d.edConfig.cname;
+                                obj.edConfig.cname = xds.vmd.ux.propmap && xds.vmd.ux.propmap[item.bindCmp] || d.edConfig.cname;
+
+                            }
+                        } else {
+                            if (item.cmptype == 'combo') {
+                                var configs = Ext.decode(item.cmpsettings);
+                                obj.editor = configs.isMulti ? "multiCombo" : 'combo';
+                                obj.options = Ext.decode(Ext.decode(item.cmpsettings).data) || [];
+
+                            }
+                        }
+                        propsArr.push(obj);
+
+                        //构造属性的默认值(20180315)
+                        //if (!xds.inspector.nodeHash[item.bindCmp]) return false;
+                        if (xds.inspector.nodeHash[item.bindCmp]) {
+                            var activeCmpId = xds.inspector.nodeHash[item.bindCmp].component.activeCmpId;
+                            if (activeCmpId) {
+                                dvalue = Ext.getCmp(activeCmpId);
+
+                                var bindval = (dvalue.initialConfig && dvalue.initialConfig[item.bindValue]) || dvalue[item.bindValue]
+                                if (bindval && typeof bindval != 'object') {
+                                    defalutConfigs[item.id] = bindval;
+                                }
+                            }
+                        }
+                    })
+                    //如果扩展有布局layout要把布局信息添加到设计时模式下
+
+                    if (page.layout) {
+                        defalutConfigs.layout = page.layout;
+                    }
+
+                    //事件接口的装配
+                    Ext.each(eventData, function (item) {
+                        var obj = {};
+                        obj.name = item.id;
+                        obj.group = "事件";
+                        obj.ctype = 'string';
+                        obj.editor = 'ace';
+                        obj.params = item.params;
+
+                        propsArr.push(obj);
+                    })
+
+                    defineProps = Ext.encode(propsArr);
+                    //去掉首位字符
+                    defineProps = defineProps.replace(/^\[/, "").replace(/\]$/, "")
+                    if (defineProps) defineProps = "," + defineProps;
+
+                    defalutConfigs = Ext.encode(defalutConfigs);
+
+                    var uxcls = designer.prefix.cmp + name;
+                    var uxAceAutoMatchStr = '',
+                        uxAceAutoMatchObj;
+                    //添加ace自动识别功能
+                    uxAceAutoMatchObj = addUxControlFun && addUxControlFun({
+                        cid: uxcls,
+                        prop: propdata,
+                        method: methodData,
+                        event: eventData
+                    });
+                    if (uxAceAutoMatchObj) {
+                        var _name = 'Data_' + uxcls.replace(/\./g, '_');
+                        uxAceAutoMatchStr = 'var ' + _name + '=' + Ext.encode(uxAceAutoMatchObj);
+                        uxAceAutoMatchStr += '\n' + '\tControlsDataManage._add(' + _name + ')';
+                    }
+                    var layoutConfig = "";
+                    //保存复合组件设计模式下布局丢失问题
+                    if (page.layoutConfig) {
+                        layoutConfig = "this.layoutConfig=" + Ext.encode(page.layoutConfig) + "\n";
+                    }
+
+
+                    var requireCmpType = xds.vmd.getModuleCmpType();
+                    // str = String.format(str, uxcls, name, name, defineProps, defalutConfigs, uxAceAutoMatchStr);
+                    //isPropPanel: true,
+                    //nodeclick: function () {
+                    //    this.activeSettings('LayoutPanel', '通用录入', '300', '1.0');
+                    //}, 
+                    var getReplacePropertySettings = function () {
+                        var format = "isPropPanel:{isPropPanel},\n" +
+                            "\tbindCmp:'{bindCmp}',\n" +
+                            "\tnodeclick:function () {\n" +
+                            "\t\t this.activeSettings('{bindCmp}', '{panelName}', '{panelWidth}', '{uxversion}');\n" +
+                            "\t},\n";
+                        if (uxpropersettings.bindCmp)
+                            return format.format({
+                                isPropPanel: true,
+                                bindCmp: uxpropersettings.bindCmp,
+                                panelName: uxpropersettings.panelName,
+                                panelWidth: uxpropersettings.panelWidth,
+                                uxversion: uxpropersettings.bindCmpVersion
+                            });
+
+                        return "";
+                    }
+                    var properysettings = getReplacePropertySettings();
+                    str = str.format({
+                        vmduxcls: uxcls,
+                        vmdname: 'hw' + name,
+                        vmdzhname: name,
+                        vmddefineProps: defineProps,
+                        vmddefalutConfigs: defalutConfigs,
+                        vmduxAceAutoMatchStr: uxAceAutoMatchStr,
+                        vmdlayoutConfig: layoutConfig,
+                        vmdrequirecss: Ext.encode(vmdrequirecss),
+                        vmdrequirejs: Ext.encode(vmdrequirejs),
+                        vmdrequirecmptype: requireCmpType ? requireCmpType : '',
+                        vmdproperysettings: properysettings
+                    });
+                    saveVmd(idepath, str, "configState");
+
+                    //日志记录
+                    vmd.saveUXCompInfo && vmd.saveUXCompInfo(id);
+                },
+                failure: function (data) {
+                    Ext.Msg.alert('提示', '加载复合组件设计时配置出错！');
+                    myMask.hide();
+                }
+            })
+        }
+        //保存组件list文件
+        var saveCmpList = function (cmpList, isUpdate) {
+            cmpList = cmpList || [];
+
+            var zhname = decodeURIComponent(getUrlParam('uxname')) || '';
+            //组件唯一
+            var cmplistUnique = function (list) {
+                var clone = [],
+                    obj = {};
+                for (var i = 0; i < list.length; i++) {
+                    var item = list[i];
+                    var name = item.name;
+                    if (!obj[name]) {
+                        clone.push(item);
+                        obj[name] = item;
+                    }
+                }
+                return clone;
+            }
+
+            cmpList = cmplistUnique(cmpList);
+
+            var cmpInfo = {
+                name: name,
+                version: xds.vmd.params.ver(),
+                lastModifyTime: new Date().format('Y-m-d H:i:s'),
+                zhname: zhname,
+                isPropPanel: xds.vmd.isPropPanel() ? true : false
+            }
+            //更新配置文件
+            var updateItem;
+            Ext.each(cmpList, function (item, index) {
+                if (item.name == name) {
+                    updateItem = item;
+                    return false;
+                }
+            })
+
+            if (updateItem) {
+                //var updateItem = cmpList[updateItemIndex];
+                //更新version 及修改时间
+                updateItem.lastModifyTime = new Date().format('Y-m-d H:i:s');
+                var ver = updateItem.version;
+                var lasv = parseInt(ver.split('.')[2]) + 1;
+                var newv = [ver.split('.')[0], ver.split('.')[1], lasv];
+                updateItem.version = newv.join('.');
+                updateItem.version = xds.vmd.params.ver();
+                updateItem.zhname = zhname;
+
+                if (cmpInfo.isPropPanel) {
+                    updateItem.isPropPanel = cmpInfo.isPropPanel;
+                } else {
+                    delete cmpInfo.isPropPanel;
+                }
+
+            } else {
+                cmpList.push(cmpInfo);
+            }
+            var str = Ext.encode(cmpList);
+            saveVmd(cmpListPath, str, "all", function () {
+                //saveUx()
+                if (typeof beautifier != 'undefined') {
+                    saveUx();
+                } else {
+                    var formatcodepath = vmd.virtualPath + '/lib/beautify/beautifier.min.js?ver=' + vmd.vmdVersion;
+                    $LAB.script(formatcodepath)
+                        .wait(function () {
+                            saveUx();
+                        })
+                }
+            });
+        }
+
+        // 修改list.js文件
+        vmd.core.readFile(cmpListPath, function (result) {
+            var data = Ext.decode(result.responseText);
+            if (data.errMsg) {
+                Ext.Msg.alert('提示', data.errMsg);
+                myMask.hide();
+                return;
+            }
+            var curCmpList = Ext.decode(data.data);
+
+            saveCmpList(curCmpList, true);
+        }, function (result) {
+            Ext.Msg.alert('提示', '网络超时，请稍后再试！');
+            myMask.hide();
+        })
+
+    },
+    _saveModuleFile: function (path, bodyStr, callback, callbackInfo, settings) {
+        var me = this;
         var id = xds.vmd.params.id();
         var myMask = new Ext.LoadMask(Ext.getBody(), {
             msg: "正在保存中,请稍后...",
@@ -4217,8 +4854,8 @@ xds.Project = Ext.extend(Ext.util.Observable, {
             htmlState: false,
             htmlrState: false
         };
-        var saveVmd = function(filename, bodyStr, taskName, callback) {
-            vmd.core.writeFile(filename, bodyStr, function(result) {
+        var saveVmd = function (filename, bodyStr, taskName, callback) {
+            vmd.core.writeFile(filename, bodyStr, function (result) {
                 var res = Ext.util.JSON.decode(result.responseText);
                 if (res.errMsg) {
                     //vmdstate = true;
@@ -4233,7 +4870,7 @@ xds.Project = Ext.extend(Ext.util.Observable, {
                 myMask.hide();
 
                 if (callback) callback();
-            }, function(result) {
+            }, function (result) {
                 //vmdstate = true;
                 tastList[taskName] = true;
                 Ext.Msg.alert('错误', '网络超时，保存失败！')
@@ -4241,542 +4878,206 @@ xds.Project = Ext.extend(Ext.util.Observable, {
             })
 
         }
-        if (designer.mode == "ux") {
-            filename = path;
-            //存储组件的总配置文件，便于左侧树的加载（usercontrols/config.js）
-            //designer.prefix.cmp;
-            if (filename) filename = filename.replace(/.vmd$/, '');
-            var root = xds.inspector.root.childNodes[0].component;
-            var name = filename || root.id;
+        var readModuleTemplete = function (filename, codeStr, cls) {
+            hwDas.ajax({
+                das: false,
+                url: xds.vmd.getReleasePath(),
+                type: 'get',
+                dataType: 'html',
+                success: function (data) {
+                    //解析vmd为html文件
+                    var title = xds.vmd.params.name() || ''
+                    /*
+                     *codestr 保存的代码
+                     *cls 模块类名
+                     *title 网页标题
+                     *css 动态插入的css样式
+                     *virtualpath 生成的虚拟目录,默认为空
+                     *vmdrescssfiles 要加载的资源css文件
+                     *vmdresjsfiles 要加载的资源js文件
+                     */
+                    var ver = "?ver=" + vmd.vmdVersion || '2.0';
 
-            var vmdpath, jspath, idepath, savePref, cmpVer = xds.vmd.params.ver();
-            cmpVer = cmpVer + '/';
-            var cmpDir = name.toLowerCase() + '/';
-            //完整相对路径
-            vmdpath = vmdXds.ux.paths.vmd + name + '.vmd';
-            jspath = vmdXds.ux.paths.cmp + name + '.js';
-            //增加版本号
-            jspath = vmdXds.ux.paths.cmp + cmpDir + cmpVer + name + '.js';
-            idepath = vmdXds.ux.paths.ide + name + '.js';
-            tastList = {
-                vmdState: false,
-                jsState: false,
-                configState: false
+                    var virtualPath = '',
+                        rescssfiles = '',
+                        resjsfiles = '',
+                        cmpjsfiles = '',
+                        cmpcssfiles = '';
+                    //加载资源中心资源
+                    rescssfiles = xds.vmd.getResStylesheet();
+                    resjsfiles = xds.vmd.getResScript();
+                    //加载组件扩展的依赖脚本库和样式库
+                    var cmpjscssfiles = xds.vmd.getCmpReleaseJsCssFiles();
+                    cmpcssfiles = cmpjscssfiles.css.join('\n\t');
+                    cmpjsfiles = cmpjscssfiles.js.join('\n\t');
 
-            }
+                    //var html = String.format(data, codeStr, cls, title, xds.vmd.css || '', virtualPath, cssfiles, jsfiles);
+                    var _workspace = "vmd.workspace=" + Ext.encode(vmd.workspace) + "\n\t";
+                    //增加资源地址解析
+                    var serinfo = xds.vmd.getServerList2();
+                    _workspace = _workspace + "vmd.resourceSettings=" + Ext.encode(serinfo);
+                    //加入微服务地址
+                    _workspace = _workspace + "\nvmd.projectInfo=" + Ext.encode(vmd.projectInfo);
 
-            var runner = new Ext.util.TaskRunner();
+                    //动态加入项目配置脚本
+                    var getProjectScript = function () {
 
-            var taskRun = function() {
-                //vmd文件和js及config保存成功后才提示
-                if (tastList.vmdState && tastList.jsState && tastList.configState) {
-                    Ext.Msg.alert('提示', '保存成功！', function() {
-                        if (callback && !callbackInfo.isShow) {
-                            window.close()
-                        }
+                        var path = xds.vmd.getProjectConfigPath();
+                        return '<script src="' + path + '"></script>'
+                    }
+					var cmpList= xds.vmd.getDynamicCmpList();
+                    //构造组件运行时动态加载的组件
+                    if (cmpList.length > 0) {
+                        /*var cmpList = [];
+                        Ext.each(xds.vmd.cmpdeps, function (cmpName) {
+                            var d = xds.Registry.get(cmpName);
+                            var dcmpXls = d.prototype.xcls;
+                            // if(!eval(dcmpXls)) cmpList.push(dcmpXls)
+                            cmpList.push(dcmpXls)
+                        })*/
+						
+                        codeStr += '\n vmd.core.requireCmpDeps(' + Ext.encode(cmpList) + ');';
+                    }
+
+                    var html = data.format({
+                        vmdcodeStr: vmd.replaceResVars(codeStr),
+                        vmdcls: cls,
+                        vmdtitle: title,
+                        vmdcss: vmd.replaceResVars(xds.vmd.css) || '',
+                        vmdvirtualPath: virtualPath,
+                        vmdrescssfiles: rescssfiles,
+                        vmdresjsfiles: resjsfiles,
+                        vmdcmpcssfiles: cmpcssfiles,
+                        vmdcmpjsfiles: cmpjsfiles,
+                        vmdver: ver,
+                        vmdworkspaceInfo: _workspace,
+                        vmdworkspacePath: "",
+                        vmdPreviewMode: "vmd.previewMode=true;",
+                        vmdprojectcssfiles: '',
+                        vmdprojectjsfiles: '',
+                        vmdprojectconfigjs: getProjectScript()
+                    })
+
+                    //代码格式化一下
+                    html = beautifier.html(html, {
+                        "max_preserve_newlines": "-1"
                     });
-                    runner.stop(task); //停止 任务
-                    if (callback) callback();
+
+                    saveVmd(filename, html, "htmlState");
+
+                    //20171205 增加发布临时html文件
+                    var _filename = filename.substring(filename.lastIndexOf('/') + 1, filename.length);
+                    _filename = _filename.replace('.html', '') + '_r' + '.html';
+                    filename = filename.substring(0, filename.lastIndexOf('/')) + '/' + _filename;
+
+                    //返回带变量替换的值
+                    rescssfiles = xds.vmd.getResStylesheet(true);
+                    resjsfiles = xds.vmd.getResScript(true);
+                    //加载组件扩展的依赖脚本库和样式库
+                    cmpjscssfiles = xds.vmd.getCmpReleaseJsCssFiles(true);
+                    cmpcssfiles = cmpjscssfiles.css.join('\n\t');
+                    cmpjsfiles = cmpjscssfiles.js.join('\n\t');
+                    //html = String.format(data, codeStr, cls, title, xds.vmd.css || '', '{0}', cssfiles, jsfiles);
+                    html = data.format({
+                        vmdcodeStr: codeStr,
+                        vmdcls: cls,
+                        vmdtitle: title,
+                        vmdcss: xds.vmd.css || '',
+                        vmdvirtualPath: "{vmdvirtualPath}",
+                        vmdworkspaceInfo: "",
+                        vmdworkspacePath: "{vmdworkspacePath}",
+                        vmdrescssfiles: rescssfiles,
+                        vmdresjsfiles: resjsfiles,
+                        vmdcmpcssfiles: cmpcssfiles,
+                        vmdcmpjsfiles: cmpjsfiles,
+                        vmdver: ver,
+                        vmdPreviewMode: "",
+                        vmdprojectcssfiles: '{vmdprojectcssfiles}',
+                        vmdprojectjsfiles: '{vmdprojectjsfiles}',
+                        vmdprojectconfigjs: '{vmdprojectconfigjs}'
+                    })
+                    //代码格式化一下
+
+
+                    saveVmd(filename, html, "htmlrState");
+
+                    //日志记录
+                    vmd.saveModuleEditInfo && vmd.saveModuleEditInfo(id);
+
+                },
+                error: function (data) {
+                    Ext.Msg.alert('提示', '加载模块模版文件出错！');
                 }
-
-            }
-            var task = {
-                run: taskRun,
-                interval: 100,
-                duration: 10000
-            }
-            runner.start(task);
-
-            //进行保存验证(读取config.js)，先判断数据库中是否有该组件（path为空时），并提示是否覆盖
-
-            var cmpListPath = vmdXds.ux.cmpListPath;
-            var url = vmd.vmdUploadPath + 'FileService?FileName=' + cmpListPath
-            var cmpList = [];
-
-            //复合组件资源加载
-            designer.requirejs = [];
-            designer.requirecss = [];
-            var vmdrequirecss = [],
-                vmdrequirejs = [];
-            var listinfo = xds.vmd.getUxDepJsCss();
-            vmdrequirecss = listinfo.css;
-            vmdrequirejs = listinfo.js;
-            designer.uxrequirejs = vmdrequirejs;
-            designer.uxrequirecss = vmdrequirecss;
-
-            var saveUx = function() {
-                //1、保存复合组件描述文件
-                saveVmd(vmdpath, bodyStr, "vmdState")
-
-                //2、保存复合组件的js文件
-                var page = xds.project.getJson()[0];
-                //序列化属性面板设置
-                var uxpropersettings={
-                    panelName:page.panelName,
-                    bindCmp:page.bindCmp,
-                    panelWidth:page.panelWidth,
-                    bindCmpVersion:page.bindCmpVersion
-                }
-                if(xds.vmd.isPropPanel()){
-                    delete page.panelName;
-                    delete page.bindCmp;
-                    delete page.panelWidth;
-                    delete page.bindCmpVersion;
-                }
-                var codeStr = SourceX.JonsScript(page);
-                codeStr = xds.vmd.controllerEvents + '\n' + codeStr;
-                codeStr = beautifier.js(codeStr, {
-                    "max_preserve_newlines": "-1"
-                });
-                saveVmd(jspath, codeStr, "jsState");
-
-                //3、保存复合组件的ide的属性设置
-                //先加载组件模块
-                Ext.Ajax.request({
-                    type: 'get',
-                    url: 'templete/ux.js',
-                    success: function(result) {
-
-                        var str = result.responseText;
-                       
-                        var defineProps = "",
-                            propsArr = [],
-                            propdata, eventData, methodData, defalutConfigs = {};
-                        propdata = xds.vmd.getPropsData();
-                        methodData = xds.vmd.getMethodsData();
-                        eventData = xds.vmd.getEventsData();
-                        Ext.each(propdata, function(item) {
-                            //if (!item.uxcid) return false;
-                            var d = {},
-                                dvalue;
-                            if (item.uxcid) {
-                                d = xds.vmd.getConfigByName(item.uxcid, item.bindValue);
-                                //组件设计时的默认值
-                                var ideconfig = xds.Registry.all.map[item.uxcid].prototype;
-                                dvalue = ideconfig.defaultConfig;
-                            }
-                            var obj = {};
-                            obj.name = item.id;
-                            obj.group = item.group || "设计";
-                            obj.ctype = d.ctype || (item.cmptype == 'combo' ? 'string' : item.cmptype) || "string";
-                            if (item.cmptype == 'store' || item.cmptype == 'storeField') {
-                                obj.ctype = 'string';
-                                d.editor = 'options';
-                                d.edConfig = {
-                                    type: item.cmptype
-                                }
-                                if (item.cmptype == 'storeField') {
-                                    d.edConfig.cname = item.storesource;
-                                    //字段多选
-                                    if (item.storefield_multi) d.editor = 'multiOptions';
-                                }
-                            }
-                            if (d.editor) {
-                                obj.editor = d.editor;
-                                if (d.options) obj.options = d.options;
-                                if (d.edConfig) obj.edConfig = Ext.clone(d.edConfig);
-                                if (d.edConfig && d.edConfig.type == "store") {
-
-                                    //ideconfig._bindStoreName=obj.name;
-                                    if (!xds.vmd.ux.propmap) xds.vmd.ux.propmap = {};
-                                    item.bindCmp && (xds.vmd.ux.propmap[item.bindCmp] = obj.name);
-                                }
-                                //重置store
-                                if (d.edConfig && d.edConfig.type == "storeField") {
-                                    //d.edConfig.cname=ideconfig._bindStoreName||d.edConfig.cname;
-                                    obj.edConfig.cname = xds.vmd.ux.propmap && xds.vmd.ux.propmap[item.bindCmp] || d.edConfig.cname;
-
-                                }
-                            } else {
-                                if (item.cmptype == 'combo') {
-                                    var configs = Ext.decode(item.cmpsettings);
-                                    obj.editor = configs.isMulti ? "multiCombo" : 'combo';
-                                    obj.options = Ext.decode(Ext.decode(item.cmpsettings).data) || [];
-
-                                }
-                            }
-                            propsArr.push(obj);
-
-                            //构造属性的默认值(20180315)
-                            //if (!xds.inspector.nodeHash[item.bindCmp]) return false;
-                            if (xds.inspector.nodeHash[item.bindCmp]) {
-                                var activeCmpId = xds.inspector.nodeHash[item.bindCmp].component.activeCmpId;
-                                if (activeCmpId) {
-                                    dvalue = Ext.getCmp(activeCmpId);
-
-                                    var bindval = (dvalue.initialConfig && dvalue.initialConfig[item.bindValue]) || dvalue[item.bindValue]
-                                    if (bindval && typeof bindval != 'object') {
-                                        defalutConfigs[item.id] = bindval;
-                                    }
-                                }
-                            }
-                        })
-                        //如果扩展有布局layout要把布局信息添加到设计时模式下
-
-                        if (page.layout) {
-                            defalutConfigs.layout = page.layout;
-                        }
-
-                        //事件接口的装配
-                        Ext.each(eventData, function(item) {
-                            var obj = {};
-                            obj.name = item.id;
-                            obj.group = "事件";
-                            obj.ctype = 'string';
-                            obj.editor = 'ace';
-                            obj.params = item.params;
-
-                            propsArr.push(obj);
-                        })
-
-                        defineProps = Ext.encode(propsArr);
-                        //去掉首位字符
-                        defineProps = defineProps.replace(/^\[/, "").replace(/\]$/, "")
-                        if (defineProps) defineProps = "," + defineProps;
-
-                        defalutConfigs = Ext.encode(defalutConfigs);
-
-                        var uxcls = designer.prefix.cmp + name;
-                        var uxAceAutoMatchStr = '',
-                            uxAceAutoMatchObj;
-                        //添加ace自动识别功能
-                        uxAceAutoMatchObj = addUxControlFun && addUxControlFun({
-                            cid: uxcls,
-                            prop: propdata,
-                            method: methodData,
-                            event: eventData
-                        });
-                        if (uxAceAutoMatchObj) {
-                            var _name = 'Data_' + uxcls.replace(/\./g, '_');
-                            uxAceAutoMatchStr = 'var ' + _name + '=' + Ext.encode(uxAceAutoMatchObj);
-                            uxAceAutoMatchStr += '\n' + '\tControlsDataManage._add(' + _name + ')';
-                        }
-                        var layoutConfig = "";
-                        //保存复合组件设计模式下布局丢失问题
-                        if (page.layoutConfig) {
-                            layoutConfig = "this.layoutConfig=" + Ext.encode(page.layoutConfig) + "\n";
-                        }
-
-
-                        var requireCmpType = xds.vmd.getModuleCmpType();
-                        // str = String.format(str, uxcls, name, name, defineProps, defalutConfigs, uxAceAutoMatchStr);
-                        //isPropPanel: true,
-                        //nodeclick: function () {
-                        //    this.activeSettings('LayoutPanel', '通用录入', '300', '1.0');
-                        //}, 
-                        var getReplacePropertySettings=function(){
-                            var format="isPropPanel:{isPropPanel},\n"+
-                                       "\tbindCmp:'{bindCmp}',\n"+
-                                       "\tnodeclick:function () {\n"+
-                                       "\t\t this.activeSettings('{bindCmp}', '{panelName}', '{panelWidth}', '{uxversion}');\n"+
-                                       "\t},\n";
-                            if(uxpropersettings.bindCmp)
-                                return format.format({
-                                    isPropPanel:true,
-                                    bindCmp:uxpropersettings.bindCmp,
-                                    panelName:uxpropersettings.panelName,
-                                    panelWidth:uxpropersettings.panelWidth,
-                                    uxversion:uxpropersettings.bindCmpVersion
-                                });
-                            return "";
-                        }
-                        var properysettings=getReplacePropertySettings();
-                        str = str.format({
-                            vmduxcls: uxcls,
-                            vmdname: 'hw' + name,
-                            vmdzhname: name,
-                            vmddefineProps: defineProps,
-                            vmddefalutConfigs: defalutConfigs,
-                            vmduxAceAutoMatchStr: uxAceAutoMatchStr,
-                            vmdlayoutConfig: layoutConfig,
-                            vmdrequirecss: Ext.encode(vmdrequirecss),
-                            vmdrequirejs: Ext.encode(vmdrequirejs),
-                            vmdrequirecmptype: requireCmpType ? requireCmpType : '',
-                            vmdproperysettings:properysettings
-                        });
-                        saveVmd(idepath, str, "configState");
-
-                        //日志记录
-                        vmd.saveUXCompInfo && vmd.saveUXCompInfo(id);
-                    },
-                    failure: function(data) {
-                        Ext.Msg.alert('提示', '加载复合组件设计时配置出错！');
-                        myMask.hide();
-                    }
-                })
-            }
-            //保存组件list文件
-            var saveCmpList = function(cmpList, isUpdate) {
-                cmpList = cmpList || [];
-
-                var zhname = decodeURIComponent(getUrlParam('uxname')) || '';
-                //组件唯一
-                var cmplistUnique = function(list) {
-                    var clone = [],
-                        obj = {};
-                    for (var i = 0; i < list.length; i++) {
-                        var item = list[i];
-                        var name = item.name;
-                        if (!obj[name]) {
-                            clone.push(item);
-                            obj[name] = item;
-                        }
-                    }
-                    return clone;
-                }
-
-                cmpList = cmplistUnique(cmpList);
-
-                var cmpInfo = {
-                    name: name,
-                    version: xds.vmd.params.ver(),
-                    lastModifyTime: new Date().format('Y-m-d H:i:s'),
-                    zhname: zhname,
-                    isPropPanel:xds.vmd.isPropPanel()?true:false
-                }
-                //更新配置文件
-                var updateItem;
-                Ext.each(cmpList, function(item, index) {
-                    if (item.name == name) {
-                        updateItem = item;
-                        return false;
-                    }
-                })
-
-                if (updateItem) {
-                    //var updateItem = cmpList[updateItemIndex];
-                    //更新version 及修改时间
-                    updateItem.lastModifyTime = new Date().format('Y-m-d H:i:s');
-                    var ver = updateItem.version;
-                    var lasv = parseInt(ver.split('.')[2]) + 1;
-                    var newv = [ver.split('.')[0], ver.split('.')[1], lasv];
-                    updateItem.version = newv.join('.');
-                    updateItem.version = xds.vmd.params.ver();
-                    updateItem.zhname = zhname;
-                    if(cmpInfo.isPropPanel){
-                        updateItem.isPropPanel = cmpInfo.isPropPanel;
-                    }else{ 
-                        delete cmpInfo.isPropPanel;
-                    }
-                } else {
-                    cmpList.push(cmpInfo);
-                }
-                var str = Ext.encode(cmpList);
-                saveVmd(cmpListPath, str, "all", function() {
-                    //saveUx()
-                    if (typeof beautifier != 'undefined') {
-                        saveUx();
-                    } else {
-                        var formatcodepath = vmd.virtualPath + '/lib/beautify/beautifier.min.js?ver=' + vmd.vmdVersion;
-                        $LAB.script(formatcodepath)
-                            .wait(function() {
-                                saveUx();
-                            })
-                    }
-                });
-            }
-
-            // 修改list.js文件
-            vmd.core.readFile(cmpListPath, function(result) {
-                var data = Ext.decode(result.responseText);
-                if (data.errMsg) {
-                    Ext.Msg.alert('提示', data.errMsg);
-                    myMask.hide();
-                    return;
-                }
-                var curCmpList = Ext.decode(data.data);
-
-                saveCmpList(curCmpList, true);
-            }, function(result) {
-                Ext.Msg.alert('提示', '网络超时，请稍后再试！');
-                myMask.hide();
             })
+        }
+        //修改集成功能类型
+        xds.vmd.checkCid();
 
+        saveVmd(filename, bodyStr, "vmdState")
+
+        var page = xds.project.getJson()[0];
+        var codeStr = SourceX.JonsScript(page);
+
+        var cls = page.name;
+        var htmlfile = filename.replace('.vmd', '.html');
+        //格式化代码
+        if (typeof beautifier != 'undefined') {
+            readModuleTemplete(htmlfile, codeStr, cls)
+        } else {
+            var formatcodepath = vmd.virtualPath + '/lib/beautify/beautifier.min.js?ver=' + vmd.vmdVersion;
+            $LAB.script(formatcodepath)
+                .wait(function () {
+                    readModuleTemplete(htmlfile, codeStr, cls)
+                })
+        }
+
+
+        var runner = new Ext.util.TaskRunner();
+        var taskRun = function () {
+            //vmd文件和html及html发布文件保存成功后才提示
+            if (tastList.vmdState && tastList.htmlState && tastList.htmlrState) {
+                !settings && Ext.Msg.alert('提示', '保存成功！', function () {
+
+                    if (callback && !callbackInfo.isShow) {
+                        window.close()
+                    }
+                    //subwindow是否首次保存
+                    try {
+                        if (parent.xds) {
+                            parent.xds.vmd.saveSubWindow();
+                        }
+                    } catch (e) { }
+
+                });
+
+                runner.stop(task); //停止 任务
+                if (callback) callback();
+            }
+
+        }
+        var task = {
+            run: taskRun,
+            interval: 100,
+            duration: 10000
+        }
+
+        runner.start(task);
+    },
+    saveVmdFile: function (path, bodyStr, callback, callbackInfo, settings) {
+
+        if (designer.mode == "ux") {
+            this._saveUxFile(path, bodyStr, callback, callbackInfo, settings);
 
         } else {
-
             //module.html
-
-            var readModuleTemplete = function(filename, codeStr, cls) {
-                hwDas.ajax({
-                    das: false,
-                    url: xds.vmd.getReleasePath(),
-                    type: 'get',
-                    dataType: 'html',
-                    success: function(data) {
-                        //解析vmd为html文件
-                        var title = xds.vmd.params.name() || ''
-                        /*
-                         *codestr 保存的代码
-                         *cls 模块类名
-                         *title 网页标题
-                         *css 动态插入的css样式
-                         *virtualpath 生成的虚拟目录,默认为空
-                         *vmdrescssfiles 要加载的资源css文件
-                         *vmdresjsfiles 要加载的资源js文件
-                         */
-                        var ver = "?ver=" + vmd.vmdVersion || '2.0';
-
-                        var virtualPath = '',
-                            rescssfiles = '',
-                            resjsfiles = '',
-                            cmpjsfiles = '',
-                            cmpcssfiles = '';
-                        //加载资源中心资源
-                        rescssfiles = xds.vmd.getResStylesheet();
-                        resjsfiles = xds.vmd.getResScript();
-                        //加载组件扩展的依赖脚本库和样式库
-                        var cmpjscssfiles = xds.vmd.getCmpReleaseJsCssFiles();
-                        cmpcssfiles = cmpjscssfiles.css.join('\n\t');
-                        cmpjsfiles = cmpjscssfiles.js.join('\n\t');
-
-                        //var html = String.format(data, codeStr, cls, title, xds.vmd.css || '', virtualPath, cssfiles, jsfiles);
-                        var _workspace = "vmd.workspace=" + Ext.encode(vmd.workspace) + "\n\t";
-                        //增加资源地址解析
-                        var serinfo = xds.vmd.getServerList2();
-                        _workspace = _workspace + "vmd.resourceSettings=" + Ext.encode(serinfo);
-                        //加入微服务地址
-                        _workspace = _workspace + "\nvmd.projectInfo=" + Ext.encode(vmd.projectInfo);
-
-                        //动态加入项目配置脚本
-                        var getProjectScript = function() {
-
-                            var path = xds.vmd.getProjectConfigPath();
-                            return '<script src="' + path + '"></script>'
-                        }
-                        var html = data.format({
-                            vmdcodeStr: vmd.replaceResVars(codeStr),
-                            vmdcls: cls,
-                            vmdtitle: title,
-                            vmdcss: vmd.replaceResVars(xds.vmd.css) || '',
-                            vmdvirtualPath: virtualPath,
-                            vmdrescssfiles: rescssfiles,
-                            vmdresjsfiles: resjsfiles,
-                            vmdcmpcssfiles: cmpcssfiles,
-                            vmdcmpjsfiles: cmpjsfiles,
-                            vmdver: ver,
-                            vmdworkspaceInfo: _workspace,
-                            vmdworkspacePath: "",
-                            vmdPreviewMode: "vmd.previewMode=true;",
-                            vmdprojectcssfiles: '',
-                            vmdprojectjsfiles: '',
-                            vmdprojectconfigjs: getProjectScript()
-                        })
-
-                        //代码格式化一下
-                        html = beautifier.html(html, {
-                            "max_preserve_newlines": "-1"
-                        });
-
-                        saveVmd(filename, html, "htmlState");
-
-                        //20171205 增加发布临时html文件
-                        var _filename = filename.substring(filename.lastIndexOf('/') + 1, filename.length);
-                        _filename = _filename.replace('.html', '') + '_r' + '.html';
-                        filename = filename.substring(0, filename.lastIndexOf('/')) + '/' + _filename;
-
-                        //返回带变量替换的值
-                        rescssfiles = xds.vmd.getResStylesheet(true);
-                        resjsfiles = xds.vmd.getResScript(true);
-                        //加载组件扩展的依赖脚本库和样式库
-                        cmpjscssfiles = xds.vmd.getCmpReleaseJsCssFiles(true);
-                        cmpcssfiles = cmpjscssfiles.css.join('\n\t');
-                        cmpjsfiles = cmpjscssfiles.js.join('\n\t');
-                        //html = String.format(data, codeStr, cls, title, xds.vmd.css || '', '{0}', cssfiles, jsfiles);
-                        html = data.format({
-                            vmdcodeStr: codeStr,
-                            vmdcls: cls,
-                            vmdtitle: title,
-                            vmdcss: xds.vmd.css || '',
-                            vmdvirtualPath: "{vmdvirtualPath}",
-                            vmdworkspaceInfo: "",
-                            vmdworkspacePath: "{vmdworkspacePath}",
-                            vmdrescssfiles: rescssfiles,
-                            vmdresjsfiles: resjsfiles,
-                            vmdcmpcssfiles: cmpcssfiles,
-                            vmdcmpjsfiles: cmpjsfiles,
-                            vmdver: ver,
-                            vmdPreviewMode: "",
-                            vmdprojectcssfiles: '{vmdprojectcssfiles}',
-                            vmdprojectjsfiles: '{vmdprojectjsfiles}',
-                            vmdprojectconfigjs: '{vmdprojectconfigjs}'
-                        })
-                        //代码格式化一下
-
-
-                        saveVmd(filename, html, "htmlrState");
-
-                        //日志记录
-                        vmd.saveModuleEditInfo && vmd.saveModuleEditInfo(id);
-
-                    },
-                    error: function(data) {
-                        Ext.Msg.alert('提示', '加载模块模版文件出错！');
-                    }
-                })
-            }
-            //修改集成功能类型
-            xds.vmd.checkCid();
-
-            saveVmd(filename, bodyStr, "vmdState")
-
-            var page = xds.project.getJson()[0];
-            var codeStr = SourceX.JonsScript(page);
-
-            var cls = page.name;
-            var htmlfile = filename.replace('.vmd', '.html');
-            //格式化代码
-            if (typeof beautifier != 'undefined') {
-                readModuleTemplete(htmlfile, codeStr, cls)
-            } else {
-                var formatcodepath = vmd.virtualPath + '/lib/beautify/beautifier.min.js?ver=' + vmd.vmdVersion;
-                $LAB.script(formatcodepath)
-                    .wait(function() {
-                        readModuleTemplete(htmlfile, codeStr, cls)
-                    })
-            }
-
-
-            var runner = new Ext.util.TaskRunner();
-            var taskRun = function() {
-                //vmd文件和html及html发布文件保存成功后才提示
-                if (tastList.vmdState && tastList.htmlState && tastList.htmlrState) {
-                    !settings && Ext.Msg.alert('提示', '保存成功！', function() {
-
-                        if (callback && !callbackInfo.isShow) {
-                            window.close()
-                        }
-                        //subwindow是否首次保存
-                        try {
-                            if (parent.xds) {
-                                parent.xds.vmd.saveSubWindow();
-                            }
-                        } catch (e) {}
-
-                    });
-
-                    runner.stop(task); //停止 任务
-                    if (callback) callback();
-                }
-
-            }
-            var task = {
-                run: taskRun,
-                interval: 100,
-                duration: 10000
-            }
-
-            runner.start(task);
-
-
-
+            this._saveModuleFile(path, bodyStr, callback, callbackInfo, settings);
         }
 
     }
 });
 
 Ext.override(Ext.Window, {
-    moveZone: function(me, x, y) {
+    moveZone: function (me, x, y) {
         var bh = document.documentElement.clientHeight;
         if (y < 0) {
             me.setPosition(x, 0);
@@ -4796,24 +5097,24 @@ xds.Config = Ext.extend(Ext.util.Observable, {
     editor: "string",
     setFn: "setConfig",
     getFn: "getConfigValue",
-    constructor: function(a) {
+    constructor: function (a) {
         Ext.apply(this, a);
     },
-    getHeight: function() {
+    getHeight: function () {
         return (document.documentElement || document.body).clientHeight - 50;
     },
-    getWidth: function() {
+    getWidth: function () {
         var width = (document.documentElement || document.body).clientWidth;
         if (width > 400) {
             return width - 200;
         }
         return width - 20;
     },
-    getValue: function(a) {
+    getValue: function (a) {
         return a[this.getFn](this.name)
     },
 
-    setValue: function(e, b) {
+    setValue: function (e, b) {
         var a = e[this.getFn](this.name);
         e[this.setFn](this.name, b);
         if (String(a) !== String(b)) {
@@ -4832,7 +5133,7 @@ xds.Config = Ext.extend(Ext.util.Observable, {
                             attr = modifyrecs[0].data.name;
                             oldValue = modifyrecs[0].modified.value;
                         }
-                    } catch (ex) {}
+                    } catch (ex) { }
                     var opts = {
                         status: 'update',
                         cmp: e,
@@ -4845,7 +5146,7 @@ xds.Config = Ext.extend(Ext.util.Observable, {
             }
         }
     },
-    getView: function(a) {
+    getView: function (a) {
         if (this.propEditor) { //不能用同一个
             this.propEditor.destroy();
         }
@@ -4859,7 +5160,7 @@ xds.Config = Ext.extend(Ext.util.Observable, {
             return {};
         }
     },
-    render: function(a, c, b) {
+    render: function (a, c, b) {
         return a
     }
 });
@@ -4881,7 +5182,7 @@ xds.Config.Boolean = Ext.extend(xds.Config, {
     defaultValue: false,
     editor: "boolean",
     htmlEncode: false,
-    render: function(a, c, b) {
+    render: function (a, c, b) {
         a = a === undefined ? this.defaultValue : a;
         return '<span class="bcheck"><input type="checkbox" class="' +
             b.id + '"' + (a ? " checked" : "") + "></span>"
@@ -4891,12 +5192,12 @@ xds.Config.Frame = Ext.extend(xds.Config, {
     type: "Frame",
     editor: "frame",
     htmlEncode: false,
-    render: function(a, c, b) {
+    render: function (a, c, b) {
 
         var url = this.edConfig && this.edConfig.url || "";
         var height = (this.edConfig && this.edConfig.height || 23) + "px";
         //嵌套页面回写父容器的属性值
-        window.vmdPropsSetValue = function(prop, value) {
+        window.vmdPropsSetValue = function (prop, value) {
             if (arguments.length = 1) {
                 value = prop;
                 prop = null;
@@ -4921,10 +5222,10 @@ xds.Config.Object = Ext.extend(xds.Config.String, {
     type: "Object",
     defaultValue: null,
     editor: "object",
-    render: function() {
+    render: function () {
         return "[object]..."
     },
-    setValue: function(c, value) {
+    setValue: function (c, value) {
         if (typeof value != "object") {
             value = Ext.util.Format.trim(value);
             var o;
@@ -4948,7 +5249,7 @@ xds.Config.types = {
 //扩展  begin 
 xds.Config.Editor = Ext.extend(Ext.util.Observable, {
 
-    constructor: function(a, b) {
+    constructor: function (a, b) {
         var me = this;
         this.config = a;
         this.component = b;
@@ -4964,13 +5265,13 @@ xds.Config.Editor = Ext.extend(Ext.util.Observable, {
 
         this.view.name = this.config.name;
 
-        this.view.on('afterrender', function() {
+        this.view.on('afterrender', function () {
 
             this.addHighLightClass();
             this.view.addHighLightClass = this._addHighLightClass;
 
         }, this)
-        this.view.on('specialkey', function(field, e) {
+        this.view.on('specialkey', function (field, e) {
 
             if (e.keyCode == 13) {
                 field.onBlur();
@@ -4980,21 +5281,21 @@ xds.Config.Editor = Ext.extend(Ext.util.Observable, {
 
         }, this)
 
-        this.view.on("focus", function(p) {
+        this.view.on("focus", function (p) {
             this.setPropDesc();
             //console.log(this.view)
         }, this);
-        Ext.defer(function() {
-            me.view.on("check", function(p) {
+        Ext.defer(function () {
+            me.view.on("check", function (p) {
                 this.setPropDesc();
             }, me);
         }, 200)
 
     },
-    getEditorCmpId: function(id) {
+    getEditorCmpId: function (id) {
         return id && id.replace(xds.vmd.propName, '').replace('Container-', '');
     },
-    _getFieldProp: function(type) {
+    _getFieldProp: function (type) {
         var prop;
         var cid = this.component.cid;
 
@@ -5006,19 +5307,19 @@ xds.Config.Editor = Ext.extend(Ext.util.Observable, {
         if (cid.indexOf(designer.prefix.cmp) != -1) cid = cid.replace(/\./g, '_');
 
         var propArr = ControlsDataManage._getTreeNodes(cid, type) || [];
-        prop = Ext.Array.findBy(propArr, function(item) {
+        prop = Ext.Array.findBy(propArr, function (item) {
             return item && (item.id == cmpId);
         }, this)
         return prop || {};
     },
-    getPropName: function(type) {
+    getPropName: function (type) {
         var name = '';
         var prop = this._getFieldProp(type);
         if (prop) name = prop.data && prop.data.Name;
         return name;
 
     },
-    setPropDesc: function(type) {
+    setPropDesc: function (type) {
         var html = '<div class="properyDescript"><h3 class="properyDescript-title">{text}</h3><p class="properyDescript-content"></p>{comment}</div>'
         var propDesc = Ext.getCmp('propDesc');
         var prop = this._getFieldProp(type);
@@ -5029,7 +5330,7 @@ xds.Config.Editor = Ext.extend(Ext.util.Observable, {
         });
         vmd(Ext.getDom(propDesc.body.id)).html(html);
     },
-    _addHighLightClass: function(cmp, store, name) {
+    _addHighLightClass: function (cmp, store, name) {
 
         var item = store.getById(name) || store.getById('vmd-prop-' + name) || store.getById('Container-vmd-prop-' + name)
         if (item) {
@@ -5043,20 +5344,20 @@ xds.Config.Editor = Ext.extend(Ext.util.Observable, {
             }
         }
     },
-    addHighLightClass: function() {
+    addHighLightClass: function () {
 
         var store = this.component.propStore.store;
         var name = this.config.name;
         this._addHighLightClass(this.view, store, name)
 
     },
-    getHeight: function() {
+    getHeight: function () {
         return document.body.clientHeight - 50;
     },
-    getWidth: function() {
+    getWidth: function () {
         return document.body.clientWidth - 50;
     },
-    init: function() {
+    init: function () {
         this.view = new Ext.form.TextField({
             selectOnFocus: true,
             enableKeyEvent: true,
@@ -5068,9 +5369,9 @@ xds.Config.Editor = Ext.extend(Ext.util.Observable, {
 
     },
 
-    reload: function() {},
-    edit: function() {},
-    destroy: function() {
+    reload: function () { },
+    edit: function () { },
+    destroy: function () {
         if (this.view && this.view.destroy) {
             this.view.destroy();
         }
@@ -5078,7 +5379,7 @@ xds.Config.Editor = Ext.extend(Ext.util.Observable, {
 })
 xds.Config.Editor.string = Ext.extend(xds.Config.Editor, {});
 xds.Config.Editor.boolean = Ext.extend(xds.Config.Editor, {
-    init: function() {
+    init: function () {
         this.view = new Ext.form.Checkbox({
             readOnly: this.config.readOnly,
             hidden: this.config.hide,
@@ -5087,7 +5388,7 @@ xds.Config.Editor.boolean = Ext.extend(xds.Config.Editor, {
     }
 });
 xds.Config.Editor.date = Ext.extend(xds.Config.Editor, {
-    init: function() {
+    init: function () {
         this.view = new Ext.form.DateField({
             selectOnFocus: true,
             readOnly: this.config.readOnly,
@@ -5097,7 +5398,7 @@ xds.Config.Editor.date = Ext.extend(xds.Config.Editor, {
     }
 });
 xds.Config.Editor.number = Ext.extend(xds.Config.Editor, {
-    init: function() {
+    init: function () {
         this.view = new Ext.form.NumberField({
             selectOnFocus: true,
             enableKeyEvent: true,
@@ -5110,12 +5411,12 @@ xds.Config.Editor.number = Ext.extend(xds.Config.Editor, {
 xds.Config.Editor.code = Ext.extend(xds.Config.Editor, {});
 xds.Config.Editor.object = Ext.extend(xds.Config.Editor, {});
 xds.Config.Editor.file = Ext.extend(xds.Config.Editor, {
-    constructor: function(a, b) {
+    constructor: function (a, b) {
         this.config = a;
         this.component = b;
         this.init();
     },
-    init: function() {
+    init: function () {
         var me = this;
         this.config.edConfig = this.config.edConfig || {};
         var fileView = new Ext.form.FileUploadField({
@@ -5154,7 +5455,7 @@ xds.Config.Editor.file = Ext.extend(xds.Config.Editor, {
         });
         // items: [fileView]
         this.view.add(fileView);
-        fileView.on("fileselected", function(e, a) {
+        fileView.on("fileselected", function (e, a) {
             //兼容url处理
             var url = this.url;
             if (Ext.isFunction(url)) url = this.url();
@@ -5173,7 +5474,7 @@ xds.Config.Editor.file = Ext.extend(xds.Config.Editor, {
                  }
                  ,failure:function(){
                      
-                     debugger
+                     
                  }
              });*/
             var fileEl = fileView.el.next().dom;
@@ -5192,10 +5493,10 @@ xds.Config.Editor.file = Ext.extend(xds.Config.Editor, {
                 processData: false,
                 contentType: false,
                 dataType: "json",
-                beforeSend: function() {
+                beforeSend: function () {
                     uploading = true;
                 },
-                success: function(data) {
+                success: function (data) {
 
                     if (data.isSucceed) {
 
@@ -5209,10 +5510,10 @@ xds.Config.Editor.file = Ext.extend(xds.Config.Editor, {
                     }
 
                 },
-                error: function(data) {
+                error: function (data) {
                     Ext.Msg.alert('提示', '上传失败，请重新上传！');
                 },
-                complete: function() {
+                complete: function () {
                     msg.hide();
                 }
             });
@@ -5224,12 +5525,12 @@ xds.Config.Editor.file = Ext.extend(xds.Config.Editor, {
     }
 });
 xds.Config.Editor.frame = Ext.extend(xds.Config.Editor, {
-    init: function() {
+    init: function () {
         var url = this.config.edConfig && this.config.edConfig.url || "";
         var height = (this.config.edConfig && this.config.edConfig.height || 30) + "px";
         //嵌套页面回写父容器的属性值
         var me = this;
-        window.vmdPropsSetValue = function(prop, value) {
+        window.vmdPropsSetValue = function (prop, value) {
             if (arguments.length = 1) {
                 value = prop;
                 prop = null;
@@ -5256,17 +5557,17 @@ xds.Config.Editor.frame = Ext.extend(xds.Config.Editor, {
             hidden: this.config.hide,
             disabled: this.config.disabled,
             html: '<iframe  src=' + url + ' style="height:' + height + '" frameborder=0 scrolling=no></iframe>',
-            setValue: function(value) {
+            setValue: function (value) {
                 this.value = value;
             },
-            getValue: function() {
+            getValue: function () {
                 return this.value;
             }
         });
     }
 });
 xds.Config.Editor.options = Ext.extend(xds.Config.Editor, {
-    init: function() {
+    init: function () {
         this.view = new Ext.ux.SelectBox({
             listClass: "x-combo-list-small",
             readOnly: this.config.readOnly,
@@ -5280,7 +5581,7 @@ xds.Config.Editor.options = Ext.extend(xds.Config.Editor, {
         });
         this.reload();
     },
-    reload: function() {
+    reload: function () {
         if (!this.config.edConfig) {
             this.config.edConfig = {};
         }
@@ -5291,7 +5592,7 @@ xds.Config.Editor.options = Ext.extend(xds.Config.Editor, {
             var options = this.config.options || [];
             this.view.store.loadData(options);
         } else {
-            this.view.on("focus", function(p) {
+            this.view.on("focus", function (p) {
                 var cfg = this.config.edConfig || {};
                 var options = this.config.options || [];
 
@@ -5332,7 +5633,7 @@ xds.Config.Editor.options = Ext.extend(xds.Config.Editor, {
 
 //20181117 成兵扩展，增加对文本框+更多的属性设置功能
 xds.Config.Editor.customString = Ext.extend(xds.Config.Editor, {
-    init: function() {
+    init: function () {
         this.textField = new Ext.form.TextArea({
             region: "center",
             readOnly: this.config.readOnly,
@@ -5354,12 +5655,12 @@ xds.Config.Editor.customString = Ext.extend(xds.Config.Editor, {
             readOnly: this.config.readOnly,
             hidden: this.config.hide,
             disabled: this.config.disabled,
-            setValue: function(value) {
+            setValue: function (value) {
                 if (me.component && Ext.isFunction(me.component)) value = me.component.getVarExp(me.view.name, value);
                 this.textField.setValue(value);
                 this.value = value
             },
-            getValue: function() {
+            getValue: function () {
                 return this.textField.getValue();
             }
         });
@@ -5369,16 +5670,16 @@ xds.Config.Editor.customString = Ext.extend(xds.Config.Editor, {
         this.view.morebtn = this.morebtn
         this.reload();
     },
-    reload: function() {
+    reload: function () {
         var me = this;
         if (!this.config.edConfig) {
             this.config.edConfig = {};
         }
         Ext.apply(this.textField, this.config.edConfig)
-        me.textField.on("blur", function() {
+        me.textField.on("blur", function () {
             me.view.fireEvent("change", me.view, me.view.getValue());
         }, me);
-        me.morebtn.on("click", function(p) {
+        me.morebtn.on("click", function (p) {
             var aceWin = new Ext.Window({
                 title: "表达式编辑",
                 id: "aceWin",
@@ -5390,12 +5691,12 @@ xds.Config.Editor.customString = Ext.extend(xds.Config.Editor, {
                 layout: 'border',
                 draggable: false,
                 listeners: {
-                    move: function(me, x, y) {
+                    move: function (me, x, y) {
                         me.moveZone(me, x, y);
                     }
                 }
             });
-            aceWin.closeFn = function() {
+            aceWin.closeFn = function () {
                 Ext.select('.Ace-Tern-tooltip').remove();
                 var val = aceWin.val;
                 if (aceWin.script == val) {
@@ -5406,8 +5707,8 @@ xds.Config.Editor.customString = Ext.extend(xds.Config.Editor, {
             }
             init_def_platformControlData();
             aceWin.on('close', aceWin.closeFn, me)
-            window.setTimeout(function() {
-                window.setTimeout(function() {
+            window.setTimeout(function () {
+                window.setTimeout(function () {
                     //代码编辑器初始化
                     if (typeof rowIndex == "number") {
                         aceWin.aceline = rowIndex;
@@ -5431,16 +5732,16 @@ xds.Config.Editor.customString = Ext.extend(xds.Config.Editor, {
     }
 });
 //派生复合组件属性面板弹窗
-xds.Config.Editor.propertyPanel=Ext.extend(xds.Config.Editor.customString,{
-    reload:function(){
+xds.Config.Editor.propertyPanel = Ext.extend(xds.Config.Editor.customString, {
+    reload: function () {
         var me = this;
-        me.morebtn.on("click", function(p) {
+        me.morebtn.on("click", function (p) {
             //弹窗代码
         })
     }
 })
 xds.Config.Editor.multiOptions = Ext.extend(xds.Config.Editor.options, {
-    init: function() {
+    init: function () {
         this.view = new Ext.ux.MultiComboBox({
             listClass: "x-combo-list-small",
             store: new Ext.data.SimpleStore({
@@ -5457,7 +5758,7 @@ xds.Config.Editor.multiOptions = Ext.extend(xds.Config.Editor.options, {
     }
 });
 xds.Config.Editor.multiCombo = Ext.extend(xds.Config.Editor.options, {
-    init: function() {
+    init: function () {
         this.view = new Ext.ux.MultiComboBox({
             listClass: "x-combo-list-small",
             store: new Ext.data.JsonStore({
@@ -5475,7 +5776,7 @@ xds.Config.Editor.multiCombo = Ext.extend(xds.Config.Editor.options, {
     }
 });
 xds.Config.Editor.combo = Ext.extend(xds.Config.Editor.options, {
-    init: function() {
+    init: function () {
         this.view = new Ext.ux.SelectBoxEx({
             listClass: "x-combo-list-small",
             store: new Ext.data.JsonStore({
@@ -5491,14 +5792,14 @@ xds.Config.Editor.combo = Ext.extend(xds.Config.Editor.options, {
     }
 });
 xds.Config.Editor.js = Ext.extend(xds.Config.Editor, {
-    init: function() {
+    init: function () {
         xds.Config.Editor.js.superclass.init.call(this);
         this.view.readOnly = true;
-        this.view.on("focus", function(p) {
+        this.view.on("focus", function (p) {
             this.edit();
         }, this);
     },
-    edit: function() {
+    edit: function () {
         var editor = new vmd.comp.Ace({
             /*必须加id（itemId）不然add操作会重复累加dom结构*/
             id: 'ace_js',
@@ -5515,7 +5816,7 @@ xds.Config.Editor.js = Ext.extend(xds.Config.Editor, {
             hidden: true,
             items: [editor],
             listeners: {
-                move: function(me, x, y) {
+                move: function (me, x, y) {
                     this.moveZone(me, x, y);
                 }
             }
@@ -5525,7 +5826,7 @@ xds.Config.Editor.js = Ext.extend(xds.Config.Editor, {
         aceWin.height = this.getHeight();
         aceWin.width = this.getWidth();
         var me = this;
-        aceWin.closeFn = function() {
+        aceWin.closeFn = function () {
             //修复ace tooltip还存在的问题
             Ext.select('.Ace-Tern-tooltip').remove();
             var oldValue = this.view.getValue();
@@ -5547,17 +5848,17 @@ xds.Config.Editor.js = Ext.extend(xds.Config.Editor, {
         };
         aceWin.on('close', aceWin.closeFn, this)
 
-        Ext.defer(function() {
+        Ext.defer(function () {
             var value = me.view.getValue() || "";
             //对于tpl属性特殊处理
             if (me.config.name == "tpl")
                 value = value.replace(/',/g, "',\n")
             editor.value = value;
             aceWin.show();
-            Ext.defer(function() {
+            Ext.defer(function () {
                 editor.focus();
                 value && editor.initCodeFormatJs(editor.language,
-                    function() {
+                    function () {
                         editor.formatting();
                     })
             }, 150)
@@ -5565,7 +5866,7 @@ xds.Config.Editor.js = Ext.extend(xds.Config.Editor, {
     }
 });
 xds.Config.Editor.html = Ext.extend(xds.Config.Editor.js, {
-    edit: function() {
+    edit: function () {
         var editor = new vmd.comp.Ace({
             language: 'html'
         })
@@ -5580,7 +5881,7 @@ xds.Config.Editor.html = Ext.extend(xds.Config.Editor.js, {
             bodyStyle: "background-color:#fff",
             items: [editor],
             listeners: {
-                move: function(me, x, y) {
+                move: function (me, x, y) {
                     this.moveZone(me, x, y);
                 }
             }
@@ -5589,20 +5890,20 @@ xds.Config.Editor.html = Ext.extend(xds.Config.Editor.js, {
         var me = this;
         // win.height = this.getHeight();
         // win.width = this.getWidth();
-        Ext.defer(function() {
+        Ext.defer(function () {
             editor.value = me.view.getValue() || '';
             win.show();
-            Ext.defer(function() {
+            Ext.defer(function () {
                 editor.focus();
                 editor.initCodeFormatJs(editor.language,
-                    function() {
+                    function () {
                         editor.formatting();
                     })
             }, 100)
 
         }, 50);
         //关闭
-        win.closefn = function() {
+        win.closefn = function () {
             var newValue = editor.getValue() || "";
             var oldValue = this.view.getValue();
             if (oldValue !== newValue) {
@@ -5614,7 +5915,7 @@ xds.Config.Editor.html = Ext.extend(xds.Config.Editor.js, {
     }
 });
 xds.Config.Editor.style = Ext.extend(xds.Config.Editor.js, {
-    edit: function() {
+    edit: function () {
         var editor = new vmd.comp.Ace({
             /*必须加id（itemId）不然add操作会重复累加dom结构*/
             id: 'ace_style',
@@ -5631,13 +5932,13 @@ xds.Config.Editor.style = Ext.extend(xds.Config.Editor.js, {
             modal: true,
             items: [editor],
             listeners: {
-                move: function(me, x, y) {
+                move: function (me, x, y) {
                     this.moveZone(me, x, y);
                 }
             }
         });
         var me = this;
-        aceWin.closefn = function() {
+        aceWin.closefn = function () {
             //修复ace tooltip还存在的问题
             Ext.select('.Ace-Tern-tooltip').remove();
 
@@ -5669,8 +5970,8 @@ xds.Config.Editor.style = Ext.extend(xds.Config.Editor.js, {
         };
         aceWin.on('close', aceWin.closefn, this)
 
-        Ext.defer(function() {
-            Ext.defer(function() {
+        Ext.defer(function () {
+            Ext.defer(function () {
                 editor.gotoLine(2);
                 editor.focus();
             }, 150)
@@ -5681,7 +5982,7 @@ xds.Config.Editor.style = Ext.extend(xds.Config.Editor.js, {
             aceWin.show();
 
             value && editor.initCodeFormatJs(editor.language,
-                function() {
+                function () {
                     editor.formatting();
                 })
 
@@ -5690,29 +5991,29 @@ xds.Config.Editor.style = Ext.extend(xds.Config.Editor.js, {
 });
 xds.Config.Editor.css = Ext.extend(xds.Config.Editor.style, {});
 xds.Config.Editor.ace = Ext.extend(xds.Config.Editor, {
-    init: function() {
+    init: function () {
         var me = this;
         xds.Config.Editor.ace.superclass.init.call(this);
         this.view.readOnly = true;
         this.view.un('focus');
-        this.view.on("focus", function(p) {
+        this.view.on("focus", function (p) {
             //this.edit();
             var me = this;
-            Ext.defer(function() {
+            Ext.defer(function () {
                 me.setPropDesc("Event");
             }, 50)
 
 
         }, this);
-        this.view.on('afterrender', function() {
-            this.el.on("dblclick", function(p) {
+        this.view.on('afterrender', function () {
+            this.el.on("dblclick", function (p) {
                 me.edit();
             }, this);
         })
 
 
     },
-    edit: function() {
+    edit: function () {
 
         var editor = new vmd.comp.Ace({
             id: "ace_code"
@@ -5728,21 +6029,21 @@ xds.Config.Editor.ace = Ext.extend(xds.Config.Editor, {
             layout: 'border',
             draggable: false,
             listeners: {
-                move: function(me, x, y) {
+                move: function (me, x, y) {
                     this.moveZone(me, x, y);
                 }
 
             }
         });
         var me = this;
-        aceWin.closeFn = function() {
+        aceWin.closeFn = function () {
             //修复ace tooltip还存在的问题
             Ext.select('.Ace-Tern-tooltip').remove();
             var val = aceWin.val;
             if (aceWin.script == val) {
                 return;
             }
-            Ext.Msg.confirm("提示", "脚本已改变是否保存?", function(btn) {
+            Ext.Msg.confirm("提示", "脚本已改变是否保存?", function (btn) {
                 if (btn == 'no') return;
                 var click_label = me.view.originalValue ? me.view.originalValue : (me.component.id + "_" + me.config.name);
                 /* if (!me.view.getValue()) {
@@ -5772,8 +6073,8 @@ xds.Config.Editor.ace = Ext.extend(xds.Config.Editor, {
         aceWin.width = this.getWidth();
         aceWin.on('close', aceWin.closeFn, this)
         //当前拖拽组件
-        window.setTimeout(function() {
-            window.setTimeout(function() {
+        window.setTimeout(function () {
+            window.setTimeout(function () {
                 //代码编辑器初始化
                 if (typeof rowIndex == "number") {
                     aceWin.aceline = rowIndex;
@@ -5784,13 +6085,13 @@ xds.Config.Editor.ace = Ext.extend(xds.Config.Editor, {
             var code = xds.vmd.events;
             var eventName = me.view.getValue() || me.component.id + "_" + me.config.name;
 
-            var getdefaulteventname = function() {
+            var getdefaulteventname = function () {
                 var params = me.config.params || "";
                 if (params) params = "," + params;
                 var funStr = ""
                 if (me.component.cid == 'vmdButton')
                     funStr = "//记录日志信息 \n" +
-                    "//vmd.webBase.syslog(loginfo,logtype,operationtype,function(res){}) "
+                        "//vmd.webBase.syslog(loginfo,logtype,operationtype,function(res){}) "
                 return "function(sender" + params + "){\n" + funStr + "\n} \n";
             }
             var m = getdefaulteventname(),
@@ -5817,7 +6118,7 @@ xds.Config.Editor.ace = Ext.extend(xds.Config.Editor, {
             var scriptArr = code.split("\n"),
                 rowIndex = null;
             Ext.each(scriptArr,
-                function(o, p) {
+                function (o, p) {
                     if (o.search(regex) != -1) {
                         rowIndex = p + 2;
                         return false
@@ -5827,15 +6128,15 @@ xds.Config.Editor.ace = Ext.extend(xds.Config.Editor, {
     }
 });
 xds.Config.Editor.defineWindow = Ext.extend(xds.Config.Editor, {
-    init: function() {
+    init: function () {
         xds.Config.Editor.ace.superclass.init.call(this);
         this.view.readOnly = true;
-        this.view.on("focus", function(p) {
+        this.view.on("focus", function (p) {
             this.edit();
         }, this);
 
     },
-    edit: function() {
+    edit: function () {
         var win = new Ext.Window({
             title: "自定义",
             modal: true,
@@ -5846,13 +6147,13 @@ xds.Config.Editor.defineWindow = Ext.extend(xds.Config.Editor, {
             resizable: true,
             bodyStyle: "background-color:#fff",
             listeners: {
-                move: function(me, x, y) {
+                move: function (me, x, y) {
                     this.moveZone(me, x, y);
                 }
             }
         });
         var me = this;
-        Ext.defer(function() {
+        Ext.defer(function () {
             var wincfg = me.config.edConfig || {},
                 _r = new Date().getTime();
             Ext.apply(win, wincfg);
@@ -5869,7 +6170,7 @@ xds.Config.Editor.defineWindow = Ext.extend(xds.Config.Editor, {
         }, 50)
         //关闭
 
-        win.closefn = function() {
+        win.closefn = function () {
             var subWin = win.el.query('iframe')[0].contentWindow;
             var newValue = this.vmdReturnValue || subWin.vmdReturnValue;
             var oldValue = this.view.getValue();
@@ -5949,12 +6250,12 @@ xds.Config.Editor.defineWindow = Ext.extend(xds.Config.Editor, {
         }
 
         //准备废掉
-        window.edClose = function(isCover) {
+        window.edClose = function (isCover) {
             //if (isCover == null) isCover = true;
             win.isCover = isCover;
             win.close();
         };
-        window.edclose = function(returnValue) {
+        window.edclose = function (returnValue) {
 
             if (returnValue != null) {
                 win.isCover = true;
@@ -5967,7 +6268,7 @@ xds.Config.Editor.defineWindow = Ext.extend(xds.Config.Editor, {
     }
 });
 xds.Config.Editor.image = Ext.extend(xds.Config.Editor.defineWindow, {
-    edit: function() {
+    edit: function () {
 
         var src = this.view.value || '';
         this.config.edConfig = {
@@ -6008,7 +6309,7 @@ xds.Config.editors = {
 };
 //end
 
-xds.editorConfigs = new Ext.util.MixedCollection(false, function(a) {
+xds.editorConfigs = new Ext.util.MixedCollection(false, function (a) {
     return a.name
 });
 
@@ -6016,10 +6317,10 @@ xds.editorConfigs.addAll([new xds.Config.String({
     name: "name",
     ctype: "string",
     group: "(Designer)",
-    getValue: function(a) {
+    getValue: function (a) {
         return (a.name == a.defaultName) ? a.id : a.name;
     },
-    setValue: function(e, b) {
+    setValue: function (e, b) {
         var a = e.id;
         var d = xds.inspector.getNodeById(e.id);
         if (xds.canvas.selectedId == a) {
@@ -6032,14 +6333,14 @@ xds.editorConfigs.addAll([new xds.Config.String({
     name: "userXType",
     ctype: "string",
     group: "(Designer)",
-    getValue: function(a) {
+    getValue: function (a) {
         return a.userXType
     },
-    setValue: function(b, a) {
+    setValue: function (b, a) {
         b.userXType = a
     }
 })]);
-xds.dockConfigs = new Ext.util.MixedCollection(false, function(a) {
+xds.dockConfigs = new Ext.util.MixedCollection(false, function (a) {
     return a.name
 });
 xds.dockConfigs.addAll([new xds.Config.String({
@@ -6048,10 +6349,10 @@ xds.dockConfigs.addAll([new xds.Config.String({
     group: "(Designer)",
     editor: "options",
     options: ["(none)", "bbar", "tbar", "fbar"],
-    getValue: function(a) {
+    getValue: function (a) {
         return a.dock
     },
-    setValue: function(b, a) {
+    setValue: function (b, a) {
         if (a == "(none)") {
             a = undefined
         }
@@ -6068,17 +6369,17 @@ xds.MainMenu = Ext.extend(Ext.Toolbar, {
     defaults: {
         minWidth: 42
     },
-    initComponent: function() {
+    initComponent: function () {
         this.items = [{
             text: "File",
             menu: [xds.actions.newAction, "-", xds.actions.openAction,
                 "-", xds.actions.saveAction,
-                xds.actions.saveAsAction
+            xds.actions.saveAsAction
             ]
         }, {
             text: "Project",
             menu: [xds.actions.newCmpAction,
-                xds.actions.deleteCmpAction
+            xds.actions.deleteCmpAction
             ]
         }, {
             text: "Help",
@@ -6093,7 +6394,7 @@ xds.actions = {
         itemText: "Save Project",
         tooltip: designer.toolbar.save,
         text: designer.toolbar.save,
-        handler: function() {
+        handler: function () {
             xds.project.save()
         }
     }),
@@ -6102,7 +6403,7 @@ xds.actions = {
         itemText: "Save Project As...",
         tooltip: designer.toolbar.saveAs,
         text: designer.toolbar.saveAs,
-        handler: function() {
+        handler: function () {
             xds.project.saveAs()
         }
     }),
@@ -6112,11 +6413,11 @@ xds.actions = {
         itemText: designer.toolbar.New,
         tooltip: designer.toolbar.New,
         text: designer.toolbar.New,
-        handler: function() {
+        handler: function () {
             designer.mode = "module";
             xds.vmd.clear();
             //xds.vmd.events = "";
-            xds.project.close(function() {
+            xds.project.close(function () {
                 var content = {
                     "components": [{
                         "cid": "viewport",
@@ -6143,7 +6444,7 @@ xds.actions = {
         tooltip: designer.toolbar.NewComp,
         text: designer.toolbar.NewComp,
         itemId: 'newuxcmp',
-        handler: function() {
+        handler: function () {
             xds.vmd.newUxCmp();
 
         }
@@ -6153,9 +6454,9 @@ xds.actions = {
         itemText: designer.toolbar.open,
         tooltip: designer.toolbar.open,
         text: designer.toolbar.open,
-        handler: function() {
-            xds.project.close(function() {
-                xds.File.openProject(function(b) {
+        handler: function () {
+            xds.project.close(function () {
+                xds.File.openProject(function (b) {
                     var a = new xds.Project(b);
                     a.open()
                 })
@@ -6167,7 +6468,7 @@ xds.actions = {
         tooltip: designer.toolbar.add,
         itemText: designer.toolbar.add,
         text: designer.toolbar.add,
-        handler: function() {
+        handler: function () {
             var a = new xds.CWindow({
                 title: designer.toolbar.add
             });
@@ -6180,7 +6481,7 @@ xds.actions = {
         disabled: true,
         itemText: designer.toolbar.del,
         text: designer.toolbar.del,
-        handler: function() {
+        handler: function () {
             xds.inspector.removeComponent(xds.active.component)
         }
     }),
@@ -6189,19 +6490,19 @@ xds.actions = {
         tooltip: designer.toolbar.help,
         itemText: designer.toolbar.del.help,
         text: designer.toolbar.del.help,
-        handler: function() {}
+        handler: function () { }
     }),
     aboutXds: new Ext.Action({
         tooltip: designer.toolbar.about,
         itemText: designer.toolbar.about,
-        handler: function() {}
+        handler: function () { }
     }),
     viewJson: new Ext.Action({
         iconCls: "icon-view-json",
         itemText: designer.CJsonWindow.title,
         tooltip: designer.CJsonWindow.title,
         text: designer.CJsonWindow.title,
-        handler: function() {
+        handler: function () {
 
             xds.project.viewJoson();
         }
@@ -6210,7 +6511,7 @@ xds.actions = {
         iconCls: "icon-view-json",
         tooltip: "点击预览",
         text: "预览",
-        handler: function() {
+        handler: function () {
 
             xds.project.preview();
 
@@ -6228,7 +6529,7 @@ xds.Component = Ext.extend(Ext.util.Observable, {
     minHeight: 10,
     snapToGrid: 10,
     showGrid: true,
-    constructor: function(a) {
+    constructor: function (a) {
         Ext.apply(this, a);
         this.name = this.name || this.defaultName;
 
@@ -6247,14 +6548,14 @@ xds.Component = Ext.extend(Ext.util.Observable, {
             this.flyoutCls = "xds-flyout"
         }
     },
-    setOwner: function(a) {
+    setOwner: function (a) {
         if (this.owner && !a) {
             this.setName(this.id)
         }
         this.owner = a;
         delete this.config
     },
-    setConfig: function(a, b) {
+    setConfig: function (a, b) {
         var originalId = this.id;
         this.userConfig[a] = b;
         if (this.config && !Ext.isEmptyObject(this.config)) {
@@ -6328,13 +6629,13 @@ xds.Component = Ext.extend(Ext.util.Observable, {
             }
         }
     },
-    getSnapToGrid: function(a) {
+    getSnapToGrid: function (a) {
         return !this.snapToGrid ? "(none)" : this.snapToGrid
     },
-    setSnapToGrid: function(b, a) {
+    setSnapToGrid: function (b, a) {
         this.snapToGrid = a == "(none)" ? 0 : parseInt(a, 10)
     },
-    setName: function(a) {
+    setName: function (a) {
         //if (this.ids[a]) {
 
         //    return false;
@@ -6352,14 +6653,14 @@ xds.Component = Ext.extend(Ext.util.Observable, {
         this.getNode().setText(a + this.nameSuffix)
     },
     //id默认设置
-    getConfig: function() {
+    getConfig: function () {
         //mafei新增4.2基类后需要兼容config
         if (!this.config || Ext.isEmptyObject(this.config)) {
             //if (!this.config) {
             this.config = Ext.apply({
                 xtype: this.xtype,
                 id: this.id,
-				xcls:this.xcls
+                xcls: this.xcls
 
             }, this.defaultConfig);
             this.initConfig(this.config, this.owner);
@@ -6367,23 +6668,23 @@ xds.Component = Ext.extend(Ext.util.Observable, {
         }
         return this.config
     },
-    getLayoutCfg: function() {
+    getLayoutCfg: function () {
         var i = 0;
         for (p in this.layoutConfig) i++;
         if (i > 0)
             return xds.copy(this.layoutConfig);
     },
     //序列化转换
-    getJsonConfig: function(a) {
+    getJsonConfig: function (a) {
         //节点可以重复
-        var hasRepeatNode = function(cid) {
+        var hasRepeatNode = function (cid) {
             if (xds.vmd.repeatRootTypes().indexOf(cid) != -1) {
                 return true;
             }
             return false;
         }
 
-        var c = null,cid;
+        var c = null, cid;
         if (!c) {
             c = Ext.apply({
                 xtype: this.xtype,
@@ -6394,7 +6695,9 @@ xds.Component = Ext.extend(Ext.util.Observable, {
                 layoutConfig: this.getLayoutCfg()
                 //userConfig : xds.copy(this.userConfig)
             }, this.defaultConfig);
-            cid=this.cid;
+
+            cid = this.cid;
+
 
             //20171121
             if (c.id && hasRepeatNode(this.cid)) {
@@ -6411,13 +6714,13 @@ xds.Component = Ext.extend(Ext.util.Observable, {
                 //先找到组将定义对象，然后从配置中找到事件中是否含有该属性，最后动态构造events
                 var all = xds.Registry.all;
 
-                Ext.each(all.items, function(cmp, index) {
+                Ext.each(all.items, function (cmp, index) {
                     // cmp = new cmp();
                     cmp = cmp.prototype;
                     if (cmp.xcls == c.xcls) {
                         var configs = cmp.configs.items;
                         for (var key in me.userConfig) {
-                            Ext.each(configs, function(conf) {
+                            Ext.each(configs, function (conf) {
                                 //修复高度、宽度百分比不起作用
                                 // if (!c.height) delete c.height;
                                 // if (!c.width) delete c.width;
@@ -6494,19 +6797,20 @@ xds.Component = Ext.extend(Ext.util.Observable, {
                 }
             }
         }
+
         return c;
     },
-    getConfigValue: function(a) {
+    getConfigValue: function (a) {
         return this.getConfig()[a]
     },
-    isSet: function(a) {
+    isSet: function (a) {
         return this.userConfig[a] !== undefined
     },
-    initConfig: function(b, a) {},
-    nextId: function() {
+    initConfig: function (b, a) { },
+    nextId: function () {
         return Ext.getCmp("structure").nextId(this.naming)
     },
-    getNode: function() {
+    getNode: function () {
         if (!this.node) {
             var b = this.attrs = {
                 id: this.id,
@@ -6522,7 +6826,7 @@ xds.Component = Ext.extend(Ext.util.Observable, {
                 b.children = [];
                 b.expanded = true;
                 //处理组件树节点展开
-                if(this.cid=='vmdJsonStore')  b.expanded=false;
+                if (this.cid == 'vmdJsonStore') b.expanded = false;
             }
 
             this.node = new Ext.tree.TreeNode(b);
@@ -6530,10 +6834,10 @@ xds.Component = Ext.extend(Ext.util.Observable, {
         }
         return this.node
     },
-    getFilm: function() {
+    getFilm: function () {
         return Ext.get("film-for-" + this.id)
     },
-    isValidChild: function(a, b) {
+    isValidChild: function (a, b) {
         if (this.isContainer) {
             if (this.validChildTypes) {
                 return this.validChildTypes.contains(a)
@@ -6542,13 +6846,13 @@ xds.Component = Ext.extend(Ext.util.Observable, {
         }
         return false
     },
-    isValidParent: function(a) {
+    isValidParent: function (a) {
         return this.isVisual ? true : !!a
     },
-    getConfigs: function() {
+    getConfigs: function () {
         return this.configs
     },
-    getConfigObject: function(b) {
+    getConfigObject: function (b) {
         if (this.configs.map[b]) {
             return this.configs.map[b]
         } else {
@@ -6568,21 +6872,21 @@ xds.Component = Ext.extend(Ext.util.Observable, {
             }
         }
     },
-    getContainerConfigs: function() {
+    getContainerConfigs: function () {
         var a = this.getConfigValue("layout");
         if (a && a != "auto") {
             return xds.Layouts[a].layoutConfigs
         }
         return null
     },
-    setContainerConfig: function(a, b) {
+    setContainerConfig: function (a, b) {
         this.layoutConfig = this.layoutConfig || {};
         this.layoutConfig[a] = b
     },
-    getContainerConfigValue: function(a) {
+    getContainerConfigValue: function (a) {
         return this.layoutConfig ? this.layoutConfig[a] : undefined
     },
-    getLayoutConfigs: function() {
+    getLayoutConfigs: function () {
         if (this.owner) {
             var a = this.owner.getConfigValue("layout");
             if (a && a != "auto") {
@@ -6591,15 +6895,15 @@ xds.Component = Ext.extend(Ext.util.Observable, {
         }
         return null
     },
-    getCommonConfigs: function() {
+    getCommonConfigs: function () {
         if (!this.configs.common) {
-            this.configs.common = this.configs.filterBy(function(a) {
+            this.configs.common = this.configs.filterBy(function (a) {
                 return xds.commonConfigs.indexOf(a.name) !== -1
             })
         }
         return this.configs.common
     },
-    getEditorConfigs: function() {
+    getEditorConfigs: function () {
         if (this.owner) {
             return false
         }
@@ -6607,7 +6911,7 @@ xds.Component = Ext.extend(Ext.util.Observable, {
         return false;
         //return xds.editorConfigs
     },
-    createCanvasConfig: function(f) {
+    createCanvasConfig: function (f) {
         var e = Ext.apply({}, this.getConfig());
         e.xtype = this.dtype;
         e.stateful = false;
@@ -6642,10 +6946,10 @@ xds.Component = Ext.extend(Ext.util.Observable, {
         }
         return e
     },
-    getActions: function() {
+    getActions: function () {
         return null
     },
-    setSuffix: function(b, a) {
+    setSuffix: function (b, a) {
         //设置后缀
         a = a || "loaded";
         if (!b) {
@@ -6656,7 +6960,7 @@ xds.Component = Ext.extend(Ext.util.Observable, {
         }
         this.setName(this.name)
     },
-    assignDocked: function(a, b) {
+    assignDocked: function (a, b) {
         //分配dock模式
         b = b.component ? b.component : b;
         if (b.dock) {
@@ -6665,7 +6969,7 @@ xds.Component = Ext.extend(Ext.util.Observable, {
         }
         return false
     },
-    syncFilm: function() {
+    syncFilm: function () {
         if (this.isVisual !== false) {
             var a = Ext.getCmp(this.activeCmpId);
             if (a) {
@@ -6673,14 +6977,14 @@ xds.Component = Ext.extend(Ext.util.Observable, {
             }
         }
     },
-    getExtComponent: function() {
+    getExtComponent: function () {
         return Ext.getCmp(this.activeCmpId)
     },
-    isResizable: function() {
+    isResizable: function () {
         return false
     },
     onFilmClick: Ext.emptyFn,
-    getLabel: function(f) {
+    getLabel: function (f) {
         var a;
         var d = this.getExtComponent();
         if (d) {
@@ -6705,22 +7009,22 @@ xds.Component = Ext.extend(Ext.util.Observable, {
         }
         return null
     },
-    onFilmDblClick: function(b) {
+    onFilmDblClick: function (b) {
         var a = this.getLabel(b);
         if (a) {
             xds.canvas.startEdit(this, a.el, this
                 .getConfigObject(a.name))
         }
     },
-    onSelectChange: function(a) {
+    onSelectChange: function (a) {
         this.selected = a
     },
-    onFilmMouseDown: function(a) {
+    onFilmMouseDown: function (a) {
         if (this.enableFlyout && a.getTarget("b", 1)) {
             this.delegateFlyout(a)
         }
     },
-    delegateFlyout: function(a) {
+    delegateFlyout: function (a) {
         if (this.enableFlyout) {
             if (!this.flyout) {
                 this.getNode().select();
@@ -6734,14 +7038,14 @@ xds.Component = Ext.extend(Ext.util.Observable, {
             }
         }
     },
-    getFlyoutButton: function() {
+    getFlyoutButton: function () {
         var a = this.getFilm();
         return a ? a.child("b") : null
     },
-    hasConfig: function(a, b) {
+    hasConfig: function (a, b) {
         return this.getConfigValue(a) === b
     },
-    getInternals: function(a, b, idIgnore) {
+    getInternals: function (a, b, idIgnore) {
         if (b) this.cid = designer.prefix.cmp + this.name; //区分复合组件
         //mafei 修复序列化后加载组件id和name不对应的问题，去掉name改为id
         var d = {
@@ -6781,36 +7085,36 @@ xds.Component = Ext.extend(Ext.util.Observable, {
         }
         return d
     },
-    getDefaultInternals: function() {
+    getDefaultInternals: function () {
         return {
             cid: this.cid
         }
     },
-    getSpec: function() {
+    getSpec: function () {
         return this.spec || this.getDefaultInternals()
     },
-    beforeRemove: function() {
+    beforeRemove: function () {
         if (this.flyout) {
             this.flyout.destroy()
         }
     },
-    isAnchored: function() {
+    isAnchored: function () {
         var a = this.owner ? this.owner.getConfigValue("layout") : "";
         return a && this.getConfigValue("anchor") &&
             (a == "form" || a == "anchor" || a == "absolute")
     },
-    isFit: function() {
+    isFit: function () {
         var a = this.owner ? this.owner.getConfigValue("layout") : "";
         return a == "fit" || a == "card"
     },
-    setComponentX: function(b, a) {
+    setComponentX: function (b, a) {
         b.setPosition(a)
     },
-    setComponentY: function(a, b) {
+    setComponentY: function (a, b) {
         a.setPosition(undefined, b)
     },
     //begin (chengtao) 2018-01-10  添加 
-    getPropPanelItem: function() {
+    getPropPanelItem: function () {
 
         var confgs = [];
         var haveconfgs = {};
@@ -6916,13 +7220,13 @@ xds.Component = Ext.extend(Ext.util.Observable, {
             record: f
         };
     },
-    getOriginalPropPanel: function(confgs, records) {
+    getOriginalPropPanel: function (confgs, records) {
         var propGroups = {};
 
         xds.activecmpEdView = new Ext.util.MixedCollection();
 
 
-        Ext.each(confgs, function(item) {
+        Ext.each(confgs, function (item) {
             if (item.viewid == (xds.vmd.propName + "id")) {
                 return;
             }
@@ -6949,7 +7253,7 @@ xds.Component = Ext.extend(Ext.util.Observable, {
             var propitem = item.getView(this);
             //增加组件类的标识方便对复合组件的引用查找
             if (propitem.name == 'xtype') propitem.readOnly = true;
-			if (propitem.name == 'xcls')  propitem.readOnly = true;
+            if (propitem.name == 'xcls') propitem.readOnly = true;
             group.items.push(propitem);
         }, this);
 
@@ -6958,7 +7262,7 @@ xds.Component = Ext.extend(Ext.util.Observable, {
             var _configs = propGroups[key];
             var _count = _configs.items.length;
             var _cfgIndex = 0;
-            Ext.each(_configs.items, function(item) {
+            Ext.each(_configs.items, function (item) {
                 if (item.hidden == true) {
                     _cfgIndex++;
                 }
@@ -6970,19 +7274,19 @@ xds.Component = Ext.extend(Ext.util.Observable, {
 
 
         //复合组件id不可修改
-        var _isReadOnly = function() {
+        var _isReadOnly = function () {
 
             if (xds.active.component.id == xds.inspector.root.firstChild.id && xds.vmd.isUx()) return true;
 
             return false;
         }
-        var _isHide = function() {
+        var _isHide = function () {
 
             var viewId = xds.vmd.propName + "id";
 
             var flag = false;
             var _arr = [];
-            Ext.each(records, function(item) {
+            Ext.each(records, function (item) {
                 _arr.push(item.id)
             })
             if (_arr.indexOf(viewId) == -1) flag = true;
@@ -7001,7 +7305,7 @@ xds.Component = Ext.extend(Ext.util.Observable, {
             //regexText:'id只能由字母和数字组成！',
             enableKeyEvent: true, //2018-01-25
             listeners: {
-                "specialkey": function(field, e) {
+                "specialkey": function (field, e) {
                     if (e.keyCode == 13) {
                         field.onBlur();
                         field.el && field.el.dom.blur()
@@ -7010,7 +7314,7 @@ xds.Component = Ext.extend(Ext.util.Observable, {
             }
         };
 
-        (function(a) {
+        (function (a) {
 
 
             if (_isHide()) {
@@ -7019,7 +7323,7 @@ xds.Component = Ext.extend(Ext.util.Observable, {
             //复合组件id只读
             if (xds.active.component.id == xds.inspector.root.firstChild.id && xds.vmd.isUx()) idconfigs.readOnly = true;
             //对hide属性控制
-            Ext.each(confgs, function(item) {
+            Ext.each(confgs, function (item) {
                 if (item.name == 'id') {
 
                     if (item.hide) idconfigs.hidden = true;
@@ -7104,7 +7408,7 @@ xds.Component = Ext.extend(Ext.util.Observable, {
             items: []
         }];
 
-        var _getItems = function(arr) {
+        var _getItems = function (arr) {
 
             if (_isHide()) {
                 arr.pop();
@@ -7122,7 +7426,7 @@ xds.Component = Ext.extend(Ext.util.Observable, {
             cls: 'vmd-propPanel',
             items: propItems,
             listeners: {
-                beforetabchange: function(tp, p, c) {
+                beforetabchange: function (tp, p, c) {
                     if (p.getId() == 'tab-css') {
                         if (!vmd.cssWin) {
                             vmd.cssWin = new Ext.Window({
@@ -7140,7 +7444,7 @@ xds.Component = Ext.extend(Ext.util.Observable, {
                                     value: xds.vmd.css || ''
                                 }]
                             })
-                            vmd.cssWin.on('hide', function() {
+                            vmd.cssWin.on('hide', function () {
 
                                 xds.vmd.css = vmd.cssWin.getComponent('ace_css').getValue();
                             })
@@ -7151,11 +7455,11 @@ xds.Component = Ext.extend(Ext.util.Observable, {
                     }
 
                 },
-                beforerender: function() {
+                beforerender: function () {
 
                     this.activeTab = xds.vmd._activePropTab || 0;
                 },
-                tabchange: function(tabpanel, tab) {
+                tabchange: function (tabpanel, tab) {
                     xds.vmd._activePropTab = tabpanel.items.keys.indexOf(tab.id);
                 }
             }
@@ -7169,25 +7473,25 @@ xds.Component = Ext.extend(Ext.util.Observable, {
     *@param {number} panelWidth-属性面板宽度
     *@param {string} version-关联组件的版本号
     **/
-    activeSettings:function(cmpName,panelName,panelWidth,version){
-        var me=this;
+    activeSettings: function (cmpName, panelName, panelWidth, version) {
+        var me = this;
         if (xds.eastlayout && xds.eastlayout.activeSettings) {
             xds.eastlayout.activeSettings(cmpName, panelWidth, panelName, function (cmpSettings) {
-                cmpSettings.dcmp=me;
+                cmpSettings.dcmp = me;
                 cmpSettings.onInitComponent && cmpSettings.onInitComponent(me);
-            },version);
+            }, version);
         }
     }
     //end
 });
-xds.Component.getFilmEl = function() {
+xds.Component.getFilmEl = function () {
     var a = this.getPositionEl();
     if (this.fieldLabel) {
         return this.el.up(".x-form-item") || a
     }
     return a
 };
-xds.Component.isValidDrop = function(a, b) {
+xds.Component.isValidDrop = function (a, b) {
     var dragCmp = xds.Registry.all.get(b.cid);
     var dragCmpFn;
     if (dragCmp) {
@@ -7199,12 +7503,12 @@ xds.Component.isValidDrop = function(a, b) {
     return a != b && (!a || a.isValidChild(b.cid)) && b.isValidParent(a)
 };
 //组件注册
-xds.Registry = function() {
-    var a = new Ext.util.MixedCollection(true, function(d) {
+xds.Registry = function () {
+    var a = new Ext.util.MixedCollection(true, function (d) {
         return d.prototype.cid
     });
     var b = Ext.extend(Ext.data.JsonStore, {
-        constructor: function() {
+        constructor: function () {
             b.superclass.constructor.call(this, {
                 id: "cid",
                 fields: [{
@@ -7219,13 +7523,13 @@ xds.Registry = function() {
     });
     var c = null;
     return {
-        register: function(f) {
+        register: function (f) {
             a.add(f);
             f.prototype.__xdclass = f;
             var g = f.prototype.configs || [];
             f.prototype.configs = f.configs = new Ext.util.MixedCollection(
                 false,
-                function(h) {
+                function (h) {
                     return h.name
                 });
             //begin (chengtao) 2018-01-16添加  属性分组
@@ -7311,12 +7615,19 @@ xds.Registry = function() {
                 name: 'Name',
                 group: 'Vmd.Component',
                 ctype: 'string'
+
+            }, {
+                name: 'BindValue',
+                group: 'Vmd.Component',
+                ctype: 'string'
+
             }];
+
             var filterCid = ['gridcolumn', 'checkcolumn', 'numbercolumn', 'datecolumn', 'templatecolumn'],
                 cid = f.prototype.cid;
 
             if (filterCid.indexOf(cid) == -1)
-                Ext.each(pcss, function(item) {
+                Ext.each(pcss, function (item) {
                     if (f.configs && f.configs.keys.indexOf(item.name) == -1) {
                         f.configs.add(new xds.Config.types['string'](item));
                     }
@@ -7324,14 +7635,14 @@ xds.Registry = function() {
 
 
         },
-        unregister: function(d) {
+        unregister: function (d) {
             a.remove(d)
         },
-        get: function(d) {
+        get: function (d) {
             return a.get(d)
         },
         all: a,
-        createStore: function(g) {
+        createStore: function (g) {
             if (!c) {
                 c = [];
                 for (var e = 0, d = a.items.length; e < d; e++) {
@@ -7345,7 +7656,7 @@ xds.Registry = function() {
             }
             return f
         },
-        addUserType: function(d) {
+        addUserType: function (d) {
             this.userTypes = this.userTypes || [];
             this.userTypes.push(d)
         }
@@ -7353,7 +7664,7 @@ xds.Registry = function() {
 }();
 //mafei画板窗体设计器
 xds.Canvas = Ext.extend(Ext.Panel, {
-    constructor: function() {
+    constructor: function () {
         xds.canvas = this;
         xds.on("componentselect", this.onComponentSelect, this, {
             delay: 10
@@ -7375,7 +7686,7 @@ xds.Canvas = Ext.extend(Ext.Panel, {
             cregion: new Ext.lib.Region(0, 0, 0, 0)
         })
     },
-    afterRender: function() {
+    afterRender: function () {
         xds.Canvas.superclass.afterRender.call(this);
         //以下为拖拽、移动的核心
         this.body.on("mousedown", this.onBodyMouseDown, this);
@@ -7397,7 +7708,7 @@ xds.Canvas = Ext.extend(Ext.Panel, {
             el: this.body
         })
     },
-    isFlyoutBtnClick: function(b) {
+    isFlyoutBtnClick: function (b) {
         if (this.selectedId) {
             var c = xds.inspector.getNodeById(this.selectedId);
             if (c) {
@@ -7409,7 +7720,7 @@ xds.Canvas = Ext.extend(Ext.Panel, {
         }
         return false
     },
-    onBodyMouseDown: function(b, a, d) {
+    onBodyMouseDown: function (b, a, d) {
         if (d = this.isFlyoutBtnClick(b)) {
             d.delegateFlyout(b);
             return
@@ -7419,13 +7730,13 @@ xds.Canvas = Ext.extend(Ext.Panel, {
             d.component.onFilmMouseDown(b)
         }
     },
-    onBodyDblClick: function(b, a) {
+    onBodyDblClick: function (b, a) {
         var d = this.findTarget(b);
         if (d) {
             d.component.onFilmDblClick(b)
         }
     },
-    onBodyClick: function(d, b) {
+    onBodyClick: function (d, b) {
 
         if (this.isFlyoutBtnClick(d)) {
             return
@@ -7446,7 +7757,7 @@ xds.Canvas = Ext.extend(Ext.Panel, {
             }
         }
     },
-    onBodyOver: function(b, a) {
+    onBodyOver: function (b, a) {
 
         if (a = b.getTarget(".el-film", 2)) {
             if (a != this.overFilm) {
@@ -7455,7 +7766,7 @@ xds.Canvas = Ext.extend(Ext.Panel, {
             }
         }
     },
-    onBodyMove: function(g, k) {
+    onBodyMove: function (g, k) {
         //鼠标移动处理
         //xds.canvas.syncAll()
         //xds.active.node.component.syncFilm()
@@ -7532,7 +7843,7 @@ xds.Canvas = Ext.extend(Ext.Panel, {
             this.dragTracker.setDragMode("Absolute")
         }
     },
-    onBodyContextMenu: function(d) {
+    onBodyContextMenu: function (d) {
         d.preventDefault();
         var b = this.findTarget(d, false);
         if (b) {
@@ -7548,22 +7859,22 @@ xds.Canvas = Ext.extend(Ext.Panel, {
             }
         }
     },
-    onDocOver: function(a) {
+    onDocOver: function (a) {
         if (this.overFilm && !a.within(this.overFilm)) {
             this.overFilm.removeClass("el-film-over");
             delete this.overFilm
         }
     },
-    beginUpdate: function() {
+    beginUpdate: function () {
         this.updating = true
     },
-    endUpdate: function(a) {
+    endUpdate: function (a) {
         this.updating = false;
         if (this.updateCmp && a !== true) {
             this.setComponent(this.updateCmp)
         }
     },
-    setComponent2: function(b) {
+    setComponent2: function (b) {
         //test
         var that = this;
 
@@ -7598,13 +7909,13 @@ xds.Canvas = Ext.extend(Ext.Panel, {
         }
         if (b) {
             //检查加载的模块中是否有缺失复合组件的问题
-            var clsmgr = function(alias) {
+            var clsmgr = function (alias) {
                 var registerCmp = Ext.ComponentMgr.types[alias.replace('widget.', '')];
                 return Ext.ClassManager.maps.aliasToName[alias] || registerCmp && registerCmp.$className || '';
             }
 
             var missclsinfo = {}
-            var checkClass = function(item) {
+            var checkClass = function (item) {
                 if (!item) return
                 var xtype = item.xtype;
                 if (xtype) {
@@ -7616,7 +7927,7 @@ xds.Canvas = Ext.extend(Ext.Panel, {
                     }
                 }
                 if (item.items) {
-                    item.items.forEach(function(t, i) {
+                    item.items.forEach(function (t, i) {
                         checkClass(t);
                     })
                 }
@@ -7628,17 +7939,17 @@ xds.Canvas = Ext.extend(Ext.Panel, {
 
                 //vmd.alert('组件文件丢失', '以下组件class不存在<br>' + missclsinfo.cls.join(',') + '<br><b>模块无法打开，请联系组件开发人员!</b>');
                 //对嵌套复合组件的处理方案，需要异步等待完成后再render画步
-                var statefn = function() {
+                var statefn = function () {
                     var state = true;
                     var unloadcls = missclsinfo.cls;
-                    unloadcls.forEach(function(xtype) {
+                    unloadcls.forEach(function (xtype) {
                         var widget = 'widget.' + xtype
                         state = state && clsmgr(widget);
                     })
                     return state;
                 }
                 var runner = new Ext.util.TaskRunner();
-                var taskRun = function() {
+                var taskRun = function () {
                     if (statefn()) {
                         runner.stop(task); //停止 任务
                         //重新刷新
@@ -7667,7 +7978,7 @@ xds.Canvas = Ext.extend(Ext.Panel, {
 
         }
     },
-    setComponent: function(b) {
+    setComponent: function (b) {
         //test
         /*if (b.component.cid.toLowerCase() == "vmdsubviewport") {
 	        var activeNode = xds.active.node;
@@ -7706,13 +8017,13 @@ xds.Canvas = Ext.extend(Ext.Panel, {
         }
         if (b) {
             //检查加载的模块中是否有缺失复合组件的问题
-            var clsmgr = function(alias) {
+            var clsmgr = function (alias) {
                 var registerCmp = Ext.ComponentMgr.types[alias.replace('widget.', '')];
                 return Ext.ClassManager.maps.aliasToName[alias] || registerCmp && registerCmp.$className || '';
             }
 
             var missclsinfo = {}
-            var checkClass = function(item) {
+            var checkClass = function (item) {
                 if (!item) return
                 var xtype = item.xtype;
                 if (xtype) {
@@ -7724,7 +8035,7 @@ xds.Canvas = Ext.extend(Ext.Panel, {
                     }
                 }
                 if (item.items) {
-                    item.items.forEach(function(t, i) {
+                    item.items.forEach(function (t, i) {
                         checkClass(t);
                     })
                 }
@@ -7736,17 +8047,17 @@ xds.Canvas = Ext.extend(Ext.Panel, {
 
                 //vmd.alert('组件文件丢失', '以下组件class不存在<br>' + missclsinfo.cls.join(',') + '<br><b>模块无法打开，请联系组件开发人员!</b>');
                 //对嵌套复合组件的处理方案，需要异步等待完成后再render画步
-                var statefn = function() {
+                var statefn = function () {
                     var state = true;
                     var unloadcls = missclsinfo.cls;
-                    unloadcls.forEach(function(xtype) {
+                    unloadcls.forEach(function (xtype) {
                         var widget = 'widget.' + xtype
                         state = state && clsmgr(widget);
                     })
                     return state;
                 }
                 var runner = new Ext.util.TaskRunner();
-                var taskRun = function() {
+                var taskRun = function () {
                     if (statefn()) {
                         runner.stop(task); //停止 任务
                         //重新刷新
@@ -7774,16 +8085,16 @@ xds.Canvas = Ext.extend(Ext.Panel, {
 
         }
     },
-    clear: function() {
+    clear: function () {
         this.setComponent(null)
     },
-    setComponentFromNode: function(a) {
+    setComponentFromNode: function (a) {
         this.setComponent(this.createConfig(a))
     },
-    createConfig: function(a) {
+    createConfig: function (a) {
         return a.component.createCanvasConfig(a)
     },
-    onComponentSelect: function(a) {
+    onComponentSelect: function (a) {
 
         this.setSelected(a.node ? a.node.id : null);
         if (a.component && this.editData &&
@@ -7791,7 +8102,7 @@ xds.Canvas = Ext.extend(Ext.Panel, {
             this.stopEdit()
         }
     },
-    setSelected: function(d, activeObj) {
+    setSelected: function (d, activeObj) {
         if (this.selectedId != d) {
             var a = Ext.get("film-for-" + this.selectedId);
             if (a) {
@@ -7830,20 +8141,20 @@ xds.Canvas = Ext.extend(Ext.Panel, {
             }
         }
     },
-    syncAll: function() {
+    syncAll: function () {
         if (xds.active && xds.active.topNode) {
-            xds.active.topNode.cascade(function() {
+            xds.active.topNode.cascade(function () {
                 this.component.syncFilm()
             })
         }
         this.setSelected(this.selectedId)
     },
-    getTargetComponent: function(b) {
+    getTargetComponent: function (b) {
         var a = b.id.substr(9);
         return xds.inspector.getNodeById(a)
     },
 
-    findTarget: function(c, b) {
+    findTarget: function (c, b) {
         var a = c.getTarget(".el-film", 2) ||
             c.getTarget(".xds-child-target", 2);
         if (a && b !== false) {
@@ -7851,7 +8162,7 @@ xds.Canvas = Ext.extend(Ext.Panel, {
         }
         return a
     },
-    getInlineEditor: function() {
+    getInlineEditor: function () {
         if (!this.inlineEd) {
             this.inlineEd = new Ext.Editor({
                 alignment: "l-l?",
@@ -7865,7 +8176,7 @@ xds.Canvas = Ext.extend(Ext.Panel, {
                     selectOnFocus: true
                 },
                 ignoreNoChange: false,
-                doAutoSize: function() {
+                doAutoSize: function () {
                     if (typeof this.requestedWidth == "number") {
                         this.setSize(this.requestedWidth)
                     } else {
@@ -7877,12 +8188,12 @@ xds.Canvas = Ext.extend(Ext.Panel, {
         }
         return this.inlineEd
     },
-    stopEdit: function() {
+    stopEdit: function () {
         if (this.inlineEd && this.inlineEd.editing) {
             this.inlineEd.completeEdit()
         }
     },
-    startEdit: function(f, e, a, c) {
+    startEdit: function (f, e, a, c) {
         var g = this.editData;
         if (g && g.component == f && g.el == e && g.config == a) {
             return
@@ -7897,7 +8208,7 @@ xds.Canvas = Ext.extend(Ext.Panel, {
         b.requestedWidth = c;
         b.startEdit(e, a.getValue(f))
     },
-    onEditComplete: function(a, b, c) {
+    onEditComplete: function (a, b, c) {
         if (String(b) != String(c)) {
             if (xds.active &&
                 xds.active.component == this.editData.component) {
@@ -7909,7 +8220,7 @@ xds.Canvas = Ext.extend(Ext.Panel, {
         }
         delete this.editData
     },
-    originalXY: function() {
+    originalXY: function () {
         //mafei 20180412 修复拖拽组件超过边界后闪动问题
         var canvasBody = xds.canvas.bwrap.first();
         if (canvasBody) {
@@ -7923,7 +8234,7 @@ xds.Canvas = Ext.extend(Ext.Panel, {
     }
 });
 xds.Canvas.DropZone = Ext.extend(Ext.dd.DropZone, {
-    constructor: function(a) {
+    constructor: function (a) {
         this.allowContainerDrop = false;
         xds.Canvas.DropZone.superclass.constructor.call(this, a.bwrap, {});
         this.canvas = a;
@@ -7932,27 +8243,27 @@ xds.Canvas.DropZone = Ext.extend(Ext.dd.DropZone, {
     },
     //关联左侧树能够拖拽
     ddGroup: "TreeDD",
-    getTargetFromEvent: function(a) {
+    getTargetFromEvent: function (a) {
         return a.getTarget(".xds-child-target", 2) ||
             a.getTarget(".el-film", 2) || this.canvas
     },
-    isValidDropPoint: function(g, b, d) {
+    isValidDropPoint: function (g, b, d) {
         var a = g ? g.component : null;
         var f = b.node.component || b.node.instance;
         return xds.Component.isValidDrop(a, f)
     },
-    onNodeEnter: function(d, a, c, b) {},
-    onNodeOver: function(h, a, f, d) {
+    onNodeEnter: function (d, a, c, b) { },
+    onNodeOver: function (h, a, f, d) {
         //对于报表兼容处理
         var designerMode = xds.vmd.checkCid();
-        if (designerMode.isModule!= true) {
-			var rootNode=xds.inspector.root.childNodes[0];
+        if (designerMode.isModule != true) {
+            var rootNode = xds.inspector.root.childNodes[0];
             var rootId = rootNode.id;
-			if(rootNode.component) rootNode.component.syncFilm();
+            if (rootNode.component) rootNode.component.syncFilm();
             var rootMsk = document.getElementById("film-for-" + rootId);
             if (rootMsk) {
                 rootMsk.style.display = '';
-            } 
+            }
             //this._viewMask = rootMsk;
         }
         var g = this.canvas.getTargetComponent(h);
@@ -7968,14 +8279,14 @@ xds.Canvas.DropZone = Ext.extend(Ext.dd.DropZone, {
             return this.dropNotAllowed
         }
     },
-    onNodeOut: function(d, a, c, b) {},
+    onNodeOut: function (d, a, c, b) { },
     /*
      * @param {object} h dom对象
      *@param {object} a 拖拽对象
      *@param {object} e 拖拽e
      *@param {object} d 拖拽dragData
      */
-    onNodeDrop: function(h, a, f, d) {
+    onNodeDrop: function (h, a, f, d) {
         var g = h == this.canvas ? null : this.canvas
             .getTargetComponent(h);
         var b = d.node;
@@ -8004,16 +8315,52 @@ xds.Canvas.DropZone = Ext.extend(Ext.dd.DropZone, {
             } else if (b.isDragSetPropValue) {
                 conf.type = 'setvalue';
             }
+      
+	         var me=this;
+			
+			//触发该动作有组件选中和重新渲染动作
+			/*	xds.fireEvent("componentevent", conf);
+				delete me.canvas.lastDropPoint;
+				//对subview兼容处理，拖拽和移动造成的width和height不同步问题
+				xds.vmd.resizeSubView();
 
-            //触发该动作有组件选中和重新渲染动作
-            xds.fireEvent("componentevent", conf);
-            delete this.canvas.lastDropPoint;
-            //对subview兼容处理，拖拽和移动造成的width和height不同步问题
-            xds.vmd.resizeSubView();
+				//解决删除组件后组件结构树节点不展开的问题
+				xds.inspector && xds.inspector.root.expand(true);*/
+			
+			 
+			 var componentchange=function(isMask){
+				if(isMask)  myMask.hide();
+				xds.fireEvent("componentevent", conf);
+				delete me.canvas.lastDropPoint;
+				//对subview兼容处理，拖拽和移动造成的width和height不同步问题
+				xds.vmd.resizeSubView();
 
-            //解决删除组件后组件结构树节点不展开的问题
-            xds.inspector && xds.inspector.root.expand(true);
-
+				//解决删除组件后组件结构树节点不展开的问题
+				xds.inspector && xds.inspector.root.expand(true);
+			 }
+			 var type=conf.type;
+			 if(type=='new'){
+				  var cids=[];
+				  if(conf.component&&conf.component.cid) cids.push(conf.component.cid);
+				  var cmpdeps=xds.vmd.getDynamicCmpList(cids,'dtype');
+				  //组件有依赖
+				  if(cmpdeps.length>0){
+					   var myMask = new Ext.LoadMask(Ext.getBody(), {
+							msg: "正在加载组件依赖,请稍后...",
+							msgCls: 'z-index:10000;'
+						});
+						myMask.show();
+						vmd.core.classLoader(cmpdeps,function(){
+							componentchange(true);
+						})
+						
+				  }else{
+					  componentchange();
+				  }
+				 
+			 }else{
+				 componentchange();
+			 }
 
             return true
         } else {
@@ -8025,19 +8372,19 @@ xds.Canvas.DragTracker = Ext.extend(Ext.dd.DragTracker, {
     autoStart: true,
     preventDefault: false,
     dragMode: "Absolute",
-    setDragMode: function(a) {
+    setDragMode: function (a) {
         if (!this.active && !this.waiting) {
             this.dragMode = a
         }
     },
-    onMouseUp: function(a) {
+    onMouseUp: function (a) {
         this.waiting = false;
         xds.Canvas.DragTracker.superclass.onMouseUp.call(this, a)
     },
-    isAbsolute: function(a) {
+    isAbsolute: function (a) {
         return (a.component.owner && a.component.owner.getConfigValue("layout") == "absolute")
     },
-    onBeforeStart: function(b) {
+    onBeforeStart: function (b) {
         var a = b.getTarget(".el-film", 2);
         this.snapValue = false;
         if (a && !b.getTarget("b", 1)) {
@@ -8065,37 +8412,37 @@ xds.Canvas.DragTracker = Ext.extend(Ext.dd.DragTracker, {
         }
         return false
     },
-    onStart: function(a) {
+    onStart: function (a) {
         this.waiting = false;
         this.node.select();
         this.cmp.getExtComponent().film.addClass("el-film-drag")
     },
-    onDrag: function(a) {
+    onDrag: function (a) {
         this["onDrag" + this.dragMode](a, this.getOffset(), this.cmp
             .getExtComponent())
     },
-    onDragAbsolute: function(b, c, a) {
+    onDragAbsolute: function (b, c, a) {
         a.setPosition(this.snap(this.startX - c[0]), this.snap(this.startY -
             c[1]));
         a.syncFilm()
     },
-    onDragRight: function(b, c, a) {
+    onDragRight: function (b, c, a) {
         a.setWidth(Math.max(this.cmp.minWidth, this.snap(this.startSize.width -
             c[0])));
         a.syncFilm()
     },
-    onDragBottom: function(b, c, a) {
+    onDragBottom: function (b, c, a) {
         a.setHeight(Math.max(this.cmp.minHeight, this
             .snap(this.startSize.height - c[1])));
         a.syncFilm()
     },
-    onDragCorner: function(b, c, a) {
+    onDragCorner: function (b, c, a) {
         a.setSize(Math.max(this.cmp.minWidth, this.snap(this.startSize.width -
             c[0])), Math.max(this.cmp.minHeight, this
-            .snap(this.startSize.height - c[1])));
+                .snap(this.startSize.height - c[1])));
         a.syncFilm()
     },
-    onEnd: function(b) {
+    onEnd: function (b) {
         xds.canvas.originalXY();
 
         var a = this.cmp.getExtComponent();
@@ -8109,7 +8456,7 @@ xds.Canvas.DragTracker = Ext.extend(Ext.dd.DragTracker, {
         //对subview兼容处理，拖拽和移动造成的width和height不同步问题
         xds.vmd.resizeSubView();
     },
-    onEndAbsolute: function(b, c, a) {
+    onEndAbsolute: function (b, c, a) {
         var d = a.getPosition(true);
         d[0] = this.snap(d[0]);
         d[1] = this.snap(d[1]);
@@ -8121,7 +8468,7 @@ xds.Canvas.DragTracker = Ext.extend(Ext.dd.DragTracker, {
         xds.canvas.endUpdate(true);
         xds.fireEvent("componentchanged")
     },
-    onEndRight: function(c, d, b) {
+    onEndRight: function (c, d, b) {
         xds.canvas.beginUpdate();
         var a = b.getWidth();
         this.cmp.setConfig("width", a);
@@ -8129,7 +8476,7 @@ xds.Canvas.DragTracker = Ext.extend(Ext.dd.DragTracker, {
         xds.canvas.endUpdate(true);
         xds.fireEvent("componentchanged")
     },
-    onEndBottom: function(c, d, b) {
+    onEndBottom: function (c, d, b) {
         xds.canvas.beginUpdate();
         var a = b.getHeight();
         this.cmp.setConfig("height", a);
@@ -8137,7 +8484,7 @@ xds.Canvas.DragTracker = Ext.extend(Ext.dd.DragTracker, {
         xds.canvas.endUpdate(true);
         xds.fireEvent("componentchanged")
     },
-    onEndCorner: function(d, f, c) {
+    onEndCorner: function (d, f, c) {
         xds.canvas.beginUpdate();
         var b = c.getWidth();
         this.cmp.setConfig("width", b);
@@ -8148,7 +8495,7 @@ xds.Canvas.DragTracker = Ext.extend(Ext.dd.DragTracker, {
         xds.canvas.endUpdate(true);
         xds.fireEvent("componentchanged")
     },
-    snap: function(c, b) {
+    snap: function (c, b) {
         b = b || this.snapValue;
         if (b < 1 || !c) {
             return c
@@ -8168,13 +8515,13 @@ xds.Canvas.DragTracker = Ext.extend(Ext.dd.DragTracker, {
 });
 //右侧属性面板///////////   begin (chengtao) 2018-01-04 调整
 xds.ConfigEditor = Ext.extend(Ext.Panel, {
-    constructor: function() {
+    constructor: function () {
         var self = this;
         this.propStore = new xds.PropertyStore();
 
         this.form = new xds.PropPanel(this.propStore);
 
-        self.form.on('afterrender', function() {
+        self.form.on('afterrender', function () {
 
             self.form.el.on("contextmenu", self.onRowContext, self);
 
@@ -8214,14 +8561,14 @@ xds.ConfigEditor = Ext.extend(Ext.Panel, {
                 0.5),
             tools: [{
                 id: "expand-all",
-                handler: function() {
+                handler: function () {
                     this.form.expand();
                 },
                 qtip: "全部展开",
                 scope: this
             }, {
                 id: "collapse-all",
-                handler: function() {
+                handler: function () {
                     this.form.collapse();
                 },
                 qtip: "全部收缩",
@@ -8229,10 +8576,10 @@ xds.ConfigEditor = Ext.extend(Ext.Panel, {
             }]
         })
     },
-    findRecord: function(b) {
+    findRecord: function (b) {
         var a = null;
         var store = this.propStore.store;
-        store.each(function(c) {
+        store.each(function (c) {
             if (c.data.name == b) {
                 a = c;
                 return false
@@ -8240,7 +8587,7 @@ xds.ConfigEditor = Ext.extend(Ext.Panel, {
         });
         return a
     },
-    findType: function(c) {
+    findType: function (c) {
         var b = xds.configs[xds.active.component.xcls].configs;
         for (var d = 0, a = b.length; d < a; d++) {
             if (b[d].name == c) {
@@ -8249,7 +8596,7 @@ xds.ConfigEditor = Ext.extend(Ext.Panel, {
         }
         return "String"
     },
-    addAndEdit: function(c, d, e) {
+    addAndEdit: function (c, d, e) {
         var b = xds.active.component.config;
         if (e !== undefined || b[c] === undefined) {
             b[c] = e !== undefined ? this.convertForType(d, e) : this
@@ -8269,7 +8616,7 @@ xds.ConfigEditor = Ext.extend(Ext.Panel, {
             xds.fireEvent("componentchanged")
         }
     },
-    getDefaultForType: function(a) {
+    getDefaultForType: function (a) {
         a = a.toLowerCase();
         switch (a) {
             case "string":
@@ -8282,7 +8629,7 @@ xds.ConfigEditor = Ext.extend(Ext.Panel, {
                 return ""
         }
     },
-    convertForType: function(a, b) {
+    convertForType: function (a, b) {
         a = a.toLowerCase();
         switch (a) {
             case "string":
@@ -8295,14 +8642,14 @@ xds.ConfigEditor = Ext.extend(Ext.Panel, {
                 return b
         }
     },
-    onRowContext: function(a, c, b) {
+    onRowContext: function (a, c, b) {
 
         if (!this.contextMenu) {
             this.contextMenu = new Ext.menu.Menu({
                 items: [{
                     text: "删除",
                     iconCls: "icon-delete",
-                    handler: function() {
+                    handler: function () {
                         xds.active.component
                             .getConfigObject(this.contextProperty)
                             .setValue(xds.active.component,
@@ -8330,7 +8677,7 @@ xds.ConfigEditor = Ext.extend(Ext.Panel, {
         }
 
     },
-    refresh: function() {
+    refresh: function () {
         if (xds.active) {
             var a = xds.active.component;
             a.propStore = this.propStore;
@@ -8344,19 +8691,19 @@ xds.ConfigEditor = Ext.extend(Ext.Panel, {
             this.form.clear();
         }
     },
-    setValue: function(c, b) {
+    setValue: function (c, b) {
         var a = this.propStore.store.getById(c);
         if (a) {
             a.set("value", b)
         } else {
-            this.propStore.store.each(function(a) {
+            this.propStore.store.each(function (a) {
                 if (a.data.name == c) {
                     a.set("value", b)
                 }
             });
         }
     },
-    getValue: function(name) {
+    getValue: function (name) {
 
         var value = '';
         var rec = this.findRecord(name);
@@ -8367,7 +8714,7 @@ xds.ConfigEditor = Ext.extend(Ext.Panel, {
 });
 //end
 xds.Inspector = Ext.extend(Ext.tree.TreePanel, {
-    constructor: function() {
+    constructor: function () {
         xds.inspector = this;
         xds.Inspector.superclass.constructor.call(this, {
             id: "structure",
@@ -8388,33 +8735,33 @@ xds.Inspector = Ext.extend(Ext.tree.TreePanel, {
             tools: [{
                 id: "expand-all",
                 qtip: designer.Toolbox.expandall,
-                handler: function() {
+                handler: function () {
                     this.root.expand(true)
                 },
                 scope: this
             }, {
                 id: "collapse-all",
                 qtip: designer.Toolbox.collapseall,
-                handler: function() {
+                handler: function () {
                     this.root.collapse(true)
                 },
                 scope: this
             }, {
                 id: "refresh",
                 qtip: designer.Toolbox.RepaintCanvas,
-                handler: function() {
+                handler: function () {
                     xds.fireEvent("componentchanged")
                 }
             }],
             keys: [{
                 key: Ext.EventObject.DELETE,
-                fn: function() {
+                fn: function () {
                     if (xds.active) {
                         Ext.Msg.confirm(designer.ActionMsg.DeleteComponent, designer.ActionMsg.DeleteComponentMsg,
-                            function(a) {
+                            function (a) {
                                 if (a == "yes" && xds.active) {
 
-                                    var deleteNode = function() {
+                                    var deleteNode = function () {
                                         xds.inspector.removeComponent(xds.active.component);
                                         xds.fireEvent("componentchanged");
                                     }
@@ -8432,7 +8779,7 @@ xds.Inspector = Ext.extend(Ext.tree.TreePanel, {
             }]
         })
     },
-    initComponent: function() {
+    initComponent: function () {
         this.loader = new xds.Inspector.DemoLoader();
         this.root = {
             id: "croot",
@@ -8448,39 +8795,39 @@ xds.Inspector = Ext.extend(Ext.tree.TreePanel, {
         this.on("nodedrop", this.onAfterDrop, this);
         this.on("contextmenu", this.onNodeContext, this);
 
-		this.on("afterrender", function(){
-			var me=this
-			this.el.on('mousedown',function(e,dom){
-			 var cmp,nodeId,cid,node;
-			 var el=vmd(dom);
-			 if(el.hasClass('x-tree-node-el')){
-				node=me.getNodeById(el.attr('ext:tree-node-id'))	
-				cid=node.component.cid;
-			 }else{
-				node= vmd(arguments[1]).parents('.x-tree-node-el')
-				if(node){
-					 nodeId=node.attr('ext:tree-node-id');
-					 cmp=me.getNodeById(nodeId)
-					 cid=cmp.component.cid;
-				}
-				
-				
-			 }
-			 if(cid=='datafield' ||cid=='vmdJsonStore') {
-				 xds.canvas && xds.canvas.dropZone.removeFromGroup('TreeDD')
-			 }
-		//debugger
-			
-		})
-	 
-	}, this);		
-		
+        this.on("afterrender", function () {
+            var me = this
+            this.el.on('mousedown', function (e, dom) {
+                var cmp, nodeId, cid, node;
+                var el = vmd(dom);
+                if (el.hasClass('x-tree-node-el')) {
+                    node = me.getNodeById(el.attr('ext:tree-node-id'))
+                    cid = node.component.cid;
+                } else {
+                    node = vmd(arguments[1]).parents('.x-tree-node-el')
+                    if (node) {
+                        nodeId = node.attr('ext:tree-node-id');
+                        cmp = me.getNodeById(nodeId)
+                        cid = cmp.component.cid;
+                    }
+
+
+                }
+                if (cid == 'datafield' || cid == 'vmdJsonStore') {
+                    xds.canvas && xds.canvas.dropZone.removeFromGroup('TreeDD')
+                }
+                //debugger
+
+            })
+
+        }, this);
+
         //dbclick
         this.on("dblclick", this.onNodedblClick, this);
 
         xds.on("componentevent", this.onComponentEvent, this);
         xds.on("componentclick", this.onComponentClick, this);
-        this.getSelectionModel().on("selectionchange", function(c, b) {
+        this.getSelectionModel().on("selectionchange", function (c, b) {
             var a = b;
 
             //20171128
@@ -8509,10 +8856,10 @@ xds.Inspector = Ext.extend(Ext.tree.TreePanel, {
 		    })*/
 
             //20180820 兼容子窗口改造
-            var getTopNode = function(node, topNode) {
+            var getTopNode = function (node, topNode) {
                 var _node = topNode;
                 if (topNode && topNode.component.cid.toLowerCase() == "vmdsubviewport") {
-                    node.bubble(function(node) {
+                    node.bubble(function (node) {
                         var cmp = node.component;
                         if (cmp) {
                             if (cmp.cid.toLowerCase() == "vmdsubview") {
@@ -8536,22 +8883,22 @@ xds.Inspector = Ext.extend(Ext.tree.TreePanel, {
         }, this);
         xds.Inspector.superclass.initComponent.call(this)
     },
-    onNodedblClick: function(node, e) {
+    onNodedblClick: function (node, e) {
         var cmp = node.component;
         if (cmp && cmp.nodedblClick) cmp.nodedblClick(node, e);
     },
-    onBeforeEdit: function(c, b, a) {
+    onBeforeEdit: function (c, b, a) {
         return !this.getNodeById(b)
     },
-    onEdit: function(c, b, a) {
+    onEdit: function (c, b, a) {
         var d = this.editor.editNode
     },
-    onComponentClick: function(a) {
+    onComponentClick: function (a) {
         if (a.node) {
             a.node.select()
         }
     },
-    onBeforeAppend: function(a, b, d) {
+    onBeforeAppend: function (a, b, d) {
         var c;
         if (b.component && (c = b.component.getConfigValue("layout"))) {
             if (xds.Layouts[c] && xds.Layouts[c].onBeforeAdd) {
@@ -8559,7 +8906,7 @@ xds.Inspector = Ext.extend(Ext.tree.TreePanel, {
             }
         }
     },
-    removeComponent: function(b) {
+    removeComponent: function (b) {
         var a = b.attributes ? b : this.getNodeById(b.id);
         if (a) {
             if (a.isSelected()) {
@@ -8583,12 +8930,12 @@ xds.Inspector = Ext.extend(Ext.tree.TreePanel, {
             }
         }
     },
-    getContextMenu2: function(isHide) {
+    getContextMenu2: function (isHide) {
 
         if (!this.contextMenu2) {
             var a = this.contextMenu2 = new Ext.menu.Menu({
                 zIndex: 80000,
-                onContextShow: function() {
+                onContextShow: function () {
 
                     var d = a.node.component.getActions();
                     if (d) {
@@ -8598,7 +8945,7 @@ xds.Inspector = Ext.extend(Ext.tree.TreePanel, {
                         }
                     }
                 },
-                onContextClose: function() {
+                onContextClose: function () {
                     var d = a.node.component.getActions();
                     if (d) {
                         // a.remove(a.items.get("actions-sep"));
@@ -8615,65 +8962,65 @@ xds.Inspector = Ext.extend(Ext.tree.TreePanel, {
         }
         return this.contextMenu2
     },
-    getContextMenu3: function(cid) {
+    getContextMenu3: function (cid) {
         //20191022
         var cmenu3;
-        var menu=[];
-        var me=this;
-        var displayMenu=function(){
-            cmenu3=me.contextMenu3;
-            var v=cmenu3.getComponent('newVar');
-            var t=cmenu3.getComponent('newDataTable');
-            var s=cmenu3.getComponent('newDataSet');
+        var menu = [];
+        var me = this;
+        var displayMenu = function () {
+            cmenu3 = me.contextMenu3;
+            var v = cmenu3.getComponent('newVar');
+            var t = cmenu3.getComponent('newDataTable');
+            var s = cmenu3.getComponent('newDataSet');			
             var c=cmenu3.getComponent('newVirtualDataTable');
-            if(cid == 'vmdvariable'){
+            if (cid == 'vmdvariable') {
                 v.show();
                 t.hide();
-                s.hide();      
+                s.hide();   
                 c.hide();
-            }else if(cid == 'vmddataset'){
+            } else if (cid == 'vmddataset') {
                 v.hide();
                 t.show();
-                s.show();
+                s.show();   
                 c.show();
             }
         }
-        var sort=function(a,b){
-            if (a.component.cid> b.component.cid) return -1;
-            if (a.component.cid<b.component.cid) return 1;
+        var sort = function (a, b) {
+            if (a.component.cid > b.component.cid) return -1;
+            if (a.component.cid < b.component.cid) return 1;
             return 0;
         }
-        menu=[{
+        menu = [{
             itemId: 'newVar',
             text: designer.ContextMenu.newVariable,
-                    iconCls: "icon-new",
-                    handler: function() {
+            iconCls: "icon-new",
+            handler: function () {
                 cmenu3.node.select()
-                        cid = this.parentMenu.cid || cid;
-                                xds.vmd.addNode([{
+                cid = this.parentMenu.cid || cid;
+                xds.vmd.addNode([{
                     cid: 'vmdVariable'
-                                }], xds.vmd.getRootNode(cid));
+                }], xds.vmd.getRootNode(cid));
 
             }
-        },{
+        }, {
             itemId: 'newDataTable',
             text: designer.ContextMenu.newDataTable,
             iconCls: "icon-datatable",
-            handler: function() {
+            handler: function () {
                 cmenu3.node.select()
                 cid = this.parentMenu.cid || cid;
-                var nodeList=xds.vmd.addNode([{
+                var nodeList = xds.vmd.addNode([{
                     cid: 'vmdJsonStore'
-                                }], xds.vmd.getRootNode(cid));
-                if(nodeList.length>0) nodeList[nodeList.length-1].select();
+                }], xds.vmd.getRootNode(cid));
+                if (nodeList.length > 0) nodeList[nodeList.length - 1].select();
                 cmenu3.node.sort(sort);
-                        }
-        },{
+            }
+        }, {
             itemId: 'newVirtualDataTable',
             text: designer.ContextMenu.newVirtualDataTable,
             iconCls: "icon-virtualdatatable",
             handler: function() {
-            	debugger
+            	
                 cmenu3.node.select()
                 cid = this.parentMenu.cid || cid;
                 var nodeList=xds.vmd.addNode([{
@@ -8688,21 +9035,21 @@ xds.Inspector = Ext.extend(Ext.tree.TreePanel, {
             itemId: 'newDataSet',
             text: designer.ContextMenu.newDataSet,
             iconCls: "icon-dataset",
-            handler: function() {
+            handler: function () {
                 cmenu3.node.select();
                 cid = this.parentMenu.cid || cid;
-                var nodeList= xds.vmd.addNode([{
+                var nodeList = xds.vmd.addNode([{
                     cid: 'vmdDataSet'
                 }], xds.vmd.getRootNode(cid));
-                if(nodeList.length>0) nodeList[nodeList.length-1].select();
+                if (nodeList.length > 0) nodeList[nodeList.length - 1].select();
                 cmenu3.node.sort(sort);
 
-                    }
+            }
         }];
         if (!this.contextMenu3) {
             cmenu3 = this.contextMenu3 = new Ext.menu.Menu({
                 zIndex: 80000,
-                items:menu
+                items: menu
             })
             displayMenu();
 
@@ -8717,21 +9064,21 @@ xds.Inspector = Ext.extend(Ext.tree.TreePanel, {
 
         return this.contextMenu3;
     },
-    getContextMenu: function(isHide) {
+    getContextMenu: function (isHide) {
         if (!this.contextMenu) {
             var a = this.contextMenu = new Ext.menu.Menu({
                 zIndex: 80000,
                 items: [{
                     text: designer.ContextMenu.SelectComponent,
                     iconCls: "icon-cmp-view",
-                    handler: function() {
+                    handler: function () {
                         a.node.select()
                     }
                 }, {
                     itemId: "save-to-toolbox",
                     text: designer.ContextMenu.SaveToToolbox,
                     iconCls: "icon-save",
-                    handler: function() {
+                    handler: function () {
                         var mode = designer.mode;
                         //定义组件类与模块区分开
                         if (mode == "ux") {
@@ -8777,7 +9124,7 @@ xds.Inspector = Ext.extend(Ext.tree.TreePanel, {
                 }, "-", {
                     itemId: "cmp-copy",
                     text: designer.ContextMenu.Copy,
-                    handler: function() {
+                    handler: function () {
 
                         //20171229
                         var b = a.node.component.getInternals(true, null, true);
@@ -8795,7 +9142,7 @@ xds.Inspector = Ext.extend(Ext.tree.TreePanel, {
                 }, "-", {
                     itemId: "move-up",
                     text: designer.ContextMenu.MoveUp,
-                    handler: function() {
+                    handler: function () {
                         a.node.parentNode.insertBefore(a.node,
                             a.node.previousSibling);
                         a.node.select();
@@ -8804,7 +9151,7 @@ xds.Inspector = Ext.extend(Ext.tree.TreePanel, {
                 }, {
                     itemId: "move-down",
                     text: designer.ContextMenu.MoveDown,
-                    handler: function() {
+                    handler: function () {
                         a.node.parentNode.insertBefore(a.node,
                             a.node.nextSibling.nextSibling);
                         a.node.select();
@@ -8814,10 +9161,10 @@ xds.Inspector = Ext.extend(Ext.tree.TreePanel, {
                     text: designer.ContextMenu.Delete,
                     itemId: "delete-item",
                     iconCls: "icon-delete",
-                    handler: function() {
+                    handler: function () {
                         //20171128 chengbing  删除组件时，调用组件的删除方法
 
-                        var deleteNode = function() {
+                        var deleteNode = function () {
                             xds.inspector.removeComponent(a.node.component);
 
                             xds.fireEvent("componentchanged", {
@@ -8837,7 +9184,7 @@ xds.Inspector = Ext.extend(Ext.tree.TreePanel, {
 
                     }
                 }],
-                onContextShow: function() {
+                onContextShow: function () {
                     this.items.get("save-to-toolbox")
                         .setDisabled(!!a.node.component.owner);
                     this.items.get("move-up")
@@ -8845,7 +9192,7 @@ xds.Inspector = Ext.extend(Ext.tree.TreePanel, {
                     this.items.get("move-down")
                         .setDisabled(!a.node.nextSibling);
                     a.node.ui.addClass("xds-context-node");
-                    var dcmp=a.node.component;
+                    var dcmp = a.node.component;
                     var d = dcmp.getActions();
                     if (d) {
                         //a.add(new Ext.menu.Separator({
@@ -8855,23 +9202,23 @@ xds.Inspector = Ext.extend(Ext.tree.TreePanel, {
                         //    a.add(d[c])
                         //}
                         //隐藏工具自带菜单
-                        Ext.each(a.items.items,function(item){
-                            if(item.itemId!='delete-item' || dcmp.deleteMenuHide) item.hide();
+                        Ext.each(a.items.items, function (item) {
+                            if (item.itemId != 'delete-item' || dcmp.deleteMenuHide) item.hide();
                         })
-                        !dcmp.deleteMenuHide&&a.insert(0,new Ext.menu.Separator({
+                        !dcmp.deleteMenuHide && a.insert(0, new Ext.menu.Separator({
                             id: "actions-sep"
                         }));
                         //倒序追加自定义菜单
-                        for (var c = 0, b = d.length-1; c <= b; b--) {
-                             a.insert(0,d[b])
+                        for (var c = 0, b = d.length - 1; c <= b; b--) {
+                            a.insert(0, d[b])
                         }
-                    }else{
-                        Ext.each(a.items.items,function(item){
-                             item.show();
+                    } else {
+                        Ext.each(a.items.items, function (item) {
+                            item.show();
                         })
                     }
                 },
-                onContextClose: function() {
+                onContextClose: function () {
                     var d = a.node.component.getActions();
                     if (d) {
                         a.remove(a.items.get("actions-sep"));
@@ -8887,13 +9234,13 @@ xds.Inspector = Ext.extend(Ext.tree.TreePanel, {
         }
         return this.contextMenu
     },
-    disableNode: function(dcmp) {
+    disableNode: function (dcmp) {
         //禁用节点集合
         var disableNodeId = [xds.vmd.project.extConfigName];
         if (disableNodeId.indexOf(dcmp.id) != -1) return true;
         return false;
     },
-    onNodeContext: function(c, b) {
+    onNodeContext: function (c, b) {
 
         var hide;
         if (c && c.component) {
@@ -8920,7 +9267,7 @@ xds.Inspector = Ext.extend(Ext.tree.TreePanel, {
         a.showAt(b.getXY());
         b.stopEvent()
     },
-    nextId: function(b) {
+    nextId: function (b) {
         if (!this.getNodeById(b)) {
             return b
         }
@@ -8940,17 +9287,17 @@ xds.Inspector = Ext.extend(Ext.tree.TreePanel, {
         //}
         return b + a
     },
-    onDragOver: function(a) {
+    onDragOver: function (a) {
         return xds.Component.isValidDrop(this
             .getDropPosition(a.target, a.point).parent.component,
             a.dropNode.component || a.dropNode.instance)
     },
-    onBeforeDrop: function(d) {
+    onBeforeDrop: function (d) {
         xds.canvas.originalXY();
 
         if (!xds.Component.isValidDrop(
-                this.getDropPosition(d.target, d.point).parent.component,
-                d.dropNode.component || d.dropNode.instance)) {
+            this.getDropPosition(d.target, d.point).parent.component,
+            d.dropNode.component || d.dropNode.instance)) {
             return false
         }
         if (d.tree == d.source.tree) {
@@ -8972,7 +9319,7 @@ xds.Inspector = Ext.extend(Ext.tree.TreePanel, {
         }
         return false
     },
-    getDropPosition: function(b, a) {
+    getDropPosition: function (b, a) {
         var c = {};
         switch (a) {
             case "above":
@@ -8988,12 +9335,12 @@ xds.Inspector = Ext.extend(Ext.tree.TreePanel, {
         }
         return c
     },
-    onAfterDrop: function(a) {
+    onAfterDrop: function (a) {
         a.dropNode.select();
         a.dropNode.component.setOwner(a.dropNode.parentNode.component);
         xds.fireEvent("componentchanged")
     },
-    onComponentEvent: function(c) {
+    onComponentEvent: function (c) {
 
         var b = c.parentId ? this.getNodeById(c.parentId) : this.root;
         if (c.type == "new") {
@@ -9033,12 +9380,12 @@ xds.Inspector = Ext.extend(Ext.tree.TreePanel, {
         }
 
     },
-    initCopy: function(c, b, a) {
+    initCopy: function (c, b, a) {
         Ext.Msg.show({
             title: "复制",
             msg: "复制组件到一个新的层是不可撤消的. 您是否要继续?",
             buttons: Ext.Msg.YESNOCANCEL,
-            fn: function(d) {
+            fn: function (d) {
                 if (d == "yes") {
                     var e = c.component.getInternals(true);
                     var f = this.getDropPosition(b, a);
@@ -9056,7 +9403,7 @@ xds.Inspector = Ext.extend(Ext.tree.TreePanel, {
             scope: this
         })
     },
-    restore: function(h, b, f) {
+    restore: function (h, b, f) {
         try {
             b = b || this.root;
             var e = xds.create(h);
@@ -9076,19 +9423,19 @@ xds.Inspector = Ext.extend(Ext.tree.TreePanel, {
             }
             return d
 
-        } catch (ex) {}
+        } catch (ex) { }
 
     }
 });
 xds.Inspector.DemoLoader = Ext.extend(Ext.tree.TreeLoader, {
-    load: function(a, b) {
+    load: function (a, b) {
         b()
     }
 });
 
 xds.Interface = Ext.extend(xds.Inspector, {
 
-    constructor: function() {
+    constructor: function () {
         xds.interface = this;
 
         xds.Inspector.superclass.constructor.call(this, {
@@ -9110,30 +9457,30 @@ xds.Interface = Ext.extend(xds.Inspector, {
             tools: [{
                 id: "expand-all",
                 qtip: designer.Toolbox.expandall,
-                handler: function() {
+                handler: function () {
                     this.root.expand(true)
                 },
                 scope: this
             }, {
                 id: "collapse-all",
                 qtip: designer.Toolbox.collapseall,
-                handler: function() {
+                handler: function () {
                     this.root.collapse(true)
                 },
                 scope: this
             }, {
                 id: "refresh",
                 qtip: designer.Toolbox.RepaintCanvas,
-                handler: function() {
+                handler: function () {
                     xds.fireEvent("componentchanged")
                 }
             }],
             keys: [{
                 key: Ext.EventObject.DELETE,
-                fn: function() {
+                fn: function () {
                     if (xds.active) {
                         Ext.Msg.confirm(designer.ActionMsg.DeleteComponent, designer.ActionMsg.DeleteComponentMsg,
-                            function(a) {
+                            function (a) {
                                 if (a == "yes" && xds.active) {
                                     xds.interface
                                         .removeComponent(xds.active.component)
@@ -9144,7 +9491,7 @@ xds.Interface = Ext.extend(xds.Inspector, {
             }]
         })
     },
-    initComponent: function() {
+    initComponent: function () {
         this.loader = new xds.Inspector.DemoLoader();
         this.root = {
             id: "iroot",
@@ -9158,11 +9505,11 @@ xds.Interface = Ext.extend(xds.Inspector, {
         this.on("nodedragover", this.onDragOver, this);
         xds.Inspector.superclass.initComponent.call(this)
     },
-    hasPropGroupNodeById: function(id) {
+    hasPropGroupNodeById: function (id) {
 
         var flag = false;
         var propNodes = this.root.childNodes[0];
-        Ext.each(propNodes.childNodes, function(item) {
+        Ext.each(propNodes.childNodes, function (item) {
 
             var cmp = item.component;
             if (cmp.cid == 'uxpropgroup' && cmp.id == id) {
@@ -9174,14 +9521,14 @@ xds.Interface = Ext.extend(xds.Inspector, {
         return flag;
 
     },
-    getContextMenu: function(isHide) {
+    getContextMenu: function (isHide) {
         if (!this.contextMenu) {
             var a = this.contextMenu = new Ext.menu.Menu({
                 zIndex: 80000,
                 items: [{
                     itemId: "move-up",
                     text: designer.ContextMenu.MoveUp,
-                    handler: function() {
+                    handler: function () {
                         a.node.parentNode.insertBefore(a.node,
                             a.node.previousSibling);
                         a.node.select();
@@ -9190,7 +9537,7 @@ xds.Interface = Ext.extend(xds.Inspector, {
                 }, {
                     itemId: "move-down",
                     text: designer.ContextMenu.MoveDown,
-                    handler: function() {
+                    handler: function () {
                         a.node.parentNode.insertBefore(a.node,
                             a.node.nextSibling.nextSibling);
                         a.node.select();
@@ -9199,8 +9546,8 @@ xds.Interface = Ext.extend(xds.Inspector, {
                 }, "-", {
                     text: designer.ContextMenu.Delete,
                     iconCls: "icon-delete",
-                    handler: function() {
-                        var deleteNode = function() {
+                    handler: function () {
+                        var deleteNode = function () {
                             xds.interface.removeComponent(a.node.component);
                             xds.fireEvent("componentchanged")
                         }
@@ -9212,7 +9559,7 @@ xds.Interface = Ext.extend(xds.Inspector, {
                         }
                     }
                 }],
-                onContextShow: function() {
+                onContextShow: function () {
 
                     this.items.get("move-up")
                         .setDisabled(!a.node.previousSibling);
@@ -9229,7 +9576,7 @@ xds.Interface = Ext.extend(xds.Inspector, {
                         }
                     }
                 },
-                onContextClose: function() {
+                onContextClose: function () {
                     var d = a.node.component.getActions();
                     if (d) {
                         a.remove(a.items.get("actions-sep"));
@@ -9250,7 +9597,7 @@ xds.Interface = Ext.extend(xds.Inspector, {
 
 xds.Resource = Ext.extend(xds.Inspector, {
 
-    constructor: function() {
+    constructor: function () {
         xds.resource = this;
 
         xds.Inspector.superclass.constructor.call(this, {
@@ -9272,30 +9619,30 @@ xds.Resource = Ext.extend(xds.Inspector, {
             tools: [{
                 id: "expand-all",
                 qtip: designer.Toolbox.expandall,
-                handler: function() {
+                handler: function () {
                     this.root.expand(true)
                 },
                 scope: this
             }, {
                 id: "collapse-all",
                 qtip: designer.Toolbox.collapseall,
-                handler: function() {
+                handler: function () {
                     this.root.collapse(true)
                 },
                 scope: this
             }, {
                 id: "refresh",
                 qtip: designer.Toolbox.RepaintCanvas,
-                handler: function() {
+                handler: function () {
                     xds.fireEvent("componentchanged")
                 }
             }],
             keys: [{
                 key: Ext.EventObject.DELETE,
-                fn: function() {
+                fn: function () {
                     if (xds.active) {
                         Ext.Msg.confirm(designer.ActionMsg.DeleteComponent, designer.ActionMsg.DeleteComponentMsg,
-                            function(a) {
+                            function (a) {
                                 if (a == "yes" && xds.active) {
                                     xds.resource
                                         .removeComponent(xds.active.component)
@@ -9306,7 +9653,7 @@ xds.Resource = Ext.extend(xds.Inspector, {
             }]
         })
     },
-    initComponent: function() {
+    initComponent: function () {
         this.loader = new xds.Inspector.DemoLoader();
         this.root = {
             id: "iroot_res",
@@ -9327,11 +9674,11 @@ xds.Resource = Ext.extend(xds.Inspector, {
 
         xds.Inspector.superclass.initComponent.call(this)
     },
-    onNodedblClick: function(node, e) {
+    onNodedblClick: function (node, e) {
         var cmp = node.component;
         if (cmp) cmp.nodedblClick && cmp.nodedblClick(node, e);
     },
-    onDragDrag: function(that, node, dd, e) {
+    onDragDrag: function (that, node, dd, e) {
         //拖拽到有效区域内的鼠标放开后的动作
         var sourceCmp = node && node.component;
         if (sourceCmp.cid == 'rescss' || sourceCmp.cid == 'resjs') return;
@@ -9357,7 +9704,7 @@ xds.Resource = Ext.extend(xds.Inspector, {
         xds.props.setValue(targetProp, value)
 
     },
-    onStartDrag: function(that, node, e) {
+    onStartDrag: function (that, node, e) {
         this.curDragNode = node;
         var cmp = node.component;
         var cid = cmp.cid;
@@ -9376,7 +9723,7 @@ xds.Resource = Ext.extend(xds.Inspector, {
 
         //node.instacne=new 
     },
-    getContextMenu: function(isHide) {
+    getContextMenu: function (isHide) {
 
         if (!this.contextMenu) {
             var a = this.contextMenu = new Ext.menu.Menu({
@@ -9384,7 +9731,7 @@ xds.Resource = Ext.extend(xds.Inspector, {
                 items: [{
                     itemId: "move-up",
                     text: designer.ContextMenu.MoveUp,
-                    handler: function() {
+                    handler: function () {
                         a.node.parentNode.insertBefore(a.node,
                             a.node.previousSibling);
                         a.node.select();
@@ -9393,7 +9740,7 @@ xds.Resource = Ext.extend(xds.Inspector, {
                 }, {
                     itemId: "move-down",
                     text: designer.ContextMenu.MoveDown,
-                    handler: function() {
+                    handler: function () {
                         a.node.parentNode.insertBefore(a.node,
                             a.node.nextSibling.nextSibling);
                         a.node.select();
@@ -9402,9 +9749,9 @@ xds.Resource = Ext.extend(xds.Inspector, {
                 }, "-", {
                     text: designer.ContextMenu.Delete,
                     iconCls: "icon-delete",
-                    handler: function() {
+                    handler: function () {
 
-                        var deleteNode = function() {
+                        var deleteNode = function () {
                             xds.resource.removeComponent(a.node.component);
                             xds.fireEvent("componentchanged");
                         }
@@ -9417,14 +9764,14 @@ xds.Resource = Ext.extend(xds.Inspector, {
                 }, {
                     text: "编辑",
                     hidden: designer.mode == 'ux' ? false : true,
-                    handler: function() {
+                    handler: function () {
                         var cmp = a.node.component;
                         xds.vmd.openUxControllerjs(cmp);
 
                     }
                 }, {
                     text: "引用的资源地址",
-                    handler: function() {
+                    handler: function () {
 
                         var cmp = a.node.component;
                         var servname = cmp.userConfig.servName;
@@ -9477,7 +9824,7 @@ xds.Resource = Ext.extend(xds.Inspector, {
                 }
 
                 ],
-                onContextShow: function() {
+                onContextShow: function () {
 
                     this.items.get("move-up")
                         .setDisabled(!a.node.previousSibling);
@@ -9494,7 +9841,7 @@ xds.Resource = Ext.extend(xds.Inspector, {
                         }
                     }
                 },
-                onContextClose: function() {
+                onContextClose: function () {
                     var d = a.node.component.getActions();
                     if (d) {
                         a.remove(a.items.get("actions-sep"));
@@ -9510,40 +9857,40 @@ xds.Resource = Ext.extend(xds.Inspector, {
         }
         return this.contextMenu
     },
-    getCssNode: function() {
+    getCssNode: function () {
         return this.root.childNodes[0];
     },
-    getJsNode: function() {
+    getJsNode: function () {
         return this.root.childNodes[1];
     },
-    getImgNode: function() {
+    getImgNode: function () {
         return this.root.childNodes[2];
     },
 
-    addCssNodes: function(data) {
+    addCssNodes: function (data) {
         var node = this.getCssNode();
         if (!node) return;
 
         this._addNodes(data, node, 'rescss', true);
 
     },
-    addJsNodes: function(data) {
+    addJsNodes: function (data) {
         var node = this.getJsNode();
         if (!node) return;
 
         this._addNodes(data, node, 'resjs', true);
 
     },
-    addImgNodes: function(data) {
+    addImgNodes: function (data) {
         var node = this.getImgNode();
         if (!node) return;
 
         this._addNodes(data, node, 'resimg', true);
 
     },
-    _addNodes: function(data, node, cid, isNoRemoveAll) {
+    _addNodes: function (data, node, cid, isNoRemoveAll) {
         var me = this;
-        var createConf = function(obj) {
+        var createConf = function (obj) {
             var newObj = {
                 cid: obj.cid || cid,
                 id: obj.id,
@@ -9554,7 +9901,7 @@ xds.Resource = Ext.extend(xds.Inspector, {
             Ext.apply(newObj.userConfig, obj);
             if (obj.cn) {
                 newObj.cn = [];
-                Ext.each(obj.cn, function(item) {
+                Ext.each(obj.cn, function (item) {
                     item = createConf(item);
                     newObj.cn.push(item);
                 })
@@ -9565,7 +9912,7 @@ xds.Resource = Ext.extend(xds.Inspector, {
         }
         if (!isNoRemoveAll) node.removeAll();
 
-        Ext.each(data, function(item) {
+        Ext.each(data, function (item) {
             // node.leaf = false
             item = createConf(item);
             var _node = me.restore(item, node);
@@ -9579,7 +9926,7 @@ xds.Resource = Ext.extend(xds.Inspector, {
         node.expand();
 
     },
-    getCssData: function() {
+    getCssData: function () {
         var data = []
         var node = this.getCssNode();
         if (!node) return data;
@@ -9588,7 +9935,7 @@ xds.Resource = Ext.extend(xds.Inspector, {
         return data;
 
     },
-    getJsData: function() {
+    getJsData: function () {
 
         var data = []
         var node = this.getJsNode();
@@ -9597,7 +9944,7 @@ xds.Resource = Ext.extend(xds.Inspector, {
 
         return data;
     },
-    getImgData: function() {
+    getImgData: function () {
 
         var data = []
         var node = this.getImgNode();
@@ -9605,12 +9952,12 @@ xds.Resource = Ext.extend(xds.Inspector, {
         data = this._getData(node);
         return data;
     },
-    _getData: function(node) {
+    _getData: function (node) {
         var data = [];
         var _data = node.component.getInternals(true);
         if (_data.cn) {
             var tempData = Ext.decode(Ext.encode(_data.cn));
-            Ext.each(tempData, function(item) {
+            Ext.each(tempData, function (item) {
                 var obj = {};
                 obj.id = item.id;
                 Ext.apply(obj, item.userConfig)
@@ -9626,7 +9973,7 @@ xds.Resource = Ext.extend(xds.Inspector, {
 
 //工具箱
 xds.Toolbox = Ext.extend(Ext.tree.TreePanel, {
-    constructor: function() {
+    constructor: function () {
         xds.Toolbox.superclass.constructor.call(this, {
             width: 200,
             region: "west",
@@ -9651,14 +9998,14 @@ xds.Toolbox = Ext.extend(Ext.tree.TreePanel, {
             animFloat: false,
             tools: [{
                 id: "expand-all",
-                handler: function() {
+                handler: function () {
                     this.root.expand(true)
                 },
                 qtip: designer.Toolbox.expandall,
                 scope: this
             }, {
                 id: "collapse-all",
-                handler: function() {
+                handler: function () {
                     this.root.collapse(true)
                 },
                 qtip: designer.Toolbox.collapseall,
@@ -9667,7 +10014,7 @@ xds.Toolbox = Ext.extend(Ext.tree.TreePanel, {
         });
         xds.toolbox = this
     },
-    initComponent: function() {
+    initComponent: function () {
         //组件加载
         this.loader = new xds.Toolbox.DemoLoader();
         this.root = {
@@ -9678,28 +10025,28 @@ xds.Toolbox = Ext.extend(Ext.tree.TreePanel, {
         };
 
         xds.Toolbox.superclass.initComponent.call(this);
-        this.getSelectionModel().on("beforeselect", function(a, b) {
+        this.getSelectionModel().on("beforeselect", function (a, b) {
             if (b && !b.isLeaf()) {
                 b.toggle();
                 return false
             }
         });
         this.on("dblclick", this.onDblClick, this);
-		 this.on("afterrender", function(){
-			var me=this
-			this.el.on('mousedown',function(e,dom){
-			 xds.canvas && xds.canvas.dropZone.addToGroup('TreeDD')
-           })
+        this.on("afterrender", function () {
+            var me = this
+            this.el.on('mousedown', function (e, dom) {
+                xds.canvas && xds.canvas.dropZone.addToGroup('TreeDD')
+            })
         }, this);
     },
-    onDblClick: function(a) {
+    onDblClick: function (a) {
         if (a.isLeaf() && xds.active &&
             xds.Component.isValidDrop(xds.active.component, a.instance)) {
             xds.inspector.restore(a.instance.getSpec(), xds.active.node);
             xds.fireEvent("componentchanged")
         }
     },
-    loadUserTypes: function() {
+    loadUserTypes: function () {
 
         var e = xds.Registry.userTypes;
         if (e) {
@@ -9747,7 +10094,7 @@ xds.Toolbox = Ext.extend(Ext.tree.TreePanel, {
 
         }
     },
-    loadUserTypes2: function() {
+    loadUserTypes2: function () {
 
         xds.Registry.vmdux = [];
         var e = xds.Registry.userTypes;
@@ -9773,7 +10120,7 @@ xds.Toolbox = Ext.extend(Ext.tree.TreePanel, {
                 var g = xds.Registry.get(a.cid);
                 xds.Registry.vmdux.push(a.cid);
                 var nodeText = a.text || a.name || a.naming;
-                var getVer = function(name) {
+                var getVer = function (name) {
                     var v;
                     if (name) {
                         v = xds.vmd.cmpList.getVerByName(name);
@@ -9808,7 +10155,7 @@ xds.Toolbox = Ext.extend(Ext.tree.TreePanel, {
             d.expand()
         }
     },
-    onRender: function(b, a) {
+    onRender: function (b, a) {
         xds.Toolbox.superclass.onRender.call(this, b, a);
         this.innerCt.setStyle("padding-bottom", "20px")
     }
@@ -9818,7 +10165,7 @@ xds.Toolbox.Loader = Ext.extend(Ext.tree.TreeLoader, {
 });
 xds.Toolbox.WebLoader = Ext.extend(xds.Toolbox.Loader, {});
 xds.Toolbox.DemoLoader = Ext.extend(xds.Toolbox.Loader, {
-    load: function(a, k) {
+    load: function (a, k) {
         if (a.id != "troot") {
             k();
             return
@@ -9867,7 +10214,7 @@ xds.Toolbox.DemoLoader = Ext.extend(xds.Toolbox.Loader, {
         xds.fireEvent("componentsloaded");
 
         vmd('.User_Components').append('<div class="uxadd" style="float:right;margin-right:10px;color:blue">添加</div>');
-        vmd('.User_Components .uxadd').bind('click', function(e) {
+        vmd('.User_Components .uxadd').bind('click', function (e) {
 
             xds.uxSelectWin = new vmd.window({
                 url: vmd.uxSelectPath,
@@ -9879,12 +10226,12 @@ xds.Toolbox.DemoLoader = Ext.extend(xds.Toolbox.Loader, {
             })
             xds.uxSelectWin.show();
 
-            xds.uxSelectWin.addUx = function(listCmp) {
+            xds.uxSelectWin.addUx = function (listCmp) {
 
                 if (listCmp) {
 
                     var ux = xds.vmd.ux;
-                    xds.vmd.readCmpList(ux.cmpListPath, function(data) {
+                    xds.vmd.readCmpList(ux.cmpListPath, function (data) {
 
                         if (data) {
                             xds.vmd.setCmpListMap(data);
@@ -9892,7 +10239,7 @@ xds.Toolbox.DemoLoader = Ext.extend(xds.Toolbox.Loader, {
                             var pref = designer.prefix.cmp;
                             xds.Registry.vmdux = xds.Registry.vmdux || [];
                             listCmp = listCmp || [];
-                            listCmp.forEach(function(item) {
+                            listCmp.forEach(function (item) {
 
                                 var cls, _cls = item.cls;
                                 var name = item.name
@@ -9905,13 +10252,13 @@ xds.Toolbox.DemoLoader = Ext.extend(xds.Toolbox.Loader, {
 
                             })
                             if (list.length > 0)
-                                LazyLoad.js(list, function() {
+                                LazyLoad.js(list, function () {
                                     //加载模块树
                                     var cls = [];
-                                    Ext.each(listCmp, function(item) {
+                                    Ext.each(listCmp, function (item) {
                                         cls.push(designer.prefix.cmp + item.cls);
                                     })
-                                    xds.vmd.loadCmpJSCssfiles(function() {
+                                    xds.vmd.loadCmpJSCssfiles(function () {
                                         xds.toolbox.loadUserTypes2();
                                     }, cls)
 
@@ -10123,7 +10470,7 @@ xds.Layouts = {
             group: "Vmd.layout.BorderLayout",
             ctype: "boolean"
         }],
-        onBeforeAdd: function(d, c) {
+        onBeforeAdd: function (d, c) {
             var f = ["center", "west", "east", "north", "south"];
             var e = d.firstChild;
             while (e) {
@@ -10140,7 +10487,7 @@ xds.Layouts = {
             var value = c.component.userConfig && c.component.userConfig.region;
             c.component.setConfig("region", value || f[0])
         },
-        onInit: function(a) {
+        onInit: function (a) {
             var b = a.firstChild;
             while (b) {
                 this.onBeforeAdd(a, b);
@@ -10185,7 +10532,7 @@ xds.Layouts = {
             options: ["(none)", "5", "10", "15", "20"],
             defaultValue: "10"
         }],
-        onBeforeAdd: function(b, a) {
+        onBeforeAdd: function (b, a) {
             if (xds.canvas.lastDropPoint) {
                 var d = b.component.getExtComponent();
                 if (d) {
@@ -10323,7 +10670,7 @@ xds.layouts = ["auto", "absolute", "accordion", "anchor", "border", "card",
 xds.layouts = ["auto", "absolute", "anchor", "border",
     "column", "fit", "form", "hbox", "table", "vbox"
 ];
-(function() {
+(function () {
     for (var a in xds.Layouts) {
         if (xds.Layouts.hasOwnProperty(a)) {
             xds.initConfigs("configs", xds.Layouts[a]);
@@ -10331,10 +10678,10 @@ xds.layouts = ["auto", "absolute", "anchor", "border",
         }
     }
 })();
-xds.StoreCache = new Ext.util.MixedCollection(false, function(a) {
+xds.StoreCache = new Ext.util.MixedCollection(false, function (a) {
     return a.component.id
 });
-Ext.intercept(Ext.StoreMgr, "register", function(a) {
+Ext.intercept(Ext.StoreMgr, "register", function (a) {
     if (a.cache === false) {
         return false
     }
@@ -10355,7 +10702,7 @@ xds.Flyout = Ext.extend(Ext.Tip, {
     width: 170,
     layout: "form",
     labelAlign: "top",
-    initComponent: function() {
+    initComponent: function () {
         xds.Flyout.superclass.initComponent.call(this);
         this.component.flyout = this;
         this.component.flyoutCls = "xds-flyout xds-flyout-open";
@@ -10364,7 +10711,7 @@ xds.Flyout = Ext.extend(Ext.Tip, {
         this.mon(xds.east.el, "mousedown", this.doAutoClose, this);
         this.mon(xds.toolbox.el, "mousedown", this.doAutoClose, this);
         this.syncTask = Ext.TaskMgr.start({
-            run: function() {
+            run: function () {
                 var a = this.component.getFlyoutButton();
                 if (a) {
                     this.showBy(a, "tl-tr?")
@@ -10374,7 +10721,7 @@ xds.Flyout = Ext.extend(Ext.Tip, {
             interval: 100
         })
     },
-    beforeDestroy: function() {
+    beforeDestroy: function () {
         delete this.component.flyout;
         this.component.flyoutCls = "xds-flyout";
         xds.un("componentselect", this.doAutoClose, this);
@@ -10385,7 +10732,7 @@ xds.Flyout = Ext.extend(Ext.Tip, {
         Ext.TaskMgr.stop(this.syncTask);
         xds.Flyout.superclass.beforeDestroy.call(this)
     },
-    doAutoClose: function(a) {
+    doAutoClose: function (a) {
 
         if (!a.within(this.el) &&
             a.target != this.component.getFlyoutButton().dom) {
@@ -10401,16 +10748,16 @@ xds.CJsonWindow = Ext.extend(Ext.Window, {
     modal: true,
     plain: true,
     layout: 'border',
-    initComponent: function() {
+    initComponent: function () {
         this.fbar = ['->', {
             text: designer.WindowButton,
             handler: this.onAccept,
             scope: this
         }, {
-            text: designer.WindowButton.Cancel,
-            handler: this.close,
-            scope: this
-        }];
+                text: designer.WindowButton.Cancel,
+                handler: this.close,
+                scope: this
+            }];
         var rootNode = new Ext.tree.TreeNode({
             leaf: false,
             text: ""
@@ -10426,7 +10773,7 @@ xds.CJsonWindow = Ext.extend(Ext.Window, {
                 text: n.id,
                 js: n
             })
-            if (typeof(n.tbar) != 'undefined') {
+            if (typeof (n.tbar) != 'undefined') {
                 var len = n.tbar.length;
                 var tbar = new Ext.tree.TreeNode({
                     expand: true,
@@ -10436,12 +10783,12 @@ xds.CJsonWindow = Ext.extend(Ext.Window, {
                     js: n.tbar
                 });
                 for (var i = 0; i < len; i++) {
-                    if (typeof(n.tbar[i]) != 'undefined')
+                    if (typeof (n.tbar[i]) != 'undefined')
                         tbar.appendChild(build_node(n.tbar[i]));
                 }
                 node.appendChild(tbar);
             }
-            if (typeof(n.bbar) != 'undefined') {
+            if (typeof (n.bbar) != 'undefined') {
                 var len = n.bbar.length;
                 var bbar = new Ext.tree.TreeNode({
                     leaf: false,
@@ -10450,12 +10797,12 @@ xds.CJsonWindow = Ext.extend(Ext.Window, {
                     js: n.bbar
                 });
                 for (var i = 0; i < len; i++) {
-                    if (typeof(n.bbar[i]) != 'undefined')
+                    if (typeof (n.bbar[i]) != 'undefined')
                         bbar.appendChild(build_node(n.bbar[i]));
                 }
                 node.appendChild(bbar);
             }
-            if (typeof(n.fbar) != 'undefined') {
+            if (typeof (n.fbar) != 'undefined') {
                 var len = n.fbar.length;
                 var fbar = new Ext.tree.TreeNode({
                     leaf: false,
@@ -10464,15 +10811,15 @@ xds.CJsonWindow = Ext.extend(Ext.Window, {
                     js: n.fbar
                 });
                 for (var i = 0; i < len; i++) {
-                    if (typeof(n.fbar[i]) != 'undefined')
+                    if (typeof (n.fbar[i]) != 'undefined')
                         fbar.appendChild(build_node(n.fbar[i]));
                 }
                 node.appendChild(fbar);
             }
-            if (typeof(n.columns) != 'undefined') {
+            if (typeof (n.columns) != 'undefined') {
                 var len = n.columns.length;
                 for (var i = 0; i < len; i++) {
-                    if (typeof(n.columns[i]) != 'undefined')
+                    if (typeof (n.columns[i]) != 'undefined')
                         node.appendChild(new Ext.tree.TreeNode({
                             leaf: true,
                             text: n.columns[i].header,
@@ -10481,7 +10828,7 @@ xds.CJsonWindow = Ext.extend(Ext.Window, {
                         }));
                 }
             }
-            if (typeof(n.store) != 'undefined') {
+            if (typeof (n.store) != 'undefined') {
                 node.appendChild(new Ext.tree.TreeNode({
                     leaf: true,
                     text: 'store',
@@ -10489,10 +10836,10 @@ xds.CJsonWindow = Ext.extend(Ext.Window, {
                     js: n.store
                 }));
             }
-            if (typeof(n.items) != 'undefined') {
+            if (typeof (n.items) != 'undefined') {
                 var len = n.items.length;
                 for (var i = 0; i < len; i++) {
-                    if (typeof(n.items[i]) != 'undefined')
+                    if (typeof (n.items[i]) != 'undefined')
                         node.appendChild(build_node(n.items[i]));
                 }
             }
@@ -10532,7 +10879,7 @@ xds.CJsonWindow = Ext.extend(Ext.Window, {
                     case 'xtype':
                     case 'xcls':
                     case 'storeId':
-                        // case 'id':
+                    // case 'id':
                     case 'layoutConfig':
                         break;
                     case 'type':
@@ -10540,7 +10887,7 @@ xds.CJsonWindow = Ext.extend(Ext.Window, {
                             arr.push(p + ':"' + obj[p] + '"');
                         break;
                     default:
-                        switch (typeof(obj[p])) {
+                        switch (typeof (obj[p])) {
                             case 'string':
                                 arr.push(p + ':"' + obj[p] + '"');
                                 break;
@@ -10588,7 +10935,7 @@ xds.CJsonWindow = Ext.extend(Ext.Window, {
                         break;
                     case 'userXType':
                         break;
-                        // case 'id': if (cfg.NOID) break;
+                    // case 'id': if (cfg.NOID) break;
                     case 'items':
                     case 'tbar':
                     case 'fbar':
@@ -10596,7 +10943,7 @@ xds.CJsonWindow = Ext.extend(Ext.Window, {
                         break;
                         break;
                     default:
-                        switch (typeof(obj[p])) {
+                        switch (typeof (obj[p])) {
                             case 'string':
                                 arr.push(p + ':"' + obj[p].replace('"', '\\\"') + '"');
                                 break;
@@ -10617,17 +10964,17 @@ xds.CJsonWindow = Ext.extend(Ext.Window, {
             out += 'initComponent: function(){\n';
 
             // initComponent 代码处理
-            if (typeof(obj.tbar) != 'undefined') {
+            if (typeof (obj.tbar) != 'undefined') {
                 out += lpad + '\tthis.tbar=' + objToString(obj.tbar, 'button', lpad + '\t\t', false) + '\n';
             }
-            if (typeof(obj.fbar) != 'undefined') {
+            if (typeof (obj.fbar) != 'undefined') {
                 out += lpad + '\tthis.fbar=' + objToString(obj.fbar, 'button', lpad + '\t\t', false) + '\n';
             }
-            if (typeof(obj.bbar) != 'undefined') {
+            if (typeof (obj.bbar) != 'undefined') {
                 out += lpad + '\tthis.bbar=' + objToString(obj.bbar, 'button', lpad + '\t\t', false) + '\n';
             }
-            if (typeof(obj.items) != 'undefined') {
-                if (typeof(obj['defaultType']) == 'string') {
+            if (typeof (obj.items) != 'undefined') {
+                if (typeof (obj['defaultType']) == 'string') {
                     out += lpad + '\tthis.items=' + objToString(obj.items, obj['defaultType'], lpad + '\t\t', false) + '\n';
                 } else {
                     switch (obj['xtype']) {
@@ -10641,7 +10988,7 @@ xds.CJsonWindow = Ext.extend(Ext.Window, {
                 }
             }
             out += '\t' + lpad + obj.name + '.superclass.initComponent.call(this);\n' + lpad + '}\n})';
-            if (typeof(obj.userXType) == 'string') {
+            if (typeof (obj.userXType) == 'string') {
                 out += '\nExt.reg("' + obj.userXType + '",' + obj.name + ');';
             }
             return out;
@@ -10653,7 +11000,7 @@ xds.CJsonWindow = Ext.extend(Ext.Window, {
             }
             var out = '';
             var isArr = isArray(obj);
-            if (!isArr && isClass && typeof(obj['name']) == 'string') { // generate class code;
+            if (!isArr && isClass && typeof (obj['name']) == 'string') { // generate class code;
                 return objToCls(obj, dt, lpad, false);
             }
             if (isW) {
@@ -10674,7 +11021,7 @@ xds.CJsonWindow = Ext.extend(Ext.Window, {
             if (isArr) {
                 var len = obj.length;
                 for (var i = 0; i < len; i++) {
-                    switch (typeof(obj[i])) {
+                    switch (typeof (obj[i])) {
                         case 'string':
                             arr.push('"' + obj[i].replace('"', '\\\"') + '"');
                             break;
@@ -10694,7 +11041,7 @@ xds.CJsonWindow = Ext.extend(Ext.Window, {
                     switch (p) {
                         case 'xcls':
                             break;
-                            // case 'id':
+                        // case 'id':
                         case 'storeId':
                             if (cfg.NOID) break;
                         case 'name':
@@ -10710,12 +11057,12 @@ xds.CJsonWindow = Ext.extend(Ext.Window, {
                                         return '" "';
                                 }
                             }
-                            if (typeof(dt) == 'string' && dt == obj[p]) {
+                            if (typeof (dt) == 'string' && dt == obj[p]) {
                                 break;
                             }
                             if (isW) break;
                         default:
-                            switch (typeof(obj[p])) {
+                            switch (typeof (obj[p])) {
                                 case 'string':
                                     arr.push(p + ':"' + obj[p].replace('"', '\\\"') + '"');
                                     break;
@@ -10728,7 +11075,7 @@ xds.CJsonWindow = Ext.extend(Ext.Window, {
                                 case 'object':
                                     switch (p) {
                                         case 'items': //子控件
-                                            if (typeof(obj['defaultType']) == 'string') {
+                                            if (typeof (obj['defaultType']) == 'string') {
                                                 arr.push(p + ':' + objToString(obj[p], obj['defaultType'], lpad + '\t', false));
                                                 break;
                                             }
@@ -10798,7 +11145,7 @@ xds.CJsonWindow = Ext.extend(Ext.Window, {
                     iconCls: 'icon-copy',
                     itemText: '复制代码',
                     tooltip: '复制代码到剪辑版',
-                    handler: function() {
+                    handler: function () {
                         var psb = window.parentSandboxBridge;
                         var te = Ext.getCmp('textarea-viewjson-value');
                         psb.toClipboard(te.getValue().replace(/(\n)/g, '\r\n'));
@@ -10807,7 +11154,7 @@ xds.CJsonWindow = Ext.extend(Ext.Window, {
                     iconCls: 'icon-save',
                     itemText: "保存代码到",
                     tooltip: '保存代码到文件',
-                    handler: function(b, e) {
+                    handler: function (b, e) {
                         var te = Ext.getCmp('textarea-viewjson-value');
                         window.parentSandboxBridge.saveJSAs({
                             contents: te.getValue().replace(/(\n)/g, '\r\n')
@@ -10849,7 +11196,7 @@ xds.CJsonWindow = Ext.extend(Ext.Window, {
         }
         xds.CJsonWindow.superclass.initComponent.call(this)
     },
-    onAccept: function() {
+    onAccept: function () {
         this.close()
     }
 });
@@ -10860,7 +11207,7 @@ xds.CWindow = Ext.extend(Ext.Window, {
     layout: "border",
     plain: true,
     modal: true,
-    initComponent: function() {
+    initComponent: function () {
         this.items = [this.view = new Ext.ux.TileView({
             style: "background:#fff;overflow:auto",
             region: "center",
@@ -10896,7 +11243,7 @@ xds.CWindow = Ext.extend(Ext.Window, {
         this.view.on("selectionchange", this.onViewSelect, this);
         xds.CWindow.superclass.initComponent.call(this)
     },
-    onViewSelect: function() {
+    onViewSelect: function () {
         var a = this.view.getSelectedRecords()[0];
         if (a) {
             this.buttons[0].enable();
@@ -10905,7 +11252,7 @@ xds.CWindow = Ext.extend(Ext.Window, {
             this.buttons[0].disable()
         }
     },
-    onAccept: function() {
+    onAccept: function () {
 
         var a = this.view.getSelectedRecords()[0];
         var b = xds.Registry.get(a.id);
@@ -10921,10 +11268,10 @@ xds.PanelBase = Ext.extend(xds.Component, {
     category: "Containers",
     isContainer: true,
     enableFlyout: true,
-    isResizable: function(a, b) {
+    isResizable: function (a, b) {
         return !this.isFit() && !this.isAnchored()
     },
-    initConfig: function(b, a) {
+    initConfig: function (b, a) {
         if (!a) {
             b.width = 400;
             b.height = 250
@@ -10932,7 +11279,7 @@ xds.PanelBase = Ext.extend(xds.Component, {
     },
     autoScrollable: true,
     layoutable: true,
-    getFlyoutItems: function() {
+    getFlyoutItems: function () {
         var a = [];
         if (this.layoutable) {
             a.push({
@@ -10987,7 +11334,7 @@ xds.PanelBase = Ext.extend(xds.Component, {
         }
         return a
     },
-    onFlyout: function() {
+    onFlyout: function () {
         var a = this.getFlyoutItems();
         return new xds.Flyout({
             title: this.getNode().text,
@@ -10995,14 +11342,14 @@ xds.PanelBase = Ext.extend(xds.Component, {
             items: a
         })
     },
-    getPanelHeader: function() {
+    getPanelHeader: function () {
         var a = this.getExtComponent();
         if (a.header && a.headerAsText) {
             return a.header.child("span")
         }
         return null
     },
-    onFilmDblClick: function(a) {
+    onFilmDblClick: function (a) {
         var b = this.getPanelHeader();
         if (b && b.getRegion().contains(a.getPoint())) {
             this.startTitleEdit(b)
@@ -11010,7 +11357,7 @@ xds.PanelBase = Ext.extend(xds.Component, {
             xds.PanelBase.superclass.onFilmDblClick.call(this, a)
         }
     },
-    startTitleEdit: function(a) {
+    startTitleEdit: function (a) {
         xds.canvas.startEdit(this, a || this.getPanelHeader(), this
             .getConfigObject("title"), 150)
     }
@@ -11035,7 +11382,7 @@ xds.types.Container = Ext.extend(xds.Component, {
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'top left'
     },
-    initConfig: function(b, a) {
+    initConfig: function (b, a) {
 
         //if (!a) {
         b.width = 400;
@@ -11046,7 +11393,7 @@ xds.types.Container = Ext.extend(xds.Component, {
             this.xtype = this.userConfig.xtype = 'panel';
         }
     },
-    isResizable: function(a, b) {
+    isResizable: function (a, b) {
         return !this.isFit() && !this.isAnchored()
     },
     configs: [{
@@ -11079,7 +11426,7 @@ xds.types.Container = Ext.extend(xds.Component, {
         name: "html",
         group: "Vmd.Component",
         ctype: "string",
-        hide: (function() {
+        hide: (function () {
             return xds.vmd.isDisableHtmlProp()
         }())
     }, {
@@ -11143,7 +11490,7 @@ xds.types.Container = Ext.extend(xds.Component, {
             height: 500,
             width: 690,
             title: '图片上传',
-            callback: function(data, edobj) {
+            callback: function (data, edobj) {
                 if (data) {
                     //   data.props.backgroundImage = data.props.src;
                 }
@@ -11175,7 +11522,7 @@ xds.types.Container = Ext.extend(xds.Component, {
 
 
     ],
-    onFlyout: function() {
+    onFlyout: function () {
         var a = [{
             xtype: "flyoutselect",
             fieldLabel: "选择一种布局方式",
@@ -11210,7 +11557,7 @@ xds.types.Container = Ext.extend(xds.Component, {
 });
 xds.Registry.register(xds.types.Container);
 xds.Container = Ext.extend(Ext.Container, {
-    onRender: function(ct) {
+    onRender: function (ct) {
         var me = this;
         xds.Container.superclass.onRender.apply(this, arguments);
 
@@ -11222,9 +11569,9 @@ xds.Container = Ext.extend(Ext.Container, {
                 if (xds.vmd.resource.loadComplete) {
                     this.backgroundImage = vmd.replaceResVars(this.backgroundImage);
                 } else {
-                    vmd.taskRunner(function() {
+                    vmd.taskRunner(function () {
                         return xds.vmd.resource.loadComplete;
-                    }, function() {
+                    }, function () {
                         me.el && me.el.setStyle('backgroundImage', "url('" + vmd.replaceResVars(me._backgroundImage) + "')");
                     })
                 }
@@ -11255,7 +11602,7 @@ xds.Container = Ext.extend(Ext.Container, {
         }
 
     },
-    afterRender: function() {
+    afterRender: function () {
         this.el.addClass('vmd-div');
         this.border && this.el.addClass('vmd-div-border');
         xds.Container.superclass.afterRender.call(this, arguments)
@@ -11284,7 +11631,7 @@ xds.types.Form = Ext.extend(xds.PanelBase, {
         header: true,
         border: true
     },
-    initConfig: function(b, a) {
+    initConfig: function (b, a) {
         if (!a) {
             b.width = 400;
             b.height = 250;
@@ -11466,7 +11813,7 @@ xds.types.Panel = Ext.extend(xds.PanelBase, {
         name: "html",
         group: "Vmd.Panel",
         ctype: "string",
-        hide: (function() {
+        hide: (function () {
             return xds.vmd.isDisableHtmlProp()
         }())
     }, {
@@ -11572,7 +11919,11 @@ xds.types.TabPanel = Ext.extend(xds.PanelBase, {
     defaultConfig: {
         activeTab: 0,
         height: 150,
-        width: 500
+        width: 500,
+		
+		//tabPosition:'top',
+		//tabWidth:120
+		
     },
     configs: [{
         name: "activeTab",
@@ -11675,8 +12026,34 @@ xds.types.TabPanel = Ext.extend(xds.PanelBase, {
         editor: "ace",
         ctype: "string",
         params: "tab"
-    }],
-    getFlyoutItems: function() {
+    },
+	{
+        name: "tabPosition",
+        group: "Vmd.TabPanel",
+        ctype: "string",
+        editor: "options",
+        options: ["top", "bottom", "left","right"]
+    }, 
+	{
+        name: "tabWidth",
+        group: "Vmd.TabPanel",
+        ctype: "number"
+    }, 
+	{
+        name: "textAlign",
+        group: "Vmd.TabPanel",
+        ctype: "string",
+        editor: "options",
+        options: ["horizontal","vertical"]
+    },
+	{
+        name: "enableTabScroll",
+        group: "Vmd.TabPanel",
+        ctype: "boolean"
+    }
+	
+  ],
+    getFlyoutItems: function () {
         var a = xds.types.TabPanel.superclass.getFlyoutItems.call(this);
         var d = [],
             e = this;
@@ -11694,7 +12071,7 @@ xds.types.TabPanel = Ext.extend(xds.PanelBase, {
                 component: this,
                 name: "activeTab",
                 event: "select",
-                get: function() {
+                get: function () {
                     var c = e.getExtComponent();
                     var h = c.getActiveTab();
                     if (h) {
@@ -11703,7 +12080,7 @@ xds.types.TabPanel = Ext.extend(xds.PanelBase, {
                         return d[0]
                     }
                 },
-                set: function(j) {
+                set: function (j) {
                     var i = d.indexOf(j.getValue());
                     var h = e.getConfigObject("activeTab");
                     h.setValue(e, i);
@@ -11715,7 +12092,7 @@ xds.types.TabPanel = Ext.extend(xds.PanelBase, {
         });
         return a
     },
-    getDefaultInternals: function() {
+    getDefaultInternals: function () {
 
         return {
             cid: this.cid,
@@ -11737,7 +12114,7 @@ xds.types.TabPanel = Ext.extend(xds.PanelBase, {
             }]
         }
     },
-    getTabTarget: function(d) {
+    getTabTarget: function (d) {
         if (d.getTarget("b", 1)) {
             return false
         }
@@ -11761,7 +12138,7 @@ xds.types.TabPanel = Ext.extend(xds.PanelBase, {
         }
         return false
     },
-    getTabComponent: function(b) {
+    getTabComponent: function (b) {
         var e = 0;
         var d = this.getNode();
         for (var a = 0, c; c = d.childNodes[a]; a++) {
@@ -11775,7 +12152,7 @@ xds.types.TabPanel = Ext.extend(xds.PanelBase, {
         }
         return null
     },
-    onFilmClick: function(d) {
+    onFilmClick: function (d) {
         var b = this.getTabTarget(d);
         if (b !== false) {
             var a = this.getConfigObject("activeTab");
@@ -11788,7 +12165,7 @@ xds.types.TabPanel = Ext.extend(xds.PanelBase, {
                 c.getNode().select();
                 //mafei 20180330 tabpanel容器内组件选中问题
                 if (xds.active && xds.active.node) {
-                    xds.active.node.parentNode.cascade(function() {
+                    xds.active.node.parentNode.cascade(function () {
                         this.component.syncFilm()
                     })
                 }
@@ -11796,7 +12173,7 @@ xds.types.TabPanel = Ext.extend(xds.PanelBase, {
             }
         }
     },
-    onFilmDblClick: function(d) {
+    onFilmDblClick: function (d) {
         var a = this.getTabTarget(d);
         if (a !== false) {
             var c = this.getTabComponent(a);
@@ -11829,7 +12206,7 @@ xds.types.Viewport = Ext.extend(xds.Component, {
     isContainer: true,
     hide: true,
     filmCls: "el-film-btn-overlap",
-    isValidParent: function(a) {
+    isValidParent: function (a) {
         return !a
     },
     configs: [{
@@ -11887,8 +12264,9 @@ xds.types.Viewport = Ext.extend(xds.Component, {
         group: "Vmd.Component",
         ctype: "string"
     }
+
     ],
-    onFlyout: function() {
+    onFlyout: function () {
         return new xds.Flyout({
             title: this.getNode().text,
             component: this,
@@ -11910,21 +12288,21 @@ xds.Registry.register(xds.types.Viewport);
 xds.Viewport = Ext.extend(Ext.Panel, {
     baseCls: "page",
     frame: true,
-    initComponent: function() {
+    initComponent: function () {
         //修复autoscroll为true时canvas显示不全的问题
         this.autoScroll = false;
         xds.Viewport.superclass.initComponent.call(this)
     },
-    onShow: function() {
+    onShow: function () {
         xds.Viewport.superclass.onShow.call(this);
         this.onCanvasResize();
         xds.canvas.on("resize", this.onCanvasResize, this)
     },
-    onHide: function() {
+    onHide: function () {
         xds.Viewport.superclass.onHide.call(this);
         xds.canvas.un("resize", this.onCanvasResize, this)
     },
-    onCanvasResize: function() {
+    onCanvasResize: function () {
         //mafei 20180412
         if (xds.canvas.overflowScroll && (_canvasbody = xds.canvas.bwrap)) {
             _canvasbody.first().dom.scrollLeft = xds.canvas.overflowScroll.left;
@@ -11945,10 +12323,10 @@ xds.Viewport = Ext.extend(Ext.Panel, {
 
         var designerMode = xds.vmd.checkCid();
 
-        var _canvasResize = function() {
+        var _canvasResize = function () {
             //xds.canvas.bwrap.first()
             var resizeObj = xds.canvas.body.getStyleSize();
-			if (!me) return;
+            if (!me) return;
             if (!Ext.getDom(me.el.id)) return;
             var pageWidth = Ext.getDom(me.el.id).parentNode.scrollWidth;
             var pageHeight = Ext.getDom(me.el.id).parentNode.scrollHeight;
@@ -11970,7 +12348,7 @@ xds.Viewport = Ext.extend(Ext.Panel, {
         xds.canvas.syncAll.defer(50, xds.canvas);
 
         //20180822 修复容器内组件宽度和高度多大导致的画板显示不全问题
-        Ext.defer(function() {
+        Ext.defer(function () {
             _canvasResize();
         }, 60)
 
@@ -11991,10 +12369,10 @@ xds.types.Window = Ext.extend(xds.PanelBase, {
     iconCls: "icon-window",
     naming: "MyWindow",
     hide: true,
-    isValidParent: function(a) {
+    isValidParent: function (a) {
         return !a || a.cid == "viewport"
     },
-    isResizable: function(a, b) {
+    isResizable: function (a, b) {
         return true
     },
     defaultConfig: {
@@ -12002,7 +12380,7 @@ xds.types.Window = Ext.extend(xds.PanelBase, {
         width: 400,
         height: 250
     },
-    initConfig: function(opts, parent, comp) {
+    initConfig: function (opts, parent, comp) {
         //修复默认窗体不显示的问题
         opts.hidden = false;
     },
@@ -12246,7 +12624,7 @@ xds.Window = Ext.extend(Ext.Panel, {
     closable: true,
     elements: "header,body",
     frame: true,
-    initEvents: function() {
+    initEvents: function () {
         xds.Window.superclass.initEvents.call(this);
         if (this.minimizable) {
             this.addTool({
@@ -12264,7 +12642,7 @@ xds.Window = Ext.extend(Ext.Panel, {
             })
         }
     },
-    onRender: function() {
+    onRender: function () {
         xds.Window.superclass.onRender.apply(this, arguments);
         if (this.plain) {
             this.el.addClass("x-window-plain")
@@ -12291,15 +12669,15 @@ xds.types.FieldSet = Ext.extend(xds.Component, {
         layout: "absolute",
         checkboxToggle: true
     },
-    isResizable: function(a, b) {
+    isResizable: function (a, b) {
         return true
     },
-    initConfig: function(b, a) {
+    initConfig: function (b, a) {
         if (!a) {
             b.width = 400
         }
     },
-    onFlyout: function() {
+    onFlyout: function () {
         return new xds.Flyout({
             title: this.getNode().text,
             component: this,
@@ -12316,7 +12694,7 @@ xds.types.FieldSet = Ext.extend(xds.Component, {
             }]
         })
     },
-    onFilmDblClick: function(b) {
+    onFilmDblClick: function (b) {
         var a = this.getExtComponent();
         if (a.header && a.header.getRegion().contains(b.getPoint())) {
             xds.canvas.startEdit(this, a.header, this
@@ -12463,13 +12841,13 @@ xds.types.Label = Ext.extend(xds.Component, {
     defaultConfig: {
         text: "lable:"
     },
-    isResizable: function(a, b) {
+    isResizable: function (a, b) {
         //return a == "Right"
         //		&& !this.getConfigValue("anchor")
         //		&& (!this.owner || this.owner.getConfigValue("layout") != "form")
         return true;
     },
-    onFilmDblClick: function(b) {
+    onFilmDblClick: function (b) {
         var a = this.getExtComponent();
         xds.canvas.startEdit(this, a.el, this.getConfigObject("text"))
     },
@@ -12568,16 +12946,16 @@ xds.types.GridPanel = Ext.extend(xds.PanelBase, {
         loadMask: true
 
     },
-    initConfig: function(b, a) {
+    initConfig: function (b, a) {
         if (!a) {
             b.width = 400;
             b.height = 250
         }
     },
-    isResizable: function(a, b) {
+    isResizable: function (a, b) {
         return !this.isFit() && !this.isAnchored()
     },
-    isValidChild: function(a) {
+    isValidChild: function (a) {
 
         return this.superclass.isValidChild.apply(this, arguments)
     },
@@ -12698,7 +13076,7 @@ xds.types.GridPanel = Ext.extend(xds.PanelBase, {
         ctype: "string",
         params: "field,val,record,rowIndex,columnIndex,e"
     }],
-    createCanvasConfig: function(h) {
+    createCanvasConfig: function (h) {
         var g = Ext.apply({}, this.getConfig());
         g.xtype = this.dtype;
         g.stateful = false;
@@ -12720,7 +13098,7 @@ xds.types.GridPanel = Ext.extend(xds.PanelBase, {
         }
         return g
     },
-    getTargetColumnIndex: function(h) {
+    getTargetColumnIndex: function (h) {
         var a = this.getExtComponent();
         if (a) {
             var n = h.getPoint();
@@ -12746,7 +13124,7 @@ xds.types.GridPanel = Ext.extend(xds.PanelBase, {
         }
         return false
     },
-    getTargetColumn: function(a) {
+    getTargetColumn: function (a) {
         if (typeof a == "object") {
             a = this.getTargetColumnIndex(a)
         }
@@ -12756,14 +13134,14 @@ xds.types.GridPanel = Ext.extend(xds.PanelBase, {
         var b = this.getColumnNodes();
         return b[a].component
     },
-    onFilmClick: function(b) {
+    onFilmClick: function (b) {
         var a = this.getTargetColumn(b);
         if (a) {
             a.getNode().select();
             return false
         }
     },
-    onFilmDblClick: function(d) {
+    onFilmDblClick: function (d) {
         var a = this.getTargetColumnIndex(d);
         if (a !== false) {
             var c = this.getExtComponent().view.getHeaderCell(a);
@@ -12773,7 +13151,7 @@ xds.types.GridPanel = Ext.extend(xds.PanelBase, {
             xds.types.GridPanel.superclass.onFilmDblClick.call(this, d)
         }
     },
-    getDefaultInternals: function() {
+    getDefaultInternals: function () {
         return {
             cid: this.cid,
             cn: [{
@@ -12797,7 +13175,7 @@ xds.types.GridPanel = Ext.extend(xds.PanelBase, {
             }]
         }
     },
-    getActions: function() {
+    getActions: function () {
         if (!this.actions) {
             this.actions = [new Ext.Action({
                 itemId: "auto-columns",
@@ -12809,7 +13187,7 @@ xds.types.GridPanel = Ext.extend(xds.PanelBase, {
         }
         return this.actions
     },
-    getColumnNodes: function() {
+    getColumnNodes: function () {
         var f = this.getNode(),
             c = f.childNodes,
             d = [];
@@ -12820,7 +13198,7 @@ xds.types.GridPanel = Ext.extend(xds.PanelBase, {
         }
         return d
     },
-    getStoreNode: function() {
+    getStoreNode: function () {
         var a = this.getNode().firstChild;
         while (a) {
             if (a.component.isStore) {
@@ -12830,7 +13208,7 @@ xds.types.GridPanel = Ext.extend(xds.PanelBase, {
         }
         return null
     },
-    doAutoColumns: function() {
+    doAutoColumns: function () {
 
         var k = this.getStoreNode(),
             b = this.getNode();
@@ -12857,7 +13235,7 @@ xds.types.GridPanel = Ext.extend(xds.PanelBase, {
             var j = f.component,
                 g = j.getConfigValue("type"),
                 a = j
-                .getConfigValue("name");
+                    .getConfigValue("name");
 
             // a = j.getConfigValue("id");
             switch (g) {
@@ -12911,7 +13289,7 @@ xds.types.GridPanel = Ext.extend(xds.PanelBase, {
 xds.Registry.register(xds.types.GridPanel);
 xds.GridPanel = Ext.extend(Ext.grid.GridPanel, {
     //20171122
-    initComponent: function() {
+    initComponent: function () {
 
         //this.store = this.store || new Ext.data.JsonStore();
         if (typeof this.store == "string" || typeof this.store == "undefined") {
@@ -12926,7 +13304,7 @@ xds.GridPanel = Ext.extend(Ext.grid.GridPanel, {
         }
         this.callParent(arguments)
     },
-    afterRender: function() {
+    afterRender: function () {
         xds.GridPanel.superclass.afterRender.call(this);
         if (false && this.store && this.store.viewerNode) {
             this.createFloater(this.store.viewerNode.id,
@@ -12953,13 +13331,13 @@ xds.GridPanel.DefaultStore = new Ext.data.JsonStore({
     }]
 });
 
-Ext.onReady(function() {
+Ext.onReady(function () {
     xds.Config.editors.columns = new Ext.grid.GridEditor(new xds.MoreField({
         value: "(Collection)",
-        setRawValue: function(a) {
+        setRawValue: function (a) {
             this.value = a
         },
-        onMoreClick: function(b) {
+        onMoreClick: function (b) {
             var a = new xds.ColumnWindow();
             a.component = xds.active.component;
             a.show(b.target)
@@ -12976,10 +13354,10 @@ xds.StoreBase = Ext.extend(xds.Component, {
     validChildTypes: ["datafield"],
     isInvisible: true,
     defaultConfig: {},
-    initConfig: function(b, a) {
+    initConfig: function (b, a) {
         b.storeId = this.id
     },
-    setConfig: function(a, b) {
+    setConfig: function (a, b) {
         xds.StoreBase.superclass.setConfig.call(this, a, b);
         this.reconfigure();
         if (a == "url" && this.actions) {
@@ -12987,7 +13365,7 @@ xds.StoreBase = Ext.extend(xds.Component, {
             this.actions[0].initialConfig.disabled = !b
         }
     },
-    reconfigure: function(d) {
+    reconfigure: function (d) {
         var b = xds.StoreCache.get(this.owner.id);
         var e = this.processConfig(b.viewerNode);
         e.cache = false;
@@ -13005,7 +13383,7 @@ xds.StoreBase = Ext.extend(xds.Component, {
             b.loadData(b.dataCache)
         }
     },
-    createCanvasConfig: function(d) {
+    createCanvasConfig: function (d) {
         var a = xds.StoreCache.get(this.owner.id);
         if (!a) {
             var b = this.processConfig(d);
@@ -13015,14 +13393,14 @@ xds.StoreBase = Ext.extend(xds.Component, {
         }
         return a
     },
-    onLoadException: function() {
+    onLoadException: function () {
         xds.status.el.update("");
         Ext.Msg
             .alert("Error",
                 "Unable to load data using the supplied configuration.");
         this.setSuffix("load error", "error")
     },
-    processConfig: function(e) {
+    processConfig: function (e) {
         var d = Ext.apply({}, this.getConfig());
         d.xtype = this.xtype;
         d.fields = [];
@@ -13035,9 +13413,9 @@ xds.StoreBase = Ext.extend(xds.Component, {
         }
         return d
     },
-    getActions: function() {
+    getActions: function () {
         if (!this.actions) {
-            var a = function(c) {
+            var a = function (c) {
                 var b = [];
                 for (var d = 0; d < c; d++) {
                     xds.inspector.restore({
@@ -13049,7 +13427,7 @@ xds.StoreBase = Ext.extend(xds.Component, {
                 itemId: "store-load",
                 text: "加载数据",
                 iconCls: "icon-load",
-                handler: function() {
+                handler: function () {
                     var b = xds.StoreCache
                         .get(this.owner.id);
                     delete b.dataCache;
@@ -13089,7 +13467,7 @@ xds.StoreBase = Ext.extend(xds.Component, {
         }
         return this.actions
     },
-    isValidParent: function(a) {
+    isValidParent: function (a) {
         if (a && a.getStoreNode) {
             return !a.getStoreNode()
         }
@@ -13103,7 +13481,7 @@ xds.types.JsonStore = Ext.extend(xds.StoreBase, {
     dtype: "jsonstore",
     xcls: "Ext.data.JsonStore",
     iconCls: "icon-json",
-    createStore: function(a, c) {
+    createStore: function (a, c) {
         a = a || {};
         a.proxy = a.proxy || new Ext.data.HttpProxy(a);
         var b = new Ext.data.JsonStore(a);
@@ -13111,7 +13489,7 @@ xds.types.JsonStore = Ext.extend(xds.StoreBase, {
         // var _data = "var data={0};return data;"
         // config.data = String.format(_data, Ext.encode(data));
         if (c) {
-            b.on("beforeload", function() {
+            b.on("beforeload", function () {
                 if (!b.proxy.conn.url) {
                     Ext.Msg
                         .alert("Warning",
@@ -13125,7 +13503,7 @@ xds.types.JsonStore = Ext.extend(xds.StoreBase, {
                     xds.status.el.update("Loading store...")
                 }
             });
-            b.on("load", function(d) {
+            b.on("load", function (d) {
                 d.dataCache = d.reader.jsonData;
                 xds.status.el.update("");
                 this.setSuffix((d.data.length) + " records loaded",
@@ -13188,7 +13566,7 @@ xds.ColumnBase = Ext.extend(xds.Component, {
     naming: "MyColumn",
     isVisual: false,
     hide: false,
-    setConfig: function(a, b) {
+    setConfig: function (a, b) {
         xds.ColumnBase.superclass.setConfig.call(this, a, b);
         if (a == "dataIndex") {
             var c = this.getConfigValue("id");
@@ -13203,7 +13581,7 @@ xds.ColumnBase = Ext.extend(xds.Component, {
         dataIndex: "",
         width: 100
     },
-    initConfig: function(b, a) {}
+    initConfig: function (b, a) { }
 });
 xds.types.GridColumn = Ext.extend(xds.ColumnBase, {
     cid: "gridcolumn",
@@ -13248,28 +13626,28 @@ xds.types.GridColumn = Ext.extend(xds.ColumnBase, {
         group: "Vmd.grid.Column",
         ctype: "boolean"
     },
-        //{
-        //    name: "id",
-        //    group: "Vmd.grid.Column",
-        //    ctype: "string"
-        //},
-        {
-            name: "menuDisabled",
-            group: "Vmd.grid.Column",
-            ctype: "boolean"
-        }, {
-            name: "resizable",
-            group: "Vmd.grid.Column",
-            ctype: "boolean"
-        }, {
-            name: "tooltip",
-            group: "Vmd.grid.Column",
-            ctype: "string"
-        }, {
-            name: "width",
-            group: "Vmd.grid.Column",
-            ctype: "number"
-        }
+    //{
+    //    name: "id",
+    //    group: "Vmd.grid.Column",
+    //    ctype: "string"
+    //},
+    {
+        name: "menuDisabled",
+        group: "Vmd.grid.Column",
+        ctype: "boolean"
+    }, {
+        name: "resizable",
+        group: "Vmd.grid.Column",
+        ctype: "boolean"
+    }, {
+        name: "tooltip",
+        group: "Vmd.grid.Column",
+        ctype: "string"
+    }, {
+        name: "width",
+        group: "Vmd.grid.Column",
+        ctype: "number"
+    }
     ]
 });
 xds.Registry.register(xds.types.GridColumn);
@@ -13317,28 +13695,28 @@ xds.types.CheckColumn = Ext.extend(xds.ColumnBase, {
         group: "Vmd.grid.Column",
         ctype: "boolean"
     },
-        //{
-        //    name: "id",
-        //    group: "Vmd.grid.Column",
-        //    ctype: "string"
-        //},
-        {
-            name: "menuDisabled",
-            group: "Vmd.grid.Column",
-            ctype: "boolean"
-        }, {
-            name: "resizable",
-            group: "Vmd.grid.Column",
-            ctype: "boolean"
-        }, {
-            name: "tooltip",
-            group: "Vmd.grid.Column",
-            ctype: "string"
-        }, {
-            name: "width",
-            group: "Vmd.grid.Column",
-            ctype: "number"
-        }
+    //{
+    //    name: "id",
+    //    group: "Vmd.grid.Column",
+    //    ctype: "string"
+    //},
+    {
+        name: "menuDisabled",
+        group: "Vmd.grid.Column",
+        ctype: "boolean"
+    }, {
+        name: "resizable",
+        group: "Vmd.grid.Column",
+        ctype: "boolean"
+    }, {
+        name: "tooltip",
+        group: "Vmd.grid.Column",
+        ctype: "string"
+    }, {
+        name: "width",
+        group: "Vmd.grid.Column",
+        ctype: "number"
+    }
     ]
 });
 xds.Registry.register(xds.types.CheckColumn);
@@ -13397,28 +13775,28 @@ xds.types.NumberColumn = Ext.extend(xds.ColumnBase, {
         group: "Vmd.grid.Column",
         ctype: "boolean"
     },
-        //{
-        //    name: "id",
-        //    group: "Vmd.grid.Column",
-        //    ctype: "string"
-        //},
-        {
-            name: "menuDisabled",
-            group: "Vmd.grid.Column",
-            ctype: "boolean"
-        }, {
-            name: "resizable",
-            group: "Vmd.grid.Column",
-            ctype: "boolean"
-        }, {
-            name: "tooltip",
-            group: "Vmd.grid.Column",
-            ctype: "string"
-        }, {
-            name: "width",
-            group: "Vmd.grid.Column",
-            ctype: "number"
-        }
+    //{
+    //    name: "id",
+    //    group: "Vmd.grid.Column",
+    //    ctype: "string"
+    //},
+    {
+        name: "menuDisabled",
+        group: "Vmd.grid.Column",
+        ctype: "boolean"
+    }, {
+        name: "resizable",
+        group: "Vmd.grid.Column",
+        ctype: "boolean"
+    }, {
+        name: "tooltip",
+        group: "Vmd.grid.Column",
+        ctype: "string"
+    }, {
+        name: "width",
+        group: "Vmd.grid.Column",
+        ctype: "number"
+    }
     ]
 });
 xds.Registry.register(xds.types.NumberColumn);
@@ -13477,28 +13855,28 @@ xds.types.DateColumn = Ext.extend(xds.ColumnBase, {
         group: "Vmd.grid.Column",
         ctype: "boolean"
     },
-        //{
-        //    name: "id",
-        //    group: "Vmd.grid.Column",
-        //    ctype: "string"
-        //},
-        {
-            name: "menuDisabled",
-            group: "Vmd.grid.Column",
-            ctype: "boolean"
-        }, {
-            name: "resizable",
-            group: "Vmd.grid.Column",
-            ctype: "boolean"
-        }, {
-            name: "tooltip",
-            group: "Vmd.grid.Column",
-            ctype: "string"
-        }, {
-            name: "width",
-            group: "Vmd.grid.Column",
-            ctype: "number"
-        }
+    //{
+    //    name: "id",
+    //    group: "Vmd.grid.Column",
+    //    ctype: "string"
+    //},
+    {
+        name: "menuDisabled",
+        group: "Vmd.grid.Column",
+        ctype: "boolean"
+    }, {
+        name: "resizable",
+        group: "Vmd.grid.Column",
+        ctype: "boolean"
+    }, {
+        name: "tooltip",
+        group: "Vmd.grid.Column",
+        ctype: "string"
+    }, {
+        name: "width",
+        group: "Vmd.grid.Column",
+        ctype: "number"
+    }
     ]
 });
 xds.Registry.register(xds.types.DateColumn);
@@ -13565,22 +13943,22 @@ xds.types.TemplateColumn = Ext.extend(xds.ColumnBase, {
         //    ctype: "string"
         //}
         , {
-            name: "menuDisabled",
-            group: "Vmd.grid.Column",
-            ctype: "boolean"
-        }, {
-            name: "resizable",
-            group: "Vmd.grid.Column",
-            ctype: "boolean"
-        }, {
-            name: "tooltip",
-            group: "Vmd.grid.Column",
-            ctype: "string"
-        }, {
-            name: "width",
-            group: "Vmd.grid.Column",
-            ctype: "number"
-        }
+        name: "menuDisabled",
+        group: "Vmd.grid.Column",
+        ctype: "boolean"
+    }, {
+        name: "resizable",
+        group: "Vmd.grid.Column",
+        ctype: "boolean"
+    }, {
+        name: "tooltip",
+        group: "Vmd.grid.Column",
+        ctype: "string"
+    }, {
+        name: "width",
+        group: "Vmd.grid.Column",
+        ctype: "number"
+    }
     ]
 });
 xds.Registry.register(xds.types.TemplateColumn);
@@ -13601,10 +13979,10 @@ xds.types.DataField = Ext.extend(xds.Component, {
         name: "field",
         type: "auto"
     },
-    initConfig: function(b, a) {
+    initConfig: function (b, a) {
         b.storeId = this.id
     },
-    setConfig: function(a, b) {
+    setConfig: function (a, b) {
         this.superclass.setConfig.call(this, a, b);
         this.owner.reconfigure && this.owner.reconfigure()
     },
@@ -13639,7 +14017,7 @@ xds.types.DataField = Ext.extend(xds.Component, {
             "string"
         ]
     }],
-    getActions: function() {
+    getActions: function () {
         if (!this.actions) {
             this.actions = [new Ext.Action({
                 itemId: "ruleInfo",
@@ -13651,7 +14029,7 @@ xds.types.DataField = Ext.extend(xds.Component, {
         }
         return this.actions
     },
-    ruleInfo: function() {
+    ruleInfo: function () {
         var that = this;
         var _store = this.owner;
         _store.ruleInfo(that.name)
@@ -13667,13 +14045,13 @@ xds.FieldBase = Ext.extend(xds.Component, {
     defaultConfig: {
         fieldLabel: "Form Fields"
     },
-    isResizable: function(a, b) {
+    isResizable: function (a, b) {
         return a == "Right" &&
             !this.isAnchored() &&
             !this.isFit() &&
             (!this.owner || this.owner.getConfigValue("layout") != "form")
     },
-    initConfig: function(c, a) {
+    initConfig: function (c, a) {
         var b = this.owner ? this.owner.getConfigValue("layout") : "";
         if (!a) {
             c.width = 200
@@ -13791,7 +14169,7 @@ xds.types.CheckboxGroup = Ext.extend(xds.Component, {
     naming: "hwCheckboxGroup",
     validChildTypes: ["checkbox"],
     isContainer: true,
-    isResizable: function(a, b) {
+    isResizable: function (a, b) {
         return true;
     },
     defaultConfig: {
@@ -13804,7 +14182,7 @@ xds.types.CheckboxGroup = Ext.extend(xds.Component, {
         checkedField: 'checked',
         boxFieldName: 'mycheckbox'
     },
-    getDefaultInternals: function() {
+    getDefaultInternals: function () {
 
         return {
             cid: this.cid,
@@ -14171,7 +14549,7 @@ xds.types.HtmlEditor = Ext.extend(xds.FieldBase, {
         enableLists: true,
         enableSourceEdit: true
     },
-    isResizable: function(a, b) {
+    isResizable: function (a, b) {
         return !this.getConfigValue("anchor") &&
             (!this.owner || this.owner.getConfigValue("layout") != "form")
     },
@@ -14537,7 +14915,7 @@ xds.types.RadioGroup = Ext.extend(xds.Component, {
     naming: "hwRadioGroup",
     validChildTypes: ["radio"],
     isContainer: true,
-    isResizable: function(a, b) {
+    isResizable: function (a, b) {
         return true;
     },
     defaultConfig: {
@@ -14550,7 +14928,7 @@ xds.types.RadioGroup = Ext.extend(xds.Component, {
         checkedField: 'checked',
         boxFieldName: 'myRadio'
     },
-    getDefaultInternals: function() {
+    getDefaultInternals: function () {
 
         return {
             cid: this.cid,
@@ -14864,7 +15242,7 @@ xds.types.TextArea = Ext.extend(xds.FieldBase, {
     xcls: "Ext.form.TextArea",
     iconCls: "icon-textarea",
     naming: "hwTextArea",
-    isResizable: function(a, b) {
+    isResizable: function (a, b) {
         return !this.getConfigValue("anchor") &&
             (!this.owner || this.owner.getConfigValue("layout") != "form")
     },
@@ -14991,9 +15369,9 @@ xds.TextArea = Ext.extend(Ext.form.TextArea, {
 Ext.reg("xdtextarea", xds.TextArea);
 
 
-xds.File = function() {
+xds.File = function () {
     return {
-        saveProject: function(c, a, b) {
+        saveProject: function (c, a, b) {
             var sfile = window.parentSandboxBridge;
             sfile.save({
                 fullPath: xds.Project.file,
@@ -15006,7 +15384,7 @@ xds.File = function() {
                     Ext.callback(a.callback, scope);
             }
         },
-        serializeUxInterface: function(obj) {
+        serializeUxInterface: function (obj) {
             //直接修改obj
             if (xds.vmd.isUx()) {
                 var interfaceObj = xds.project.getData2();
@@ -15021,7 +15399,7 @@ xds.File = function() {
             }
 
         },
-        saveProjectAs: function(c, a, b) {
+        saveProjectAs: function (c, a, b) {
 
             if (Ext.isFunction(a)) {
                 a = {
@@ -15029,7 +15407,7 @@ xds.File = function() {
                     isShow: true
                 }
             }
-            var callback = a && a.callback
+            var callback = a && a.callback;
             var obj = {
                 vmdversion: vmd.vmdVersion || '2.0',
                 vmdlayout: Ext.util.JSON.encode(c),
@@ -15037,8 +15415,8 @@ xds.File = function() {
                 vmdcss: xds.vmd.css || '',
                 vmdprops: Ext.encode(xds.vmd.props),
                 vmdcss: xds.vmd.css || '',
-                type: designer.mode
-
+                type: designer.mode,
+                vmdcmpdeps: xds.vmd.cmpdeps
             };
 
             if (xds.vmd.isUx()) {
@@ -15054,7 +15432,7 @@ xds.File = function() {
             var sfile = window.parentSandboxBridge;
             sfile && sfile.saveAs({
                 contents: Ext.util.JSON.encode(c)
-            }, function(target) {
+            }, function (target) {
                 xds.Project.file = target; //save the file
                 xds.File.setTitle(target.nativePath)
                 if (a) {
@@ -15065,19 +15443,19 @@ xds.File = function() {
             });
 
         },
-        openProject: function(a, b) {
+        openProject: function (a, b) {
 
         },
-        getComponents: function(a, b) {},
-        saveUserComponent: function(b, a, c) {},
-        removeUserComponent: function(b, a, c) {},
-        setTitle: function(a) {
+        getComponents: function (a, b) { },
+        saveUserComponent: function (b, a, c) { },
+        removeUserComponent: function (b, a, c) { },
+        setTitle: function (a) {
             var psb = window.parentSandboxBridge && window.parentSandboxBridge.setTitle(a);
         }
     }
 }();
 
-function SourceX() {}
+function SourceX() { }
 
 Ext.apply(SourceX, {
 
@@ -15086,11 +15464,11 @@ Ext.apply(SourceX, {
         CLASS: true
     },
 
-    isArray: function(o) {
+    isArray: function (o) {
         return Object.prototype.toString.call(o) === '[object Array]';
     },
 
-    FieldToStr: function(obj, lpad) {
+    FieldToStr: function (obj, lpad) {
         var bString = true;
         for (var p in obj) {
             switch (p) {
@@ -15123,7 +15501,7 @@ Ext.apply(SourceX, {
                 case 'xtype':
                 case 'xcls':
                 case 'storeId':
-                    //case 'id':
+                //case 'id':
                 case 'layoutConfig':
                     break;
                 case 'type':
@@ -15131,7 +15509,7 @@ Ext.apply(SourceX, {
                         arr.push(p + ':"' + obj[p] + '"');
                     break;
                 default:
-                    switch (typeof(obj[p])) {
+                    switch (typeof (obj[p])) {
                         case 'string':
                             arr.push(p + ':"' + obj[p] + '"');
                             break;
@@ -15142,7 +15520,7 @@ Ext.apply(SourceX, {
         return '{\n' + lpad + '\t' + arr.join(',\n' + lpad + '\t') + '\n' + lpad + '}';
     },
 
-    fieldsToString: function(obj, lpad) {
+    fieldsToString: function (obj, lpad) {
         if (this.isArray(obj)) {
             var l = obj.length;
             var arr = [];
@@ -15154,8 +15532,9 @@ Ext.apply(SourceX, {
         }
         return '[]';
     },
+
     //序列化
-    objToCls: function(obj, dt, lpad) {
+    objToCls: function (obj, dt, lpad) {
         // obj.name;
         var mode = designer.mode;
         var out = '';
@@ -15178,10 +15557,11 @@ Ext.apply(SourceX, {
 
         out += 'Ext.define("' + obj.name + '" ,{\n';
         var arr = [];
-        if(xds.vmd.isPropPanel() && obj.xcls!='vmd.base.UxPropertySettings'){
-            obj.xcls='vmd.base.UxPropertySettings';
-            obj.xtype='vmd.uxpropertysettings';
-        } 
+
+        if (xds.vmd.isPropPanel() && obj.xcls != 'vmd.base.UxPropertySettings') {
+            obj.xcls = 'vmd.base.UxPropertySettings';
+            obj.xtype = 'vmd.uxpropertysettings';
+        }
         arr.push('\textend:"' + obj.xcls + '"');
         arr.push('requires:vmd.getCmpDeps(' + xds.vmd.getCmpDeps() + ')');
         if (mode == "ux") {
@@ -15212,7 +15592,7 @@ Ext.apply(SourceX, {
                     arr.push(p + ':"' + obj.name + '"');
                     break;
                 default:
-                    switch (typeof(obj[p])) {
+                    switch (typeof (obj[p])) {
                         case 'string':
                             //arr.push(p + ':"' + obj[p].replace('"', '\\\"') + '"');
                             //去掉回车换行
@@ -15239,12 +15619,12 @@ Ext.apply(SourceX, {
         //复合组件增加作用域修改功能
         if (mode == "ux") {
             out += '\t' + lpad + this.resetCmpScope(obj) + '\n' + lpad;
-            out += '\t'+lpad +'try{\n'+ lpad;
+            out += '\t' + lpad + 'try{\n' + lpad;
         }
         //事件代码块
         out += '\t' + lpad + (xds.vmd.events ? xds.vmd.events : '') + '\n' + lpad;
-        if(mode == "ux"){
-            out += '\t' +lpad +"}catch(ex){vmd.Error.log('003-3',{p1:'"+xds.vmd.params.uxName()+"',p2:ex.message},ex,100);}\n"+ lpad;
+        if (mode == "ux") {
+            out += '\t' + lpad + "}catch(ex){vmd.Error.log('003-3',{p1:'" + xds.vmd.params.uxName() + "',p2:ex.message},ex,100);}\n" + lpad;
         }
         //公共事件(afterrend\beforerender)单独处理,此方法废掉改用initPublicEvents
         out += this.publicEvents(lpad, obj, xds.vmd.events);
@@ -15256,7 +15636,7 @@ Ext.apply(SourceX, {
         var me = this;
         var vmJson = this.getVWJson('subview');
         var subviewout = "";
-        Ext.each(vmJson, function(item) {
+        Ext.each(vmJson, function (item) {
 
             var id = item.id;
             var winJsTpl = '\t var {id}=new vmd.comp.SubView({view:{content},rootScope:this,isModule:true})\n';
@@ -15271,7 +15651,7 @@ Ext.apply(SourceX, {
 
         vmJson = this.getVWJson('subwindow');
         var subwindowout = "";
-        Ext.each(vmJson, function(item) {
+        Ext.each(vmJson, function (item) {
 
             var id = item.id;
             var winJsTpl = '\t var {id}=new vmd.comp.SubWindow({view:{content},rootScope:this,isModule:true})\n';
@@ -15283,17 +15663,17 @@ Ext.apply(SourceX, {
             out += subwindowout;
         })
         //
-        if (typeof(obj.tbar) != 'undefined') {
+        if (typeof (obj.tbar) != 'undefined') {
             out += lpad + '\tthis.tbar=' + this.objToString(obj.tbar, 'button', lpad + '\t\t', false) + '\n';
         }
-        if (typeof(obj.fbar) != 'undefined') {
+        if (typeof (obj.fbar) != 'undefined') {
             out += lpad + '\tthis.fbar=' + this.objToString(obj.fbar, 'button', lpad + '\t\t', false) + '\n';
         }
-        if (typeof(obj.bbar) != 'undefined') {
+        if (typeof (obj.bbar) != 'undefined') {
             out += lpad + '\tthis.bbar=' + this.objToString(obj.bbar, 'button', lpad + '\t\t', false) + '\n';
         }
-        if (typeof(obj.items) != 'undefined') {
-            if (typeof(obj['defaultType']) == 'string') {
+        if (typeof (obj.items) != 'undefined') {
+            if (typeof (obj['defaultType']) == 'string') {
                 out += lpad + '\tthis.items=' + this.objToString(obj.items, obj['defaultType'], lpad + '\t\t', false) + '\n';
             } else {
                 switch (obj['xtype']) {
@@ -15315,9 +15695,9 @@ Ext.apply(SourceX, {
             out += lpad + 'vmd.core.compositeCmpInit(this.items, this);\n' + lpad;
             out += lpad + 'var me = this;eval(me.defineVars);\n' + lpad;
             out += lpad + 'resetCmpScope();\n' + lpad;
-           
+
             out += this.initUxMethod(lpad);
-           
+
             out += lpad + 'Ext.util.CSS.removeStyleSheet("' + obj.name + '");\n' + lpad;
             out += lpad + 'this.uxCss&&Ext.util.CSS.createStyleSheet(vmd.replaceResVars(this.uxCss), "' + obj.name + '");\n' + lpad;
         } else {
@@ -15342,7 +15722,7 @@ Ext.apply(SourceX, {
         //最外层结束
         out += '}\n})';
 
-        if (typeof(obj.userXType) == 'string') {
+        if (typeof (obj.userXType) == 'string') {
             // out += '\nExt.reg("' + obj.userXType + '",' + obj.name + ');';
         } else {
             //if(mode=="ux")
@@ -15350,7 +15730,7 @@ Ext.apply(SourceX, {
         }
         return out;
     },
-    getVWJson: function(type) {
+    getVWJson: function (type) {
         var vm, vmarr = []
 
         if (xds.vmd.isUx()) {
@@ -15358,20 +15738,20 @@ Ext.apply(SourceX, {
         } else vm = xds.project.getJson()[3];
         if (!vm) return vmarr;
         if (type == 'subview') {
-            Ext.each(vm.items, function(item) {
+            Ext.each(vm.items, function (item) {
                 if (item.xtype == 'vmd.subview')
                     vmarr.push(item);
             })
         } else {
             //独立窗口
-            Ext.each(vm.items, function(item) {
+            Ext.each(vm.items, function (item) {
                 if (item.xtype == 'vmd.subwindow')
                     vmarr.push(item);
             })
         }
         return vmarr;
     },
-    initModule: function(lpad) {
+    initModule: function (lpad) {
         var out = '';
         //变量初始化
         out += this.initVariable(lpad, 'variable') + "\n";
@@ -15383,7 +15763,7 @@ Ext.apply(SourceX, {
         if (xds.vmd.vmdServiceInit) out += xds.vmd.vmdServiceInit(lpad);
         return out
     },
-    resetCmpScope: function(obj) {
+    resetCmpScope: function (obj) {
         var out = '';
         out += "function resetCmpScope() {\n" +
             "                    var cmpList = me._reloadCmpList;\n" +
@@ -15403,10 +15783,10 @@ Ext.apply(SourceX, {
         propdata = xds.vmd.getPropsData();
         if (propdata) {
             var storeStr = '';
-            var storelist = propdata.filter(function(item) {
+            var storelist = propdata.filter(function (item) {
                 return item.cmptype == 'store'
             });
-            Ext.each(storelist, function(item) {
+            Ext.each(storelist, function (item) {
 
                 if (item.id) {
                     out += '\tif(Ext.isString(this.' + item.id + ')) this.' + item.id + '=new Ext.data.JsonStore()\n'
@@ -15417,17 +15797,17 @@ Ext.apply(SourceX, {
 
         return out;
     },
-    initUx: function() {
+    initUx: function () {
 
         return '';
     },
-    preInit: function(mode, lpad) {
+    preInit: function (mode, lpad) {
         var out = '';
         if (mode == "ux") out = this.initUx(lpad);
         else out = this.initModule(lpad)
         return out;
     },
-    publicEvents: function(lpad, item, events) {
+    publicEvents: function (lpad, item, events) {
         events = events || "";
         var out = '';
         var aftervents = item.id + "_afterrender";
@@ -15440,10 +15820,10 @@ Ext.apply(SourceX, {
         }
         return out;
     },
-    getEventList: function(cid) {
+    getEventList: function (cid) {
         var configs = xds.Registry.get(cid || 'vmdJsonStore').configs;
         var arr = [];
-        Ext.each(configs.items, function(obj) {
+        Ext.each(configs.items, function (obj) {
             if (obj.group == "事件") {
                 arr.push(obj.name);
             }
@@ -15451,9 +15831,9 @@ Ext.apply(SourceX, {
         return arr;
 
     },
-    _findById: function(obj, conf) {
+    _findById: function (obj, conf) {
         var me = this;
-        Ext.each(obj.items, function(item) {
+        Ext.each(obj.items, function (item) {
             if (item.id == conf.bindCmp) {
                 me.rootObj[conf.prop] = item[conf.bindValue];
                 item[conf.bindValue] = "this." + conf.prop;
@@ -15462,7 +15842,7 @@ Ext.apply(SourceX, {
         })
 
     },
-    restrctObj: function(obj, conf) {
+    restrctObj: function (obj, conf) {
         var me = this;
         this.rootObj = obj;
         //if (obj.id == conf.id) {
@@ -15472,14 +15852,14 @@ Ext.apply(SourceX, {
         //复合组件新增属性构造
         me._findById(obj, conf);
     },
-    initUxProp: function(obj, lpad) {
+    initUxProp: function (obj, lpad) {
         if (!this.rootObj) this.rootObj = obj;
         if (!xds.vmd.isUx()) return;
         var out = '';
         var me = this;
         me.uxprops = {};
         var propdata = xds.vmd.getPropsData();
-        Ext.each(propdata, function(item) {
+        Ext.each(propdata, function (item) {
             if (!me.uxprops[item.bindCmp]) me.uxprops[item.bindCmp] = {};
             //if (item.uxcid.indexOf('.ux')==-1) return false
             me.uxprops[item.bindCmp][item.bindValue] = item.id;
@@ -15504,22 +15884,22 @@ Ext.apply(SourceX, {
         }
         return out;
     },
-    initUxMethod: function(lpad) {
+    initUxMethod: function (lpad) {
         if (!xds.vmd.isUx()) return;
         var out = '';
         var me = this;
         var data = xds.vmd.getMethodsData();
-        Ext.each(data, function(item) {
+        Ext.each(data, function (item) {
             out += '\t' + lpad + 'this.' + item.id + "= function(" + item.params + "){\n" + item.code + '\n\t}\n';
         })
         return out;
     },
-    _loadPublicEvent: function(listMap, lpad, pref) {
+    _loadPublicEvent: function (listMap, lpad, pref) {
         var out = '';
         var that = this;
         var cmps = listMap.keys();
         pref = pref || '';
-        Ext.each(cmps, function(cmpId) {
+        Ext.each(cmps, function (cmpId) {
             var _pref = pref;
             if (!cmpId) return false;
             var event = listMap.get(cmpId);
@@ -15539,7 +15919,7 @@ Ext.apply(SourceX, {
         })
         return out;
     },
-    initPublicEvents: function(lpad) {
+    initPublicEvents: function (lpad) {
         var out = '';
         //afterrender装配
         var afterList = xds.vmd.eventDict.afterrender;
@@ -15548,77 +15928,77 @@ Ext.apply(SourceX, {
         out += this._loadPublicEvent(afterList, lpad, 'vmd');
         return out;
     },
-    initStore: function(lpad, vmdType) {
+    initStore: function (lpad, vmdType) {
 
         var me = this;
         var root = xds.vmd.getRootNode(vmdType);
         var node = root && root.childNodes;
         var out = '';
-        var _initStore=function(node){
-        node && Ext.each(node, function(item, i) {
-            //id,storeConfig
-            // var configs = item.component.userConfig;
-            var configs = item.component.config;
-                var isMSstore=configs.isMaster?true:false;
+        var _initStore = function (node) {
+            node && Ext.each(node, function (item, i) {
+                //id,storeConfig
+                // var configs = item.component.userConfig;
+                var configs = item.component.config;
+                var isMSstore = configs.isMaster ? true : false;
                 delete configs.isMaster;
-                if(isMSstore) item.component.xcls='vmd.store.MSStore';
-            var opts = "{{0}}";
-            var str = "";
-            var temp = [];
-            if (configs) {
-                //str = "storeConfig:" + configs.storeConfig + "";
-                //属性序列化
-                str = Ext.encode(configs).replace(/^{(.+)\}$/, '$1');
-                if (!configs.storeConfig) {
-                    var fields = []
-                    Ext.each(item.childNodes, function(obj) {
-                        if (obj.component.name)
-                            fields.push(obj.component.name);
-                    })
-                    if (fields.length > 0)
-                        str = "fields:['" + fields.join("','") + "']"
+                if (isMSstore) item.component.xcls = 'vmd.store.MSStore';
+                var opts = "{{0}}";
+                var str = "";
+                var temp = [];
+                if (configs) {
+                    //str = "storeConfig:" + configs.storeConfig + "";
+                    //属性序列化
+                    str = Ext.encode(configs).replace(/^{(.+)\}$/, '$1');
+                    if (!configs.storeConfig) {
+                        var fields = []
+                        Ext.each(item.childNodes, function (obj) {
+                            if (obj.component.name)
+                                fields.push(obj.component.name);
+                        })
+                        if (fields.length > 0)
+                            str = "fields:['" + fields.join("','") + "']"
+
+                    }
+                }
+
+                //增加事件
+                var eventArr = me.getEventList(item.component.cid);
+                //遍历事件方法构造完整事件
+
+                for (var key in configs) {
+                    if (eventArr.indexOf(key) != -1) {
+                        var eventName = configs[key];
+                        if (!eventName) continue;
+                        //if (!listeners) listeners = {};
+                        // listeners[key] = "function(){" + eventName + ".apply(this,arguments);}";
+                        var evetMethod = "function(){" + eventName + ".apply(this,arguments);}";
+                        temp.push(key + ":" + evetMethod);
+                    }
+                }
+
+                if (temp.length > 0) {
+                    str = "listeners:{" + temp.join(',') + "}," + str;
 
                 }
-            }
+                //对于未选中直接预览报错
+                if (str == "{}") str = "";
 
-            //增加事件
-            var eventArr = me.getEventList(item.component.cid);
-            //遍历事件方法构造完整事件
-
-            for (var key in configs) {
-                if (eventArr.indexOf(key) != -1) {
-                    var eventName = configs[key];
-                    if (!eventName) continue;
-                    //if (!listeners) listeners = {};
-                    // listeners[key] = "function(){" + eventName + ".apply(this,arguments);}";
-                    var evetMethod = "function(){" + eventName + ".apply(this,arguments);}";
-                    temp.push(key + ":" + evetMethod);
-                }
-            }
-
-            if (temp.length > 0) {
-                str = "listeners:{" + temp.join(',') + "}," + str;
-
-            }
-            //对于未选中直接预览报错
-            if (str == "{}") str = "";
-
-            opts = String.format(opts, str);
+                opts = String.format(opts, str);
                 //递归dataset
-                if(item.component.cid=='vmdDataSet'){
+                if (item.component.cid == 'vmdDataSet') {
                     _initStore(item.childNodes);
-                }else 
-            out += '\t' + lpad + item.id + "=new " + item.component.xcls + '(' + opts + ');\n';
-        })
+                } else
+                    out += '\t' + lpad + item.id + "=new " + item.component.xcls + '(' + opts + ');\n';
+            })
         }
         _initStore(node);
         return out;
     },
-    initVariable: function(lpad, vmdType) {
+    initVariable: function (lpad, vmdType) {
         var root = xds.vmd.getRootNode(vmdType);
         var node = root && root.childNodes;
         var out = '';
-        node && Ext.each(node, function(item, i) {
+        node && Ext.each(node, function (item, i) {
             //value
             var opts = "{}";
             var value = item.component.userConfig.value;
@@ -15628,7 +16008,7 @@ Ext.apply(SourceX, {
 
         return out;
     },
-    initWorkflow: function(lpad, vmdType) {
+    initWorkflow: function (lpad, vmdType) {
 
         var root = xds.vmd.getRootNode(vmdType);
 
@@ -15670,12 +16050,12 @@ Ext.apply(SourceX, {
         out += '\t' + lpad + root.id + "=new " + root.component.xcls + '(' + opts + ');\n';
         return out;
     },
-    listerToString: function(lpad) {
+    listerToString: function (lpad) {
         var out = '';
         var deserialize = xds.project.getJson()[0];
-        var ite = function(items) {
-            Ext.each(items, function(item) {
-                item.mapevents && Ext.each(item.mapevents, function(list) {
+        var ite = function (items) {
+            Ext.each(items, function (item) {
+                item.mapevents && Ext.each(item.mapevents, function (list) {
                     for (var name in list) {
                         out += '\t' + lpad + 'me.' + item.id + '.on(\'' + name + '\',' + list[name] + ');\n';
                     }
@@ -15689,7 +16069,7 @@ Ext.apply(SourceX, {
         return out;
     },
     //根节点
-    objToString: function(obj, dt, lpad, isW, isClass, cmp) { // dt = defaulttype
+    objToString: function (obj, dt, lpad, isW, isClass, cmp) { // dt = defaulttype
 
         var me = this;
         if (!lpad) {
@@ -15697,7 +16077,7 @@ Ext.apply(SourceX, {
         }
         var out = '';
         var isArr = this.isArray(obj);
-        if (!isArr && isClass && typeof(obj['name']) == 'string') { // generate class code;
+        if (!isArr && isClass && typeof (obj['name']) == 'string') { // generate class code;
             return this.objToCls(obj, dt, lpad, false);
         }
         if (isW) {
@@ -15718,7 +16098,7 @@ Ext.apply(SourceX, {
         if (isArr) {
             var len = obj.length;
             for (var i = 0; i < len; i++) {
-                switch (typeof(obj[i])) {
+                switch (typeof (obj[i])) {
                     case 'string':
                         arr.push('"' + obj[i].replace('"', '\\\"') + '"');
                         break;
@@ -15738,7 +16118,7 @@ Ext.apply(SourceX, {
                 switch (p) {
                     case 'xcls':
                         break;
-                        //case 'id':
+                    //case 'id':
                     case 'storeId':
                         if (this.cfg.NOID) break;
                     case 'name':
@@ -15754,12 +16134,12 @@ Ext.apply(SourceX, {
                                     return '" "';
                             }
                         }
-                        if (typeof(dt) == 'string' && dt == obj[p]) {
+                        if (typeof (dt) == 'string' && dt == obj[p]) {
                             break;
                         }
                         if (isW) break;
                     default:
-                        switch (typeof(obj[p])) {
+                        switch (typeof (obj[p])) {
 
                             case 'string':
                                 // if (obj[p].indexOf('_vmdlisteners') != -1 && p != "afterrender" && p != "beforerender") {
@@ -15767,10 +16147,10 @@ Ext.apply(SourceX, {
                                     if (designer.mode == "module" && cmp && cmp.xtype == "viewport") {
                                         var func = "function(){\n\tthis." + obj[p].replace('_vmdlisteners', '') + "(this)" + "\n}"
                                         arr.push(p + ':' + func + '');
-                                    } else if (designer.mode == "ux" && cmp && (cmp.xtype == "panel" ||cmp.xtype=="vmd.uxbase"||cmp.xtype=="vmd.uxpropertysettings")) {
+                                    } else if (designer.mode == "ux" && cmp && (cmp.xtype == "panel" || cmp.xtype == "vmd.uxbase" || cmp.xtype == "vmd.uxpropertysettings")) {
                                         //复合组件也需要单独处理，要放到afterlayout等函数内（后续调整）
-                                        var errCode=p=='vmdafterrender'?'003-2':'003-1'
-                                        var func = "function(){\n\ttry{this." + obj[p].replace('_vmdlisteners', '') + "(this)}catch(ex){vmd.Error.log('"+errCode+"',{p1:'"+xds.vmd.params.uxName()+"'},ex,50);}" + "\n}"
+                                        var errCode = p == 'vmdafterrender' ? '003-2' : '003-1'
+                                        var func = "function(){\n\ttry{this." + obj[p].replace('_vmdlisteners', '') + "(this)}catch(ex){vmd.Error.log('" + errCode + "',{p1:'" + xds.vmd.params.uxName() + "'},ex,50);}" + "\n}"
                                         arr.push(p + ':' + func + '');
 
                                     } else {
@@ -15813,7 +16193,7 @@ Ext.apply(SourceX, {
                                         break;
                                 }
                                 break;
-                                // arr.push(p + ':"' + obj[p].replace('"', '\\\"') + '"'); break;
+                            // arr.push(p + ':"' + obj[p].replace('"', '\\\"') + '"'); break;
                             case 'number':
                                 arr.push(p + ':' + obj[p]);
                                 break;
@@ -15825,7 +16205,7 @@ Ext.apply(SourceX, {
                                     case 'items':
                                     case 'mapevents':
                                     case 'listeners': //mafei 201709
-                                        if (typeof(obj['defaultType']) == 'string') {
+                                        if (typeof (obj['defaultType']) == 'string') {
                                             arr.push(p + ':' + this.objToString(obj[p], obj['defaultType'], lpad + '\t', false));
                                             break;
                                         }
@@ -15873,18 +16253,18 @@ Ext.apply(SourceX, {
         }
         return out;
     },
-    Test: function() {
+    Test: function () {
         alert("SourceX")
     },
 
-    JonsScript: function(ctrl) {
+    JonsScript: function (ctrl) {
 
         if (ctrl) {
             return this.objToString(ctrl, null, '\t', true, this.cfg.CLASS);
         }
     }
 })
-designer.init = function() {
+designer.init = function () {
     //快速提示，用于右侧属性
     Ext.QuickTips.init();
     Ext.QuickTips.getQuickTip().el.setZIndex(70000);
@@ -15918,14 +16298,14 @@ designer.init = function() {
             iconCls: "icon-project-new"
 
         }, xds.actions.openAction, '-',
-            xds.actions.saveAction,
-            xds.actions.openAction, '-',
-            xds.actions.newCmpAction,
+        xds.actions.saveAction,
+        xds.actions.openAction, '-',
+        xds.actions.newCmpAction,
             '-', xds.actions.preview, {
-                id: "csep",
-                xtype: "tbseparator",
-                hidden: true
-            }
+            id: "csep",
+            xtype: "tbseparator",
+            hidden: true
+        }
         ]
     });
 
@@ -15945,7 +16325,7 @@ designer.init = function() {
             layout: 'fit',
             region: 'center',
             listeners: {
-                vmdafterrender: function() {
+                vmdafterrender: function () {
                     var me = this;
                     this.activeHeader = this.rpt_header = Ext.get('inspector_module__ins_rptconf');
                     this.ins_tab = Ext.getCmp('inspector_module');
@@ -15954,7 +16334,7 @@ designer.init = function() {
 
                 }
             },
-            activeReprot: function() {
+            activeReport: function () {
                 var me = this;
                 this.ins_tab.activate('ins_rptconf');
                 //调整宽度
@@ -15964,12 +16344,12 @@ designer.init = function() {
                 //动态加载报表属性交互组件
                 var rptPath = vmd.virtualPath + '/components/ux/contentProperty/1.0/ContentProperty.js';
                 $LAB.script(rptPath)
-                    .wait(function() {
+                    .wait(function () {
                         var rptInst;
 
-                        vmd.taskRunner(function() {
+                        vmd.taskRunner(function () {
                             if (vmd.ux.ContentProperty) return true;
-                        }, function() {
+                        }, function () {
                             if (vmd.ux.ContentProperty) {
                                 if (!me.reportInst) {
                                     me.reportInst = new vmd.ux.ContentProperty();
@@ -15981,7 +16361,7 @@ designer.init = function() {
                     })
 
             },
-            activeSettings: function(uxName, width, title, callback) {
+            activeSettings: function (uxName, width, title, callback) {
 
                 var uxPath;
                 var me = this;
@@ -15999,12 +16379,12 @@ designer.init = function() {
                 //动态加载报表属性交互组件
                 var rptPath = uxPath;
                 $LAB.script(rptPath)
-                    .wait(function() {
+                    .wait(function () {
                         var rptInst;
 
-                        vmd.taskRunner(function() {
+                        vmd.taskRunner(function () {
                             if (vmd.ux && vmd.ux[uxName]) return true;
-                        }, function() {
+                        }, function () {
                             if (vmd.ux[uxName]) {
                                 if (!me[uxName]) {
                                     me[uxName] = new vmd.ux[uxName]();
@@ -16020,27 +16400,27 @@ designer.init = function() {
                         })
                     })
             },
-            _showActiveSettings: function(activeCmp) {
+            _showActiveSettings: function (activeCmp) {
                 if (!this.rpt.items) return;
-                Ext.each(this.rpt.items.items, function(item) {
+                Ext.each(this.rpt.items.items, function (item) {
                     if (activeCmp.id == item.id) item.show();
                     else item.hide();
                 })
             },
-            showRptTab: function() {
+            showRptTab: function () {
 
                 if (this.rpt_header) this.rpt_header.show();
                 xds.props.hide();
                 xds.east.doLayout();
 
             },
-            hideRptTab: function() {
+            hideRptTab: function () {
                 xds.props.show();
                 xds.east.doLayout();
                 xds.props.refresh();
 
             },
-            hideRptTab2: function() {
+            hideRptTab2: function () {
                 if (this.rpt_header) {
                     this.ins_tab.activate(0);
                     this.rpt_header.hide();
@@ -16052,7 +16432,7 @@ designer.init = function() {
                 activeTab: 0,
                 id: 'inspector_module',
                 listeners: {
-                    tabchange: function(sender, tab) {
+                    tabchange: function (sender, tab) {
 
 
                         if (tab.id == 'ins_rptconf') {
@@ -16105,7 +16485,7 @@ designer.init = function() {
             layout: 'fit',
             region: 'center',
             listeners: {
-                vmdafterrender: function() {
+                vmdafterrender: function () {
                     var me = this;
                     this.activeHeader = this.rpt_header = Ext.get('inspector_module__ins_rptconf');
                     this.ins_tab = Ext.getCmp('inspector_module');
@@ -16114,7 +16494,7 @@ designer.init = function() {
 
                 }
             },
-            activeReprot: function() {
+            activeReport: function () {
                 var me = this;
                 this.ins_tab.activate('ins_rptconf');
                 //调整宽度
@@ -16124,12 +16504,12 @@ designer.init = function() {
                 //动态加载报表属性交互组件
                 var rptPath = vmd.virtualPath + '/components/ux/contentProperty/1.0/ContentProperty.js';
                 $LAB.script(rptPath)
-                    .wait(function() {
+                    .wait(function () {
                         var rptInst;
 
-                        vmd.taskRunner(function() {
+                        vmd.taskRunner(function () {
                             if (vmd.ux.ContentProperty) return true;
-                        }, function() {
+                        }, function () {
                             if (vmd.ux.ContentProperty) {
                                 if (!me.reportInst) {
                                     me.reportInst = new vmd.ux.ContentProperty();
@@ -16141,13 +16521,14 @@ designer.init = function() {
                     })
 
             },
-            activeSettings: function(uxName, width, title, callback,version) {
+            activeSettings: function (uxName, width, title, callback, version) {
 
-                version=version||'1.0';
+                version = version || '1.0';
+
                 var uxPath;
                 var me = this;
                 if (!uxName) return;
-                uxPath = vmd.virtualPath + '/components/ux/' + uxName.toLowerCase() + '/'+version+'/' + uxName + '.js';
+                uxPath = vmd.virtualPath + '/components/ux/' + uxName.toLowerCase() + '/' + version + '/' + uxName + '.js';
                 //标题设置
                 this.activeCt.title = title || '未设置标题';
                 if (vmd.ux && vmd.ux[uxName]) this.activeCt.setTitle(this.activeCt.title);
@@ -16160,12 +16541,12 @@ designer.init = function() {
                 //动态加载报表属性交互组件
                 var rptPath = uxPath;
                 $LAB.script(rptPath)
-                    .wait(function() {
+                    .wait(function () {
                         var rptInst;
 
-                        vmd.taskRunner(function() {
+                        vmd.taskRunner(function () {
                             if (vmd.ux && vmd.ux[uxName]) return true;
-                        }, function() {
+                        }, function () {
                             if (vmd.ux[uxName]) {
                                 if (!me[uxName]) {
                                     me[uxName] = new vmd.ux[uxName]();
@@ -16182,7 +16563,7 @@ designer.init = function() {
                     })
 
             },
-            activeSettings2: function(uxName, width, title, callback) {
+            activeSettings2: function (uxName, width, title, callback) {
 
                 var uxPath;
                 var me = this;
@@ -16203,12 +16584,12 @@ designer.init = function() {
                 //动态加载报表属性交互组件
                 var rptPath = uxPath;
                 $LAB.script(rptPath)
-                    .wait(function() {
+                    .wait(function () {
                         var rptInst;
 
-                        vmd.taskRunner(function() {
+                        vmd.taskRunner(function () {
                             if (vmd.ux && vmd.ux[uxName]) return true;
-                        }, function() {
+                        }, function () {
                             if (vmd.ux[uxName]) {
                                 if (!me[uxName]) {
                                     me[uxName] = new vmd.ux[uxName]();
@@ -16224,26 +16605,26 @@ designer.init = function() {
                         })
                     })
             },
-            _showActiveSettings: function(activeCmp) {
+            _showActiveSettings: function (activeCmp) {
                 if (!this.rpt.items) return;
-                Ext.each(this.rpt.items.items, function(item) {
+                Ext.each(this.rpt.items.items, function (item) {
                     if (activeCmp.id == item.id) item.show();
                     else item.hide();
                 })
             },
-            showRptTab: function() {
+            showRptTab: function () {
 
                 if (this.rpt_header) this.rpt_header.show();
                 xds.props.hide();
                 xds.east.doLayout();
 
             },
-            hideRptTab: function() {
+            hideRptTab: function () {
                 xds.props.show();
                 xds.east.doLayout();
                 xds.props.refresh();
             },
-            hideRptTab2: function() {
+            hideRptTab2: function () {
                 if (this.rpt_header) {
                     this.ins_tab.activate(0);
                     this.rpt_header.hide();
@@ -16255,7 +16636,7 @@ designer.init = function() {
                 activeTab: 0,
                 id: 'inspector_module',
                 listeners: {
-                    tabchange: function(sender, tab) {
+                    tabchange: function (sender, tab) {
 
 
                         if (tab.id == 'ins_rptconf') {
@@ -16315,7 +16696,7 @@ designer.init = function() {
     var e = new xds.Canvas();
     Ext.MyViewport = Ext.extend(Ext.Viewport, {
         xtype: "viewport",
-        initComponent: function() {
+        initComponent: function () {
             Ext.MyViewport.superclass.initComponent.call(this);
         }
     })
@@ -16370,7 +16751,7 @@ designer.init = function() {
             }],
 
             listeners: {
-                'tabchange': function(tab) {
+                'tabchange': function (tab) {
                     if (tab.activeTab.id == "DM") {
 
                         xds.TextAreajosnCode.setValue(SourceX.JonsScript(xds.project.getJson()[0]))
@@ -16419,7 +16800,7 @@ designer.init = function() {
                     width: 70,
                     type: 'primary',
                     style: 'margin-right:10px',
-                    handler: function() {
+                    handler: function () {
 
                         xds.project.saveVmd();
                     }
@@ -16430,7 +16811,7 @@ designer.init = function() {
                     width: 70,
                     type: 'primary',
                     style: 'margin-right:10px',
-                    handler: function() {
+                    handler: function () {
                         xds.project.preview()
                     }
                 }, {
@@ -16440,7 +16821,7 @@ designer.init = function() {
                     width: 70,
                     type: 'primary',
                     style: 'margin-right:10px',
-                    handler: function() {
+                    handler: function () {
                         xds.project.close()
                     }
                 }]
@@ -16466,7 +16847,7 @@ designer.init = function() {
                     width: 120,
                     height: 36,
                     type: 'primary',
-                    handler: function(btn, e) {
+                    handler: function (btn, e) {
                         window.open(vmd.virtualPath + vmd.vmdUxPath, "复合组件管理");
                     }
                 }]
@@ -16496,7 +16877,7 @@ designer.init = function() {
                     height: 36,
                     width: 100,
                     type: 'primary',
-                    handler: function(btn, e) {
+                    handler: function (btn, e) {
                         if (designer.mode == 'ux') {
 
                             var cmpName = vmd.getUrlParam('name');
@@ -16517,7 +16898,7 @@ designer.init = function() {
                                 auto: false,
                                 fbar: [{
                                     text: '确定',
-                                    handler: function() {
+                                    handler: function () {
                                         var selectFiles = Ext.decode(win.postdata);
                                         if (!selectFiles || (Ext.isArray(selectFiles) && selectFiles.length == 0)) {
                                             win.close();
@@ -16528,7 +16909,7 @@ designer.init = function() {
                                         var _cssData = [],
                                             _jsData = [],
                                             _imgData = [];
-                                        selectFiles.forEach(function(data) {
+                                        selectFiles.forEach(function (data) {
                                             var ext = data.ext;
                                             var path = data.path;
                                             var id = path;
@@ -16558,7 +16939,7 @@ designer.init = function() {
                                     }
                                 }, {
                                     text: '取消',
-                                    handler: function() {
+                                    handler: function () {
                                         win.close();
                                     }
                                 }]
@@ -16566,7 +16947,7 @@ designer.init = function() {
                             win.show();
                             win.postdata = null;
                             //test
-                            window.addEventListener('message', function(messageEvent) {
+                            window.addEventListener('message', function (messageEvent) {
                                 var data = messageEvent.data;
                                 win.postdata = data;
                             }, false);
@@ -16585,7 +16966,7 @@ designer.init = function() {
                     width: 60,
 
                     listeners: {
-                        beforerender: function() {
+                        beforerender: function () {
 
                             this.items = [{
                                 value: "zh",
@@ -16602,7 +16983,7 @@ designer.init = function() {
 
                         },
 
-                        change: function(combo, value, text) {
+                        change: function (combo, value, text) {
 
                             //利用localstorage进行本地存储
                             LocalData.set('language', value);
@@ -16627,7 +17008,7 @@ designer.init = function() {
         var moduleId = xds.vmd.params.id();
         //成兵 20180914  添加获取项目环境变量的方法
         vmd.core.getEnvVariables("", moduleId);
-        vmd.core.getModuleResourceServices(moduleId, function(data) {
+        vmd.core.getModuleResourceServices(moduleId, function (data) {
             //var data = [];
             //    data.push({
             //    id: "000000-00000000-000000-000000-000000",
@@ -16646,13 +17027,13 @@ designer.init = function() {
             xds.vmd.resource.serverList = data || [];
             var resmenudata = [];
             res_menu.removeAll();
-            xds.vmd.resource.serverList.forEach(function(item, index) {
+            xds.vmd.resource.serverList.forEach(function (item, index) {
 
-                var getServerList = function() {
+                var getServerList = function () {
                     var list = [];
                     var serverInfo = item.children;
                     if (serverInfo) {
-                        serverInfo.forEach(function(_item) {
+                        serverInfo.forEach(function (_item) {
                             var obj = {
                                 text: _item.name,
                                 name: _item.name,
@@ -16677,7 +17058,7 @@ designer.init = function() {
                     menu: new Ext.menu.Menu({
                         items: getServerList(),
                         listeners: {
-                            click: function(menu, item, e) {
+                            click: function (menu, item, e) {
                                 itemclick(menu, item, e)
                             }
                         }
@@ -16691,7 +17072,7 @@ designer.init = function() {
             res_menu.add(resmenudata);
             res_menu.doLayout();
 
-            var itemclick = function(menu, item, e) {
+            var itemclick = function (menu, item, e) {
                 var win = new vmd.window({
                     url: vmdSettings.resourcePath + "?moduleid=" + moduleId + "&serviceid=" + item.servId + "&resourceid=" + item.resId + "&servername=" + item.name,
                     title: '<span style="color:blue">' + item.name + '</span>——文件选择（温馨提示：shift多选资源，只支持js、css、图片的选择）',
@@ -16700,7 +17081,7 @@ designer.init = function() {
                     offset: [100, 100],
                     fbar: [{
                         text: '确定',
-                        handler: function() {
+                        handler: function () {
 
                             //利用postMessage进行跨域通讯
                             //拿到选中的资源，添加到资源列表中
@@ -16717,7 +17098,7 @@ designer.init = function() {
                             var _cssData = [],
                                 _jsData = [],
                                 _imgData = [];
-                            selectFiles.forEach(function(data) {
+                            selectFiles.forEach(function (data) {
                                 var ext = data.ext;
                                 var serName = data.servName;
                                 var resName = item.resName;
@@ -16751,7 +17132,7 @@ designer.init = function() {
                     }, {
 
                         text: '取消',
-                        handler: function() {
+                        handler: function () {
                             win.close()
                         }
 
@@ -16760,7 +17141,7 @@ designer.init = function() {
                 win.show();
                 win.postdata = null;
                 //test
-                window.addEventListener('message', function(messageEvent) {
+                window.addEventListener('message', function (messageEvent) {
                     var data = messageEvent.data; // messageEvent: {source, currentTarget, data}
                     //console.info('message from child:', data);
                     win.postdata = data;
@@ -16775,7 +17156,7 @@ designer.init = function() {
             Ext.util.CSS.removeStyleSheet("vmdcss")
             Ext.util.CSS.createStyleSheet(vmd.replaceResVars(xds.vmd.css), "vmdcss")
 
-        }, function() {
+        }, function () {
             xds.vmd.resource.loadComplete = true;
             vmd.tip('资源加载失败！', 'error');
         })
@@ -16788,11 +17169,11 @@ designer.init = function() {
             autoHeight: true,
             hidden: false,
             listMap: {},
-            resize: function() {
+            resize: function () {
 
                 tpl.doLayout()
             },
-            setActive: function(cid) {
+            setActive: function (cid) {
                 /**/
                 if (!cid) return;
                 var toolbar = this.getToolbarByCid(cid);
@@ -16827,13 +17208,13 @@ designer.init = function() {
                 //调整画布的高度
                 tpl.doLayout()
             },
-            getActive: function() {
+            getActive: function () {
                 return this.active;
             },
-            getToolbarByCid: function(cid) {
+            getToolbarByCid: function (cid) {
                 return this.listMap[cid];
             },
-            put: function(cid, toolbar) {
+            put: function (cid, toolbar) {
                 if (!cid) return;
 
                 if (!this.listMap[cid]) {
@@ -16875,10 +17256,10 @@ designer.init = function() {
         }, xds.east, c, tpl, g]
     });
 
-    xds.on("componentselect", function(j) {
+    xds.on("componentselect", function (j) {
 
 
-        var initToolbar = function() {
+        var initToolbar = function () {
 
             //处理属性面板报表和曲线的显示隐藏
             if (j.component.cid != 'vmdReport' && j.component.cid != 'vmdChart' && !j.component.isPropPanel) {
@@ -16893,7 +17274,7 @@ designer.init = function() {
                 if (!xds.canvasToolbar) return;
                 //xds.canvasToolbar.enable();
 
-                Ext.defer(function() {
+                Ext.defer(function () {
                     //var toolbar = xds.canvasToolbar.getToolbarByCid(j.component.cid);
                     //if (toolbar) xds.canvasToolbar.setActive({ cid: j.component.cid ,toolbar:toolbar});
                     j.component.initToolbar(xds.canvasToolbar);
@@ -16903,7 +17284,7 @@ designer.init = function() {
             } else xds.canvasToolbar && xds.canvasToolbar.disable()
 
 
-            if (j.topNode.component.cid == 'viewport' ||j.topNode.component.cid == 'vmdSubView') xds.canvas.dropZone.addToGroup('TreeDD');
+            if (j.topNode.component.cid == 'viewport' || j.topNode.component.cid == 'vmdSubView') xds.canvas.dropZone.addToGroup('TreeDD');
 
         }
 
@@ -16919,24 +17300,25 @@ designer.init = function() {
 
                 var designerSate = xds.vmd.checkCid();
                 //报表刷新兼容处理
-			   if (i &&[ 'viewport','vmdSubView'].indexOf(j.topNode.component.cid)!=-1 && i.topNode.component.cid != 'viewport' && !designerSate.isModule && ['vmdSubView', 'vmdsubviewport', 'vmdSubWindow'].indexOf(i.topNode.component.cid) == -1) {
-              //  if (i && j.topNode.component.cid == 'viewport' && i.topNode.component.cid != 'viewport' && !designerSate.isModule && ['vmdSubView', 'vmdsubviewport', 'vmdSubWindow'].indexOf(i.topNode.component.cid) == -1) {
-                    if(!xds.canvas.dropZone.groups['TreeDD']) xds.canvas.dropZone.addToGroup('TreeDD');                      
-                    if(j.topNode.component.cid==xds.canvas.activeType)   return;   
+                if (i && ['viewport', 'vmdSubView'].indexOf(j.topNode.component.cid) != -1 && i.topNode.component.cid != 'viewport' && !designerSate.isModule && ['vmdSubView', 'vmdsubviewport', 'vmdSubWindow'].indexOf(i.topNode.component.cid) == -1) {
+                    //  if (i && j.topNode.component.cid == 'viewport' && i.topNode.component.cid != 'viewport' && !designerSate.isModule && ['vmdSubView', 'vmdsubviewport', 'vmdSubWindow'].indexOf(i.topNode.component.cid) == -1) {
+                    //if (!xds.canvas.dropZone.groups['TreeDD']) xds.canvas.dropZone.addToGroup('TreeDD');
+					initToolbar();
+                    if (j.topNode.component.cid == xds.canvas.activeType) return;
                 }
-				//当子视图和主视图发生变化后执行以下componentchane,保证报表录入的字段不丢失
-				if(j.topNode.component.cid!=xds.canvas.activeType){
-					xds.fireEvent("beforecomponentchanged")
+                //当子视图和主视图发生变化后执行以下componentchane,保证报表录入的字段不丢失
+                if (j.topNode.component.cid != xds.canvas.activeType) {
+                    xds.fireEvent("beforecomponentchanged")
                 }
 
-				if([ 'viewport','vmdSubView'].indexOf(j.topNode.component.cid)!=-1) xds.canvas.activeType=j.topNode.component.cid;
+                if (['viewport', 'vmdSubView'].indexOf(j.topNode.component.cid) != -1) xds.canvas.activeType = j.topNode.component.cid;
                 e.setComponent(j.topNode);
-                
+
                 if (!i) {
                     var _root = j.node.parentNode;
                     if (_root.id == 'croot') {
                         _rootNodes = _root.childNodes;
-                        _rootNodes.forEach(function(node, index) {
+                        _rootNodes.forEach(function (node, index) {
                             if (j.topNode.id == node.id) return;
                             e.setComponent(node);
                         })
@@ -16956,12 +17338,18 @@ designer.init = function() {
 
     });
 
-    xds.on("componentchanged", function(opts) {
+    xds.on("componentchanged", function (opts) {
         if (xds.active) {
 
             xds.fireEvent("beforecomponentchanged", opts)
-
-            var dcmp = xds.active.node.component
+            
+			//扩展组件的删除和更新时的接口
+			if(opts&&opts.status&&opts.cmp){
+				if(opts.status=='update' && Ext.isFunction(opts.cmp.onUpdate))   opts.cmp.onUpdate(opts);
+				if(opts.status=='delete' && Ext.isFunction(opts.cmp.onRemove))   opts.cmp.onRemove();
+			}
+			
+            var dcmp = xds.active.node.component;
             //拖拽及节点移动
             var designerSate = xds.vmd.checkCid();
             // if (!designerSate.isModule) {
@@ -16990,7 +17378,7 @@ designer.init = function() {
     xds.fireEvent("init");
 
     var f;
-    var h = function() {
+    var h = function () {
         if (f) {
             for (var k = 0, j = f.length; k < j; k++) {
                 d.remove(f[k].itemId)
@@ -16999,7 +17387,7 @@ designer.init = function() {
         }
     };
 
-    xds.on("componentselect", function(m) {
+    xds.on("componentselect", function (m) {
 
         var k = d.items.get("csep");
         if (m.component) {
@@ -17030,9 +17418,55 @@ designer.init = function() {
     //vmd.core.saveAsCmp('', '1.0', '')
     // vmd.core.cmpVerUpdate('MyComptest','1.0','1.1')
 }
+
 //窗体初始化
-!xds.vmd.isExtMode() && Ext.onReady(function() {
-    Ext.require(['vmd.base.UxPropertySettings','ide.ext.Report', 'ide.ext.Chart', 'ide.ext.DataInput'], function() {
+!xds.vmd.isExtMode() && Ext.onReady(function () {
+
+    //先模拟加载
+    var webcharts = [];
+	/*if(xds.vmdWebChart){
+		Ext.Object.each(xds.vmdWebChart,function(key,value){
+			var dtype=value.prototype.dtype;
+			if(webcharts.indexOf(dtype)==-1 &&dtype) webcharts.push(dtype);
+		})
+	}*/
+    //var requires=['ide.ext.Report', 'ide.ext.Chart', 'ide.ext.DataInput','ide.ext.Well']
+    //requires=requires.concat(webcharts);
+	/*Ext.require('hwcharts',function(){
+	
+		
+	})*/
+	
+    Ext.require('vmd.d.config', function () {
         designer.init()
     })
+
+   /*Ext.require(['vmd.d.config','hwcharts'], function () {
+	   Ext.require(['vmd.d.webchart.MiningIndex','vmd.d.webchart.Well'],function(){
+		   
+		  designer.init() 
+	   })
+        
+    })*/
+   
 });
+
+
+
+Ext.define('xds.log', {
+
+    singleton: true,
+    requires: ['vmd.proxy.Log'],
+    constructor: function () {
+        this.inst = new vmd.proxy.Log();
+    },
+	/**
+	*@desc 日志写入接口
+	*@param {string} operateType-操作类型
+	*@param {string} operateContext-操作描述
+	*/
+    save: function (operateType, operateContext) {
+       //moduleId       
+	  // this.inst.save.apply(this.inst, arguments)
+    }
+})

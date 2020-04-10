@@ -113,6 +113,10 @@ function eXcell_vmded(cell) {
             this.cell.DOMelem_input.focus();
             this.cell.DOMelem_input.blur();
         }
+        	//如果单元格不是全部可视，则向下滚动显示出全部单元格再进行编辑 2019.12.27 lf
+		if(dhx.getOffset(this.cell).top+ (this.cell.clientHeight - 3)>document.body.clientHeight){
+            this.hwReport.grid.objBox.scrollTop += dhx.getOffset(this.cell).top+ (this.cell.clientHeight - 3)-document.body.clientHeight;
+        }
         this.cell.DOMelem_input.focus();
     }
 

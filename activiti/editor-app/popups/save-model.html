@@ -1,0 +1,42 @@
+﻿
+<div class="modal" ng-controller="SaveModelCtrl">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            {{'MODEL.SAVE.TITLE' | translate}}
+            <!--<h2>{{'MODEL.SAVE.TITLE' | translate}}</h2>-->
+        </div>
+        <div class="modal-body" style="padding:5px 10px 5px 10px;">
+        
+        	<div class="form-group" style="display:flex; margin-bottom: 10px;">
+           		<label for="nameField" style="width:54px; padding-top: 8px;">{{'MODEL.NAME' | translate}}：</label>
+        		<input type="text"
+                       ng-disabled="status.loading"
+                       id="nameField"
+                       class="form-control input-text-bottomline"
+                       ng-model="saveDialog.name"
+                       ui-keypress="{13:'save()'}"
+                       auto-focus />
+        	</div>
+        	<div class="form-group" style="display:flex; margin-bottom: 10px;">
+           		<label for="docTextArea" style="width:54px; padding-top: 0px;">{{'MODEL.DESCRIPTION' | translate}}：</label>
+           		<textarea id="docTextArea" ng-disabled="status.loading" class="form-control" ng-model="saveDialog.description"></textarea>
+        	</div>
+        </div>
+        <div class="modal-footer" style="margin-top:0px; padding: 10px 15px 10px;">
+        
+        	<div class="pull-right">
+            	<button type="button" class="btn btn-hw-cancel" ng-click="close()" ng-disabled="status.loading" translate>ACTION.CANCEL</button>
+            	<!--<button class="btn btn-primary btn-hw" style="width:90px"; ng-click="saveAndClose()" ng-disabled="status.loading" ng-show="!error" translate>ACTION.SAVE-AND-CLOSE</button>-->
+            	<button class="btn btn-primary btn-hw" ng-click="save()" ng-disabled="status.loading" ng-show="!error" translate>ACTION.SAVE</button>
+            </div>
+        
+            <div class="pull-right popup-error" ng-if="error && !error.isConflict">
+                <span>{{'MODEL.SAVE.ERROR' | translate}}</span>
+            </div>
+        
+        	<loading></loading>
+        
+        </div>
+    </div>
+</div>

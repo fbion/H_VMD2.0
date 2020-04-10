@@ -38,7 +38,7 @@ Ext.define("vmd.ux.DropDownTreeProperty", {
             var cell = page.cell;
             var curTab = tab;
             if (info) {
-                debugger
+                
                 switch (curTab.title) {
                     case "属性":
                         DropDownTreeType.setInfo(info.cell_DropDownTreeInfo[0], cell)

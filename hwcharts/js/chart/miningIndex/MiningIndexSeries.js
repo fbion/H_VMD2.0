@@ -54,13 +54,16 @@ Vmd.define('hwchart.chart.miningIndex.MiningIndexSeries', {
         },
         getProgressive: function () {
             var progressive = this.option.progressive;
-
-            if (progressive == null) {
-                // PENDING
-                return this.option.large ? 5e3 : this.get('progressive');
+            var isProgressive = this.option.isProgressive;
+            if(!isProgressive){
+                return 0
+            }else{
+                if (progressive == null) {
+                    // PENDING
+                    return this.option.large ? 5e3 : this.get('progressive');
+                }
+                return progressive;
             }
-
-            return progressive;
         },
         getProgressiveThreshold: function () {
             var progressiveThreshold = this.option.progressiveThreshold;

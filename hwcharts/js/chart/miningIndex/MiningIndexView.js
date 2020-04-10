@@ -32,7 +32,7 @@ Vmd.define('hwchart.chart.miningIndex.MiningIndexView', {
         render: function (seriesModel, ecModel, api) {
             var self = this;
             self.seriesModel = seriesModel;
-            if (!this.__hasFetchData) {
+            if (!this.__hasFetchData ||seriesModel.option.fetchData) {
                 api.dispatchAction({
                     type: 'fetchData',
                     id: seriesModel.id,
@@ -113,7 +113,7 @@ Vmd.define('hwchart.chart.miningIndex.MiningIndexView', {
         },
 
         remove: function (ecModel, api) {
-            this._miningIndexDraw && this._miningIndexDraw.remove(api);
+            this._miningIndexDraw && this._miningIndexDraw.remove(ecModel, api);
         },
 
         dispose: function () {}

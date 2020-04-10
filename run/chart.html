@@ -7,28 +7,29 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>test</title>
     <!--基本样式-->
-    <link href="../css/common.css?ver=vmd2.0.5.200306" rel="stylesheet" />
-    <link href="../lib/ext-3.4/resources/css/ext-all.css?ver=vmd2.0.5.200306" rel="stylesheet" />
-    <link href="../lib/dhtmlx/dhtmlx.css?ver=vmd2.0.5.200306" rel="stylesheet" />
+    <link href="../css/common.css?ver=vmd2.0.7.200328" rel="stylesheet" />
+    <link href="../lib/ext-3.4/resources/css/ext-all.css?ver=vmd2.0.7.200328" rel="stylesheet" />
+    <link href="../lib/dhtmlx/dhtmlx.css?ver=vmd2.0.7.200328" rel="stylesheet" />
     <!--样式快捷索引表-->
-    <link href="../css/shortcut.css?ver=vmd2.0.5.200306" rel="stylesheet" />
-    <link href="../design/css/icons.css?ver=vmd2.0.5.200306" rel="stylesheet" />
-    <script src="../lib/labjs/LAB.min.js?ver=vmd2.0.5.200306"></script>
-    <script src="../config.js?ver=vmd2.0.5.200306"></script>
-    <script src="../lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=vmd2.0.5.200306"></script>
-    <script src="../lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=vmd2.0.5.200306"></script>
-    <script src="../lib/ext-3.4/adapter/ext/ext-base-class.js?ver=vmd2.0.5.200306"></script>
-    <script src="../lib/ext-3.4/ext-all-debug.js?ver=vmd2.0.5.200306"></script>
-    <script src="../lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=vmd2.0.5.200306"></script>
-    <script src="../js/util.js?ver=vmd2.0.5.200306"></script>
-    <script src="../lib/dhtmlx/dhtmlx.js?ver=vmd2.0.5.200306"></script>
-    <script src="../chart/js/hwAPI.js?ver=vmd2.0.5.200306"></script>
-    <script src="../js/hwdas.js?ver=vmd2.0.5.200306"></script>
-    <script src="../js/hwMSC.js?ver=vmd2.0.5.200306"></script>
-    <script src="../js/vmdcore.js?ver=vmd2.0.5.200306"></script>
-    <script src="../js/vmdcomps.js?ver=vmd2.0.5.200306"></script>
-    <script src="../js/vmdchart.js?ver=vmd2.0.5.200306"></script>
-    <script src="../js/publicMethods.js?ver=vmd2.0.5.200306"></script>
+    <link href="../css/shortcut.css?ver=vmd2.0.7.200328" rel="stylesheet" />
+    <link href="../design/css/icons.css?ver=vmd2.0.7.200328" rel="stylesheet" />
+    <script src="../lib/labjs/LAB.min.js?ver=vmd2.0.7.200328"></script>
+    <script src="../config.js?ver=vmd2.0.7.200328"></script>
+    <script src="../lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=vmd2.0.7.200328"></script>
+    <script src="../lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=vmd2.0.7.200328"></script>
+    <script src="../lib/ext-3.4/adapter/ext/ext-base-class.js?ver=vmd2.0.7.200328"></script>
+    <script src="../lib/ext-3.4/ext-all-debug.js?ver=vmd2.0.7.200328"></script>
+    <script src="../lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=vmd2.0.7.200328"></script>
+    <script src="../js/util.js?ver=vmd2.0.7.200328"></script>
+    <script src="../lib/dhtmlx/dhtmlx.js?ver=vmd2.0.7.200328"></script>
+    <script src="../chart/js/hwAPI.js?ver=vmd2.0.7.200328"></script>
+    <script src="../js/hwdas.js?ver=vmd2.0.7.200328"></script>
+    <script src="../js/hwMSC.js?ver=vmd2.0.7.200328"></script>
+    <script src="../js/vmdcore.js?ver=vmd2.0.7.200328"></script>
+    <script src="../js/vmdcomps.js?ver=vmd2.0.7.200328"></script>
+    <script src="../js/vmdchart.js?ver=vmd2.0.7.200328"></script>
+    <script src="../js/publicMethods.js?ver=vmd2.0.7.200328"></script>
+    <script src="../js/proxy/Log.js?ver=vmd2.0.7.200328"></script>
     <style> </style>
     <script>
         //注册未加载的组件
@@ -58,17 +59,31 @@
                 var xlc = pref + parent.xds.inspector.root.firstChild.text;
                 var body, jsFiles = parent.xds.vmd.getJsFiles(),
                     cssFiles = parent.xds.vmd.getCssFiles();
+                var renderbody = function(callback) {
+                    var cmplist = parent.xds.vmd.getDynamicCmpList();
+                    if (cmplist.length > 0) {
+                        vmd.core.classLoader(cmplist, callback)
+                    } else {
+                        callback()
+                    }
+                }
                 var render = function() {
                     //加入样式
                     Ext.util.CSS.createStyleSheet(vmd.replaceResVars(parent.xds.vmd.css), "vmdcss")
                     if (jsFiles.length > 0) LazyLoad.js(jsFiles, function() {
-                        body = !errStatus && Ext.create(xlc, {
-                            renderTo: document.body
+                        renderbody(function() {
+                            body = !errStatus && Ext.create(xlc, {
+                                renderTo: document.body
+                            })
                         })
                     });
-                    else body = !errStatus && Ext.create(xlc, {
-                        renderTo: document.body
-                    })
+                    else {
+                        renderBody(function() {
+                            body = !errStatus && Ext.create(xlc, {
+                                renderTo: document.body
+                            })
+                        })
+                    }
                 }
                 if (cssFiles.length > 0)
                     LazyLoad.css(cssFiles, function() {

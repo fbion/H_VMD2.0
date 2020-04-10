@@ -1,0 +1,30 @@
+﻿[{
+	"id": "1",
+	"text": "井位图",
+	"name": "jwt",
+	"type": "2",
+	"ver": "1.0",
+	"updateTime": "2020-01-19 09:09:09",
+	"updateInfo": "",
+	"img": "/design/webchart/chartinfo/img/jwt.png"
+},
+{
+	'id': "2",
+	'text': "开采现状图",
+	'name': "kcxzt",
+	'type': "2",
+	'ver': "1.0",
+	'updateTime': "2020-01-19 09:09:09",
+	'updateInfo': "",
+	'img': "/design/webchart/chartinfo/img/jwt.png"
+},
+{
+	'id': "3",
+	'text': "等值图",
+	'name': "dzt",
+	'type': "2",
+	'ver': "1.0",
+	'updateTime': "2020-01-19 09:09:09",
+	'updateInfo': "",
+	'img': "/design/webchart/chartinfo/img/jwt.png"
+}]

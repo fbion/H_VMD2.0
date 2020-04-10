@@ -2795,7 +2795,7 @@
                     //  if (pnode.id == tree.root.id) {
                     //      return tree.root.text + "/"
                     //  }
-                    //  debugger
+                    //  
                     //  if (pnode.parentNode && pnode.parentNode.parentNode) {
                     //      return getPName(pnode.parentNode) + "/" + pnode.text;
                     //  } else {
@@ -3349,7 +3349,7 @@
                         selNode.removeAll()
                         //添加子节点
                         hwFao.getDirs(selectPath, 'Dirs', function(result) {
-                            debugger
+                            
                             if (result.data && result.data.length > 0) {
                                 _bindChildNode(result.data, selNode.id)
                             }

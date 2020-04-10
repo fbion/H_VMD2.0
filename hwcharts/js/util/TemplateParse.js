@@ -19,7 +19,9 @@ Vmd.define('hwchart.util.TemplateParse',{
         me.chart.on('fetchData',function(params){
             if(params){
                 dataParse.parse(params,function(tplData){  // 运行模式数据解析
-                    me.parseTpl(params,tplData)
+                    if(tplData.data&&tplData.data.length>0){
+                        me.parseTpl(params,tplData)
+                    }
                 })
             }else{
                 console.warn('组件参数未传递')
@@ -205,7 +207,8 @@ Vmd.define('hwchart.util.TemplateParse',{
                             data: [{
                                 name: params.params.curveName,
                                 data: tplData.data,
-                                requestCompleted:true
+                                requestCompleted:true,
+                                fetchData:false
                             }]
                         }]})
                     break;
@@ -218,7 +221,8 @@ Vmd.define('hwchart.util.TemplateParse',{
 				name:params.name,
 				data:tplData.data,
 				dirty:true,
-				requestCompleted:true
+                requestCompleted:true,
+                fetchData:false
 			}];
 			if(params.applyDataTo&&params.applyDataTo.length>0){
 				for(var i = 0;i<params.applyDataTo.length;i++){
@@ -226,11 +230,54 @@ Vmd.define('hwchart.util.TemplateParse',{
 						name:params.applyDataTo[i],
 						data:tplData.data,
 						dirty:true,
-						requestCompleted:true
+                        requestCompleted:true,
+                        fetchData:false
 					})
 				}
+            }
+			
+			var ecModel = me.chart._api.getModel(); // 获取Model的ecModel
+            if(!ecModel){
+                return;
+            }		
+			var geo = ecModel.getComponent('geo');
+			var _boudingRect = geo.coordinateSystem.getBoundingRect();
+			if (_boudingRect.height > 0 && geo.coordinateSystem._zoom == 1) {
+				var ptLeftTop = geo.coordinateSystem.dataToPoint([_boudingRect.x, _boudingRect.y + _boudingRect.height]);
+				var ptRightBtm = geo.coordinateSystem.dataToPoint([_boudingRect.x + _boudingRect.width, _boudingRect.y]);
+
+				// 计算逻辑宽高
+				// var frameHei = 414.9630163348047;
+				// var frameWid = 479.99999852408655;
+				var frameHei = ptRightBtm[1] - ptLeftTop[1];
+				var frameWid = ptRightBtm[0] - ptLeftTop[0];
+				if (frameHei < 1) { frameHei = 100; }
+				if (frameWid < 1) { frameWid = 100; }
+
+				var chartHei = me.chart.getHeight();
+				var chartWid = me.chart.getWidth();
+				var newWid = (chartHei - 50) * frameWid / frameHei;
+				// 缩放比例
+				// var zoomFactor = (me.chart.getHeight() - 150) / frameHei;		
+				//var zoomFactor = (me.chart._dom.offsetHeight - 120) / frameHei;
+				// var zoomFactor = (me.chart.getWidth() - 120) / frameWid;	
+				var opt = me.chart.getOption();
+				// 设置geo的属性
+				for (var i = 0; i < opt.geo.length; i++) {
+					opt.geo[i].width = newWid;
+				}
+				me.chart.setOption({
+					series: s,
+					geo: opt.geo
+				})
 			}
-            me.chart.setOption({series:s})
+			else {
+				var opt = me.chart.getOption();
+				me.chart.setOption({
+					series: s,
+					geo: opt.geo
+				})
+			}
         }
     },
     /*
@@ -283,12 +330,13 @@ Vmd.define('hwchart.util.TemplateParse',{
         //工具栏配置
         var otherOption = {
             toolbox: {
-                left: 'center',
+                left: '20',
                 z:99,
                 feature: {
                     brush: {
                         isWellMode: true,
-                        type: ['rect', 'polygon']
+                        type: ['']
+                        //type: ['rect', 'polygon']
                     },
                     zoom: {
                         show: true
@@ -532,12 +580,12 @@ Vmd.define('hwchart.util.TemplateParse',{
                 }
             })
             var w = parseFloat(geo.width);
-            var h = (xMax-xMin)*w/(yMax-yMin);
+            var h = ((xMax-xMin)||1000)*w/((yMax-yMin)||1000);
             if(isAdd){ // 井位区域外扩
                 var addW = 100;
                 var addH = 50;
-                var addX = (xMax-xMin)*addW/(w-2*addW);
-                var addY = (yMax-yMin)*addH/(h-2*addH);
+                var addX = ((xMax-xMin)||1000)*addW/(w-2*addW);
+                var addY = ((yMax-yMin)||1000)*addH/(h-2*addH);
 
                 if(!isNaN(addX)){
                     xMin = xMin - addX;

@@ -34,7 +34,7 @@ Ext.define("vmd.ux.UploadType", {
         var page = this;
 
         function setInfo(info, cell) {
-            debugger
+            
             if (info) {
                 var hot = sheetHot;
                 var canWrite = false;
@@ -87,13 +87,13 @@ Ext.define("vmd.ux.UploadType", {
         }
 
         function div1_click(sender, e) {
-            debugger
+            
             sczj_max.setValue(parseInt(sczj_max.getValue()) + 1)
             page.fireEvent('uploadDecimalChanged', sczj_max, sczj_max.getValue())
         }
 
         function div2_click(sender, e) {
-            debugger
+            
             if (sczj_max.getValue() > 0) {
                 sczj_max.setValue(parseInt(sczj_max.getValue()) - 1)
             } else {

@@ -91,8 +91,14 @@ function eXcell_vmdgrid(cell) {
         
         this.subgrid.DOMelem_input.focus();
         this.subgrid.entBox.style.display = 'block';
+        this.subgrid.entBox.style.zIndex="99";
 
-        this.subgrid.DOMelem.style.top = Math.max(0, (this.subgrid.DOMParent.clientHeight - this.subgrid.DOMelem.clientHeight) / 2) + "px";
+
+        var top = (this.subgrid.DOMParent.clientHeight - this.subgrid.DOMelem.clientHeight) / 2;
+        if (top < 1) {
+            top = 0;
+        }
+        this.subgrid.DOMelem.style.top = top + "px";
 
         var s = window.dhx4.screenDim();
         var bh = this.subgrid.entBox.offsetHeight;
@@ -425,6 +431,14 @@ eXcell_vmdgrid.prototype.init = function (index) {
             subgrid.DOMelem_check_all.onclick = function (e) {
                 //执行选中操作
                 if (/item_chk0.gif/g.test(this.src)) {
+					var data=subgrid.rptStore.dhtmlxDatastore;
+					var count=data.dataCount();
+					for(var i=0;i<count;i++){
+						var id=data.idByIndex(i);
+						var item1=data.item(id);
+						item1.chkid="1";	
+					}
+					data.refresh();
                     var checkedTexts = [];
                     for (var a in subgrid.rowsAr) {
                         var row = subgrid.rowsAr[a];
@@ -442,10 +456,21 @@ eXcell_vmdgrid.prototype.init = function (index) {
                     
                     this.src = this.src.replace("item_chk0.gif", "item_chk1.gif");
                     subgrid._is_checked_all_col0 = true;
-
-                    subgrid.DOMelem_input.value = checkedTexts.join(that.cellType.seperator);
+					subgrid.DOMelem_input.value = checkedTexts.join(that.cellType.seperator);
+					checkCell.firstChild.innerHTML = "<img src='" + this.src + "' />";
+					subgrid.DOMelem_check_all = checkCell.firstChild.firstChild;
+					subgrid.DOMelem_check_all.onclick=this.onclick;
                 }
                 else {
+					var data=subgrid.rptStore.dhtmlxDatastore;
+					var count=data.dataCount();
+					for(var i=0;i<count;i++){
+						var id=data.idByIndex(i);
+						var item1=data.item(id);
+						item1.chkid=undefined;
+						//data.update(id,item1);
+					}
+					data.refresh();
                     for (var a in subgrid.rowsAr) {
                         var row = subgrid.rowsAr[a];
                         if (row && row.idd) {
@@ -459,9 +484,13 @@ eXcell_vmdgrid.prototype.init = function (index) {
 
                     this.src = this.src.replace("item_chk1.gif", "item_chk0.gif");
                     subgrid._is_checked_all_col0 = false;
-
-                    subgrid.DOMelem_input.value = "";
-                }
+					subgrid.DOMelem_input.value = "";
+					checkCell.firstChild.innerHTML = "<img src='" + this.src + "' />";
+					subgrid.DOMelem_check_all = checkCell.firstChild.firstChild;
+					subgrid.DOMelem_check_all.onclick=this.onclick;
+					
+				}
+				e.stopPropagation(); 
             }
         }
     });
@@ -600,7 +629,19 @@ eXcell_vmdgrid.prototype.setComboCValue = function (value, value2) {
         ]);
     }
     else {
+        //this.setCValue(value, value2);
+    
+    //IE下的兼容
+    var oldsubgridhtml;
+    if(dhx.isIE)  oldsubgridhtml=this.subgrid.DOMParent.innerHTML;
+    
         this.setCValue(value, value2);
+    
+    if(dhx.isIE && oldsubgridhtml){
+      this.subgrid.DOMParent.innerHTML=oldsubgridhtml;
+        this.subgrid.DOMParent.firstChild.firstChild.value=(value == "&nbsp;" ? "" : value);
+    }
+
     }
 };
 

@@ -3,13 +3,14 @@ Ext.define('vmd.ux.moduleInfo.Controller', {
     constructor: function(options) {}
 })
 Ext.define("vmd.ux.ModuleInfo", {
-    extend: "Ext.Panel",
+    extend: "vmd.base.Ux",
     requires: vmd.getCmpDeps([]),
     version: "1.0",
     xtype: "vmd.ux.ModuleInfo",
     title: "Panel",
     header: false,
     border: false,
+    panelWidth: 240,
     width: 605,
     height: 590,
     layout: "absolute",
@@ -151,6 +152,12 @@ Ext.define("vmd.ux.ModuleInfo", {
                                         module_id: selId
                                     }],
                                     function(result) {
+                                        var s = new vmd.proxy.Log();
+                                        s.save("模块基础信息", selId, Ext.util.Cookies.get('userName') + "在" + Ext.Date.dateFormat(new Date(), 'Y-m-d H:i:s') + "修改了模块" + hwText1.getValue() + "的基础信息", "模块", function() {
+                                            // alert("保存成功了！")
+                                        }, function() {
+                                            console.log("日志报存失败了！");
+                                        })
                                         myMask.hide();
                                     },
                                     function(msg) {
@@ -191,6 +198,12 @@ Ext.define("vmd.ux.ModuleInfo", {
                                 row_changed_date: hwText5.getValue()
                             }],
                             success: function(result) {
+                                var s = new vmd.proxy.Log();
+                                s.save("模块基础信息", id, Ext.util.Cookies.get('userName') + "在" + Ext.Date.dateFormat(new Date(), 'Y-m-d H:i:s') + "修改了模块" + hwText1.getValue() + "的基础信息", "模块", function() {
+                                    // alert("保存成功了！")
+                                }, function() {
+                                    console.log("日志报存失败了！");
+                                })
                                 if (selId == '0') {
                                     mytree.insertNewChild(selId, id, name);
                                     mytree.setItemImage2(id, "tree/model.png", "tree/model.png", "tree/model.png")

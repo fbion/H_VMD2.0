@@ -35,7 +35,7 @@ Ext.define("vmd.ux.JH", {
         }
 
         function JH_afterrender(sender) {
-            debugger
+            
         }
         this.JH_afterrender = JH_afterrender;
         this.items = [{

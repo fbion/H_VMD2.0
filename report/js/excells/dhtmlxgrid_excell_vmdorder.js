@@ -24,18 +24,34 @@ function eXcell_vmdorder(cell) {
     }
     this.setValue = function (val) {
         var hwReport = this.grid.hwReport;
-        var oCell = hwReport.getOriginCellById(this.cell._attrs.sid);
-        if (!val && oCell) {
-            var cellType = hwReport.cellTypes.get(oCell && oCell.fillcelltype);
-            var start = (cellType && cellType.start) || 1;
-            oCell._seed = oCell._seed || start;
-            val = oCell._seed++;
-        }
-
-        val = val || "1";
-        this.cell._brval = val;
-
-        this.setCValue(val);
+		if(hwReport.vmdreport&&hwReport.vmdreport.xtype=="vmd.datainput")
+		{
+			var cell=this.cell;
+			var that=this;
+			window.setTimeout(function(){
+				if (!cell.parentNode) return;
+				var val=cell.parentNode.rowIndex;
+				if (cell.parentNode.grid.currentPage || val<0 || cell.parentNode.grid._srnd) val=cell.parentNode.grid.rowsBuffer._dhx_find(cell.parentNode)+1;
+				if (val<=0) return;
+					cell.innerHTML = val;
+				if (cell.parentNode.grid._fake && cell._cellIndex<cell.parentNode.grid._fake._cCount && cell.parentNode.grid._fake.rowsAr[cell.parentNode.idd]) cell.parentNode.grid._fake.cells(cell.parentNode.idd,cell._cellIndex).setCValue(val);
+					cell=null;
+				that.setCValue(val);
+			},100);
+		}
+		else
+		{        
+			var oCell = hwReport.getOriginCellById(this.cell._attrs.sid);
+			if (!val && oCell) {
+				var cellType = hwReport.cellTypes.get(oCell && oCell.fillcelltype);
+				var start = (cellType && cellType.start) || 1;
+				oCell._seed = oCell._seed || start;
+				val = oCell._seed++;
+			}
+			val = val || "1";
+			this.cell._brval = val;
+			this.setCValue(val);
+		}
     }
 }
 

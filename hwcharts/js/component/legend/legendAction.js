@@ -25,6 +25,29 @@
                 isSelected = legendModel.isSelected(payload.name);
             }
 
+            var relateSeries = payload.api.getChart().seriesSelected;
+            relateSeries[payload.name] = isSelected;
+            //relateSeries["砂体范围"] = isSelected;
+            // ----------------------------------------------------
+            // 20200102:处理与此序列相关的序列的显示隐藏
+            if (legendModel.option.relateSeries && !legendModel.isEmpty(legendModel.option.relateSeries)) {
+                for (var i = 0; i < legendModel.option.relateSeries.length; i++) {
+                    if (legendModel.option.relateSeries[i].name == payload.name) {
+                        // 设置相关序列的显示隐藏
+                        for (var j = 0; j < legendModel.option.relateSeries[i].relates.length; j++) {
+                            var relateName = legendModel.option.relateSeries[i].relates[j];
+                            // 20200102：与图层关联，设置这个对象的显示隐藏
+                            if (payload.api) {
+                                //var relateSeries = payload.api.getChart().seriesSelected;
+                                relateSeries[relateName] = isSelected;
+                            }
+                        }
+                        break;
+                    }
+                }
+            }
+            // ----------------------------------------------------
+
             var legendData = legendModel.getData();
             zrUtil.each(legendData, function (model) {
                 var name = model.get('name'); // Wrap element

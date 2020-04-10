@@ -27,8 +27,10 @@ function eXcell_vmdupload(cell) {
             this.hwReport.upload_onReportRendered_id = this.hwReport.attachEvent("onRendered", function () {
                 for (var item in that.hwReport.uploadCells) {
                     var td = that.hwReport.uploadCells[item];
-                    td._uploader = that.grid._uploader_render(td);
-                    td._uploader.doLayout();
+                    if(!td._uploader){
+						td._uploader = that.grid._uploader_render(td);
+                        td._uploader.doLayout();
+					}
                 }
             });
         }
@@ -44,6 +46,9 @@ function eXcell_vmdupload(cell) {
         this.cell._val = val;
         if (this.cell._uploader) {
             this.cell._uploader.setValue(val);
+        }else{
+            this.cell._uploader = that.grid._uploader_render( this.cell);
+           this.cell._uploader.doLayout();
         }
         //this.cell.uploader = this.initUpload(this.cell.parentNode.idd, this.cell._cellIndex, this._dataIndex, this.cell.offsetWidth);
         //this.cell.uploader.setValue(val);
@@ -306,7 +311,7 @@ dhtmlXGridObject.prototype._uploader_render = function (cell) {
                 name: file.name,
                 id: file.id,
                 size: file.size,
-                ext: file.name.substring(file.name.indexOf(".")),
+                ext: file.ext||(file.name&&file.name.substring(file.name.indexOf("."))),
                 state: file.storageState
             });
         }
@@ -322,7 +327,7 @@ dhtmlXGridObject.prototype._uploader_render = function (cell) {
                 name: file.name,
                 id: file.id,
                 size: file.size,
-                ext: file.name.substring(file.name.indexOf(".")),
+                ext: file.ext||(file.name&&file.name.substring(file.name.indexOf("."))),
                 state: file.storageState
             });
         }
@@ -334,7 +339,7 @@ dhtmlXGridObject.prototype._uploader_render = function (cell) {
                     name: file.name,
                     id: file.id,
                     size: file.size,
-                    ext: file.name.substring(file.name.indexOf(".")),
+                    ext: file.ext||(file.name&&file.name.substring(file.name.indexOf("."))),
                     state: file.storageState
                 });
             }

@@ -6,7 +6,7 @@ Ext.define("vmd.ux.Testdemo2", {
     title: "Panel",
     header: false,
     border: false,
-    panelWidth: 240,
+    panelWidth: 300,
     width: 242,
     height: 43,
     layout: "fit",

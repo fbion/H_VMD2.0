@@ -304,6 +304,12 @@ Ext.define("vmd.ux.UserControlInfo", {
                 }
                 //保存模块的基础信息
                 saveModelInfo("", "", function() {
+                    var s = new vmd.proxy.Log();
+                    s.save("复合组件基础信息", hwTree.getSelectedItemId(), Ext.util.Cookies.get('userName') + "在" + Ext.Date.dateFormat(new Date(), 'Y-m-d H:i:s') + "修改了复合组件" + uxName.getValue() + "的基础信息", "复合组件", function() {
+                        // alert("保存成功了！")
+                    }, function() {
+                        console.log("日志报存失败了！");
+                    })
                     vmd.isCheckFileExist('components/vmd/' + MyField1.getValue() + '.vmd', function(data) {
                         if (data.isSucceed) {
                             vmd.core.updateCmpZhname(MyField1.getValue(), uxName.getValue(), function() {
@@ -503,7 +509,7 @@ Ext.define("vmd.ux.UserControlInfo", {
                         uxid: selId,
                         name: selnode.text,
                         uxname: selnode.uxname,
-                        ver: selnode.version,
+                        ver: selnode.version || "1.0",
                         uxType: mytree.uxType == "5" ? "1" : "0"
                     }
                     window.open(vmd.virtualPath + '/design/default.html?' + Ext.urlEncode(params), selnode.text + " 组件设计")
@@ -718,6 +724,12 @@ Ext.define("vmd.ux.UserControlInfo", {
                                                     }, dpath + selectedfImage.textContent, function(result) {
                                                         //alert("删除成功！")
                                                         txtFiles.doLayout()
+                                                        var s = new vmd.proxy.Log();
+                                                        s.save("复合组件删除文档", hwTree.getSelectedItemId(), Ext.util.Cookies.get('userName') + "在" + Ext.Date.dateFormat(new Date(), 'Y-m-d H:i:s') + "删除了" + selectedfImage.textContent + "的文档", "复合组件", function() {
+                                                            // alert("保存成功了！")
+                                                        }, function() {
+                                                            console.log("日志报存失败了！");
+                                                        })
                                                     }, function() {});
                                                 }
                                             }
@@ -735,6 +747,12 @@ Ext.define("vmd.ux.UserControlInfo", {
                             hwDiv3.setHeight(txtFiles.el.dom.scrollHeight + 50);
                             // p.parentElement
                         }
+                        var s = new vmd.proxy.Log();
+                        s.save("复合组件上传文档", hwTree.getSelectedItemId(), Ext.util.Cookies.get('userName') + "在" + Ext.Date.dateFormat(new Date(), 'Y-m-d H:i:s') + "上传了" + name + "的文档", "复合组件", function() {
+                            // alert("保存成功了！")
+                        }, function() {
+                            console.log("日志报存失败了！");
+                        })
                     }
                 })
             }
@@ -831,6 +849,12 @@ Ext.define("vmd.ux.UserControlInfo", {
                                                     }, dpath + selectedImage.textContent, function(result) {
                                                         //alert("删除成功！")
                                                         img_div.doLayout()
+                                                        var s = new vmd.proxy.Log();
+                                                        s.save("复合组件删除图片", hwTree.getSelectedItemId(), Ext.util.Cookies.get('userName') + "在" + Ext.Date.dateFormat(new Date(), 'Y-m-d H:i:s') + "删除了" + selectedfImage.textContent + "的图片", "复合组件", function() {
+                                                            // alert("保存成功了！")
+                                                        }, function() {
+                                                            console.log("日志报存失败了！");
+                                                        })
                                                     }, function() {});
                                                 }
                                             }
@@ -846,6 +870,12 @@ Ext.define("vmd.ux.UserControlInfo", {
                             img_div.setHeight(img_div.el.dom.scrollHeight);
                             hwDiv4.setHeight(img_div.el.dom.scrollHeight);
                         }
+                        var s = new vmd.proxy.Log();
+                        s.save("复合组件上传图片", hwTree.getSelectedItemId(), Ext.util.Cookies.get('userName') + "在" + Ext.Date.dateFormat(new Date(), 'Y-m-d H:i:s') + "上传了" + name + "的图片", "复合组件", function() {
+                            // alert("保存成功了！")
+                        }, function() {
+                            console.log("日志报存失败了！");
+                        })
                     }
                 })
             }

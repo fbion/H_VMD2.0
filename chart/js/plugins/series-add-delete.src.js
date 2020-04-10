@@ -796,7 +796,9 @@
 			seriesOptions.lineWidth = 0;
 		}
 		chart.addSeries(seriesOptions);
-		var s = chart.get(seriesOptions.id)
+		chart.options.series.push(seriesOptions);
+		chart.options.exportOptions.series.push(seriesOptions);
+		var s = chart.get(seriesOptions.id);
 		var params = [];
 		params.push({
 			changeType: 'seriesAdd',

@@ -1,0 +1,500 @@
+/* *********************************************************dhtml******************************************* */
+.dhxlayout_base_material div.dhx_cell_layout {
+    box-shadow: none;
+}
+
+    .dhxlayout_base_material div.dhx_cell_layout div.dhx_cell_hdr {
+        display: none;
+    }
+
+    .dhxlayout_base_material div.dhx_cell_layout div.dhx_cell_cont_layout {
+        border: 0;
+    }
+
+.dhxlayout_base_material div.dhxlayout_sep {
+    /*display:none !important*/
+}
+.dhxform_obj_material div.dhxform_item_label_left{
+    padding-top: 4px;
+}
+.dhxform_obj_material div.dhxform_label{
+    font-size: 12px;
+}
+.dhxform_obj_material input.dhxform_textarea, .dhxform_obj_material textarea.dhxform_textarea{
+    font-size: 12px;
+}
+.dhxform_obj_material div.dhxform_txt_label2{
+    font-size: 12px;
+    font-weight: normal;
+}
+.dhxform_obj_material div.dhxform_btn{
+    font-size: 12px;
+}
+.dhxform_obj_material fieldset.dhxform_fs legend.fs_legend{
+    font-size: 12px;
+}
+.dhxtabbar_base_material div.dhxtabbar_tabs div.dhxtabbar_tabs_base div.dhxtabbar_tab div.dhxtabbar_tab_text{
+    font-size: 13px;
+}
+.dhxwins_vp_material div.dhxwin_hdr{
+    font-size: 15px;
+    line-height: 50px;
+}
+div.dhxcombolist_material div.dhxcombo_option div.dhxcombo_option_text{
+    font-size:12px ;
+}
+/* *********************************************************页面样式及图层管理器样式******************************************* */
+    html,
+    body {
+        width: 100%;
+        height: 99%;
+    }
+    body:after {
+        display: block;
+        content: '';
+        clear: both;
+    }
+	#hwcharts-tab{
+	    float: right;
+	    margin-right: 1%;
+	    height: 99%;
+	    /* width: 20%; */
+	    background-color: #fcfcfc;
+	    /* border: 1px #eee solid; */
+	}
+    #hwcharts-layer{
+        /*float: right;*/
+        margin-right: 1%;
+        height: 99%;
+        /* width: 20%; */
+        background-color: #fcfcfc;
+        /* border: 1px #eee solid; */
+    }
+    ul,li,p,h3{
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+    .clear-fix:after{
+        display: block;
+        content: '';
+        clear: both;
+    }
+    #hwcharts-tab  .colse-ico{
+		position: absolute;
+		right: -3px;
+		top:0;
+		z-index: 999;
+        width: 10px;
+        height: 10px;
+        margin-right: 10px;
+        margin-top: 10px;
+        background: url("../images/close.png") no-repeat;
+        background-size: 100%;
+    }
+    #hwcharts-layer .list-item{
+        padding-top: 5px;
+    }
+    #hwcharts-layer .layer-two .list-item{
+        padding-top: 0;
+    }
+    #hwcharts-layer .layer-name{
+        height: 24px;
+    }
+    #hwcharts-layer .layer-name-color{
+        background-color: #f0f0f0;
+    }
+    #hwcharts-layer .layer-name .check{
+        float: left;
+        width: 16px;
+        height: 16px;
+        margin-right: 5px;
+        margin-top: 3px;
+    }
+    #hwcharts-layer .true{
+        background: url("../images/checked_true.png") no-repeat;
+        background-size: 100%;
+    }
+    #hwcharts-layer .false{
+        background: url("../images/checked_false.png") no-repeat;
+        background-size: 100%;
+    }
+    #hwcharts-layer .radio .true{
+        background: url("../images/true.png") no-repeat;
+        background-size: 100%;
+    }
+    #hwcharts-layer .radio .false{
+        background: url("../images/false.png") no-repeat;
+        background-size: 100%;
+    }
+    #hwcharts-layer span{
+        float: left;
+        height: 20px;
+        width: 100px;
+        line-height: 20px;
+        font-size: 12px;
+        cursor: pointer;
+    }
+    #hwcharts-layer .bnt-box{
+        float: right;
+        width: 80px;
+        line-height: 18px;
+        font-size: 12px;
+    }
+    #hwcharts-layer .bnt-box i{
+        width: 30px;
+        height:24px;
+        cursor: pointer;
+    }
+    #hwcharts-layer .bnt-box .layer-up{
+        float: left;
+        background: url("../images/up_1.png") no-repeat;
+        background-size: 60%;
+    }
+    #hwcharts-layer .bnt-box .layer-up:hover{
+        background: url("../images/up.png") no-repeat;
+        background-size: 62%;
+    }
+    
+    #hwcharts-layer .bnt-box .layer-down{
+        float: right;
+        background: url("../images/down_1.png") no-repeat;
+        background-size: 60%;
+        margin-right: 15px;
+    }
+    #hwcharts-layer .bnt-box .layer-down:hover{
+        background: url("../images/down.png") no-repeat;
+        background-size: 62%;
+    }
+    #hwcharts-layer .layer-one{
+       padding-left: 8px;
+   }
+   #hwcharts-layer .layer-two{
+       padding-left: 20px;
+   }
+
+/* ************************************************开采指标属性对话款样式调整*********************************************** */
+.dhxform_obj_material fieldset.dhxform_fs {
+    padding: 3px 0 0 0 ;
+}
+ul,li{
+    margin: 0;
+    padding: 0;
+}
+.miningIndex li{
+    list-style: none;
+    padding-left: 15px;
+    padding-right: 10px;
+}
+.dhxform_obj_material div.zb-box1 fieldset.dhxform_fs div.dhxform_base_nested.dhxform_fs_nested{
+    height: 340px;
+    margin-right: 0;
+    overflow: auto;
+}
+.dhxform_obj_material div.index-box1 fieldset.dhxform_fs div.dhxform_base_nested.dhxform_fs_nested{
+    height: 260px;
+    margin-right: 0;
+    overflow: auto;
+}
+.dhxform_obj_material div.index-box2 fieldset.dhxform_fs div.dhxform_base_nested.dhxform_fs_nested{
+    height: 260px;
+    margin-right: 0;
+}
+/* ******************************************************图片下拉框样式************************************************* */
+.index-combo-box .dhxcombo_material{
+    height: 54px;
+}
+.index-combo-box .dhxcombo_material .dhxcombo_select_button{
+    height: 50px;
+}
+.dhxform_obj_material .index-combo-box .dhxform_control .dhxform_container .dhxcombo_material {
+    height: 54px;
+}
+.dhxform_obj_material .dhxform_control .dhxform_container .index-combo-box .dhxcombo_material .dhxcombo_input{
+    height: 54px;
+    line-height:54px;
+}
+.index-combo-box .dhxcombo_material  .dhxcombo_top_image{
+    height: 54px;
+    width: 66px;
+}
+.index-combo-box .dhxcombo_material  .dhxcombo_top_image .dhxcombo_image{
+    height: 54px;
+    width: 66px;
+    background-size: 90%;
+}
+.zb-box .dhxform_obj_dhx_skyblue .dhxform_item_label_left{
+    padding-top: 0;
+}
+div.dhxcombolist_material div.dhxcombo_option div.dhxcombo_image{
+    height: 30px;
+    width: 30px;
+    background-size: 120%;
+}
+
+.label_bnt{
+    font-size: 14px;
+}
+.dhxform_obj_dhx_skyblue .label_bnt .dhxform_btn {
+    margin: 0 3px;
+}
+.dhxform_obj_dhx_skyblue .label_bnt .dhxform_btn .dhxform_btn_txt_autowidth{
+    height: 20px;
+    line-height: 20px;
+    font-size: 14px;
+}
+
+/* ************************************************基本属性对话框样式************************************************************* */
+.dhxform_obj_material .dialog_seporator .dhxform_fs{
+    /*display:none !important*/
+    border-bottom: none;
+    border-left: none;
+    border-right: none;
+}
+
+/************************************************等值区属性对话框************************************************************** */
+.hw-map-value{
+    margin-left: 20px;
+    width: 543px;
+    height: 10px;
+    margin-top: 1px;
+    margin-bottom: 5px;
+    border-bottom: 1px solid #000;
+    border-left: 1px solid #000;
+    border-right: 1px solid #000; 
+}
+.hw-map-value div{
+    float: left;
+    width: 89px;
+    height: 6px;
+    margin-top: 4px;
+    border-right: 1px solid #000;
+}
+.hw-map-value div:nth-of-type(6){
+    border-right: none;
+}
+#hw-map-item-text span{
+    float: left;
+    width: 70px;
+    margin-left: 20px;
+    /* background-color:burlywood; */
+    text-align: center;
+}
+#hw-map-item-text span:nth-of-type(1){
+    margin-left: -15px;
+}
+#hw-map-item-text span:nth-of-type(7){
+    margin-left: 5px;
+    text-align: right;
+}
+
+/* chroma */
+
+.result-display {
+    position: relative; 
+    left: 20px;
+    top: 6px;
+    width: 540px;
+    white-space: normal;
+    line-height: 22px;
+}
+
+.result-display .cm-string {
+    padding: 0px 4px;
+    display: inline-block;
+    min-width: 13px;
+    min-height: 13px;
+    border-radius: 3px;
+    box-sizing: border-box;
+    position: relative;
+    vertical-align: middle;
+    margin-left: 2px;
+    margin-bottom: 2px;
+    top: 1px;
+}
+
+.result-display .cm-string:before {
+    content: " ";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-image: url(../assets/bg.png);
+    opacity: 0.99;
+    z-index: -10;
+}
+.result-display li {
+    line-height: 24px;
+}
+.result-display .cm-number {
+    color: #164;
+}
+
+.result-display .cm-nan {
+    color: #614;
+}
+
+.result-display ol {
+    padding: 0;
+    margin: 0;
+    counter-reset: commands;
+}
+
+.result-display ol li {
+    list-style-position: inside;
+    list-style: none;
+    position: relative;
+}
+
+.result-display ol li:before {
+    content: '';
+    counter-increment: commands;
+    padding-right: 0px;
+    position: absolute;
+    left: -10px;
+    top: 2px;
+    color: #bbb;
+}
+❯
+.result-display:before {
+    content: "RESULT";
+    position: absolute;
+    left: 0;
+    top: -25px;
+    font-size: 11px;
+    color: #ccc;
+}
+
+.gradient {
+    width: 100%;
+    white-space: nowrap;
+    position: relative;
+    display: inline-block;
+    top: 4px;
+    padding-bottom: 15px;
+}
+.grad-step {
+    display: inline-block;
+    height: 32px;
+    width: 1%;
+}
+.hwmap-sider{
+    position: absolute;
+    top:0;
+    left: 0;
+    width: 10px;
+    height: 45px;
+    background: url(../images/zhsh.png) no-repeat center;
+    background-size: 451%;
+    /* border: 1px solid #333; */
+    cursor: pointer;
+    /* transition: .2s; */
+}
+.dhxform_obj_material .hw-prompt .dhxform_txt_label2{
+    line-height: 28px;
+    font-size: 11px;
+    color:#bc4d24;
+}
+.dhxform_obj_material div.map-box fieldset.dhxform_fs div.dhxform_base_nested.dhxform_fs_nested{
+    height: 470px;
+}
+.dhxform_obj_material div.map-box .dhxform_fs{
+    border-bottom: none;
+}
+#sliderObj{
+    height: 40px;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+#sliderObj .dhxsl_cont_hr .dhxsl_track{
+    height: 40px;
+    background: none;
+}
+#sliderObj .dhxsl_runner{
+    position: absolute;
+    top:0;
+    left: 0;
+    width: 10px;
+    height: 45px;
+    background: url(../images/zhsh.png) no-repeat center;
+    background-size: 451%;
+    cursor: pointer;
+    border-radius:0;
+}
+/* 字体组件 */
+.dhxform_obj_material .font-bnt .dhxform_btn div.dhxform_btn_txt{
+    height: 16px;
+    line-height: 16px;
+}
+.dhxform_obj_material .font-bnt .dhxform_btn {
+    border: none;
+    cursor: pointer;
+}
+
+.dhxform_obj_material .font-bnt3 .dhxform_btn {
+    background: url(../images/font-color.png) no-repeat;
+    background-size: 100%;
+    margin-top: -2px;
+}
+.dhxform_obj_material .font-bnt .dhxform_btn_over {
+    border:none;
+}
+.dhxform_obj_material .font-bnt .dhxform_control.dhxform_img_node .chbx0{
+    width: 18px;
+    height: 20px;
+    border: 1px solid rgba(255,255,255,0);
+    cursor: pointer;
+}
+.dhxform_obj_material .font-bnt1 .dhxform_control.dhxform_img_node .chbx0{
+    background: url(../images/font-blod.png) no-repeat;
+    background-size: 100%;
+}
+.dhxform_obj_material .font-bnt2 .dhxform_control.dhxform_img_node .chbx0{
+    background: url(../images/font-italic.png) no-repeat;
+    background-size: 100%;
+}
+/* .dhxform_obj_material .font-bnt3 .dhxform_control.dhxform_img_node .chbx0{
+    background: url(../images/font-color.png) no-repeat;
+    background-size: 100%;
+} */
+.dhxform_obj_material .font-bnt1 .dhxform_control.dhxform_img_node .chbx1{
+    background: url(../images/font-blod.png) no-repeat;
+    background-size: 100%;
+}
+.dhxform_obj_material .font-bnt2 .dhxform_control.dhxform_img_node .chbx1{
+    background: url(../images/font-italic.png) no-repeat;
+    background-size: 100%;
+}
+/* .dhxform_obj_material .font-bnt3 .dhxform_control.dhxform_img_node .chbx1{
+    background: url(../images/font-color.png) no-repeat;
+    background-size: 100%;
+} */
+.dhxform_obj_material .font-bnt .dhxform_control.dhxform_img_node .chbx1{
+    width: 18px;
+    height: 20px;
+    border: 1px solid blue;
+    cursor: pointer;
+}
+.dhxform_obj_material .font-color .dhxform_textarea{
+    height: 4px;
+    padding: 0!important;
+    line-height: 0;
+    position:absolute;
+    cursor: pointer;
+}
+.dhxform_obj_material .font-color .dhxform_control{
+    height: 5px;
+    position: relative;
+}
+
+.font-box .dhxform_block {
+    margin-left: -20px;
+}
+.dhxform_obj_material .font-block .dhxform_block {
+    margin-left: 0;
+}
+.dhxform_obj_material .font-block .dhxform_block .dhxform_base{
+    margin-left: -14px;
+}

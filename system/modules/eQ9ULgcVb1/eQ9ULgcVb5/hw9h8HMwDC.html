@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>发布模块并导出new</title>
+    <!--基本样式-->
+    <link href="/css/common.css?ver=vmd2.0.7.200328" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=vmd2.0.7.200328" rel="stylesheet" />
+    <link href="/lib/dhtmlx/skins/material/dhtmlx.css?ver=vmd2.0.7.200328" rel="stylesheet" />
+    <!--样式快捷索引表-->
+    <link href="/css/shortcut.css?ver=vmd2.0.7.200328" rel="stylesheet" />
+    <script src="/lib/labjs/LAB.min.js?ver=vmd2.0.7.200328"></script>
+    <script src="/config.js?ver=vmd2.0.7.200328"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=vmd2.0.7.200328"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=vmd2.0.7.200328"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=vmd2.0.7.200328"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=vmd2.0.7.200328"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=vmd2.0.7.200328"></script>
+    <script src="/js/util.js?ver=vmd2.0.7.200328"></script>
+    <script src="/lib/dhtmlx/codebase/dhtmlx.js?ver=vmd2.0.7.200328"></script>
+    <script src="/js/hwdas.js?ver=vmd2.0.7.200328"></script>
+    <script src="/js/vmdcore.js?ver=vmd2.0.7.200328"></script>
+    <script src="/js/vmdcomps.js?ver=vmd2.0.7.200328"></script>
+    <script src="/js/publicMethods.js?ver=vmd2.0.7.200328"></script>
+    <script src="/system/modules/eQ9ULgcVb1/eQ9ULgcVb5/hw9h8HMwDC.vmdproject.config.js"></script>
+    <style> </style>
+    <style type="text/css" id="vmdcss">
+        .x-form-cb-label {
+            color: #5EA0FF;
+        }
+    </style>
+    <script>
+        vmd.previewMode = true;
+        vmd.virtualPath = '';
+        vmd.workspace = {
+            "workspaceid": "1174c7d2-f008-4f84-bb61-1845b5d28814",
+            "workflowIp": "",
+            "dataServiceIp": "",
+            "msgIp": "",
+            "projectid": "eQ9ULgcVb1"
+        }
+        vmd.resourceSettings = {
+            "test&&资源中心服务器": "http://192.168.1.181:9050/resource",
+            "test&&测试文件服务": "http://192.168.1.82:31884/resource"
+        }
+        vmd.projectInfo = {
+            "projectId": "eQ9ULgcVb1",
+            "workflowIp": "",
+            "dataServiceIp": "",
+            "msgIp": "",
+            "todoIp": "",
+            "authIp": "",
+            "docIp": "",
+            "reoprtIp": "",
+            "reportIp": "",
+            "logIp": ""
+        }
+        Ext.define("vmd.module.MainViewport", {
+            extend: "vmd.comp.viewport",
+            requires: vmd.getCmpDeps(["vmd.ux.PublishResource$1.0$PublishResource", "vmd.ux.MicroservicesList$1.0$MicroservicesList"]),
+            xtype: "vmd.module.MainViewport",
+            layout: "border",
+            afterrender: "MainViewport_afterrender",
+            initComponent: function() {
+                var hwproject_Name = vmd.getUrlParam('project_name') || '协同开发'
+                var hwproject_Id = vmd.getUrlParam('project_id') || 'eQ9ULgcVb1'
+                var treeNodePath = vmd.getUrlParam('nodepath')
+
+                function hwCheckbox_check(sender, checked) {
+                    var rootnode = tree.getRootNode();
+                    if (checked == true) {
+                        tree.setNodeCheckById(0, true); //设置根节点 被勾中
+                        for (var i = 0; i < rootnode.childNodes.length; i++) {
+                            tree.setNodeCheckById(rootnode.childNodes[i].id, true);
+                            if (rootnode.childNodes[i].childNodes.length > 0) {
+                                findchildnode(rootnode.childNodes[i]);
+                            }
+                        }
+                    } else {
+                        tree.setNodeCheckById(0, false); //设置根节点 不被勾中
+                        for (var i = 0; i < rootnode.childNodes.length; i++) {
+                            tree.setNodeCheckById(rootnode.childNodes[i].id, false);
+                            if (rootnode.childNodes[i].childNodes.length > 0) {
+                                findchildnode(rootnode.childNodes[i]);
+                            }
+                        }
+                    }
+                }
+                //遍历树形子节点
+                function findchildnode(roonodes) { //树形全勾中
+                    var childnodes = roonodes.childNodes;
+                    for (var i = 0; i < childnodes.length; i++) { // 从节点中取出子节点依次遍历
+                        tree.setNodeCheckById(childnodes[i].id, hwCheckbox.checked);
+                        if (childnodes[i].childNodes.length > 0) {
+                            findchildnode(childnodes[i]); // 如果存在子节点 递归
+                        }
+                    }
+                }
+
+                function button2_click(sender, e) {
+                    hwCheckbox.setValue(false); // 全选不勾中
+                    tree.setNodeCheckById(0, false); //设置根节点 不被勾中
+                    var rootnode = tree.getRootNode();
+                    category_findchildnode(rootnode);
+                }
+                //只选择分类按钮(遍历树形子节点)
+                function category_findchildnode(roonodes) { //树形全勾中
+                    var childnodes = roonodes.childNodes;
+                    for (var i = 0; i < childnodes.length; i++) { // 从节点中取出子节点依次遍历
+                        if (childnodes[i].childNodes.length > 0) {
+                            tree.setNodeCheckById(childnodes[i].id, true);
+                            category_findchildnode(childnodes[i]); // 如果存在子节点 递归
+                        } else {
+                            if (childnodes[i].nodeDataJson.type == 'category') {
+                                tree.setNodeCheckById(childnodes[i].id, true);
+                            } else
+                                tree.setNodeCheckById(childnodes[i].id, false);
+                        }
+                    }
+                }
+
+                function tree_afterBindData(sender) {
+                    tree.getRootNode().setText(hwproject_Name);
+                    //树形全选
+                    var rootnode = tree.getRootNode();
+                    if (hwCheckbox.checked == true) {
+                        tree.setNodeCheckById(0, true); //设置根节点 被勾中
+                        for (var i = 0; i < rootnode.childNodes.length; i++) {
+                            tree.setNodeCheckById(rootnode.childNodes[i].id, true);
+                            if (rootnode.childNodes[i].childNodes.length > 0) {
+                                findchildnode(rootnode.childNodes[i]);
+                            }
+                        }
+                    }
+                    rootnode.expand();
+                    if (treeNodePath) {
+                        treeNodePath = treeNodePath.replace(hwproject_Id, 0);
+                        delNodeIds = [];
+                        delnode(rootnode)
+                        for (var i = 0; i < delNodeIds.length; i++) {
+                            tree.removeNodeById(delNodeIds[i])
+                        }
+                    }
+                }
+                //用户分类导出时，先加载所有的节点，treeNodePath
+                function delnode(node) {
+                    for (var i = 0; i < node.childNodes.length; i++) {
+                        var cnode = node.childNodes[i]
+                        if (cnode.getPath().indexOf(treeNodePath) >= 0 || treeNodePath.indexOf(cnode.getPath()) >= 0) {
+                            if (cnode.childNodes.length > 0) {
+                                delnode(cnode)
+                            }
+                        } else {
+                            delNodeIds.push(cnode.id)
+                        }
+                    }
+                }
+                var myMask;
+
+                function button_click(sender, e) {
+                    myMask = new Ext.LoadMask(document.body, {
+                        msg: "正在导出,请稍后...",
+                        msgCls: 'z-index:10000;'
+                    });
+                    myMask.show();
+                    var ExpModulesInfo = getSelNodeIDs();
+                    vmd.ajax({
+                        url: "/expandimp/api/ModPublishExp",
+                        type: 'post',
+                        timeout: 50000,
+                        //dataType:"text",
+                        //contentType: 'application/json;charset=UTF-8',
+                        data: ExpModulesInfo, //jsonp: "callbackparam", 
+                        success: function(result) {
+                            myMask.hide();
+                            if (result.type == "success") {
+                                window.open("/" + result.zipPath, '_self')
+                                var s = new vmd.proxy.Log();
+                                s.save("导出发布模块", ExpModulesInfo.projectId, Ext.util.Cookies.get('userName') + "在" + Ext.Date.dateFormat(new Date(), 'Y-m-d H:i:s') + "导出了项目" + ExpModulesInfo.projectName + "中的模块,模块Id：" + mnodeIds.join('、') + "", "项目", function() {}, function() {
+                                    console.log("日志报存失败了！");
+                                })
+                            } else
+                                Ext.Msg.alert("提示", result.msg)
+                        },
+                        error: function(msg) {
+                            myMask.hide();
+                        }
+                    })
+                }
+                var cnodeIds = []
+                var mnodeIds = []
+                var mnodeInfo = []
+
+                function getNodeId(node) {
+                    for (var i = 0; i < node.childNodes.length; i++) {
+                        var cnode = node.childNodes[i]
+                        if (cnode.attributes.checked) {
+                            if (cnode.childNodes.length > 0) {
+                                getNodeId(cnode)
+                                cnodeIds.push(cnode.id)
+                            } else {
+                                if (cnode.nodeDataJson.type == 'category') {
+                                    cnodeIds.push(cnode.id)
+                                } else {
+                                    mnodeInfo.push({
+                                        id: cnode.id,
+                                        path: cnode.getPath().replace('/0/', hwproject_Id + '/')
+                                    })
+                                    mnodeIds.push(cnode.id)
+                                }
+                            }
+                        }
+                    }
+                }
+
+                function getSelNodeIDs() {
+                    var count = 0;
+                    div10.items.each(function(item) {
+                        var addressid = item.getComlistValue();
+                        for (var i = 0; i < micrserChild.length; i++) {
+                            if (addressid == micrserChild[i].mircserveradd_id) {
+                                var objlist = {
+                                    'id': micrserChild[i].mircserveradd_id,
+                                    'name': micrserChild[i].mircserveradd_name,
+                                    'url': micrserChild[i].mircserveradd_url
+                                }
+                                mircserverData[count].address = objlist;
+                            }
+                        }
+                        if (mircserverData[count].address == "") {
+                            var objlist = {
+                                'id': item.getComlistValue(),
+                                'name': item.getComlistValue(),
+                                'url': item.getComlistValue()
+                            }
+                            mircserverData[count].address = objlist;
+                        }
+                        count++;
+                    })
+                    var mircserverDataStr = JSON.stringify(mircserverData);
+                    var micServerInfo = {};
+                    var user_micServerInfo = {};
+                    for (var i = 0; i < mircserverData.length; i++) {
+                        if (mircserverData[i].type == "1")
+                            micServerInfo[mircserverData[i].code] = mircserverData[i].address.url;
+                        else
+                            user_micServerInfo[mircserverData[i].code] = mircserverData[i].address.url;
+                    }
+                    cnodeIds = []
+                    mnodeIds = []
+                    mnodeInfo = []
+                    var rootnode = tree.getRootNode();
+                    getNodeId(rootnode)
+                    getResourceInfo()
+                    getProjectRefResource()
+                    var ExpModulesInfo = {};
+                    // ExpModulesInfo.serverIp = txt_dataserverip.getValue() || "";
+                    // ExpModulesInfo.workFlowIp = txt_workflowip.getValue() || "";
+                    ExpModulesInfo.user_micServerInfo = user_micServerInfo;
+                    ExpModulesInfo.micServerInfo = micServerInfo;
+                    // ExpModulesInfo.msgIp = txt_msg.getValue() || "";
+                    // ExpModulesInfo.todoIp = txt_todo.getValue() || "";
+                    // ExpModulesInfo.authIp = txt_auth.getValue() || "";
+                    // ExpModulesInfo.docIp = txt_doc.getValue() || "";
+                    // ExpModulesInfo.reportIp = txt_report.getValue() || "";
+                    // ExpModulesInfo.logIp = txt_report.getValue() || "";
+                    ExpModulesInfo.virtualPath = MyField.getValue() || "";
+                    ExpModulesInfo.ModulesInfo = mnodeInfo;
+                    ExpModulesInfo.projectId = hwproject_Id;
+                    ExpModulesInfo.projectName = hwproject_Name;
+                    ExpModulesInfo.resourceInfo = resourecInfo;
+                    ExpModulesInfo.projectCss = projectRefCss;
+                    ExpModulesInfo.projectJs = projectRefJs;
+                    return ExpModulesInfo
+                }
+                var projectRefJs = "";
+                var projectRefCss = "";
+
+                function getProjectRefResource() {
+                    //记录项目中的引用资源信息，包括脚本，样式
+                    for (var i = 0; i < projectResourceInfo.length; i++) {
+                        var index = -1;
+                        for (var j = 0; j < resourecInfo.length; j++) {
+                            if (resourecInfo[j].rname == projectResourceInfo[i].servName)
+                                index = j
+                        }
+                        if (index >= 0) {
+                            if (projectResourceInfo[i].ext == "js") {
+                                projectRefJs += '<script src="http://' + resourecInfo[index].newPath + '/resource/' + projectResourceInfo[i].path + '"><\/script>\n'
+                            }
+                            if (projectResourceInfo[i].ext == "css") {
+                                projectRefCss += '<link href="http://' + resourecInfo[index].newPath + '/resource/' + projectResourceInfo[i].path + '"  rel="stylesheet" />\n'
+                            }
+                        } else {
+                            if (projectResourceInfo[i].ext == "js") {
+                                projectRefJs += '<script src="' + projectResourceInfo[i].absolutePath + '"><\/script>\n'
+                            }
+                            if (projectResourceInfo[i].ext == "css") {
+                                projectRefCss += '<link href="' + projectResourceInfo[i].absolutePath + '"  rel="stylesheet" />\n'
+                            }
+                        }
+                    }
+                }
+                var resourecInfo = [];
+
+                function getResourceInfo() {
+                    resourecInfo = [];
+                    for (var i = 0; i < listPublishResourceComps.length; i++) {
+                        var _resourecInfo = listPublishResourceComps[i].com.getText();
+                        resourecInfo.push({
+                            rname: listPublishResourceComps[i].sname,
+                            newPath: _resourecInfo.newIP || _resourecInfo.oldIP
+                        })
+                    }
+                }
+
+                function button1_click(sender, e) {
+                    if (parent && parent.expPublishmodulesWin)
+                        parent.expPublishmodulesWin.close()
+                }
+
+                function MainViewport_afterrender(sender) {
+                    //页面初始化完成之后，获取项目需要引用的资源
+                    var myPartree = parent.hwTree;
+                    var moduleId = parent.hwTree.getSelectedItemId();
+                    vmd.core.getProjectRefResource(moduleId, false, null, null)
+                }
+
+                function button3_click(sender, e) {
+                    if (button3.getText() == "下一步") {
+                        div5.show()
+                        div4.hide()
+                        panel.doLayout()
+                        button3.setText("上一步")
+                        button.show()
+                        div2.doLayout()
+                    } else if (button3.getText() == "上一步") {
+                        div4.show()
+                        div5.hide()
+                        panel.doLayout()
+                        button3.setText("下一步")
+                        button.hide()
+                        div2.doLayout()
+                    }
+                }
+
+                function div2_afterrender(sender) {}
+
+                function button1_afterrender(sender) {}
+
+                function button_afterrender(sender) {
+                    button.hide()
+                    div2.doLayout()
+                }
+                var listPublishResourceComps = []; //记录动态添加的组件列表。
+                function div31_afterrender(sender) {}
+
+                function combo_change(sender, value, text) {
+                    var recs = store.query("config_id", value)
+                    var rec;
+                    if (recs)
+                        rec = recs.items[0]
+                    selrec = recs.items[0]
+                    bindservice(rec)
+                    bindresource(rec)
+                    MyField.setValue(rec.data.virtualdir)
+                }
+                var micrserList = [];
+                var micrserChild = [];
+                var mircserverData = [];
+                // 获取微服务分组信息
+                function getMicrserList(success) {
+                    hwDas.get({
+                            host: vmd.workspace.dataServiceIp,
+                            url: 'CDEServcie/micservice/micservicelist'
+                        }, {}, {},
+                        function(re_data) {
+                            success(re_data.data[0].datas)
+                        },
+                        function(msg) {}
+                    );
+                }
+                // 获取服务地址
+                function getMicrserChild(success) {
+                    hwDas.get({
+                            host: vmd.workspace.dataServiceIp,
+                            url: 'CDEServcie/micservice/micserviceaddress'
+                        }, {}, {},
+                        function(re_data) {
+                            success(re_data.data[0].datas)
+                        },
+                        function(msg) {}
+                    );
+                }
+                // 初始化微服务数据集数据
+                function initMicrserstore(records, sender) {
+                    getMicrserList(function(data) {
+                        for (var i = 0; i < data.length; i++) {
+                            micrserList[i] = data[i];
+                        }
+                        getMicrserChild(function(data) {
+                            for (var i = 0; i < data.length; i++) {
+                                micrserChild[i] = data[i];
+                            }
+                            // -------------在这里开始处理-----------------------
+                            if (records) {
+                                if (records.micserviceinfo != "") {
+                                    initMicrserfromStore(sender, records.micserviceinfo);
+                                } else {
+                                    initMicrserfromoldStore(sender, records);
+                                    // initMicrserList(MicrservList1)
+                                }
+                            }
+                        })
+                    })
+                }
+                // 根据数据库初始化微服务的值
+                function initMicrserfromStore(sender, data) {
+                    var micrserdata = JSON.parse(data);
+                    for (var i = 0; i < micrserdata.length; i++) {
+                        micrserdata[i].identify = micrserdata[i].code;
+                        var str = JSON.stringify(micrserdata[i]);
+                        var list = [];
+                        for (var j = 0; j < micrserChild.length; j++) {
+                            if (micrserChild[j].mircserveradd_micserviceid == micrserdata[i].id) {
+                                var objlist = {
+                                    'key': micrserChild[j].mircserveradd_id,
+                                    'value': micrserChild[j].mircserveradd_name
+                                }
+                                list.push(objlist)
+                            }
+                        }
+                        var flag = false;
+                        if (micrserdata[i].type != 1)
+                            flag = true;
+                        addMicrserList(sender, str, flag, list, i)
+                    }
+                }
+                // 从旧的数据库拿到数据
+                function initMicrserfromoldStore(sender, data) {
+                    // micrserList
+                    var list = []
+                    // 认证中心
+                    if (data.authserver != '') {
+                        // hwc0f00e216222306dd5229ac3e12013
+                        var listobj = getoldData(data.authserver, 'hwc0f00e216222306dd5229ac3e12013')
+                        list.push(listobj)
+                    }
+                    // 数据服务
+                    // hwc0f00e216222306dd5229ac3e12001
+                    var listobj = getoldData(data.dasserver, 'hwc0f00e216222306dd5229ac3e12001', 'dasserver')
+                    list.push(listobj)
+                    // 文档中心
+                    if (data.docserver != '') {
+                        // hwc0f00e216222306dd5229ac3e12008
+                        var listobj = getoldData(data.docserver, 'hwc0f00e216222306dd5229ac3e12008')
+                        list.push(listobj)
+                    }
+                    // 日志中心
+                    // hwc0f00e216222306dd5229ac3e12006
+                    var listobj = getoldData(data.logserver, 'hwc0f00e216222306dd5229ac3e12006')
+                    list.push(listobj)
+                    // 消息中心
+                    if (data.msgserver != '') {
+                        // hwc0f00e216222306dd5229ac3e12005
+                        var listobj = getoldData(data.msgserver, 'hwc0f00e216222306dd5229ac3e12005')
+                        list.push(listobj)
+                    }
+                    // 报表中心
+                    // hwc0f00e216222306dd5229ac3e12003
+                    var listobj = getoldData(data.reportserver, 'hwc0f00e216222306dd5229ac3e12003')
+                    list.push(listobj)
+                    // 待办中心
+                    if (data.todoserver != '') {
+                        // hwc0f00e216222306dd5229ac3e12007
+                        var listobj = getoldData(data.todoserver, 'hwc0f00e216222306dd5229ac3e12007')
+                        list.push(listobj)
+                    }
+                    // 流程中心
+                    if (data.wfserver != '') {
+                        // hwc0f00e216222306dd5229ac3e12004
+                        var listobj = getoldData(data.wfserver, 'hwc0f00e216222306dd5229ac3e12004')
+                        list.push(listobj)
+                    }
+                    var micrserlist = JSON.stringify(list);
+                    initMicrserfromStore(sender, micrserlist)
+                }
+
+                function getoldData(url, id) {
+                    for (var i = 0; i < micrserList.length; i++) {
+                        if (micrserList[i].mircserver_id == id) {
+                            var listobj = {
+                                'id': micrserList[i].mircserver_id,
+                                'code': micrserList[i].mircserver_code,
+                                'name': micrserList[i].mircserver_name,
+                                'type': micrserList[i].mircserver_type,
+                                'address': {
+                                    'id': url,
+                                    'code': micrserList[i].mircserver_code,
+                                    'name': url,
+                                    'url': url
+                                }
+                            }
+                            return listobj;
+                        }
+                    }
+                }
+                // 移除视图子项
+                function removeMicrserList(index, sender) {
+                    // 移除节点
+                    sender.getComponent(index).destroy();
+                    // 在数组中删除该序列
+                    mircserverData.splice(index, 1);
+                }
+                // 添加微服务下拉复合组件
+                function addMicrserList(sender, node, display, data, index) {
+                    var nodeInfo = JSON.parse(node);
+                    // 添加复合组件
+                    var MicroservicesList = new vmd.ux.MicroservicesList({
+                        'list': data,
+                        'id': vmd.getGuid(32)
+                    });
+                    var listobj = {
+                        'id': nodeInfo.id,
+                        'code': nodeInfo.identify,
+                        'name': nodeInfo.name,
+                        'type': nodeInfo.type,
+                        'address': ''
+                    }
+                    mircserverData.push(listobj)
+                    sender.add(MicroservicesList);
+                    sender.doLayout()
+                    MicroservicesList.setAttr(nodeInfo.name + "：", display, nodeInfo.address.id);
+                    MicroservicesList.on('removeRelation', function() {
+                        removeMicrserList(index, sender)
+                    })
+                }
+
+                function bindservice(rec) {
+                    recdata = rec.data;
+                    div10.removeAll();
+                    mircserverData = [];
+                    initMicrserstore(recdata, div10);
+                    div10.doLayout();
+                    // txt_dataserverip.setValue(recdata.dasserver);
+                    // txt_workflowip.setValue(recdata.wfserver);
+                    // txt_msg.setValue(recdata.msgserver);
+                    // txt_todo.setValue(recdata.todoserver);
+                    // txt_auth.setValue(recdata.authserver);
+                    // txt_doc.setValue(recdata.docserver);
+                    // txt_report.setValue(recdata.reportserver);
+                    // txt_log.setValue(recdata.logserver);
+                }
+
+                function bindresource(rec) {
+                    palResource.removeAll()
+                    var resourceserver = [];
+                    listPublishResourceComps = []
+                    var j = 0
+                    resourceserver = Ext.decode(rec.data.resourceserver);
+                    for (var i = 0; i < getresourceserver.getCount(); i++) {
+                        var res = getresourceserver.getAt(i);
+                        (function(res, index) {
+                            hwDas.get({
+                                host: getresourceserver.getAt(index).data.address,
+                                url: "zyzx/zyzxtree/getServerInfo"
+                            }, {}, {}, function(c_result) {
+                                if (c_result.data && c_result.data.length > 0 && c_result.data[0].size > 0) {
+                                    for (var k = 0; k < c_result.data[0].datas.length; k++) {
+                                        var rname = res.data.name + "/" + c_result.data[0].datas[k].name
+                                        var r_name = res.data.name + "&&" + c_result.data[0].datas[k].name
+                                        var newip = ""
+                                        for (var m = 0; m < resourceserver.length; m++) {
+                                            if (resourceserver[m].name == r_name) newip = resourceserver[m].newip
+                                        }
+                                        var ipresource = new vmd.ux.PublishResource({
+                                            id: "PublishResource" + index + "_" + k,
+                                            anchor: "100% "
+                                        });
+                                        //动态添加地址替换组件，根据有多少不同的地址进行添加
+                                        palResource.add(ipresource)
+                                        ipresource.setText(c_result.data[0].datas[k].ip, newip, rname);
+                                        listPublishResourceComps.push({
+                                            sname: r_name,
+                                            com: ipresource
+                                        });
+                                        palResource.doLayout();
+                                    }
+                                    palResource.onBodyResize()
+                                }
+                                j++
+                            }, function() {
+                                j++
+                            })
+                        })(res, i)
+                    }
+                }
+
+                function getresourceserver_load(sender, records, options) {
+                    store.toRefresh()
+                }
+                this.MainViewport_afterrender = MainViewport_afterrender;
+                treestore = new vmd.store.jsonStore({
+                    "xtype": "vmd.jsonStore",
+                    "id": "treestore",
+                    "xcls": "vmd.store.jsonStore",
+                    "autoLoad": true,
+                    "cid": "vmdJsonStore",
+                    "storeConfig": "{\"id\":\"mfLDvMIDeH\",\"callcode\":\"vmdCode\",\"url\":\"CDEServcie/expProject/getexptreeinfo\",\"host\":\"\",\"name\":\"获取导出的模块树\",\"isHwRest\":true,\"getMethods\":[{\"id\":\"project_id\",\"name\":\"项目id\",\"type\":\"String\",\"value1\":\"return getUrlParam('project_id')||'eQ9ULgcVb1'\",\"value2\":\"\",\"testValue\":\"\",\"defaultvalue\":\"\"}],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"id\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"name\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"parent_id\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"project_id\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"type\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"path\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}}]}"
+                });
+                store = new vmd.store.jsonStore({
+                    "xtype": "vmd.jsonStore",
+                    "id": "store",
+                    "xcls": "vmd.store.jsonStore",
+                    "autoLoad": false,
+                    "cid": "vmdJsonStore",
+                    "storeConfig": "{\"id\":\"mpChgtJuL5\",\"callcode\":\"vmdCode\",\"url\":\"CDEServcie/project/projectconfig/runserverconfig\",\"host\":\"\",\"name\":\"项目运行环境配置\",\"isHwRest\":true,\"getMethods\":[{\"id\":\"project_id\",\"name\":\"项目id\",\"type\":\"String\",\"value1\":\"return vmd.getUrlParam(\\\"project_id\\\")||'hWlI8gBXWj'\\n\",\"value2\":\"\",\"testValue\":\"\",\"defaultvalue\":\"\"}],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"config_id\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"project_id\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"type\",\"cname\":\"\",\"type\":\"int32\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"name\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"ptservice\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"subsysid\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"virtualdir\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"dasserver\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"wfserver\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"msgserver\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"todoserver\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"authserver\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"docserver\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"reportserver\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"logserver\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"resourceserver\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"micserviceinfo\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"ppdm_guid\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"remark\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"source\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"row_changed_by\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"row_changed_date\",\"cname\":\"\",\"type\":\"datetime\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"row_created_by\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"row_created_date\",\"cname\":\"\",\"type\":\"datetime\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"row_effective_date\",\"cname\":\"\",\"type\":\"datetime\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"row_expiry_date\",\"cname\":\"\",\"type\":\"datetime\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"row_quality\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}}]}"
+                });
+                getresourceserver = new vmd.store.jsonStore({
+                    listeners: {
+                        load: function() {
+                            getresourceserver_load.apply(this, arguments);
+                        }
+                    },
+                    "xtype": "vmd.jsonStore",
+                    "id": "getresourceserver",
+                    "xcls": "vmd.store.jsonStore",
+                    "autoLoad": true,
+                    "cid": "vmdJsonStore",
+                    "storeConfig": "{\"id\":\"bn6KEvEwwL\",\"callcode\":\"vmdCode\",\"url\":\"CDEServcie/project/projectconfig/devresourceservers\",\"host\":\"\",\"name\":\"项目开发环境资源服务信息\",\"isHwRest\":true,\"getMethods\":[{\"id\":\"id\",\"name\":\"项目id\",\"type\":\"String\",\"value1\":\"//返回值 \\r\\n return vmd.getUrlParam(\\\"project_id\\\")||'hWlI8gBXWj'\",\"value2\":\"\",\"testValue\":\"\",\"defaultvalue\":\"\"}],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"id\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"name\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"address\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"remark\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}}]}",
+                    "load": "getresourceserver_load"
+                });
+                var subView = new vmd.comp.SubView({
+                    view: {
+                        xtype: "vmd.subview",
+                        id: "subView",
+                        width: 593,
+                        height: 448,
+                        layout: "absolute",
+                        closable: true,
+                        draggable: false,
+                        maximizable: true,
+                        modal: true,
+                        resizable: true,
+                        autoScroll: true,
+                        closeAction: "close",
+                        header: false
+                    },
+                    rootScope: this,
+                    isModule: true
+                })
+                this.items = [{
+                        xtype: "panel",
+                        id: "panel",
+                        title: "Panel",
+                        header: false,
+                        border: false,
+                        height: 100,
+                        layout: "auto",
+                        region: "center",
+                        autoScroll: false,
+                        items: [{
+                                xtype: "vmd.div",
+                                id: "div4",
+                                autoEl: "div",
+                                border: false,
+                                backgroundRepeat: "no-repeat",
+                                backgroundPosition: "top left",
+                                height: 420,
+                                anchor: "100%  100%",
+                                layout: "border",
+                                hidden: false,
+                                items: [{
+                                        xtype: "vmd.div",
+                                        id: "div1",
+                                        autoEl: "div",
+                                        border: true,
+                                        backgroundRepeat: "no-repeat",
+                                        backgroundPosition: "top left",
+                                        width: 400,
+                                        height: 31,
+                                        region: "north",
+                                        layout: "absolute",
+                                        items: [{
+                                                xtype: "checkbox",
+                                                id: "hwCheckbox",
+                                                fieldLabel: "Checkbox",
+                                                boxLabel: "全选",
+                                                x: 20,
+                                                y: 5,
+                                                style: "color: #5EA0FF;",
+                                                check: "hwCheckbox_check",
+                                                listeners: {
+                                                    check: hwCheckbox_check
+                                                }
+                                            },
+                                            {
+                                                xtype: "vmd.button",
+                                                id: "button2",
+                                                text: "只选分类",
+                                                type: "text",
+                                                size: "small",
+                                                x: 80,
+                                                y: 5,
+                                                click: "button2_click",
+                                                hidden: true,
+                                                listeners: {
+                                                    click: button2_click
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        xtype: "vmd.div",
+                                        id: "div",
+                                        autoEl: "div",
+                                        border: false,
+                                        backgroundRepeat: "no-repeat",
+                                        backgroundPosition: "top left",
+                                        width: 400,
+                                        height: 50,
+                                        region: "center",
+                                        layout: "fit",
+                                        items: [{
+                                            xtype: "vmd.treeex",
+                                            id: "tree",
+                                            width: 1140,
+                                            height: 270,
+                                            hideRoot: false,
+                                            loadType: "全部加载",
+                                            x: 20,
+                                            y: 20,
+                                            checkBox: true,
+                                            store: treestore,
+                                            parentField: "parent_id",
+                                            valueField: "id",
+                                            textField: "name",
+                                            rootValue: "0",
+                                            rootText: "协同开发",
+                                            cascading: true,
+                                            nodeMarkFiled: "type",
+                                            folderValue: "category",
+                                            leafValue: "module",
+                                            rootImg: "/system/modules/eQ9ULgcVb1/img/server5.png",
+                                            folderImg: "/system/modules/eQ9ULgcVb1/img/folderClosed.gif",
+                                            leafImg: "/system/modules/eQ9ULgcVb1/img/model.png",
+                                            afterBindData: "tree_afterBindData",
+                                            listeners: {
+                                                afterBindData: tree_afterBindData
+                                            }
+                                        }]
+                                    }
+                                ]
+                            },
+                            {
+                                xtype: "vmd.div",
+                                id: "div5",
+                                autoEl: "div",
+                                border: false,
+                                backgroundRepeat: "no-repeat",
+                                backgroundPosition: "top left",
+                                height: 420,
+                                anchor: "100%   100%",
+                                hidden: true,
+                                layout: "auto",
+                                autoScroll: true,
+                                autoHeight: false,
+                                items: [{
+                                        xtype: "vmd.div",
+                                        id: "div6",
+                                        layoutConfig: {
+                                            align: "middle"
+                                        },
+                                        autoEl: "div",
+                                        border: true,
+                                        backgroundRepeat: "no-repeat",
+                                        backgroundPosition: "top left",
+                                        height: 50,
+                                        layout: "hbox",
+                                        items: [{
+                                                xtype: "label",
+                                                id: "label1",
+                                                text: "发布环境选择：",
+                                                style: "font-size:14px;",
+                                                margins: "0 5 0 10"
+                                            },
+                                            {
+                                                xtype: "vmd.combo",
+                                                id: "combo",
+                                                width: 309,
+                                                store: store,
+                                                valueField: "config_id",
+                                                displayField: "name",
+                                                change: "combo_change",
+                                                firstSelected: true,
+                                                listeners: {
+                                                    change: combo_change
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        xtype: "vmd.div",
+                                        id: "div31",
+                                        autoEl: "div",
+                                        border: false,
+                                        backgroundRepeat: "no-repeat",
+                                        backgroundPosition: "top left",
+                                        height: 50,
+                                        anchor: "100% 55%",
+                                        layout: "auto",
+                                        afterrender: "div31_afterrender",
+                                        autoHeight: true,
+                                        autoScroll: false,
+                                        style: "overflow-x: hidden !important",
+                                        listeners: {
+                                            vmdafterrender: div31_afterrender
+                                        },
+                                        items: [{
+                                                xtype: "vmd.div",
+                                                id: "div41",
+                                                autoEl: "div",
+                                                border: false,
+                                                backgroundRepeat: "no-repeat",
+                                                backgroundPosition: "top left",
+                                                height: 170,
+                                                region: "north",
+                                                layout: "auto",
+                                                autoHeight: true,
+                                                items: [{
+                                                        xtype: "vmd.div",
+                                                        id: "div9",
+                                                        layoutConfig: {
+                                                            align: "middle"
+                                                        },
+                                                        autoEl: "div",
+                                                        border: false,
+                                                        backgroundRepeat: "no-repeat",
+                                                        backgroundPosition: "top left",
+                                                        height: 35,
+                                                        region: "north",
+                                                        layout: "hbox",
+                                                        items: [{
+                                                            xtype: "label",
+                                                            id: "label7",
+                                                            text: "服务信息",
+                                                            margins: "0 0 0 10",
+                                                            style: "font-size: 14px;font-weight: bold"
+                                                        }]
+                                                    },
+                                                    {
+                                                        xtype: "vmd.div",
+                                                        id: "div10",
+                                                        autoEl: "div",
+                                                        border: false,
+                                                        backgroundRepeat: "no-repeat",
+                                                        backgroundPosition: "top left",
+                                                        width: 400,
+                                                        height: 50,
+                                                        layout: "auto",
+                                                        region: "center",
+                                                        style: "border-top: 1px solid;    border-top-color: rgb(223, 223, 223);",
+                                                        autoWidth: true,
+                                                        autoHeight: true
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                xtype: "vmd.div",
+                                                id: "div51",
+                                                autoEl: "div",
+                                                border: false,
+                                                backgroundRepeat: "no-repeat",
+                                                backgroundPosition: "top left",
+                                                height: 300,
+                                                region: "center",
+                                                layout: "auto",
+                                                autoHeight: true,
+                                                items: [{
+                                                        xtype: "vmd.div",
+                                                        id: "div2",
+                                                        layoutConfig: {
+                                                            align: "middle"
+                                                        },
+                                                        autoEl: "div",
+                                                        border: false,
+                                                        backgroundRepeat: "no-repeat",
+                                                        backgroundPosition: "top left",
+                                                        height: 35,
+                                                        anchor: "100% 10%",
+                                                        layout: "hbox",
+                                                        region: "north",
+                                                        items: [{
+                                                            xtype: "label",
+                                                            id: "title",
+                                                            text: " 资源中心",
+                                                            anchor: "",
+                                                            height: 20,
+                                                            autoHeight: false,
+                                                            width: 100,
+                                                            y: 5,
+                                                            x: 10,
+                                                            autoWidth: true,
+                                                            style: "font-size: 14px;font-weight: bold",
+                                                            margins: "0 0 0 10"
+                                                        }]
+                                                    },
+                                                    {
+                                                        xtype: "vmd.div",
+                                                        id: "DivResource",
+                                                        autoEl: "div",
+                                                        border: false,
+                                                        backgroundRepeat: "no-repeat",
+                                                        backgroundPosition: "top left",
+                                                        height: 200,
+                                                        anchor: "100% 30%",
+                                                        layout: "auto",
+                                                        region: "center",
+                                                        style: "border-top: 1px solid;    border-top-color: rgb(223, 223, 223)",
+                                                        autoHeight: true,
+                                                        items: [{
+                                                            xtype: "panel",
+                                                            id: "palResource",
+                                                            title: "Panel",
+                                                            header: false,
+                                                            border: false,
+                                                            height: 200,
+                                                            layout: "auto",
+                                                            autoScroll: false,
+                                                            autoWidth: true,
+                                                            autoHeight: true,
+                                                            items: [{
+                                                                xtype: "vmd.ux.PublishResource",
+                                                                id: "PublishResource",
+                                                                layout: "absolute",
+                                                                anchor: "100% "
+                                                            }]
+                                                        }]
+                                                    }
+                                                ]
+                                            },
+                                            {
+                                                xtype: "vmd.div",
+                                                id: "div3",
+                                                autoEl: "div",
+                                                border: true,
+                                                backgroundRepeat: "no-repeat",
+                                                backgroundPosition: "top left",
+                                                height: 50,
+                                                style: "margin-top: 10px;    border-right: 0;    border-left: 0;    border-bottom: 0",
+                                                layout: "hbox",
+                                                items: [{
+                                                        xtype: "label",
+                                                        id: "label",
+                                                        text: "虚拟目录名称：",
+                                                        style: "font-size: 14px;    color: #5f5f5f;",
+                                                        margins: "10 0 0 15"
+                                                    },
+                                                    {
+                                                        xtype: "textfield",
+                                                        id: "MyField",
+                                                        allowBlank: true,
+                                                        enableKeyEvents: true,
+                                                        margins: "5 0 0 0 ",
+                                                        width: 301
+                                                    }
+                                                ]
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                xtype: "vmd.ux.MicroservicesList",
+                                id: "hwMicroservicesList",
+                                layout: "auto",
+                                hidden: true
+                            }
+                        ]
+                    },
+                    {
+                        xtype: "vmd.div",
+                        id: "div21",
+                        layoutConfig: {
+                            align: "middle",
+                            pack: "center"
+                        },
+                        autoEl: "div",
+                        border: true,
+                        backgroundRepeat: "no-repeat",
+                        backgroundPosition: "top left",
+                        width: 400,
+                        height: 50,
+                        region: "south",
+                        layout: "hbox",
+                        afterrender: "div2_afterrender",
+                        listeners: {
+                            vmdafterrender: div2_afterrender
+                        },
+                        items: [{
+                                xtype: "vmd.button",
+                                id: "button3",
+                                text: "下一步",
+                                type: "info",
+                                size: "small",
+                                click: "button3_click",
+                                margins: "0 10 0 10",
+                                listeners: {
+                                    click: button3_click
+                                }
+                            },
+                            {
+                                xtype: "vmd.button",
+                                id: "button",
+                                text: "导出",
+                                type: "info",
+                                size: "small",
+                                margins: "0 10 0 10",
+                                click: "button_click",
+                                afterrender: "button_afterrender",
+                                listeners: {
+                                    click: button_click,
+                                    vmdafterrender: button_afterrender
+                                }
+                            },
+                            {
+                                xtype: "vmd.button",
+                                id: "button1",
+                                text: "取消",
+                                type: "(none)",
+                                size: "small",
+                                margins: "0 10 0 10",
+                                click: "button1_click",
+                                afterrender: "button1_afterrender",
+                                listeners: {
+                                    click: button1_click,
+                                    vmdafterrender: button1_afterrender
+                                }
+                            }
+                        ]
+                    }
+                ]
+                this.callParent();
+                var me = this;
+                vmd.core.moduleInit(this.items, this);
+                me.on('afterrender', function() {
+                    MainViewport_afterrender.call(me, me)
+                })
+            }
+        })
+        Ext.onReady(function() {
+            Ext.create('vmd.module.MainViewport', {
+                renderTo: document.body
+            })
+        })
+    </script>
+</head>
+
+<body> </body>
+
+</html>

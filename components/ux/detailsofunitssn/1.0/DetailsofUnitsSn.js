@@ -110,7 +110,7 @@ function gridSpan(grid, rowOrCol, cols, sepCol) {
     var preValue = undefined;
     var firstSameCell = 0;
     var allRecs = grid.getStore().getRange();
-    debugger
+    
     if(rowOrCol == "row") {
         count1 = grid.getColumnModel().getColumnCount();
         count2 = grid.getStore().getCount();

@@ -239,7 +239,7 @@ Ext.define("vmd.comp.DataInput", {
 	    this.reLayout(w, h);
 	},
 	onRemove:function(ds, record,index)
-	{	if(record.notFireRemoveEvent)
+	{	if(this.rptStore.dhtmlxDatastore.indexById(record.id)<0)
 			return
 		var vmdreport = this;
 		vmdreport.deleteRow(index)		
@@ -253,7 +253,7 @@ Ext.define("vmd.comp.DataInput", {
 		{
 			var index=ds.indexOf(record[i])
 			if(vmdreport.rptStore.dhtmlxDatastore.data.order.indexOf(record[i].id)<0)
-				vmdreport.addRow(record[0].id, null, index, null, 1, record[i].data,true) 
+				vmdreport.addRow(record[0].id, null, index, null, 1, Ext.clone(record[i].data),true) 
 		}
 	},
 
@@ -264,7 +264,7 @@ Ext.define("vmd.comp.DataInput", {
 	        vmdreport.updateRptData(record,record.id);
 	    }
 	    else {
-	        vmdreport.load();
+	        //vmdreport.load();
 			vmdreport.load(vmdreport._afterBindDate||function(){});
 	    }
 	},
@@ -291,6 +291,14 @@ Ext.define("vmd.comp.DataInput", {
 	    else {
 	        vmdreport.myMask.show();
 	        vmdreport.load(vmdreport._afterBindDate||function(){});
+	    }
+	},
+	onDataClear:function(){
+		var vmdreport = this;
+	    if (vmdreport.rptStore) {		
+	        vmdreport.rptStore.clear()
+			if(vmdreport.freeGrid)
+			{vmdreport.freeGrid.setDisabled(true)}
 	    }
 	},
 	_afterBindDate:function(){		
@@ -368,7 +376,6 @@ Ext.define("vmd.comp.DataInput", {
 		//vmd.comp.Grid.superclass.onRender.call(this, ct, position);
 		this.callParent(arguments);
 	},
-
 	afterRender: function() {
 	    var vmdreport = this;
 		this.callParent(arguments);
@@ -384,8 +391,8 @@ Ext.define("vmd.comp.DataInput", {
 		        datachanged: this.onDataChanged,
 		        add: this.onAdd,
 		        remove: this.onRemove,
-		        update: this.onUpdate
-		        //clear: this.refresh //store.removeAll清空所有数据调用此接口
+		        update: this.onUpdate,
+		        clear: this.onDataClear //store.removeAll清空所有数据调用此接口
 		    });
 		}
 		else {
@@ -465,7 +472,8 @@ Ext.define("vmd.comp.DataInput", {
                             if (vmdreport.inputConfig.navigation.firstEvent && vmdreport.fireEvent(vmdreport.inputConfig.navigation.firstEvent, vmdreport) === false) {
                                 return false;
                             }
-                            vmdreport.jumpToItem(0);
+							if(vmdreport.simpleGrid&&vmdreport.simpleGrid.grid)
+								vmdreport.jumpToItem(0);
                             break;
                         case 'forward':
                             if (vmdreport.inputConfig.navigation.prevEvent && vmdreport.fireEvent(vmdreport.inputConfig.navigation.prevEvent, vmdreport) === false) {
@@ -709,7 +717,7 @@ Ext.define("vmd.comp.DataInput", {
 		        var gridRowsNums = report.grid.getRowsNum();
 		        var gridColsNums = report.grid.getColumnsNum();
 
-		        var rptStore = vmdreport.rptStore;
+		        var rptStore = report.vmdreport.rptStore;
 		        for (var i = LeftTopRow; i <= RightBottomRow; i++) {
 		            for (var j = LeftTopCol; j < Math.min(LeftTopCol + data[i - LeftTopRow].length, gridColsNums) ; j++) {
 		                var cellObj = report.grid.cells2(i, j);
@@ -731,6 +739,7 @@ Ext.define("vmd.comp.DataInput", {
 		    var pasteWindow = new PasteWindow({
 		        confirm: function (type, param, data) {
 		            if (!data) return;
+					report=this.parseReport
 		            var copyRowsNum = data.length;
 		            //替换
 		            if (type == "replace") {
@@ -744,7 +753,7 @@ Ext.define("vmd.comp.DataInput", {
 		                        var _selectionArea = report.grid._selectionArea;
 		                        _selectionArea.RightBottomRow = _selectionArea.RightBottomRow + modRows;
 		                        for (var i = 0; i < modRows; i++) {
-		                            vmdreport.addRow(null, null, null, false, 1);
+		                            report.vmdreport.addRow(null, null, null, false, 1);
 		                        }
 		                        //report.addRows(_selectionArea.RightBottomRow, modRows, _selectionArea.RightBottomRow + 1, true);
 		                        report.grid._selectionArea = _selectionArea;
@@ -770,14 +779,14 @@ Ext.define("vmd.comp.DataInput", {
 		                var _selectionArea = report.grid._selectionArea;
 		                if (param == "bellow") {
 		                    for (var i = 0; i < copyRowsNum; i++) {
-		                        vmdreport.addRow(null, _selectionArea.RightBottomRow, _selectionArea.RightBottomRow + 1, false, 0);
+		                        report.vmdreport.addRow(null, _selectionArea.RightBottomRow, _selectionArea.RightBottomRow + 1, false, 0);
 		                    }
 		                    _selectionArea.LeftTopRow = _selectionArea.RightBottomRow + 1;
 		                    _selectionArea.RightBottomRow = _selectionArea.RightBottomRow + copyRowsNum;
 		                }
 		                else if (param == "above") {
 		                    for (var i = 0; i < copyRowsNum; i++) {
-		                        vmdreport.addRow(null, _selectionArea.LeftTopRow, _selectionArea.LeftTopRow, false, 2);
+		                        report.vmdreport.addRow(null, _selectionArea.LeftTopRow, _selectionArea.LeftTopRow, false, 2);
 		                    }
 		                    _selectionArea.RightBottomRow = _selectionArea.LeftTopRow + copyRowsNum - 1;
 		                }
@@ -787,6 +796,7 @@ Ext.define("vmd.comp.DataInput", {
 		            }
 		        }
 		    });
+			pasteWindow.parseReport=report;
 		    pasteWindow.show();
 		    return false;
 		});
@@ -1458,7 +1468,7 @@ Ext.define("vmd.comp.DataInput", {
 				data:changeDatas,
 				async:true,
 				success:function(result){
-					debugger
+					
 					if(vmdStore.submitMSChangeDatas)
 						vmdStore.submitMSChangeDatas()
 					Ext.Msg.show({
@@ -1468,7 +1478,7 @@ Ext.define("vmd.comp.DataInput", {
 	                icon: Ext.Msg.INFO
 					});
 				},
-				error:function(result){debugger}
+				error:function(result){}
 			 })	
 	        console.log(changeDatas);
             return ;
@@ -1721,7 +1731,13 @@ Ext.define("vmd.comp.DataInput", {
 	                    }
 	                    vmdreport.rptStore.clear();
 	                    vmdreport.rptStore.dhtmlxDatastore.parse(result.data.datas);
-
+						 if (vmdreport.rptStore) {
+							var dataSetName = vmdreport.inputConfig.layout.dataSet;
+							var vmdStore = Ext.StoreMgr.lookup(dataSetName);
+							//vmdStore.toRefresh();
+							debugger
+							vmdStore.loadData(result.data.datas)
+						}
 	                    //存储旧值
 	                    for (var i = 0; i < result.data.total; i++) {
 	                        var dataId = vmdreport.rptStore.dhtmlxDatastore.idByIndex(i);
@@ -1846,13 +1862,13 @@ Ext.define("vmd.comp.DataInput", {
 	    if (vmdreport.freeGrid) {
 	        vmdreport.freeGrid.totalcount = dataCount + 1;
 	    }
-	    vmdreport.jumpToItem(insertInd + alias - 1);
+		if(vmdreport.simpleGrid&&vmdreport.simpleGrid.grid)
+			vmdreport.jumpToItem(insertInd + alias - 1);
 	},
 
 	deleteRow: function (rIndex) {
 	    var vmdreport = this;
 	    var dataId = vmdreport.rptStore.dhtmlxDatastore.idByIndex(rIndex);
-
 	    for (var field in vmdreport.rptStore.validateFieldErrRules) {
 	        for (var key in vmdreport.rptStore.validateFieldErrRules[field]) {
 	            if (key.split("_")[0] == dataId) {
@@ -1883,7 +1899,7 @@ Ext.define("vmd.comp.DataInput", {
 	        vmdreport.navBar.setPageCount(dataCount, rIndex + 1);
 	    }
 	    vmdreport.jumpToItem(rIndex);
-	    if(vmdreport.simpleGrid) {
+	    if(vmdreport.simpleGrid&&vmdreport.simpleGrid.grid) {
 	        vmdreport.simpleGrid.resetCounter();
 	        //vmdreport.simpleGrid.initGrid();
 	    }
@@ -1937,5 +1953,13 @@ Ext.define("vmd.comp.DataInput", {
 	showOperateBar:function(btnNames){
 		
 		this.editBar.showOperateBar(btnNames);
+	},
+	/**
+	 *@desc
+	 *@param btnNames{array} 指定的显示按钮，['forward','next','start','end','index']
+	**/
+	showNavigationBar:function(btnNames){
+		
+		this.navBar.showNavigationBar(btnNames);
 	}
 })

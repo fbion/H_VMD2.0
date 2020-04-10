@@ -21,6 +21,7 @@ Ext.define('vmd.ux.inputComboProperty.Controller', {
         this.filter = ''
         this.click = ''
         this.change = ''
+        this.beforeClick = ''
     },
     setValue: function(info, flag) {
         if (info) {
@@ -41,6 +42,7 @@ Ext.define('vmd.ux.inputComboProperty.Controller', {
             if (!flag) {
                 this.click = info.events.click;
                 this.change = info.events.change;
+                this.beforeClick = info.events.beforeClick
             }
             this.colHide = info.settings.colHide
             this.colWidth = info.settings.colWidth
@@ -62,6 +64,7 @@ Ext.define('vmd.ux.inputComboProperty.Controller', {
                 if (!flag) {
                     this.scope.click.setValue(this.click)
                     this.scope.change.setValue(this.change)
+                    this.scope.beforeClick.setValue(this.beforeClick)
                 }
             }
         }
@@ -84,7 +87,8 @@ Ext.define('vmd.ux.inputComboProperty.Controller', {
             },
             events: {
                 click: this.click,
-                change: this.change
+                change: this.change,
+                beforeClick: this.beforeClick
             },
             datas: {
                 dataSet: this.dataSet,
@@ -285,6 +289,18 @@ Ext.define("vmd.ux.InputComboProperty", {
             function changeDelete_click(sender, e) {
                 change.setValue('');
                 change.fireEvent('change', change, '')
+            }
+
+            function beforeClick_afterrender(sender) {
+                sender.el.on('dblclick', function() {
+                    var publicmethod = activePropPanel.controller;
+                    publicmethod.openCodeEditor(sender, 'combo_beforeClick', sender.getValue(), 'grid,cell,rId,cInd,nValue,oValue');
+                })
+            }
+
+            function beforeClickdelete_click(sender, e) {
+                beforeClick.setValue(values);
+                beforeClick.fireEvent('change', beforeClick, "")
             }
         } catch (ex) {
             vmd.Error.log('003-3', {
@@ -728,7 +744,8 @@ Ext.define("vmd.ux.InputComboProperty", {
                                     xtype: "label",
                                     id: "label8",
                                     text: "显示字段：",
-                                    margins: "5 0 0 5"
+                                    margins: "5 0 0 5",
+                                    height: 24
                                 },
                                 {
                                     xtype: "vmd.comlist",
@@ -747,15 +764,19 @@ Ext.define("vmd.ux.InputComboProperty", {
                             backgroundRepeat: "no-repeat",
                             backgroundPosition: "top left",
                             width: 400,
-                            height: 67,
+                            height: 40,
                             layout: "anchor",
                             anchor: "100%",
                             hidden: true,
+                            cls: "flex",
                             items: [{
                                     xtype: "label",
                                     id: "label9",
                                     text: "过滤条件：",
-                                    margins: "5 0 0 5"
+                                    margins: "5 0 0 5",
+                                    cls: "line35",
+                                    width: 69,
+                                    height: 29
                                 },
                                 {
                                     xtype: "vmd.div",
@@ -765,17 +786,17 @@ Ext.define("vmd.ux.InputComboProperty", {
                                     backgroundRepeat: "no-repeat",
                                     backgroundPosition: "top left",
                                     width: 400,
-                                    height: 50,
+                                    height: 37,
                                     layout: "anchor",
                                     margins: "5 0 0 5",
-                                    anchor: "100%",
+                                    anchor: "-50",
                                     hidden: false,
                                     items: [{
                                             xtype: "textfield",
                                             id: "filter",
                                             allowBlank: true,
                                             enableKeyEvents: true,
-                                            anchor: "80%",
+                                            anchor: "-35",
                                             margins: "5 0 0 0",
                                             width: 125,
                                             readOnly: true
@@ -804,6 +825,64 @@ Ext.define("vmd.ux.InputComboProperty", {
                     layout: "anchor",
                     padding: "5px",
                     items: [{
+                            xtype: "vmd.div",
+                            id: "hwDiv3",
+                            autoEl: "div",
+                            border: false,
+                            backgroundRepeat: "no-repeat",
+                            backgroundPosition: "top left",
+                            height: 35,
+                            layout: "anchor",
+                            anchor: "100%",
+                            cls: "flex",
+                            items: [{
+                                    xtype: "label",
+                                    id: "hwLabel1",
+                                    text: "beforeClick:",
+                                    cls: "line35"
+                                },
+                                {
+                                    xtype: "vmd.div",
+                                    id: "hwDiv4",
+                                    autoEl: "div",
+                                    border: false,
+                                    backgroundRepeat: "no-repeat",
+                                    backgroundPosition: "top left",
+                                    width: 400,
+                                    height: 37,
+                                    anchor: "-50",
+                                    layout: "anchor",
+                                    items: [{
+                                            xtype: "textfield",
+                                            id: "beforeClick",
+                                            allowBlank: true,
+                                            enableKeyEvents: true,
+                                            anchor: "-32",
+                                            readOnly: true,
+                                            cls: "m-r5",
+                                            width: 125,
+                                            afterrender: "beforeClick_afterrender",
+                                            listeners: {
+                                                vmdafterrender: beforeClick_afterrender
+                                            }
+                                        },
+                                        {
+                                            xtype: "vmd.button",
+                                            id: "beforeClickdelete",
+                                            type: "(none)",
+                                            size: "small",
+                                            width: 30,
+                                            icon: "delete",
+                                            click: "beforeClickdelete_click",
+                                            listeners: {
+                                                click: beforeClickdelete_click
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
                             xtype: "vmd.div",
                             id: "div8",
                             autoEl: "div",

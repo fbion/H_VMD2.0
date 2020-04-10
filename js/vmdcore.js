@@ -43,8 +43,10 @@ Ext.Loader.setConfig({
 	
 		'vmd.ux': '/components/ux',
 		'vmd.ext': '/js/ext',
-		'vmd.Error': bootPATH+'js',
-		'vmd.base': bootPATH + 'js/base'
+		//'vmd.Error': bootPATH+'js',
+		'vmd.base': bootPATH + 'js/base',
+		'vmd.webchart': bootPATH + 'js/webchart',
+        'vmd.proxy': bootPATH + 'js/proxy'
 	}
 });
 
@@ -80,7 +82,29 @@ Ext.define("vmd.core", {
 	                url: url,
 	                timeout: 10000,
 	                success: function (result) {
-	                    if (Ext.isFunction(success)) success(result);
+	                    if (Ext.isFunction(success)) success(result);	
+						//记录日志
+						if(path.indexOf(".vmd")>0)
+						{
+							var log = new vmd.proxy.Log();
+							if(vmd.getUrlParam("type")=="ux"){
+								logmsg=(vmd.getUserName()||vmd.getUserId()) + "在" + Ext.Date.dateFormat(new Date(), 'Y-m-d H:i:s') + "修改保存了" + vmd.getUrlParam("name")+"{"+vmd.getUrlParam("uxid")+"}" + "组件";
+								log.save("保存设计页面", vmd.getUrlParam("uxid"),logmsg, "复合组件", function() {
+									console.log("保存页面操作日志成功！")
+								}, function() {
+									console.log("保存页面操作日志失败")
+								})			
+							} 
+							else
+							{
+								logmsg=(vmd.getUserName()||vmd.getUserId()) + "在" + Ext.Date.dateFormat(new Date(), 'Y-m-d H:i:s') + "修改保存了" + vmd.getUrlParam("name")+"{"+vmd.getUrlParam("id")+"}" + "模块";
+								log.save("保存设计页面", vmd.getUrlParam("id"),logmsg, "模块", function() {
+									console.log("保存页面操作日志成功！")
+								}, function() {
+									console.log("保存页面操作日志失败")
+								})			
+							}		
+						}				
 	                },
 	                failure: function (result) {
 	                    if (Ext.isFunction(error)) error(result);
@@ -620,17 +644,20 @@ Ext.define("vmd.core", {
 				type: 'get',
 				url: url,
 				success: function(result) {
-
-					var data = Ext.decode(result.responseText);
+				var data ;
+				try{
+					data = Ext.decode(result.responseText);
 					if(data.errMsg && !isNoErrMsg) {
 						Ext.Msg.alert('提示', data.errMsg);
 						return;
 					}
-					if(data.data){
+					if(data.data!=undefined){
 						data = Ext.decode(data.data);
 					}
-
-					callback && callback(data)
+				}
+				catch(ex)
+				{}				
+				callback && callback(data)
 
 				},
 				failure: function(result) {
@@ -997,8 +1024,9 @@ Ext.define("vmd.core", {
 			})
 			return map;
 		},
-		taskRunner: function(statefn, callback) {
+		taskRunner: function(statefn, callback,interval,duration,isContinue) {
 			var runner = new Ext.util.TaskRunner();
+			var starttieme=new Date().getTime();
 			var taskRun = function() {
 				if(Ext.isFunction(statefn) && statefn()) {
 					// console.log(statefn());
@@ -1009,8 +1037,13 @@ Ext.define("vmd.core", {
 			}
 			var task = {
 				run: taskRun,
-				interval: 100,
-				duration: 10000
+				interval:interval|| 50,
+				duration: duration||10000,
+				onStop:function(){
+					var now=new Date().getTime();
+					if((now-starttieme)>task.duration && isContinue && callback)  callback()
+				//	isContinue&&callback&&callback()
+				}
 			}
 			runner.start(task);
 		},
@@ -1253,76 +1286,74 @@ Ext.define("vmd.core", {
 		 * @param {func}error-失败回调
 		 * **/
 		getProjectServer: function(projectid, success, error) {
-			vmd.projectInfo = {};
-			vmd.projectInfo.projectId = projectid;
-			vmd.projectInfo.workflowIp = "";
-			vmd.projectInfo.dataServiceIp = "";
-			vmd.projectInfo.msgIp = "";
-			vmd.projectInfo.todoIp = "";
-			vmd.projectInfo.authIp = "";
-			vmd.projectInfo.docIp = "";
-			vmd.projectInfo.reoprtIp = "";
-			vmd.projectInfo.reportIp = "";
-			vmd.projectInfo.logIp = "";
-			if(vmd.projectInfo.projectId == "eQ9ULgcVb1" || vmd.projectInfo.projectId == "hw3ce0447e") {
-				if(success)
-					success()
+			vmd.projectInfo = {
+			projectId :projectid,
+			workflowIp :"",
+			dataServiceIp :"",
+			msgIp :"",
+			todoIp : "",
+			authIp : "",
+			docIp : "",
+			reoprtIp :"",
+			reportIp : "",
+			logIp :""};
+			
+			var setProjectInfo=function(datas){
+				var newmsi={};				
+				if(datas.micserviceinfo)//获取项目的微服务配置信息
+				{
+					msi=JSON.parse(datas.micserviceinfo)//转换为项目微服务对象
+					for(var i=0;i<msi.length;i++)//遍历微服务信息
+					{
+						if(msi[i].type!="1"&&msi[i].code)//自定义微服务，直接添加到vmd.projectInfo中
+							vmd.projectInfo[msi[i].code]=msi[i].address.url||""	
+						else if(msi[i].code)//内置微服务写到newmsi中，单独做处理，要兼容上一版的微服务配置模式
+							newmsi[msi[i].code]=msi[i].address.url||""						
+					}	
+				}				
+				vmd.projectInfo.projectid = datas.project_id;
+				vmd.projectInfo.workflowIp =newmsi.workflow|| datas.wfserver;
+				vmd.projectInfo.dataServiceIp =newmsi.hwdas|| datas.dasserver;
+				vmd.projectInfo.msgIp =newmsi.hwmsc|| datas.msgserver;
+				vmd.projectInfo.todoIp =newmsi.hwtdc|| datas.todoserver;
+				vmd.projectInfo.authIp =newmsi.hwauth|| datas.authserver;
+				vmd.projectInfo.docIp =newmsi.hwdmc|| datas.docserver;
+				vmd.projectInfo.reoprtIp =newmsi.hwrao|| datas.reportserver;
+				vmd.projectInfo.reportIp =newmsi.hwrao|| datas.reportserver;
+				vmd.projectInfo.logIp =newmsi.hwlgc|| datas.logserver;
+				vmd.projectInfo.grapDasIp = newmsi.grapDas||"";
+				vmd.projectInfo.grapAasIp = newmsi.grapAas||"";
+				vmd.projectInfo.umcIp = newmsi.hwumc||"";
+				vmd.projectInfo.emcIp = newmsi.hwemc||"";
+				vmd.projectInfo.amcIp = newmsi.hwauth||"";
+				//兼容之前工区配置的信息，项目未配置，则将工区的配置对应上
+				vmd.workspace.workflowIp = vmd.projectInfo.workflowIp || vmd.workspace.workflowIp;
+				vmd.workspace.dataServiceIp = vmd.projectInfo.dataServiceIp || vmd.workspace.dataServiceIp;
+				vmd.workspace.msgIp = vmd.projectInfo.msgIp || vmd.workspace.msgIp;				
+			}
+			if(vmd.projectInfo.projectId == "eQ9ULgcVb1" || vmd.projectInfo.projectId == "hw3ce0447e") {				
+				success&&success()
 				return;
 			}
 			if(projectid) {
 				hwDas.get("CDEServcie/project/projectconfig/devservers", {}, {
 					project_id: projectid
 				}, function(result1) {
-					if(result1.data && result1.data.length > 0 && result1.data[0].datas && result1.data[0].datas.length > 0) {
-						{
-							vmd.projectInfo.projectid = result1.data[0].datas[0].project_id;
-							vmd.projectInfo.workflowIp = result1.data[0].datas[0].wfserver;
-							vmd.projectInfo.dataServiceIp = result1.data[0].datas[0].dasserver;
-							vmd.projectInfo.msgIp = result1.data[0].datas[0].msgserver;
-							vmd.projectInfo.todoIp = result1.data[0].datas[0].todoserver;
-							vmd.projectInfo.authIp = result1.data[0].datas[0].authserver;
-							vmd.projectInfo.docIp = result1.data[0].datas[0].docserver;
-							vmd.projectInfo.reoprtIp = result1.data[0].datas[0].reportserver;
-							vmd.projectInfo.reportIp = result1.data[0].datas[0].reportserver;
-							vmd.projectInfo.logIp = result1.data[0].datas[0].logserver;
-
-							vmd.workspace.workflowIp = vmd.projectInfo.workflowIp || vmd.workspace.workflowIp;
-							vmd.workspace.dataServiceIp = vmd.projectInfo.dataServiceIp || vmd.workspace.dataServiceIp;
-							vmd.workspace.msgIp = vmd.projectInfo.msgIp || vmd.workspace.msgIp;
-						}
-					}
-					if(success)
-						success(result1)
+					if(result1.data && result1.data.length > 0 && result1.data[0].datas && result1.data[0].datas.length > 0) 
+						setProjectInfo(result1.data[0].datas[0])
+					success&&success(result1)
 				}, function(msg) {
-					if(error)
-						error(msg)
+					error&&error(msg)
 				})
 			} else if(getUrlParam("id")) {
 				hwDas.get("CDEServcie/project/projectconfig/getprodevservices", {}, {
 					id: getUrlParam("id")
 				}, function(result) {
-					if(result.data && result.data.length > 0 && result.data[0].datas && result.data[0].datas.length > 0) {
-						vmd.projectInfo.projectid = result.data[0].datas[0].project_id;
-						vmd.projectInfo.workflowIp = result.data[0].datas[0].wfserver;
-						vmd.projectInfo.dataServiceIp = result.data[0].datas[0].dasserver;
-						vmd.projectInfo.msgIp = result.data[0].datas[0].msgserver;
-						vmd.projectInfo.todoIp = result.data[0].datas[0].todoserver;
-						vmd.projectInfo.authIp = result.data[0].datas[0].authserver;
-						vmd.projectInfo.docIp = result.data[0].datas[0].docserver;
-						vmd.projectInfo.reoprtIp = result.data[0].datas[0].reportserver;
-						vmd.projectInfo.reportIp = result.data[0].datas[0].reportserver;
-						vmd.projectInfo.dlogIp = result.data[0].datas[0].logserver;
-
-						vmd.workspace.workflowIp = vmd.projectInfo.workflowIp || vmd.workspace.workflowIp;
-						vmd.workspace.dataServiceIp = vmd.projectInfo.dataServiceIp || vmd.workspace.dataServiceIp;
-						vmd.workspace.msgIp = vmd.projectInfo.msgIp || vmd.workspace.msgIp;
-					}
-					if(success)
-						success(result)
-
+					if(result.data && result.data.length > 0 && result.data[0].datas && result.data[0].datas.length > 0)
+						setProjectInfo(result.data[0].datas[0])
+					success&&success(result)
 				}, function(msg) {
-					if(error)
-						error(msg)
+					error&&error(msg)
 				})
 			}
 		},
@@ -1588,33 +1619,68 @@ Ext.define("vmd.core", {
 		 },
 		 /** 
 		 * @desc 保存模版，只在设计模式下使用，用于存储模块的公共配置
-		 * @param {string} fileName-文件名称
+		 * @param {string} fileName-文件名称,或者包含路径的文件名称，路径格式为 项目id/目录id/目录id/***.json
 		 * @param {string}context- 文件内容
 		 * @param {fun}successback- 成功回调
 		 * @param {fun}errorback- 失败回调
 		 * **/
 		 saveTemplate :function(fileName,context,successback, errorback)
-		 {	if(!fileName)
+		 {	
+		 
+		   var geturl=function(urlPath,isPath){
+			   
+					 var url='';
+					 var replaceStr = urlPath.replace(/([system|/]?(modules|release)\/(\w+\/)+)\w+(?=.(vmd|html))/, '');
+				     var url = urlPath.replace(replaceStr, ''); 
+					 
+					return url || urlPath ;	
+				}  
+		 
+		 if(!fileName)
 				{errorback("必须传递文件名！")}			
 			var savepath=fileName;
-			if(fileName.indexOf("/")<0)
-			{	 
-				 var urlPath=vmd.getUrlParam("path")&&vmd.getUrlParam("path").replace(".vmd","") 
-				 savepath="templates/default/"+urlPath+"/"+fileName;
+			if(fileName.indexOf("/")<0)//如果传递的不是路径，是文件名
+			{	var urlPath=vmd.getUrlParam("path");
+				if(vmd.previewMode)//保存基础模版方法只应用在设计模式下判断如果在设计模式下，则先获取当前页面的url参数path，如果url不存在，则调用父页面的path
+				{
+					if(!urlPath&&parent&&parent.vmd)
+						urlPath=parent.vmd.getUrlParam("path")||"";	
+				}
+				if(!urlPath){
+					errorback&&errorback("未获取到模块的路径，请在页面中传递path作为url参数或设置fileName中包含相对路径！")
+					return;
+				}
+				//urlPath=urlPath.replace(".vmd","").replace("modules/","") ;
+				/*if(urlPath.indexOf('.')>0)
+					urlPath=urlPath.match("(?<=[system|/]?modules\/|release\/).+(?=\.vmd|\.html)")||urlPath.match("(?<=[system|/]?modules\/|release\/).+")||urlPath
+				else
+					urlPath=urlPath.match("(?<=[system|/]?modules\/|release\/).+")||urlPath		
+                */
+              
+                 
+                if(urlPath.indexOf('.')>0){
+					urlPath=geturl(urlPath);
+				}else{
+					urlPath=geturl(urlPath,true);
+				}
+               				
+				savepath="templates/default/"+urlPath+"/"+fileName;
 			}			 
 			if(savepath.indexOf("templates")<0)
 			{
-				savepath="templates/default/"+savepath;
+				//savepath="templates/default/"+(savepath.match("(?<=[system|/]?modules\/|release\/).+")||savepath	);
+				
+				savepath="templates/default/"+ geturl(savepath)	;
 			}
 			 var t_hwFao=new HwFao(vmdSettings.vmdFileServiceIp||vmdSettings.vmdUploadIp||vmdSettings.dataServiceIp,"vmd")	
 			 t_hwFao.write(savepath,context,successback, errorback)		
 		 }, 
 		 /** 
-		 * @desc 保存模版，只在设计模式下使用，用于存储模块的公共配置
-		 * @param {string} fileName-文件名称
+		 * @desc 保存模版，只在设计模式的运行和运行模式下使用，用于存储模块的公共配置
+		 * @param {string} fileName-文件名称,或者包含路径的文件名称，路径格式为 项目id/目录id/目录id/***.json	 
 		 * @param {string}context- 文件内容
 		 * @param {string}userid- 用户id
-		 * @param {object}config- 用户配置 可为空｛host:***,mark:***｝
+		 * @param {object}config- 用户配置 可默认 默认为vmd	 格式｛host:***,mark:***｝
 		 * @param {fun}successback- 成功回调
 		 * @param {fun}errorback- 失败回调
 		 * **/
@@ -1625,30 +1691,45 @@ Ext.define("vmd.core", {
 			if(!userid)
 				{errorback("必须传递用户名！")
 			}		
-			 var savepath=fileName;
-			 if(fileName.indexOf("/")<0)	
-			 {				 
-				 var url = document.location.toString();
-		　　　　 var arrUrl = url.split("//");
-		　　　　 var start = arrUrl[1].indexOf("/");
-		　　　　 var relUrl = arrUrl[1].substring(start);//stop省略，截取从start开始到结尾的所有字符
-		　　　　 if(relUrl.indexOf("?") != -1){
-		　　　　　　relUrl = relUrl.split("?")[0];
-		　　　　 }
-				 var urlPath=relUrl.replace('.html',"")	
-				 urlPath=urlPath.replace(vmd.virtualPath+"/","")			 
-				 savepath="templates/user/"+userid+"/"+urlPath+"/"+fileName;
-			 }			 
+			 var savepath=fileName;			 
+			if(fileName.indexOf("/")<0)	
+			{	
+				var urlPath=vmd.getUrlParam("path");
+				if(!urlPath)
+				{
+					if(vmd.previewMode)
+					{
+						if(parent&&parent.vmd)
+							urlPath=parent.vmd.getUrlParam("path")||"";							
+					}
+					if(!urlPath)
+					{
+						 var url = document.location.toString();
+				　　　　 var arrUrl = url.split("//");
+				　　　　 var start = arrUrl[1].indexOf("/");
+				　　　　 var relUrl = arrUrl[1].substring(start);//stop省略，截取从start开始到结尾的所有字符
+				　　　　 if(relUrl.indexOf("?") != -1){
+				　　　　　　relUrl = relUrl.split("?")[0];
+				　　　　 }
+						 var urlPath=relUrl			 	
+					}			
+				}
+				if(urlPath.indexOf('.')>0)
+					urlPath=urlPath.match("(?<=[system|/]?modules\/|release\/).+(?=\.vmd|\.html)")||urlPath.match("(?<=[system|/]?modules\/|release\/).+")||urlPath
+				else
+					urlPath=urlPath.match("(?<=[system|/]?modules\/|release\/).+")||urlPath			
+				savepath="templates/user/"+userid+"/"+urlPath+"/"+fileName;		
+			}		 		 
 			if(savepath.indexOf("templates")<0)
 			{
-				savepath="templates/user/"+userid+"/"+savepath;
+				savepath="templates/user/"+userid+"/"+(savepath.match("(?<=[system|/]?modules\/|release\/).+")||savepath	);
 			}
-			var t_hwFao=new HwFao((config&&config.host)||configvmdSettings.vmdFileServiceIp||vmdSettings.vmdUploadIp||vmdSettings.dataServiceIp,(config&&config.mark)||"vmd")			
+			var t_hwFao=new HwFao((config&&config.host)||vmdSettings.vmdFileServiceIp||vmdSettings.vmdUploadIp||vmdSettings.dataServiceIp,(config&&config.mark)||"vmd")			
 			t_hwFao.write(savepath,context,successback, errorback)		
 		 },
 		 /** 
-		 * @desc 读取模版，只在设计模式下使用，用于读取模块的公共配置
-		 * @param {string} fileName-文件名称	 
+		 * @desc 读取模版，在设计模式的运行和运行模式下使用，用于读取模块的公共配置
+		 * @param {string} fileName-文件名称,或者包含路径的文件名称，路径格式为 项目id/目录id/目录id/***.json	 
 		 * @param {fun}successback- 成功回调
 		 * @param {fun}errorback- 失败回调
 		 * **/
@@ -1658,26 +1739,41 @@ Ext.define("vmd.core", {
 				{errorback&&errorback("必须传递文件名！")
 			}	
 			var readpath=fileName;		 
-			 if(fileName.indexOf("/")<0)
-			 {
-				 var url = document.location.toString();
-		　　　　 var arrUrl = url.split("//");
-		　　　　 var start = arrUrl[1].indexOf("/");
-		　　　　 var relUrl = arrUrl[1].substring(start);//stop省略，截取从start开始到结尾的所有字符
-		　　　　 if(relUrl.indexOf("?") != -1){
-		　　　　　　relUrl = relUrl.split("?")[0];
-		　　　　 }
-				 var urlPath=relUrl.replace('.html',"")	
-				 urlPath=urlPath.replace(vmd.virtualPath+"/","")			 
-				 readpath="templates/default/"+urlPath+"/"+fileName
-			 }			 
+			if(fileName.indexOf("/")<0)	
+			{	
+				var urlPath=vmd.getUrlParam("path");
+				if(!urlPath)
+				{
+					if(vmd.previewMode)
+					{
+						if(parent&&parent.vmd)
+							urlPath=parent.vmd.getUrlParam("path")||"";							
+					}
+					if(!urlPath)
+					{
+						 var url = document.location.toString();
+				　　　　 var arrUrl = url.split("//");
+				　　　　 var start = arrUrl[1].indexOf("/");
+				　　　　 var relUrl = arrUrl[1].substring(start);//stop省略，截取从start开始到结尾的所有字符
+				　　　　 if(relUrl.indexOf("?") != -1){
+				　　　　　　relUrl = relUrl.split("?")[0];
+				　　　　 }
+						 var urlPath=relUrl		 	
+					}			
+				}
+				if(urlPath.indexOf('.')>0)
+					urlPath=urlPath.match("(?<=[system|/]?modules\/|release\/).+(?=\.vmd|\.html)")||urlPath.match("(?<=[system|/]?modules\/|release\/).+")||urlPath
+				else
+					urlPath=urlPath.match("(?<=[system|/]?modules\/|release\/).+")||urlPath		
+				readpath="/templates/default/"+urlPath+"/"+fileName;		
+			}		
 			if(readpath.indexOf("templates")<0)
 			{
-				readpath="templates/default/"+readpath;
-			}
-			 if(vmd.virtualPath)
-				 readpath=vmd.virtualPath + "/" +readpath;
-			 hwDas.ajax({
+				readpath="/templates/user/"+userid+"/"+(readpath.match("(?<=[system|/]?modules\/|release\/).+")||readpath);
+			}			
+			 
+			readpath=vmd.bootPATH+readpath;
+			hwDas.ajax({
 					type: "get",
 					url:readpath,
 					dataType: "json",
@@ -1691,37 +1787,55 @@ Ext.define("vmd.core", {
 		 },
 		 /** 
 		 * @desc 读取用户模版，在设计模式的运行和运行模式下使用，用于读取用户的配置
-		 * @param {string} fileName-文件名称
+		 * @param {string} fileName-文件名称,或者包含路径的文件名称，路径格式为 项目id/目录id/目录id/***.json	 
 		 * @param {string} userid-用户id	
-		 * @param {object} config-服务配置		 
+		 * @param {object} config-服务配置	可默认 默认为vmd	 格式｛host:***,mark:***｝
 		 * @param {fun}successback- 成功回调
 		 * @param {fun}errorback- 失败回调
 		 * **/
 		 readUserTemplate :function(fileName,userid,config,successback, errorback)
 		 {			 
-			if(!fileName)
-				{errorback&&errorback("必须传递文件名！")
+			if(!fileName){
+				errorback&&errorback("必须传递文件名！")
+				return ;
 			}	
-			if(!userid)
-				{errorback&&errorback("必须传递用户名！")
+			if(!userid){
+				errorback&&errorback("必须传递用户名！")
+				return ;
 			}	
 			 var readPath=fileName;
 			 if(fileName.indexOf("/")<0)	
-			 {				 
-				 var url = document.location.toString();
-		　　　　 var arrUrl = url.split("//");
-		　　　　 var start = arrUrl[1].indexOf("/");
-		　　　　 var relUrl = arrUrl[1].substring(start);//stop省略，截取从start开始到结尾的所有字符
-		　　　　 if(relUrl.indexOf("?") != -1){
-		　　　　　　relUrl = relUrl.split("?")[0];
-		　　　　 }
-				 var urlPath=relUrl.replace('.html',"")	
-				 urlPath=urlPath.replace(vmd.virtualPath+"/","")			 
-				 readPath="templates/user/"+userid+"/"+urlPath+"/"+fileName;
-			 }	 
-			if(readpath.indexOf("templates")<0)
+			{	
+				var urlPath=vmd.getUrlParam("path");
+				if(!urlPath)
+				{
+					if(vmd.previewMode)
+					{
+						if(parent&&parent.vmd)
+							urlPath=parent.vmd.getUrlParam("path")||"";							
+					}
+					if(!urlPath)
+					{
+						 var url = document.location.toString();
+				　　　　 var arrUrl = url.split("//");
+				　　　　 var start = arrUrl[1].indexOf("/");
+				　　　　 var relUrl = arrUrl[1].substring(start);//stop省略，截取从start开始到结尾的所有字符
+				　　　　 if(relUrl.indexOf("?") != -1){
+				　　　　　　relUrl = relUrl.split("?")[0];
+				　　　　 }
+						 var urlPath=relUrl		
+						
+					}			
+				} 
+				if(urlPath.indexOf('.')>0)
+					urlPath=urlPath.match("(?<=[system|/]?modules\/|release\/).+(?=\.vmd|\.html)")||urlPath.match("(?<=[system|/]?modules\/|release\/).+")||urlPath
+				else
+					urlPath=urlPath.match("(?<=[system|/]?modules\/|release\/).+")||urlPath	 	
+				readPath="templates/user/"+userid+"/"+urlPath+"/"+fileName;		
+			}	 
+			if(readPath.indexOf("templates")<0)
 			{
-				readpath="templates/user/"+userid+"/"+readpath;
+				readPath="templates/user/"+userid+"/"+(readPath.match("(?<=[system|/]?modules\/|release\/).+")||readPath	);
 			}
 			 var t_hwFao=new HwFao((config&&config.host)||vmdSettings.vmdFileServiceIp||vmdSettings.vmdUploadIp||vmdSettings.dataServiceIp,(config&&config.mark)||"vmd")
 			 t_hwFao.read(readPath,successback, errorback)			
@@ -2128,6 +2242,7 @@ vmd.util = {
 		path = path.join("/");
 		return path;
 	}
+
 }
 window.getUrlParam = vmd.util.getUrlParam;
 //#endregion
@@ -2323,6 +2438,7 @@ Ext.apply(vmd, {
 	//20180914 成兵  设置数据访问层的调试模式
 	hwDas.runMode = getUrlParam("runMode") || hwDas.runMode;
 	hwDas.debugStatus = getUrlParam("debugStatus") || hwDas.debugStatus;
+	
    
 })()
 
@@ -2360,7 +2476,7 @@ dhtmlXCombo.prototype._showList = function(a) {
 		this._checkListHeight();
 		return
 	}
-	this.list.style.zIndex = 9009;
+	this.list.style.zIndex = 9909;
 	if (this.hdr != null && this.conf.template.header == true) {
 		this.hdr.style.zIndex = Number(this.list.style.zIndex) + 1
 	}
@@ -2391,7 +2507,23 @@ dhtmlXCombo.prototype._showList = function(a) {
 Ext.define('vmd.Error', {
     singleton: true,
     version: '2.0.6.1008',
-    requires: ['vmd.Error.error.vmd'],
+	list: [{
+        code: '003-1',
+        msg: '复合组件{p1}初始化出错',
+        help: '请检查复合组件配置或操作逻辑是否正确'
+
+    },
+        {
+            code: '003-2',
+            msg: '复合组件{p1}渲染出错',
+            help: '请检查复合组件配置或操作逻辑是否正确'
+        },
+		{
+		    code: '003-3',
+		    msg: '复合组件{p1}代码注入出错,{p2}',
+		    help: '请检查复合组件业务逻辑（变量、函数等）命名是否正确!'
+		}
+    ],
     constructor: function() {
 
         this._init();
@@ -2402,9 +2534,9 @@ Ext.define('vmd.Error', {
     _init: function() {
 
         var me = this;
-        var depsList = this._getDeps();
+       // var depsList = this._getDeps();
         this.errorList = new Ext.util.MixedCollection();
-        Ext.each(depsList, function(item) {
+        /*Ext.each(depsList, function(item) {
             if (Ext.isObject(vmd.Error.error) && vmd.Error.error[item]) {
                 var errCls = vmd.Error.error[item];
                 if (errCls && Ext.isArray(errCls.list)) {
@@ -2413,6 +2545,10 @@ Ext.define('vmd.Error', {
                     })
                 }
             }
+        })*/
+		
+		 Ext.each(this.list, function (errInfo) {
+            me.errorList.add(errInfo.code, errInfo);
         })
 
 
@@ -2507,5 +2643,97 @@ Ext.define('vmd.Error', {
 //vmd插件动态加载
 Ext.define('vmd.plugins.Comps', {
     singleton: true,
-    requires:['vmd.base.UxPropertySettings']
+    requires:['vmd.base.UxPropertySettings'],
+	uses: ['vmd.proxy.Log']
+})
+
+//兼容web图形框架
+if(typeof Vmd=='undefined'){
+	Vmd={};
+	Ext.apply(Vmd,{
+		define:Ext.define,
+ 		Loader:Ext.Loader
+	})
+} 
+//动态扩展vmd.core的方法
+vmd.core.addStatics({
+	/**
+	*@desc 运行模式下加载vmd组件
+	*@param {array} list 组件列表['component1','component2']
+	*/
+	requireCmpDeps:function(list){
+		var chartflag=Ext.Array.findBy(list,function(name){
+			return /vmd\.d\.webchart\.\w+/.test(name)
+		})
+		/*if(chartflag) {
+			Ext.require('hwcharts',function(){
+				Ext.require(list)
+			})
+	    }*/
+		//Ext.require(list)
+		this.classLoader(list)
+	},
+	/**
+	*@desc 组件依赖动态加载
+	*@param {array} list 组件列表['component1','component2']
+	*@param {function} callback 回调函数
+	*/
+	classLoader:function(list,callback){
+		if(!list) return;
+		var i = 0;
+		var count = list.length
+		var fn = function(_list) {
+			if (!_list) {
+				callback&&callback()
+				return;
+			}
+			Ext.require(_list, function() {
+				fn(list[++i])
+			})
+		}
+		fn(list[i]);
+	},
+	/**
+	*@desc 复合组件动态依赖加载css、js 
+	*@param {array} list 组件列表['component1','component2'],复合组件格式："vmd.ux.IsoArea$1.0$IsoArea"
+	*@param {function} callback 回调函数
+	*/
+	uxLoader:function(list,callback){
+		
+		if(!list) return;
+		var js=[],css=[];
+		Ext.require(list, function() { 
+		   Ext.each(list,function(cmpName){						
+				try{		
+					if(cmpName.indexOf('$')!=-1) {
+						cmpName=cmpName.split('$')[0];
+					}	
+					css=css.concat(Ext.decode(eval(cmpName+'.prototype.uxrequirecss')));
+					js=js.concat(Ext.decode(eval(cmpName+'.prototype.uxrequirejs')));	
+					
+				}catch(ex){console.log('动态加载复合组件失败'+ex)}
+			})
+			//组件列表去重
+			 css=Ext.Array.unique(css);
+			 js=Ext.Array.unique(js);
+			 css=Ext.Array.map(css,function(value){
+			     if(value&&value.indexOf('http://')==-1) return bootPATH+value;
+				 return value
+			 })
+			 js=Ext.Array.map(js,function(value){
+				 if(value&&value.indexOf('http://')==-1) return bootPATH+value;
+				 return value
+			 })
+			 
+			 css.length>0&&LazyLoad.css(css);
+			 if(js.length>0){
+				 LazyLoad.js(js,function(){
+					 callback&&callback();
+				 })
+			 }else{
+				 callback&&callback();
+			 }
+		  
+		})
+	}
 })

@@ -844,9 +844,13 @@ Ext.define("vmd.comp.RichTextEditor", {
 		var wdkHost = (vmd.projectInfo && vmd.projectInfo.docIp) || "";
 		var isWdk = this.isWdk;
 		var hwFao = !isWdk?(new HwFao(dataHost, "vmd")):(new HwFao(wdkHost, "wdk"));//地址:端口和存储标识(服务管理员分配)
-		var filepath = (vmd.previewMode ? "modules/" : "release/") + vmd.projectInfo.projectId + "/editorfile"
-		var uploadUrl = hwFao.getUploadUrl(filepath);
-	
+		var filepath ="";
+		if(vmd.projectInfo&&vmd.projectInfo.projectId)
+			filepath = (vmd.previewMode ? "modules/" : "release/") + vmd.projectInfo.projectId + "/editorfile"
+		else
+			filepath = (vmd.previewMode ? "modules/" : "release/")  + "editorfile"
+		
+		var uploadUrl = hwFao.getUploadUrl(filepath);	
 		var URL = vmdSettings.bootPATH + "/lib/ueditor/";
 		var editor = UE.getEditor(this.el.id, {
 			UEDITOR_HOME_URL: URL,
@@ -1794,6 +1798,7 @@ Ext.define("vmd.comp.Grid", {
 
 //#endregion vmdGrid
 
+
 //#region SimpleGrid
 Ext.define("vmd.comp.SimpleGrid", {
 	extend: "Ext.BoxComponent",
@@ -2104,8 +2109,8 @@ Ext.define("vmd.comp.SimpleGrid", {
 			if(recIndex >= 0)
 				return _flastore.getAt(recIndex).get(values.displayField)
 			else
-				return ""
-		} else return ""
+				return val||""
+		} else return val||""
 	},
 	onEventsReg: function(My, Mygrid) {
 		Mygrid.attachEvent("onRowSelect", function(id) {
@@ -2114,7 +2119,7 @@ Ext.define("vmd.comp.SimpleGrid", {
 
 	},
 	onResize: function(w, h) {
-		debugger
+		
 		this.callParent(arguments);
 		var me = this;
 		me.grid.setSizes();
@@ -2159,13 +2164,9 @@ Ext.define("vmd.comp.SimpleGrid", {
 	},
 	onUpdate: function(ds, record) {
 		var vmdGrid = this;
-		var item = vmdGrid.grid.dhtmlxDatastore.item(dataId);
+		var item = vmdGrid.grid.dhtmlxDatastore.item(record.id);
 		if(!item) return;
-		for(var key in record.data) {
-			if(record.data.hasOwnProperty(key) && key != "id") {
-				vmdGrid.grid.dhtmlxDatastore.updateValue(dataId, item)
-			}
-		}
+				vmdGrid.grid.update(record.id, record.data)
 	},
 	onAdd: function(ds, record) {
 		var vmdGrid = this;
@@ -2938,18 +2939,24 @@ Ext.define("vmd.store.jsonStore", {
 		else record = vmd.data.Record.create(Ext.clone(data), id);
 		this.add(record);
 	},
+	removeAll(a,b,c)
+	{
+		var me = this;
+		 Array.prototype.push.apply(this.deleteRecords, me.getJson())
+		return this.callParent(arguments);
+	},
 	updateData: function(id, data) {		
 		var urecord = this.getById(id);		
 		if(urecord) {
 			for(var key in data) {
 				if(data[key]!=urecord.data[key]&&key!='id')
 				{
-					urecord.editing=true
+					//urecord.editing=true
 					urecord.set(key, data[key]);
 					if(this.modified.indexOf(urecord) == -1){
 						this.modified.push(urecord);
 					}
-					urecord.editing=false
+					//urecord.editing=false
 				}
 			}
 		}
@@ -3602,7 +3609,7 @@ Ext.define('vmd.comp.viewport', {
 })
 
 Ext.define("vmd.service.HwMSC", {
-	xtype: "vmd.service.HwMSC",
+	xtype: "vmd.hwMSC",
 	constructor: function(host, appid, appkey) {
 		var myHwMSC = this;
 		var pMsgIp=(vmd&&vmd.projectInfo&&vmd.projectInfo.msgIp)?vmd.projectInfo.msgIp:""
@@ -3618,7 +3625,7 @@ Ext.define("vmd.service.HwMSC", {
 
 //待办中心
 Ext.define("vmd.service.HwTDC", {
-	xtype: "vmd.service.HwTDC",
+	xtype: "vmd.hwTDC",
 	constructor: function(host, appid, appkey) {
 		var myHwTDC = this;
 		var ptdcIp = (vmd && vmd.projectInfo && vmd.projectInfo.todoIp) ? vmd.projectInfo.todoIp : ""
@@ -3634,7 +3641,7 @@ Ext.define("vmd.service.HwTDC", {
 
 //日志中心
 Ext.define("vmd.service.HwLGC", {
-	xtype: "vmd.service.HwLGC",
+	xtype: "vmd.hwLGC",
 	constructor: function(host, appid, appkey) {
 		var myHwLGC = this;
 		var ptdcIp = (vmd && vmd.projectInfo && vmd.projectInfo.logIp) ? vmd.projectInfo.logIp : ""
@@ -3649,7 +3656,7 @@ Ext.define("vmd.service.HwLGC", {
 
 //文档中心
 Ext.define("vmd.service.HwDMC", {
-	xtype: "vmd.service.HwDMC",
+	xtype: "vmd.hwDMC",
 	constructor: function(host, appid, appkey) {
 		var myHwDmC = this;
 		var ptdcIp = (vmd && vmd.projectInfo && vmd.projectInfo.docIp) ? vmd.projectInfo.docIp : ""
@@ -3662,7 +3669,7 @@ Ext.define("vmd.service.HwDMC", {
 
 //应用中心
 Ext.define("vmd.service.HwAMC", {
-	xtype: "vmd.service.HwAMC",
+	xtype: "vmd.hwAMC",
 	constructor: function(host, appid, appkey) {
 		var myHwAMC = this;
 		var ptdcIp = (vmd && vmd.projectInfo && vmd.projectInfo.amcIp) ? vmd.projectInfo.amcIp : ""
@@ -3675,7 +3682,7 @@ Ext.define("vmd.service.HwAMC", {
 
 //用户中心
 Ext.define("vmd.service.HwUMC", {
-	xtype: "vmd.service.HwUMC",
+	xtype: "vmd.hwUMC",
 	constructor: function(host, appid, appkey) {
 		var myHwUMC = this;
 		var ptdcIp = (vmd && vmd.projectInfo && vmd.projectInfo.umcIp) ? vmd.projectInfo.umcIp : ""
@@ -3688,7 +3695,7 @@ Ext.define("vmd.service.HwUMC", {
 
 //权限中心
 Ext.define("vmd.service.HwEMC", {
-	xtype: "vmd.service.HwEMC",
+	xtype: "vmd.hwEMC",
 	constructor: function(host, appid, appkey) {
 		var myHwEMC = this;
 		var ptdcIp = (vmd && vmd.projectInfo && vmd.projectInfo.emcIp) ? vmd.projectInfo.emcIp : ""
@@ -3700,7 +3707,7 @@ Ext.define("vmd.service.HwEMC", {
 })
 
 Ext.define("vmd.workFlow", {
-	xtype: "vmd.workFlow",
+	xtype: "vmd.workflow",
 	alternateClassName: ['vmd.service.HwWorkFlow'],
 	/*
 	 **工作流构造函数 
@@ -4070,6 +4077,7 @@ Ext.define('vmd.comp.radiostoregroup', {
 
 	},
 	setValue: function(val) {
+		if(!this.ct) this.value=val;
 		this.setValueForItem(val)
 		// this.superclass.setValue.call(this,'value',val);
 	}

@@ -2,23 +2,28 @@ xds["vmd.ux.TestEditor"] = Ext.extend(xds.Component, {
     cid: "vmd.ux.TestEditor",
     category: "vmd复合组件",
     text: "TestEditor",//中文
-    naming: "TestEditor",
+    naming: "hwTestEditor",
     //dtype 设计时组件
     dtype: "vmd.ux.TestEditor",
     //xtype 运行时组件
     xtype: "vmd.ux.TestEditor",
     xcls: "vmd.ux.TestEditor",
     //为了拖拽能自动生成递增id
-    defaultName: "TestEditor",
+    defaultName: "hwTestEditor",
     iconCls: "icon-cmp",
     isContainer: false,
-   
+     //扩展组件依赖资源加载
+    requireCss: [],
+    requireJs: [],
+	requireCmpType:'',
     //默认属性设置
     defaultConfig: {"layout":"anchor"},
     isResizable: function (a, b) {
 
         return true;
     },
+	//属性面板
+    
     //标准属性设置
     configs: [
          {

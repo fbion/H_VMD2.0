@@ -42,7 +42,7 @@ Ext.define("vmd.ux.NestedTableType", {
             var page = this;
 
             function setInfo(info, sheet) {
-                debugger
+                
                 if (info) {
                     qtb_template.setValue(info.qtb_template.value)
                     qtb_tableName.setValue(info.qtb_tableName.value)

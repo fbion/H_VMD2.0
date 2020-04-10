@@ -68,7 +68,7 @@ Ext.define("vmd.ux.DropDownGridProperty", {
         }
 
         function MyTabs_tabchange(sender, tab) {
-            debugger
+            
             if (page.info) {
                 hwDropDownGridType.setInfo(page.info.cell_ddg, page.cell)
                 hwData_xlk.setInfo(page.info.cell_ddg, 'ddg')

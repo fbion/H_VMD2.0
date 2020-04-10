@@ -653,7 +653,7 @@
 			style: {
 				heights: [],
 				widths: [],
-				borders:[]
+				// borders:[]
 			},
 			data: []
 		}
@@ -666,22 +666,6 @@
 		for (var i = 0; i < rows.length; i++) {
 			var rowNum = [];
 			exportData.style.heights.push(30);
-			// exportData.style.borders.push({borderTop: "1px  RGB(233,225,225) solid",
-			// 																borderRight: "1px  RGB(233,225,225) solid",
-			// 																boderBottom: "1px  RGB(233,225,225) solid",
-			// 																borderLeft: "1px   RGB(233,225,225) solid",
-			// 																borderTopWidth: "1px ",
-			// 																borderRightWidth: "1px ",
-			// 																borderBottomWidth: "1px ",
-			// 																borderLeftWidth: "1px ",
-			// 																borderTopColor: "RGB(233,225,225)",
-			// 																borderRightColor: "RGB(233,225,225)",
-			// 																borderBottomColor: "RGB(233,225,225)",
-			// 																borderLeftColor: " RGB(233,225,225)",
-			// 																borderTopStyle: "solid",
-			// 																borderRightStyle: "solid",
-			// 																borderBottomStyle: "solid",
-			// 																borderLeftStyle: "solid",});
 			var rowDatas = rows[i].data;
 			if (rowDatas) {
 				for (var j = 0; j < rowDatas.length; j++) {
@@ -690,8 +674,7 @@
 					}
 					rowNum.push({
 						sid: i + '_' + j,
-						data: rows[i].data[j],
-						// border: i
+						data: rows[i].data[j]
 					})
 				}
 			}

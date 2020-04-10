@@ -165,7 +165,7 @@ Ext.define('ide.ext.DataInput', {
 						var date = {};
 						date.type = "Date";
 						date.allowuserdefine = sets.settings.customFormat;
-						date.format = sets.settings.format
+						date.format = date.allowuserdefine?sets.settings.customFormats:(sets.settings.format||"")
 						date.isallownull = sets.settings.allowEmpty
 						date.emptydisplay = sets.settings.emptydisplay
 						date.isenableedit = sets.settings.allowEdit
@@ -255,14 +255,14 @@ Ext.define('ide.ext.DataInput', {
 									selected[n].colname = selected[n].name;
 									selected[n].showtext = selected[n].cname;
 
-									if (selected[n].cellid == info.settings.fields[t].dictionary.name) {
+									if (selected[n].cellid == info.settings.fields[t].dictionary.name||selected[n].cellColname== info.settings.fields[t].dictionary.name) {
 
 										if (colset) {
-											var row = Math.floor((t+1 - hideNum) / colset) + 1;
-											var col = (t+1 - hideNum) % colset;
+											var row = Math.floor((t - hideNum) / colset) + 1;
+											var col = (t - hideNum) % colset;
 											selected[n].cellid = (numToEng(col * colset + 1) + row).toString()
 										} else {
-											selected[n].cellid = (numToEng(t+1 - hideNum) + 2).toString()
+											selected[n].cellid = (numToEng(t ) + 2).toString()
 										}
 
 									}
@@ -1061,7 +1061,7 @@ Ext.define('ide.ext.DataInputUtils', {
 		})
 		settingWin.show(); //窗口显示
 		settingWin.setBack = function(controller, flag) {
-			debugger
+			
 			flag ? page.controller = controller : page.controller.setValue(JSON.parse(backpack));
 			page.fireEvent('settingChangeEvents')
 			settingWin.close()
@@ -1136,7 +1136,7 @@ Ext.define('ide.ext.DataInputUtils', {
 	},
 	_copyToAnother: function() {
 		//应用到自由格式
-		debugger
+		
 		var page = this.page
 		if (this.type == 'grid') {
 			var temp = page.rootScope.controller.comp.grid.settings.fields
@@ -1455,7 +1455,7 @@ Ext.define('vmd.design.Datainput', {
 				saveInfo.formJson = tf;
 				bucket[i].component.setConfig('inputConfig', JSON.stringify(saveInfo))
 
-				debugger
+				
 				utils.saveEvents(bucket[i].component, saveInfo)
 			}
 		}

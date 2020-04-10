@@ -67,7 +67,7 @@ Ext.define("vmd.ux.Testsx", {
             // title.name=value
             // setvalue（value）
             function Testsx_beforerender(sender) {
-                debugger
+                
                 var list = [];
                 page.cascade(function(item) {
                     if (page.id == item.id) return true;

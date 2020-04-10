@@ -203,6 +203,7 @@
             //var scaleMin = paraModel.get('scaleMin');
             var unitGeo = paraModel.get('unitGeo');
             var unitLogic = paraModel.get('unitLogic');
+            var z = paraModel.get('z');
 
             if (this.isCalc) {
                 //var unitLogicMin = 30;
@@ -244,6 +245,7 @@
                     width: scaleWidth,
                     height: scaleHeight
                 },
+				z: z,
                 style: style,
                 silent: true
             });
@@ -277,6 +279,7 @@
                         textOffset: [-unitWidthLogic / 2, 0],
                         lineWidth: 1
                     },
+					z: z,
                     silent: true
                 });
                 graphic.subPixelOptimizeRect(rtTmp);
@@ -302,6 +305,7 @@
                         textOffset: [-unitWidthLogic / 2, 0],
                         lineWidth: 1
                     },
+					z: z,
                     silent: true
                 });
                 graphic.subPixelOptimizeRect(rtScale);
@@ -328,6 +332,7 @@
                     textOffset: [0, 0],
                     lineWidth: 0
                 },
+				z: z,
                 silent: true
             });
             graphic.subPixelOptimizeRect(rtTmp);

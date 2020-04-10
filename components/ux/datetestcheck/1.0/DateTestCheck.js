@@ -5,7 +5,7 @@ Ext.define('vmd.ux.dateTestCheck.Controller', {
 })
 Ext.define("vmd.ux.DateTestCheck", {
     extend: "vmd.base.Ux",
-    requires: vmd.getCmpDeps(["vmd.ux.DateTest1$1.0$DateTest1"]),
+    requires: vmd.getCmpDeps([]),
     version: "1.0",
     xtype: "vmd.ux.DateTestCheck",
     layoutConfig: {
@@ -50,17 +50,6 @@ Ext.define("vmd.ux.DateTestCheck", {
             }, ex, 100);
         }
         this.items = [{
-                xtype: "vmd.ux.DateTest1",
-                id: "hwDateTest1",
-                layoutConfig: {
-                    align: "middle",
-                    pack: "center"
-                },
-                ksrqlabel: "起始日期:",
-                jsrqlabel: "结束日期:",
-                layout: "hbox"
-            },
-            {
                 xtype: "vmd.button",
                 id: "button",
                 text: this.text,

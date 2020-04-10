@@ -35,7 +35,7 @@ Vmd.define('hwchart.chart.wellSymbol.WellSymbolView', {
         type: 'wellSymbol',
 
         render: function (seriesModel, ecModel, api, payload) {
-            if (!this.__hasFetchData) {
+            if (!this.__hasFetchData || seriesModel.option.fetchData) {
                 api.dispatchAction({
                     type: 'fetchData',
                     id: seriesModel.id,
@@ -74,10 +74,9 @@ Vmd.define('hwchart.chart.wellSymbol.WellSymbolView', {
 
         incrementalPrepareRender: function (seriesModel, ecModel, api) {
             var data = seriesModel.getData();
-
             WellManager.setData(data);
 
-            var symbolDraw = this._updateSymbolDraw(data, seriesModel, ecModel, api);
+            var symbolDraw  = this._updateSymbolDraw(data, seriesModel, ecModel, api);
 
             symbolDraw.incrementalPrepareUpdate(data);
             this._finished = false;

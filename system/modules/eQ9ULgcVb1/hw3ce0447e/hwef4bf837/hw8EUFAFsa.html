@@ -6,32 +6,26 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>资源管理主页面</title>
     <!--基本样式-->
-    <link href="/css/common.css?ver=vmd2.0.5.191228" rel="stylesheet" />
+    <link href="/css/common.css?ver=vmd2.0.5.200306" rel="stylesheet" />
     <!--加载dhx组件-->
-    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=vmd2.0.5.191228" rel="stylesheet" />
-    <link href="/design/css/icons.css?ver=vmd2.0.5.191228" rel="stylesheet" />
-    <link href="/lib/dhtmlx/skins/material/dhtmlx.css?ver=vmd2.0.5.191228" rel="stylesheet" />
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=vmd2.0.5.200306" rel="stylesheet" />
+    <link href="/lib/dhtmlx/skins/material/dhtmlx.css?ver=vmd2.0.5.200306" rel="stylesheet" />
     <!--样式快捷索引表-->
-    <link href="/css/shortcut.css?ver=vmd2.0.5.191228" rel="stylesheet" />
-    <script src="/lib/labjs/LAB.min.js?ver=vmd2.0.5.191228"></script>
-    <script src="/config.js?ver=vmd2.0.5.191228"></script>
-    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=vmd2.0.5.191228"></script>
-    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=vmd2.0.5.191228"></script>
-    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=vmd2.0.5.191228"></script>
-    <script src="/lib/ext-3.4/ext-all-debug.js?ver=vmd2.0.5.191228"></script>
-    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=vmd2.0.5.191228"></script>
-    <script src="/js/util.js?ver=vmd2.0.5.191228"></script>
-    <script src="/lib/dhtmlx/codebase/dhtmlx.js?ver=vmd2.0.5.191228"></script>
-    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=vmd2.0.5.191228"></script>
-    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=vmd2.0.5.191228"></script>
-    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=vmd2.0.5.191228"></script>
-    <script src="/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=vmd2.0.5.191228"></script>
-    <script src="/js/hwdas.js?ver=vmd2.0.5.191228"></script>
-    <script src="/js/vmdcore.js?ver=vmd2.0.5.191228"></script>
-    <script src="/js/vmdcomps.js?ver=vmd2.0.5.191228"></script>
-    <script src="/js/publicMethods.js?ver=vmd2.0.5.191228"></script>
-    <script src="/js/vmdreport.js?ver=vmd2.0.5.191228"></script>
-    <script src="/system/modules/eQ9ULgcVb1/project.config.js"></script>
+    <link href="/css/shortcut.css?ver=vmd2.0.5.200306" rel="stylesheet" />
+    <script src="/lib/labjs/LAB.min.js?ver=vmd2.0.5.200306"></script>
+    <script src="/config.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=vmd2.0.5.200306"></script>
+    <script src="/js/util.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/dhtmlx/codebase/dhtmlx.js?ver=vmd2.0.5.200306"></script>
+    <script src="/js/hwdas.js?ver=vmd2.0.5.200306"></script>
+    <script src="/js/vmdcore.js?ver=vmd2.0.5.200306"></script>
+    <script src="/js/vmdcomps.js?ver=vmd2.0.5.200306"></script>
+    <script src="/js/publicMethods.js?ver=vmd2.0.5.200306"></script>
+    <script src="/system/modules/eQ9ULgcVb1/hw3ce0447e/hwef4bf837/hw8EUFAFsa.vmdproject.config.js"></script>
     <style> </style>
     <style type="text/css" id="vmdcss">
         .icon-cloud-download {
@@ -256,7 +250,8 @@
             "projectid": "eQ9ULgcVb1"
         }
         vmd.resourceSettings = {
-            "资源中心&&资源中心服务器": "http://www.hanweikeji.com:10050/resource"
+            "test&&资源中心服务器": "http://192.168.1.181:9050/resource",
+            "test&&测试文件服务": "http://192.168.1.82:31884/resource"
         }
         vmd.projectInfo = {
             "projectId": "eQ9ULgcVb1",
@@ -272,7 +267,7 @@
         }
         Ext.define("vmd.module.MyViewport", {
             extend: "vmd.comp.viewport",
-            requires: vmd.getCmpDeps(["vmd.ux.Uploader$1.0$Uploader", "vmd.ux.ZyglList$1.0$ZyglList", "vmd.ux.ZyflSearch$1.0$ZyflSearch", "vmd.ux.Navigation$1.0$Navigation", "vmd.ux.ZyglTree$1.0$ZyglTree"]),
+            requires: vmd.getCmpDeps(["vmd.ux.ZyglTree$1.0$ZyglTree", "vmd.ux.Navigation$1.0$Navigation", "vmd.ux.ZyflSearch$1.0$ZyflSearch", "vmd.ux.ZyglList$1.0$ZyglList", "vmd.ux.Uploader$1.0$Uploader"]),
             xtype: "vmd.module.MyViewport",
             layout: "border",
             afterrender: "MyViewport_afterrender",
@@ -543,6 +538,12 @@
                                     //文件上传成功 需要刷新下列表
                                     liststore.toRefresh();
                                     Tips.tips("上传成功", "success");
+                                    var s = new vmd.proxy.Log();
+                                    s.save("上传文件", "ziyuan", Ext.util.Cookies.get('userName') + "在" + Ext.Date.dateFormat(new Date(), 'Y-m-d H:i:s') + "上传了" + dep + "的文件", "资源", function() {
+                                        // alert("保存成功了！")
+                                    }, function() {
+                                        console.log("日志报存失败了！");
+                                    })
                                 }, function(e) {
                                     Tips.tips("上传失败", "error");
                                 })
@@ -595,6 +596,12 @@
                                     function() {
                                         liststore.toRefresh(); //成功后刷新分类下的列表数据
                                         Tips.tips("新建文件夹成功", "success");
+                                        var s = new vmd.proxy.Log();
+                                        s.save("新建文件夹", "ziyuan", Ext.util.Cookies.get('userName') + "在" + Ext.Date.dateFormat(new Date(), 'Y-m-d H:i:s') + "新建了" + values.name + "文件夹", "资源", function() {
+                                            // alert("保存成功了！")
+                                        }, function() {
+                                            console.log("日志报存失败了！");
+                                        })
                                         fun();
                                     },
                                     function() {
@@ -627,6 +634,12 @@
                                         openAcetoEdit(newpath.trim());
                                         liststore.toRefresh();
                                         Tips.tips("新建文件成功", "success");
+                                        var s = new vmd.proxy.Log();
+                                        s.save("新建文件", "ziyuan", Ext.util.Cookies.get('userName') + "在" + Ext.Date.dateFormat(new Date(), 'Y-m-d H:i:s') + "新建了" + newpath + "文件", "资源", function() {
+                                            // alert("保存成功了！")
+                                        }, function() {
+                                            console.log("日志报存失败了！");
+                                        })
                                         fun();
                                     }, function(err) {
                                         Tips.tips("新建文件失败", 'error')
@@ -744,6 +757,7 @@
                     uploader.upload(selServerUrl.getValue(), filepath, win, function(fileList) {
                         //上传成功回调
                         var saveDate = [];
+                        var logfile = [];
                         //获取上传返回的路径
                         for (var i = 0; i < fileList.length; i++) {
                             var filedate = {
@@ -756,6 +770,7 @@
                                 CATEGORY_ID: selnodeID.getValue(),
                                 SERVER_ID: selServerID.getValue()
                             }
+                            logfile.push(fileList[i].title.trim())
                             saveDate.push(filedate);
                         }
                         //将上传的文件通过数据服务进行保存
@@ -763,6 +778,12 @@
                             //文件上传成功 需要刷新下列表
                             liststore.toRefresh();
                             Tips.tips("上传成功", "success");
+                            var s = new vmd.proxy.Log();
+                            s.save("上传文件", "ziyuan", Ext.util.Cookies.get('userName') + "在" + Ext.Date.dateFormat(new Date(), 'Y-m-d H:i:s') + "上传到" + filepath + "下" + logfile.join(',') + "文件", "资源", function() {
+                                // alert("保存成功了！")
+                            }, function() {
+                                console.log("日志报存失败了！");
+                            })
                         }, function(e) {
                             Tips.tips("上传失败", "error");
                         })
@@ -789,6 +810,12 @@
                                             ZyglTree.removeCaretory(selnodeID.getValue(), function() {
                                                 hwDas.remove(hwdasFileServer, selnodePath, function() {
                                                     Tips.tips("删除分类成功", "success");
+                                                    var s = new vmd.proxy.Log();
+                                                    s.save("删除文件", "ziyuan", Ext.util.Cookies.get('userName') + "在" + Ext.Date.dateFormat(new Date(), 'Y-m-d H:i:s') + "删除了" + selnodePath + "文件", "资源", function() {
+                                                        // alert("保存成功了！")
+                                                    }, function() {
+                                                        console.log("日志报存失败了！");
+                                                    })
                                                 }, function(msg) {
                                                     Tips.tips("删除分类失败", "error");
                                                 })
@@ -816,6 +843,12 @@
                                                     ZyglList.removeSelItem();
                                                     hwDas.remove(hwdasFileServer, selItemPath, function() {
                                                         Tips.tips("删除分类成功", "success");
+                                                        var s = new vmd.proxy.Log();
+                                                        s.save("删除文件", "ziyuan", Ext.util.Cookies.get('userName') + "在" + Ext.Date.dateFormat(new Date(), 'Y-m-d H:i:s') + "删除了" + selItemPath + "文件", "资源", function() {
+                                                            // alert("保存成功了！")
+                                                        }, function() {
+                                                            console.log("日志报存失败了！");
+                                                        })
                                                     }, function(msg) {
                                                         Tips.tips("删除分类失败", "error");
                                                     })
@@ -830,6 +863,12 @@
                                                 hwDas.remove(hwdasFileServer, selItemPath, function() {
                                                     ZyglList.removeSelItem();
                                                     Tips.tips("删除文件成功", "success");
+                                                    var s = new vmd.proxy.Log();
+                                                    s.save("删除文件", "ziyuan", Ext.util.Cookies.get('userName') + "在" + Ext.Date.dateFormat(new Date(), 'Y-m-d H:i:s') + "删除了" + selItemPath + "文件", "资源", function() {
+                                                        // alert("保存成功了！")
+                                                    }, function() {
+                                                        console.log("日志报存失败了！");
+                                                    })
                                                 }, function(msg) {
                                                     Tips.tips("删除文件失败", "error");
                                                 })
@@ -939,6 +978,12 @@
                                             }
                                         }
                                         moveFile(path, vpath, "重命名");
+                                        var s = new vmd.proxy.Log();
+                                        s.save("重命名", "ziyuan", Ext.util.Cookies.get('userName') + "在" + Ext.Date.dateFormat(new Date(), 'Y-m-d H:i:s') + "将文件:" + path + "重命名为：" + vpath, "资源", function() {
+                                            // alert("保存成功了！")
+                                        }, function() {
+                                            console.log("日志报存失败了！");
+                                        })
                                         //Tips.tips("重命名成功", "success");
                                     }, function(msg) {
                                         debugger
@@ -1476,6 +1521,10 @@
                 }
 
                 function MyViewport_afterrender(sender) {}
+
+                function button2_click(sender, e) {
+                    window.open(vmd.virtualPath + '/system/modules/eQ9ULgcVb1/hwsit8zolX/hw0585ab59.html', "资源管理日志查询");
+                }
                 this.MyViewport_afterrender = MyViewport_afterrender;
                 selnodeID = new vmd.Variable({});
                 selServerID = new vmd.Variable({});
@@ -1606,6 +1655,34 @@
                                 style: "background-color:skyblue;",
                                 bodyStyle: "background-color:#1e7fff;",
                                 items: [{
+                                        xtype: "vmd.div",
+                                        id: "hwDiv",
+                                        layoutConfig: {
+                                            align: "middle",
+                                            pack: "center"
+                                        },
+                                        autoEl: "div",
+                                        border: false,
+                                        backgroundRepeat: "no-repeat",
+                                        backgroundPosition: "top left",
+                                        width: 80,
+                                        height: 50,
+                                        layout: "hbox",
+                                        overCls: "div-hove",
+                                        items: [{
+                                            xtype: "vmd.button",
+                                            id: "button2",
+                                            text: "日志查询",
+                                            type: "text",
+                                            size: "small",
+                                            style: "font-size: 12px;    color: #ffffff;    margin-right: 10px;    line-height: 30px;",
+                                            click: "button2_click",
+                                            listeners: {
+                                                click: button2_click
+                                            }
+                                        }]
+                                    },
+                                    {
                                         xtype: "vmd.div",
                                         id: "div5",
                                         autoEl: "div",

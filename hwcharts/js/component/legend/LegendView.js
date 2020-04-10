@@ -308,15 +308,18 @@
             var tooltipModel = itemModel.getModel('tooltip');
             var legendGlobalTooltipModel = tooltipModel.parentModel; // Use user given icon first
 
-            // 20191231:临时图例实现
+           // 20191231:临时图例实现
             if (name == "尖灭线") {
-                itemIcon = 'image://http://192.168.1.181:9010/images/legend/stjmx1.jpg';
+                itemIcon = 'image://' + hwchartsPATH + 'images/legend/stjmx1.jpg';
+                // itemIcon = 'image://http://192.168.1.181:9010/images/legend/stjmx1.jpg'; // hwchartsPATH
             }
             else if (name == "评价滚动储量区") {
-                itemIcon = 'image://http://192.168.1.181:9010/images/legend/pjgdclq.jpg';
+                itemIcon = 'image://' + hwchartsPATH + 'images/legend/pjgdclq.jpg';
+                // itemIcon = 'image://http://192.168.1.181:9010/images/legend/pjgdclq.jpg';
             }
             else if (name == "探明开发储量区") {
-                itemIcon = 'image://http://192.168.1.181:9010/images/legend/tmkfclq.jpg';
+                itemIcon = 'image://' + hwchartsPATH + 'images/legend/tmkfclq.jpg';
+                // itemIcon = 'image://http://192.168.1.181:9010/images/legend/tmkfclq.jpg';
             }
 
             legendSymbolType = itemIcon || legendSymbolType;
@@ -378,10 +381,12 @@
             var formatter = legendModel.get('formatter');
 
             var content = name;
-            if (nameText)
-            {
-                content = nameText;
-            }
+			if (seriesModel.subType != 'miningIndex') {				
+				if (nameText)
+				{
+					content = nameText;
+				}
+			}
 
             if (typeof formatter === 'string' && formatter) {
                 content = formatter.replace('{name}', nameText != null ? nameText : '');
@@ -593,9 +598,16 @@
         // 20191220：处理开采指标的各指标项的显示/隐藏控制
         var indexSeries = seriesModel.option;
         for (var i = 0; i < indexSeries.data.length; i++) {
+			
+			// 处理开采指标数据中没有isShow属性的情况
+			if(indexSeries.data[i].isShow.length < indexSeries.data[i].name.length)
+			{					
+				for (var k = indexSeries.data[i].isShow.length; k < indexSeries.data[i].name.length; k++) {
+					indexSeries.data[i].isShow.push(true);
+				}
+			}
 
             for (var j = 0; j < indexSeries.data[i].name.length; j++) {
-
                 if (indexSeries.data[i].name[j] == name) {
                     indexSeries.data[i].isShow[j] = !(indexSeries.data[i].isShow[j]);
                     break;

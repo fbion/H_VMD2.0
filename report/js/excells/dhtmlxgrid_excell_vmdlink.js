@@ -63,7 +63,7 @@ function eXcell_vmdlink(cell) {
 			}
 		}
 
-		this.setCValue("<a  href='javascript:void(0)'" + valsAr[1] + " onclick='(_isIE?event:arguments[0]).cancelBubble = true;this.parentNode.parentNode.grid.hyperlinkClick(this)'>" + valsAr[0] + "</a>", valsAr[0]);
+		this.setCValue("<div style ='color:blue;cursor:pointer;text-decoration:underline;' " + valsAr[1] + " onclick='(_isIE?event:arguments[0]).cancelBubble = true;this.parentNode.parentNode.grid.hyperlinkClick(this)'>" + valsAr[0] + "</div>", valsAr[0]);
 	}
 }
 

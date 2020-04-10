@@ -6,36 +6,32 @@
 
     <title>复合组件管理</title>
 	<!--基本样式-->
-    <link href="{vmdvirtualPath}/css/common.css?ver=vmd2.0.6.200119" rel="stylesheet" />
+    <link href="{vmdvirtualPath}/css/common.css?ver=vmd2.0.5.200306" rel="stylesheet" />
     <!--加载dhx组件-->
-    <link href="{vmdvirtualPath}/lib/ext-3.4/resources/css/ext-all.css?ver=vmd2.0.6.200119" rel="stylesheet" />
+    <link href="{vmdvirtualPath}/lib/ext-3.4/resources/css/ext-all.css?ver=vmd2.0.5.200306" rel="stylesheet" />
    
-    <link href="{vmdvirtualPath}/design/css/icons.css?ver=vmd2.0.6.200119" rel="stylesheet" />
 
-	<link href="{vmdvirtualPath}/lib/dhtmlx/skins/material/dhtmlx.css?ver=vmd2.0.6.200119" rel="stylesheet" />
+	<link href="{vmdvirtualPath}/lib/dhtmlx/skins/material/dhtmlx.css?ver=vmd2.0.5.200306" rel="stylesheet" />
 	  <!--样式快捷索引表-->
-    <link href="{vmdvirtualPath}/css/shortcut.css?ver=vmd2.0.6.200119" rel="stylesheet" />
+    <link href="{vmdvirtualPath}/css/shortcut.css?ver=vmd2.0.5.200306" rel="stylesheet" />
     
 	{vmdprojectcssfiles}
     
-    <script src="{vmdvirtualPath}/lib/labjs/LAB.min.js?ver=vmd2.0.6.200119"></script>
-    <script src="{vmdvirtualPath}/config.js?ver=vmd2.0.6.200119"></script>
-    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=vmd2.0.6.200119"></script>
-    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=vmd2.0.6.200119"></script>
-    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=vmd2.0.6.200119"></script>
-    <script src="{vmdvirtualPath}/lib/ext-3.4/ext-all-debug.js?ver=vmd2.0.6.200119"></script>
-    <script src="{vmdvirtualPath}/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=vmd2.0.6.200119"></script>
-    <script src="{vmdvirtualPath}/js/util.js?ver=vmd2.0.6.200119"></script>
-    <script src="{vmdvirtualPath}/lib/dhtmlx/codebase/dhtmlx.js?ver=vmd2.0.6.200119"></script>
-	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=vmd2.0.6.200119"></script>
-	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=vmd2.0.6.200119"></script>
-    <script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=vmd2.0.6.200119"></script>
-	<script src="{vmdvirtualPath}/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=vmd2.0.6.200119"></script>
-    <script src="{vmdvirtualPath}/js/hwdas.js?ver=vmd2.0.6.200119"></script>
-    <script src="{vmdvirtualPath}/js/vmdcore.js?ver=vmd2.0.6.200119"></script>
-    <script src="{vmdvirtualPath}/js/vmdcomps.js?ver=vmd2.0.6.200119"></script>
-    <script src="{vmdvirtualPath}/js/publicMethods.js?ver=vmd2.0.6.200119"></script>
-    <script src="{vmdvirtualPath}/js/vmdreport.js?ver=vmd2.0.6.200119"></script>
+    <script src="{vmdvirtualPath}/lib/labjs/LAB.min.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/config.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/ext-all-debug.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/js/util.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/lib/dhtmlx/codebase/dhtmlx.js?ver=vmd2.0.5.200306"></script>
+	
+    <script src="{vmdvirtualPath}/js/hwdas.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/js/vmdcore.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/js/vmdcomps.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/js/publicMethods.js?ver=vmd2.0.5.200306"></script>
+   
     
     {vmdworkspacePath}
 	{vmdprojectconfigjs}
@@ -48,6 +44,12 @@
     <style type="text/css" id="vmdcss">
         .x-combo-list-item{
     margin: 5px 0
+}
+.div-hove:hover{
+    background-color: rgba(255,255,255,0.3);
+}
+.div-hove{
+    cursor: pointer
 }
     </style>
     <script>
@@ -433,6 +435,12 @@ function creatFord(_tree) {
                     treenode.isFord = true;
                 }
                 mytree.itemObj[newnodeid] = treenode;
+                var s = new vmd.proxy.Log();
+                s.save("复合组件新建分类", newnodeid, Ext.util.Cookies.get('userName') + "在" + Ext.Date.dateFormat(new Date(), 'Y-m-d H:i:s') + "新建了" + nodename + "的分类", "复合组件", function() {
+                    // alert("保存成功了！")
+                }, function() {
+                    console.log("日志报存失败了！");
+                })
             },
             error: function(msg) {
                 Ext.Msg.alert("提示", "新建分类失败")
@@ -469,6 +477,12 @@ function deleteNode(_tree) {
                     success: function(result) {
                         mytree.deleteItem(selId, true);
                         getZJData();
+                        var s = new vmd.proxy.Log();
+                        s.save("删除复合组件分类", selnode.text, Ext.util.Cookies.get('userName') + "在" + Ext.Date.dateFormat(new Date(), 'Y-m-d H:i:s') + "删除了" + selnode.text + "复合组件息", "复合组件", function() {
+                            // alert("保存成功了！")
+                        }, function() {
+                            console.log("日志报存失败了！");
+                        })
                     },
                     error: function(msg) {
                         Ext.Msg.alert("提示", "删除分类失败")
@@ -502,6 +516,12 @@ function deleteNode(_tree) {
                             myMask.hide()
                         vmd.core.removeCmpFromList(selnode.text);
                         getZJData();
+                        var s = new vmd.proxy.Log();
+                        s.save("删除复合组件", selnode.id, Ext.util.Cookies.get('userName') + "在" + Ext.Date.dateFormat(new Date(), 'Y-m-d H:i:s') + "删除了" + selnode.text + "复合组件息", "复合组件", function() {
+                            // alert("保存成功了！")
+                        }, function() {
+                            console.log("日志报存失败了！");
+                        })
                     },
                     error: function(msg) {
                         runtype.push(false)
@@ -968,6 +988,8 @@ function checkName(name, callback) {
 // 获取组建信息
 function getZJData(_tree) {
     var mytree = _tree;
+    if (!mytree)
+        return;
     hwDas.ajax({
         das: {
             idedas: true
@@ -1218,6 +1240,10 @@ function hwPTree_afterrender(sender) {
         _treeDrop(sId, tId, id, sObject, tObject, hwPTree)
     });
 }
+
+function logserach_click(sender, e) {
+    window.open(vmd.virtualPath + '/system/modules/eQ9ULgcVb1/hwsit8zolX/hwbdbf1fe6.html', "复合组件日志查询");
+}
 			this.MyViewport_afterrender=MyViewport_afterrender;
 
 
@@ -1280,13 +1306,50 @@ function hwPTree_afterrender(sender) {
 					{
 						xtype:"panel",
 						id:"MyPanel7",
+						layoutConfig:{
+							align:"middle",
+							pack:"end"
+						},
 						title:"Panel",
 						header:false,
 						border:false,
 						height:100,
 						region:"center",
 						style:"background-color: #1e7fff;",
-						bodyStyle:"background-color: #409EFF"
+						bodyStyle:"background-color: #409EFF",
+						layout:"hbox",
+						items:[
+							{
+								xtype:"vmd.div",
+								id:"hwDiv1",
+								layoutConfig:{
+									align:"middle",
+									pack:"center"
+								},
+								autoEl:"div",
+								border:false,
+								backgroundRepeat:"no-repeat",
+								backgroundPosition:"top left",
+								width:80,
+								height:50,
+								layout:"hbox",
+								overCls:"div-hove",
+								items:[
+									{
+										xtype:"vmd.button",
+										id:"logserach",
+										text:"日志查询",
+										type:"text",
+										size:"small",
+										style:"font-size: 12px;    color: #ffffff;    margin-right: 10px;    line-height: 30px;",
+										click:"logserach_click",
+										listeners:{
+											click:logserach_click
+										}
+									}
+								]
+							}
+						]
 					}
 				]
 			},

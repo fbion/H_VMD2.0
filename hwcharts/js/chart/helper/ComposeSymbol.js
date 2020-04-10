@@ -109,7 +109,7 @@ Vmd.define('hwchart.chart.helper.ComposeSymbol', {
             return;
         }
 
-        this.attr('origin', [symbolData.x - symbolData.width / 2, symbolData.y - symbolData.height / 2]);
+        //this.attr('origin', [symbolData.x - symbolData.width / 2, symbolData.y - symbolData.height / 2]);
         this.attr('position', [symbolData.x - symbolData.width / 2, symbolData.y - symbolData.height / 2]);
         this.setClipPath(new graphic.Rect({
             shape: {

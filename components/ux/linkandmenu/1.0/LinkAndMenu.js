@@ -181,7 +181,7 @@ Ext.define("vmd.ux.LinkAndMenu", {
                                     parent.xds.vmd.events = val;
                                     var name = ('' + sheetHot.rootScope.viewerNode.id + '_' + sheetHot.numToEng(cell.sc) + (cell.sr + 1) + '_itemClick').toLowerCase();
                                     sender.setValue(name)
-                                    debugger
+                                    
                                     sheetHot.changeAttributeInfo(cell.sr, cell.sc, 'menuEvent', name)
                                     if (ori.indexOf(name) == -1) {
                                         parent.xds.vmd.addEventForDesignerCmp(parent.xds.active.component, name, name)

@@ -26,7 +26,7 @@ xds["vmd.ux.Testdemo2"] = Ext.extend(xds.Component, {
     isPropPanel:true,
 	bindCmp:'TestProMode',
 	nodeclick:function () {
-		 this.activeSettings('TestProMode', 'aaa', '240', '1.0');
+		 this.activeSettings('TestProMode', 'aaa', '300', '1.0');
 	},
 
     //标准属性设置

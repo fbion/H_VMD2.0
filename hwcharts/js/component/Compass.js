@@ -113,6 +113,7 @@
             );
 
             group.attr('position', [layoutRect.x, layoutRect.y]);
+            group.attr('z', 100);
 
             this.renderCompass(compassModel, ecModel, group);
         },
@@ -194,6 +195,7 @@
             var pointerWid = paraModel.get('pointerWid') * zoomFactor;
             var pointerHei = paraModel.get('pointerHei') * zoomFactor;
             var nOffBorder = 10 * zoomFactor;
+            var z = paraModel.get('z');
             
             var circleCenter = {
                 x: baseX - nOffBorder - compassWidth / 2,
@@ -211,6 +213,8 @@
                 style: {
                     fill: "#ffffff"
                 },
+				// 二级层叠
+				z: z,
                 silent: true
             });
             graphic.subPixelOptimizeRect(circle);
@@ -237,7 +241,9 @@
                     fill: "#4D79BC",
                     stroke: "#4D79BC",
                     lineWidth: 1
-                }
+                },
+				// 二级层叠
+				z: z
             });
             graphic.subPixelOptimizeRect(polygonNorth);
             group.add(polygonNorth);
@@ -250,7 +256,9 @@
                     fill: "#ffffff",
                     stroke: "#4D79BC",
                     lineWidth: 1
-                }
+                },
+				// 二级层叠
+				z: z
             });
             graphic.subPixelOptimizeRect(polygonSouth);
             group.add(polygonSouth);

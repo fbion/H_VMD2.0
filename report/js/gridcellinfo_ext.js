@@ -5797,7 +5797,7 @@ function cellComboType() {
 
 	//设置值
 	this.setCellInfo = function(info, cell) {
-		debugger
+		
 		this.xlk_height.value = info.xlk_height.value;
 		this.combo_click.value = info.combo_click.value;
 		this.combo_change.value = info.combo_change.value;

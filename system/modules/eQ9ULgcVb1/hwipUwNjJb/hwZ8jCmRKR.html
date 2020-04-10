@@ -6,32 +6,26 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>主页面</title>
     <!--基本样式-->
-    <link href="/css/common.css?ver=vmd2.0.6.200119" rel="stylesheet" />
+    <link href="/css/common.css?ver=vmd2.0.5.200306" rel="stylesheet" />
     <!--加载dhx组件-->
-    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=vmd2.0.6.200119" rel="stylesheet" />
-    <link href="/design/css/icons.css?ver=vmd2.0.6.200119" rel="stylesheet" />
-    <link href="/lib/dhtmlx/skins/material/dhtmlx.css?ver=vmd2.0.6.200119" rel="stylesheet" />
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=vmd2.0.5.200306" rel="stylesheet" />
+    <link href="/lib/dhtmlx/skins/material/dhtmlx.css?ver=vmd2.0.5.200306" rel="stylesheet" />
     <!--样式快捷索引表-->
-    <link href="/css/shortcut.css?ver=vmd2.0.6.200119" rel="stylesheet" />
-    <script src="/lib/labjs/LAB.min.js?ver=vmd2.0.6.200119"></script>
-    <script src="/config.js?ver=vmd2.0.6.200119"></script>
-    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=vmd2.0.6.200119"></script>
-    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=vmd2.0.6.200119"></script>
-    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=vmd2.0.6.200119"></script>
-    <script src="/lib/ext-3.4/ext-all-debug.js?ver=vmd2.0.6.200119"></script>
-    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=vmd2.0.6.200119"></script>
-    <script src="/js/util.js?ver=vmd2.0.6.200119"></script>
-    <script src="/lib/dhtmlx/codebase/dhtmlx.js?ver=vmd2.0.6.200119"></script>
-    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=vmd2.0.6.200119"></script>
-    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=vmd2.0.6.200119"></script>
-    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=vmd2.0.6.200119"></script>
-    <script src="/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=vmd2.0.6.200119"></script>
-    <script src="/js/hwdas.js?ver=vmd2.0.6.200119"></script>
-    <script src="/js/vmdcore.js?ver=vmd2.0.6.200119"></script>
-    <script src="/js/vmdcomps.js?ver=vmd2.0.6.200119"></script>
-    <script src="/js/publicMethods.js?ver=vmd2.0.6.200119"></script>
-    <script src="/js/vmdreport.js?ver=vmd2.0.6.200119"></script>
-    <script src="/system/modules/eQ9ULgcVb1/project.config.js"></script>
+    <link href="/css/shortcut.css?ver=vmd2.0.5.200306" rel="stylesheet" />
+    <script src="/lib/labjs/LAB.min.js?ver=vmd2.0.5.200306"></script>
+    <script src="/config.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=vmd2.0.5.200306"></script>
+    <script src="/js/util.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/dhtmlx/codebase/dhtmlx.js?ver=vmd2.0.5.200306"></script>
+    <script src="/js/hwdas.js?ver=vmd2.0.5.200306"></script>
+    <script src="/js/vmdcore.js?ver=vmd2.0.5.200306"></script>
+    <script src="/js/vmdcomps.js?ver=vmd2.0.5.200306"></script>
+    <script src="/js/publicMethods.js?ver=vmd2.0.5.200306"></script>
+    <script src="/system/modules/eQ9ULgcVb1/hwipUwNjJb/hwZ8jCmRKR.vmdproject.config.js"></script>
     <style> </style>
     <style type="text/css" id="vmdcss">
         /*.list-list{*/
@@ -64,7 +58,8 @@
             "projectid": "eQ9ULgcVb1"
         }
         vmd.resourceSettings = {
-            "资源中心&&资源中心服务器": "http://www.hanweikeji.com:10050/resource"
+            "test&&资源中心服务器": "http://192.168.1.181:9050/resource",
+            "test&&测试文件服务": "http://192.168.1.82:31884/resource"
         }
         vmd.projectInfo = {
             "projectId": "eQ9ULgcVb1",
@@ -331,6 +326,12 @@
                                     }
                                     mytree.itemObj[newnodeid] = treenode;
                                     myMask.hide();
+                                    var s = new vmd.proxy.Log();
+                                    s.save("新建分类", projectId, Ext.util.Cookies.get('userName') + "在" + Ext.Date.dateFormat(new Date(), 'Y-m-d H:i:s') + "新建了" + treenode.text + "分类", "项目", function() {
+                                        // alert("保存成功了！")
+                                    }, function() {
+                                        console.log("日志报存失败了！");
+                                    })
                                 },
                                 error: function(msg) {
                                     myMask.hide();
@@ -399,6 +400,12 @@
                                     success: function(result) {
                                         mytree.deleteItem(selId, true);
                                         getQueryData();
+                                        var s = new vmd.proxy.Log();
+                                        s.save("删除项目", selId, Ext.util.Cookies.get('userName') + "在" + Ext.Date.dateFormat(new Date(), 'Y-m-d H:i:s') + "删除了" + selnode.text + "项目", "项目", function() {
+                                            // alert("保存成功了！")
+                                        }, function() {
+                                            console.log("日志报存失败了！");
+                                        })
                                     },
                                     error: function(msg) {
                                         Ext.Msg.alert("提示", "删除项目失败")
@@ -436,6 +443,12 @@
                                                 hwDas.remove(urlConfig, modPath + selnode.path, function() {
                                                     Tips.tips("删除分类成功", "success");
                                                     getQueryData();
+                                                    var s = new vmd.proxy.Log();
+                                                    s.save("删除分类", hwproject_id.getValue(), Ext.util.Cookies.get('userName') + "在" + Ext.Date.dateFormat(new Date(), 'Y-m-d H:i:s') + "删除了" + selnode.text + "分类", "项目", function() {
+                                                        // alert("保存成功了！")
+                                                    }, function() {
+                                                        console.log("日志报存失败了！");
+                                                    })
                                                 }, function(msg) {
                                                     Tips.tips("删除分类失败", "error");
                                                 })
@@ -474,6 +487,12 @@
                                         Tips.tips("删除模块成功", "success");
                                         getQueryData();
                                         mytree.deleteItem(selId); //, true);
+                                        var s = new vmd.proxy.Log();
+                                        s.save("删除模块", selId, Ext.util.Cookies.get('userName') + "在" + Ext.Date.dateFormat(new Date(), 'Y-m-d H:i:s') + "删除了" + selnode.text + "模块", "模块", function() {
+                                            // alert("保存成功了！")
+                                        }, function() {
+                                            console.log("日志报存失败了！");
+                                        })
                                     },
                                     error: function(msg) {
                                         Ext.Msg.alert("提示", "删除模块信息失败")
@@ -2834,7 +2853,7 @@
                     if (expAll) nodepath = ""
                     var expPublishmodulesWin = new vmd.window({
                         title: "发布模块",
-                        url: vmd.core.getVirtualPath() + "modules/eQ9ULgcVb1/eQ9ULgcVb5/hwv41flo69.html",
+                        url: vmd.core.getVirtualPath() + "modules/eQ9ULgcVb1/eQ9ULgcVb5/hw9h8HMwDC.html",
                         auto: false,
                         height: 520,
                         width: 600,
@@ -3447,7 +3466,7 @@
                     window.getProject = getProject;
                     var formProConfig = new vmd.window({
                         title: btnProjectName.getText() + "配置",
-                        url: vmd.core.getVirtualPath() + "/modules/eQ9ULgcVb1/eQ9ULgcVb5/hwBYq7WEdk/hw5f8bbf75.html",
+                        url: vmd.core.getVirtualPath() + "/modules/eQ9ULgcVb1/eQ9ULgcVb5/hwBYq7WEdk/hwkiY7Xjnw.html",
                         auto: false,
                         height: 600,
                         width: 880,
@@ -3534,6 +3553,12 @@
                                 },
                                 function(result) {
                                     Tips.tips("删除成功！", "success");
+                                    var s = new vmd.proxy.Log();
+                                    s.save("删除项目", hwText.getValue(), Ext.util.Cookies.get('userName') + "在" + Ext.Date.dateFormat(new Date(), 'Y-m-d H:i:s') + "删除了" + btnProjectName.getText() + "项目", "项目", function() {
+                                        // alert("保存成功了！")
+                                    }, function() {
+                                        console.log("日志报存失败了！");
+                                    })
                                     // Ext.Msg.alert("提示", "删除资源目录成功！");
                                 },
                                 function(msg) {
@@ -3604,6 +3629,12 @@
                                     mytree.itemObj[newnodeid] = treenode;
                                     myMask.hide();
                                     getQueryData();
+                                    var s = new vmd.proxy.Log();
+                                    s.save("新建项目分类", newnodeid, Ext.util.Cookies.get('userName') + "在" + Ext.Date.dateFormat(new Date(), 'Y-m-d H:i:s') + "新建了名为：" + nodename + "的分类", "项目", function() {
+                                        // alert("保存成功了！")
+                                    }, function() {
+                                        console.log("日志报存失败了！");
+                                    })
                                 },
                                 error: function(msg) {
                                     myMask.hide();
@@ -4224,6 +4255,12 @@
                                         creatPro = true
                                         impMask.show();
                                         importSer();
+                                        var s = new vmd.proxy.Log();
+                                        s.save("项目导入", hwText.getValue(), Ext.util.Cookies.get('userName') + "在" + Ext.Date.dateFormat(new Date(), 'Y-m-d H:i:s') + "导入了" + proName + "项目", "项目", function() {
+                                            // alert("保存成功了！")
+                                        }, function() {
+                                            console.log("日志报存失败了！");
+                                        })
                                     }
                                 })
                             } else {
@@ -4321,6 +4358,7 @@
                             }
                         })
                         createimagesWin.show();
+                        window.createimagesWin = createimagesWin;
                     }, function() {})
                 }
 
@@ -4342,6 +4380,7 @@
                         }
                     })
                     downimagesWin.show();
+                    window.downimagesWin = downimagesWin;
                 }
 
                 function imagesmanger_click(sender, e) {
@@ -4362,6 +4401,11 @@
                         }
                     })
                     imagesMangerWin.show();
+                    window.imagesMangerWin = imagesMangerWin;
+                }
+
+                function logserach_click(sender, e) {
+                    window.open(vmd.virtualPath + '/system/modules/eQ9ULgcVb1/hwsit8zolX/hwzsR8VIkO.html', "日志查询");
                 }
                 this.MyViewport_afterrender = MyViewport_afterrender;
                 this.MyViewport_beforerender = MyViewport_beforerender;
@@ -4499,7 +4543,7 @@
                                 border: false,
                                 height: 100,
                                 region: "east",
-                                width: 520,
+                                width: 590,
                                 layout: "hbox",
                                 style: "background-color: skyblue;",
                                 bodyStyle: "background-color: #0676FE;",
@@ -4526,6 +4570,35 @@
                                         listeners: {
                                             click: div3_click
                                         }
+                                    },
+                                    {
+                                        xtype: "vmd.div",
+                                        id: "hwDiv4",
+                                        layoutConfig: {
+                                            align: "middle",
+                                            pack: "center"
+                                        },
+                                        autoEl: "div",
+                                        border: false,
+                                        backgroundRepeat: "no-repeat",
+                                        backgroundPosition: "top left",
+                                        width: 80,
+                                        height: 50,
+                                        overCls: "div-hove",
+                                        layout: "hbox",
+                                        items: [{
+                                            xtype: "vmd.button",
+                                            id: "logserach",
+                                            text: "日志查询",
+                                            type: "text",
+                                            size: "small",
+                                            style: "font-size: 12px;    color: #ffffff;    margin-right: 10px;    line-height: 30px;",
+                                            click: "logserach_click",
+                                            icon: "icon-file-text-alt",
+                                            listeners: {
+                                                click: logserach_click
+                                            }
+                                        }]
                                     },
                                     {
                                         xtype: "vmd.div",

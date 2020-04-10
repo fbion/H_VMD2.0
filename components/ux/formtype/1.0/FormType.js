@@ -20,7 +20,7 @@ Ext.define('vmd.ux.formType.Controller', {
             //grid层需要展示赋值的
             this.scope.formColumn.setValue(this.settings.formColumn)
             //grid层需要展示赋值的
-            debugger
+            
             this.scope.grid_display.setValue(this.settings.titleSite)
         }
     },

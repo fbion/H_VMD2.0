@@ -183,7 +183,7 @@ Ext.define("vmd.comp.Report", {
 			return;
 		}
 		vmdreport.loading = true;
-		var host =vmdSettings.vmdReportIp ;
+		var host =vmd.MicService.getReportIp() ;
 		if (vmdreport.relativepath && vmdreport.path) {
 			var filePath = vmdreport.relativepath + "/" + vmdreport.path;
 			vmdreport.configPath = vmdreport.relativepath + "/" + vmd.getUserId() + "_" + vmdreport.path;
@@ -203,7 +203,8 @@ Ext.define("vmd.comp.Report", {
 					vmd.alert("提示", "ocx报表只允许在ie内核32位浏览器下运行展示！");
 					return;
 				}
-				hwDas.ajax({
+				//hwdas改vmd
+				vmd.ajax({
 					type: "get",
 					url:vmd.virtualPath + "/" +filePath,
 					dataType: "json",
@@ -612,3 +613,65 @@ Ext.define("vmd.comp.Report", {
 		this.hwReport.jumpToItem(number);
 	}
 })
+
+
+
+ /**
+   * @desc 单元格二分线设置
+   * @param value1(String) 二分线左边的文本,
+   * @param value2(String) 二分线右边的文本
+   * @param [lineStyle] {object} 线颜色和宽度设置 {"color":"red","width":1"}
+   * @param [textStyle] [Array] 左边和右边文本样式设置[0:左文本,1:右文本] [{textAlign: "right"},{textAlign: "left"}]
+   */
+  eXcell.prototype.setCutLine = function(value1, value2, lineStyle, textStyle) {
+      var table_cell = this;
+      var td = table_cell.cell;
+      td.style.height = '100%';
+      td.parentNode.style.padding = '0';
+      var line = lineStyle || {};
+      // 添加二分线左右的值
+      var content1 = document.createElement("div");
+      var content2 = document.createElement("div");
+      var content1_style = {
+          textAlign: "left",
+          position: "absolute",
+          bottom: "0"
+      }
+      var content2_style = {
+          textAlign: "right"
+      }
+      if (textStyle) {
+          for (var i in textStyle[0])
+              content1_style[i] = textStyle[0][i];
+          for (var i in textStyle[1])
+              content2_style[i] = textStyle[1][i];
+      }
+      if (td.parentNode.localName == 'tr') {
+          content1_style.position = "relative"
+      }
+      for (var i in content1_style)
+          content1.style[i] = content1_style[i];
+      for (var i in content2_style)
+          content2.style[i] = content2_style[i];
+      content1.innerText = value2 || "";
+      content2.innerText = value1 || "";
+      td.innerHTML = "";
+      td.appendChild(content2);
+      td.appendChild(content1)
+      // 绘制背景斜线
+      var canvas = document.createElement("canvas");
+      if (canvas.getContext) {
+          var ctx = canvas.getContext('2d');
+          //清空画布，多个表格时使用
+          ctx.clearRect(0, 0, td.clientWidth, td.clientHeight);
+          ctx.fill();
+          ctx.lineWidth = line.width || 0.5;
+          ctx.strokeStyle = line.color || '#000000';
+          ctx.beginPath();
+          ctx.moveTo(0, 0);
+          ctx.lineTo(td.clientWidth, td.clientHeight);
+          ctx.stroke();
+          ctx.closePath();
+          td.style.backgroundImage = 'url("' + ctx.canvas.toDataURL() + '")';
+      }
+  }

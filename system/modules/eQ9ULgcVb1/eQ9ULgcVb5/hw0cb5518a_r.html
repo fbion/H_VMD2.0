@@ -6,36 +6,32 @@
 
     <title>注册发布</title>
 	<!--基本样式-->
-    <link href="{vmdvirtualPath}/css/common.css?ver=vmd2.0.5.191228" rel="stylesheet" />
+    <link href="{vmdvirtualPath}/css/common.css?ver=vmd2.0.7.200328" rel="stylesheet" />
     <!--加载dhx组件-->
-    <link href="{vmdvirtualPath}/lib/ext-3.4/resources/css/ext-all.css?ver=vmd2.0.5.191228" rel="stylesheet" />
+    <link href="{vmdvirtualPath}/lib/ext-3.4/resources/css/ext-all.css?ver=vmd2.0.7.200328" rel="stylesheet" />
    
-    <link href="{vmdvirtualPath}/design/css/icons.css?ver=vmd2.0.5.191228" rel="stylesheet" />
 
-	<link href="{vmdvirtualPath}/lib/dhtmlx/skins/material/dhtmlx.css?ver=vmd2.0.5.191228" rel="stylesheet" />
+	<link href="{vmdvirtualPath}/lib/dhtmlx/skins/material/dhtmlx.css?ver=vmd2.0.7.200328" rel="stylesheet" />
 	  <!--样式快捷索引表-->
-    <link href="{vmdvirtualPath}/css/shortcut.css?ver=vmd2.0.5.191228" rel="stylesheet" />
+    <link href="{vmdvirtualPath}/css/shortcut.css?ver=vmd2.0.7.200328" rel="stylesheet" />
     
 	{vmdprojectcssfiles}
     
-    <script src="{vmdvirtualPath}/lib/labjs/LAB.min.js?ver=vmd2.0.5.191228"></script>
-    <script src="{vmdvirtualPath}/config.js?ver=vmd2.0.5.191228"></script>
-    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=vmd2.0.5.191228"></script>
-    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=vmd2.0.5.191228"></script>
-    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=vmd2.0.5.191228"></script>
-    <script src="{vmdvirtualPath}/lib/ext-3.4/ext-all-debug.js?ver=vmd2.0.5.191228"></script>
-    <script src="{vmdvirtualPath}/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=vmd2.0.5.191228"></script>
-    <script src="{vmdvirtualPath}/js/util.js?ver=vmd2.0.5.191228"></script>
-    <script src="{vmdvirtualPath}/lib/dhtmlx/codebase/dhtmlx.js?ver=vmd2.0.5.191228"></script>
-	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=vmd2.0.5.191228"></script>
-	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=vmd2.0.5.191228"></script>
-    <script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=vmd2.0.5.191228"></script>
-	<script src="{vmdvirtualPath}/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=vmd2.0.5.191228"></script>
-    <script src="{vmdvirtualPath}/js/hwdas.js?ver=vmd2.0.5.191228"></script>
-    <script src="{vmdvirtualPath}/js/vmdcore.js?ver=vmd2.0.5.191228"></script>
-    <script src="{vmdvirtualPath}/js/vmdcomps.js?ver=vmd2.0.5.191228"></script>
-    <script src="{vmdvirtualPath}/js/publicMethods.js?ver=vmd2.0.5.191228"></script>
-    <script src="{vmdvirtualPath}/js/vmdreport.js?ver=vmd2.0.5.191228"></script>
+    <script src="{vmdvirtualPath}/lib/labjs/LAB.min.js?ver=vmd2.0.7.200328"></script>
+    <script src="{vmdvirtualPath}/config.js?ver=vmd2.0.7.200328"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=vmd2.0.7.200328"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=vmd2.0.7.200328"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=vmd2.0.7.200328"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/ext-all-debug.js?ver=vmd2.0.7.200328"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=vmd2.0.7.200328"></script>
+    <script src="{vmdvirtualPath}/js/util.js?ver=vmd2.0.7.200328"></script>
+    <script src="{vmdvirtualPath}/lib/dhtmlx/codebase/dhtmlx.js?ver=vmd2.0.7.200328"></script>
+	
+    <script src="{vmdvirtualPath}/js/hwdas.js?ver=vmd2.0.7.200328"></script>
+    <script src="{vmdvirtualPath}/js/vmdcore.js?ver=vmd2.0.7.200328"></script>
+    <script src="{vmdvirtualPath}/js/vmdcomps.js?ver=vmd2.0.7.200328"></script>
+    <script src="{vmdvirtualPath}/js/publicMethods.js?ver=vmd2.0.7.200328"></script>
+   
     
     {vmdworkspacePath}
 	{vmdprojectconfigjs}
@@ -100,15 +96,21 @@ function bindtree(rec) {
 }
 
 function button_click(sender, e) {
+
     var myPtree = parent.hwTree;
     var selPId = parent.hwTree.getSelectedItemId();
     var selNode = myPtree.itemObj[selPId];
     var proId = selNode.projectId;
-     //虚拟目录获取
+    //虚拟目录获取
     var virtualPath = "";
     if (hwText.getValue() != "")
         virtualPath = "/" + hwText.getValue();
-    
+    var s = new vmd.proxy.Log();
+    s.save("模块基础信息", getUrlParam("modelid"), Ext.util.Cookies.get('userName') + "在" + Ext.Date.dateFormat(new Date(), 'Y-m-d H:i:s') + "注册了模块" + getUrlParam("modelname"), "模块", function() {
+        // alert("保存成功了！")
+    }, function() {
+        alert("日志报存失败了！");
+    })
     var resourceserver;
     resourceserver = Ext.decode(selrec.data.resourceserver);
     //记录模块中引用资源的替换信息
@@ -125,8 +127,9 @@ function button_click(sender, e) {
     //记录项目中的引用资源信息，包括脚本，样式
     var projectRefJs = "";
     var projectRefCss = "";
-    var userProjectConfigJs='<script src="'+ virtualPath +"/release/" + proId + '/project.config.js"><\/script>\n';
-  
+    var userProjectConfigJs = '<script src="' + virtualPath + "/release/" + proId + '/config.js"><\/script>\n';
+    userProjectConfigJs += '<script src="' + virtualPath + "/release/" + proId + '/project.config.js"><\/script>\n';
+
     for (var i = 0; i < projectResourceInfo.length; i++) {
         if (objlistResourceNameIP[projectResourceInfo[i].servName]) {
             if (projectResourceInfo[i].ext == "js") {
@@ -150,7 +153,7 @@ function button_click(sender, e) {
         Ext.Msg.alert("提示", "请选择模块要注册到的子系统！", function() {})
         return;
     }
-    
+
     var data = [{
         subsysid: selId,
         moduleguid: selNode.id,
@@ -162,13 +165,16 @@ function button_click(sender, e) {
         args: ""
     }];
     var zcurl = selrec.data.ptservice + "/regmodule";
-   
+
     //注册模块成功之后的逻辑处理 
     var regSuccFun = function(result) {
         var path = "/modules" + selNode.path + "_r.html";
         var releasePath = "release" + selNode.path + ".html";
-        createReleaseFun(path, releasePath, selNode.id, projectRefJs, projectRefCss,userProjectConfigJs)
-        var fileSetverConfig={host:vmdSettings.vmdFileServiceIp||vmdSettings.dataServiceIp,mark:"vmd"}
+        createReleaseFun(path, releasePath, selNode.id, projectRefJs, projectRefCss, userProjectConfigJs)
+        var fileSetverConfig = {
+            host: vmdSettings.vmdFileServiceIp || vmdSettings.dataServiceIp,
+            mark: "vmd"
+        }
         hwDas.copy(fileSetverConfig, "modules/" + proId + "/img", "release/" + proId + "/img", function() {}, function(msg) {
             console.log(msg)
         });
@@ -177,13 +183,13 @@ function button_click(sender, e) {
         });
         hwDas.copy(fileSetverConfig, "modules/" + proId + "/js", "release/" + proId + "/js", function() {}, function(msg) {
             console.log(msg)
-        }); 
+        });
         hwDas.copy(fileSetverConfig, "modules/" + proId + "/project.config.js", "release/" + proId + "/project.config.js", function() {}, function(msg) {
             console.log(msg)
         });
     }
     //处理模块信息的递归处理
-    var createReleaseFun = function(path, releasePath, moduleid, projectRefJs, projectRefCss,userProjectConfigJs) {
+    var createReleaseFun = function(path, releasePath, moduleid, projectRefJs, projectRefCss, userProjectConfigJs) {
         vmd.core.createReleaseHtml(path, releasePath, virtualPath, function() { //调用服务获取当前模块是否存在子页面  通过moduleid进行服务处理
             hwDas.get("CDEServcie/module/getchildmodule", {}, {
                 mainmoduleid: moduleid
@@ -198,7 +204,7 @@ function button_click(sender, e) {
                             count++
                             if (count == length)
                                 vmd.tip('注册模块成功！', 'success');
-                        }, objlistResourceNameIP, selNode.projectId, projectRefJs, projectRefCss,userProjectConfigJs)
+                        }, objlistResourceNameIP, selNode.projectId, projectRefJs, projectRefCss, userProjectConfigJs)
                     }
                 } else {
                     vmd.tip('注册模块成功！', 'success');
@@ -206,7 +212,7 @@ function button_click(sender, e) {
             }, function(msg) {
                 console.log(msg)
             })
-        }, objlistResourceNameIP, selNode.projectId, projectRefJs, projectRefCss,userProjectConfigJs);
+        }, objlistResourceNameIP, selNode.projectId, projectRefJs, projectRefCss, userProjectConfigJs);
     }
     //调用服务进行平台模块注册
     hwDas.ajax({
@@ -242,21 +248,40 @@ function button_click(sender, e) {
             }
         })
     }
+    var newmsi1 = {};
+    var strmsi1 = "";
+    if (selrec.data.micserviceinfo) //获取项目的微服务配置信息
+    {
+        msi = JSON.parse(selrec.data.micserviceinfo) //转换为项目微服务对象
+        for (var i = 0; i < msi.length; i++) //遍历微服务信息
+        {
+            if (msi[i].type != "1" && msi[i].code) //自定义微服务，直接添加到vmd.projectInfo中
+                strmsi1 += msi[i].code + ":" + (msi[i].address.url || "") + "\",\n";
+            else if (msi[i].code) //内置微服务写到newmsi中，单独做处理，要兼容上一版的微服务配置模式
+                newmsi1[msi[i].code] = msi[i].address.url || ""
+        }
+    }
     var bodyStr = 'vmd.workspace={\n';
     bodyStr += "dataServiceIp: \"" + selrec.data.dasserver + "\",\n";
     bodyStr += "workflowIp: \"" + selrec.data.wfserver + "\",\n";
     bodyStr += "msgIp: \"" + selrec.data.msgserver + "\"\n";
     bodyStr += '}' + "\n";
     bodyStr += 'vmd.projectInfo={\n';
-    bodyStr += "projectId: \"" + selNode.projectId + "\",\n";
-    bodyStr += "dataServiceIp: \"" + selrec.data.dasserver + "\",\n";
-    bodyStr += "workflowIp: \"" + selrec.data.wfserver + "\",\n";
-    bodyStr += "msgIp: \"" + selrec.data.msgserver + "\",\n";
-    bodyStr += "todoIp: \"" + selrec.data.todoserver + "\",\n";
-    bodyStr += "authIp: \"" + selrec.data.authserver + "\",\n";
-    bodyStr += "docIp: \"" + selrec.data.docserver + "\",\n";
-    bodyStr += "reportIp: \"" + selrec.data.reportserver + "\",\n";
-    bodyStr += "logIp: \"" + selrec.data.logserver + "\"\n";
+    bodyStr += "dataServiceIp: \"" + (newmsi1.hwdas || selrec.data.dasserver) + "\",\n";
+    bodyStr += "workflowIp: \"" + (newmsi1.workflow || selrec.data.wfserver )+ "\",\n";
+    bodyStr += "msgIp: \"" + (newmsi1.hwmsc || selrec.data.msgserver) + "\",\n";
+    bodyStr += "todoIp: \"" + (newmsi1.hwtdc || selrec.data.todoserver) + "\",\n";
+    bodyStr += "authIp: \"" + (newmsi1.hwauth || selrec.data.authserver) + "\",\n";
+    bodyStr += "docIp: \"" + (newmsi1.hwdmc || selrec.data.docserver )+ "\",\n";
+    bodyStr += "reportIp: \"" + (newmsi1.hwrao || selrec.data.reportserver )+ "\",\n";
+    bodyStr += "logIp: \"" + (newmsi1.hwlgc || selrec.data.logserver) + "\",\n";
+    bodyStr += "grapDasIp : \"" + (newmsi1.grapDas || "") + "\",\n";
+    bodyStr += "grapAasIp : \"" + (newmsi1.grapAas || "") + "\",\n";
+    bodyStr += "umcIp : \"" + (newmsi1.hwumc || "") + "\",\n";
+    bodyStr += "emcIp: \"" + (newmsi1.hwemc || "") + "\",\n";
+    bodyStr += "amcIp: \"" + (newmsi1.hwauth || "") + "\",\n";
+    bodyStr += strmsi1;
+    bodyStr += "projectId: \"" + selNode.projectId + "\"\n";
     bodyStr += '}' + "\n";
     //objlistResourceNameIP
     bodyStr += 'vmd.resourceSettings={\n';
@@ -299,7 +324,7 @@ function MainViewport_afterrender(sender) {
 }
 			this.MainViewport_afterrender=MainViewport_afterrender;
 
-		store=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"store","xcls":"vmd.store.jsonStore","autoLoad":true,"cid":"vmdJsonStore","storeConfig":"{\"id\":\"mpXawNBWE3\",\"callcode\":\"vmdCode\",\"url\":\"CDEServcie/project/projectconfig/getpubresourcebymoduleid\",\"host\":\"\",\"isHwRest\":true,\"name\":\"通过模块id获取发布环境服务\",\"getMethods\":[{\"id\":\"id\",\"value1\":\"//返回值 \\nif(parent.hwTree) {\\n    var selPId = parent.hwTree.getSelectedItemId();\\n\\n    return selPId\\n} else\\n    return \\\"hw15de1381\\\"\",\"value2\":\"\",\"defaultvalue\":\"\"}],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"config_id\",\"type\":\"string\"},{\"name\":\"project_id\",\"type\":\"string\"},{\"name\":\"type\",\"type\":\"int32\"},{\"name\":\"name\",\"type\":\"string\"},{\"name\":\"ptservice\",\"type\":\"string\"},{\"name\":\"subsysid\",\"type\":\"string\"},{\"name\":\"virtualdir\",\"type\":\"string\"},{\"name\":\"dasserver\",\"type\":\"string\"},{\"name\":\"wfserver\",\"type\":\"string\"},{\"name\":\"msgserver\",\"type\":\"string\"},{\"name\":\"todoserver\",\"type\":\"string\"},{\"name\":\"authserver\",\"type\":\"string\"},{\"name\":\"docserver\",\"type\":\"string\"},{\"name\":\"reportserver\",\"type\":\"string\"},{\"name\":\"logserver\",\"type\":\"string\"},{\"name\":\"resourceserver\",\"type\":\"string\"},{\"name\":\"ppdm_guid\",\"type\":\"string\"},{\"name\":\"remark\",\"type\":\"string\"},{\"name\":\"source\",\"type\":\"string\"},{\"name\":\"row_changed_by\",\"type\":\"string\"},{\"name\":\"row_changed_date\",\"type\":\"datetime\"},{\"name\":\"row_created_by\",\"type\":\"string\"},{\"name\":\"row_created_date\",\"type\":\"datetime\"},{\"name\":\"row_effective_date\",\"type\":\"datetime\"},{\"name\":\"row_expiry_date\",\"type\":\"datetime\"},{\"name\":\"row_quality\",\"type\":\"string\"}]}"});
+		store=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"store","xcls":"vmd.store.jsonStore","autoLoad":true,"cid":"vmdJsonStore","storeConfig":"{\"id\":\"mpXawNBWE3\",\"callcode\":\"vmdCode\",\"url\":\"CDEServcie/project/projectconfig/getpubresourcebymoduleid\",\"host\":\"\",\"name\":\"通过模块id获取发布环境服务\",\"isHwRest\":true,\"getMethods\":[{\"id\":\"id\",\"name\":\"id\",\"type\":\"String\",\"value1\":\"//返回值 \\nif(parent.hwTree) {\\n    var selPId = parent.hwTree.getSelectedItemId();\\n\\n    return selPId\\n} else\\n    return \\\"hw15de1381\\\"\",\"value2\":\"\",\"testValue\":\"\",\"defaultvalue\":\"\"}],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"config_id\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"project_id\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"type\",\"cname\":\"\",\"type\":\"int32\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"name\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"ptservice\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"subsysid\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"virtualdir\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"dasserver\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"wfserver\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"msgserver\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"todoserver\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"authserver\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"docserver\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"reportserver\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"logserver\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"resourceserver\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"micserviceinfo\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"ppdm_guid\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"remark\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"source\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"row_changed_by\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"row_changed_date\",\"cname\":\"\",\"type\":\"datetime\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"row_created_by\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"row_created_date\",\"cname\":\"\",\"type\":\"datetime\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"row_effective_date\",\"cname\":\"\",\"type\":\"datetime\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"row_expiry_date\",\"cname\":\"\",\"type\":\"datetime\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"row_quality\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}}]}"});
 
 
 		this.items=[

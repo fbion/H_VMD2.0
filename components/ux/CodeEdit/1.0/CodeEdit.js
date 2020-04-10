@@ -270,7 +270,7 @@ Ext.define("vmd.ux.CodeEdit", {
             var subType = ""
 
             function _setValue(value, remark, type) {
-                debugger
+                
                 if (subType == "0") {
                     lastEditCode = expressionDisplay.getValue()
                 } else if (subType == "1") {

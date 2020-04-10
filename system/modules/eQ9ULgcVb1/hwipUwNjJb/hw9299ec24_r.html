@@ -6,38 +6,38 @@
 
     <title>项目信息配置界面</title>
 	<!--基本样式-->
-    <link href="{vmdvirtualPath}/css/common.css?ver=2.0.4.20190408" rel="stylesheet" />
+    <link href="{vmdvirtualPath}/css/common.css?ver=vmd2.0.5.200306" rel="stylesheet" />
     <!--加载dhx组件-->
-    <link href="{vmdvirtualPath}/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.4.20190408" rel="stylesheet" />
+    <link href="{vmdvirtualPath}/lib/ext-3.4/resources/css/ext-all.css?ver=vmd2.0.5.200306" rel="stylesheet" />
    
-    <link href="{vmdvirtualPath}/design/css/icons.css?ver=2.0.4.20190408" rel="stylesheet" />
 
-	<link href="{vmdvirtualPath}/lib/dhtmlx/dhtmlx.css?ver=2.0.4.20190408" rel="stylesheet" />
+	<link href="{vmdvirtualPath}/lib/dhtmlx/skins/material/dhtmlx.css?ver=vmd2.0.5.200306" rel="stylesheet" />
 	  <!--样式快捷索引表-->
-    <link href="{vmdvirtualPath}/css/shortcut.css?ver=2.0.4.20190408" rel="stylesheet" />
+    <link href="{vmdvirtualPath}/css/shortcut.css?ver=vmd2.0.5.200306" rel="stylesheet" />
     
+	{vmdprojectcssfiles}
     
-    <script src="{vmdvirtualPath}/lib/labjs/LAB.min.js?ver=2.0.4.20190408"></script>
-    <script src="{vmdvirtualPath}/config.js?ver=2.0.4.20190408"></script>
-    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.4.20190408"></script>
-    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.4.20190408"></script>
-    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.4.20190408"></script>
-    <script src="{vmdvirtualPath}/lib/ext-3.4/ext-all-debug.js?ver=2.0.4.20190408"></script>
-    <script src="{vmdvirtualPath}/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.4.20190408"></script>
-    <script src="{vmdvirtualPath}/js/util.js?ver=2.0.4.20190408"></script>
-    <script src="{vmdvirtualPath}/lib/dhtmlx/dhtmlx.js?ver=2.0.4.20190408"></script>
-	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=2.0.4.20190408"></script>
-	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=2.0.4.20190408"></script>
-    <script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=2.0.4.20190408"></script>
-	<script src="{vmdvirtualPath}/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=2.0.4.20190408"></script>
-    <script src="{vmdvirtualPath}/js/hwdas.js?ver=2.0.4.20190408"></script>
-    <script src="{vmdvirtualPath}/js/vmdcore.js?ver=2.0.4.20190408"></script>
-    <script src="{vmdvirtualPath}/js/vmdcomps.js?ver=2.0.4.20190408"></script>
-    <script src="{vmdvirtualPath}/js/publicMethods.js?ver=2.0.4.20190408"></script>
-    <script src="{vmdvirtualPath}/js/vmdreport.js?ver=2.0.4.20190408"></script>
-    
+    <script src="{vmdvirtualPath}/lib/labjs/LAB.min.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/config.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/ext-all-debug.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/js/util.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/lib/dhtmlx/codebase/dhtmlx.js?ver=vmd2.0.5.200306"></script>
+	
+    <script src="{vmdvirtualPath}/js/hwdas.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/js/vmdcore.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/js/vmdcomps.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/js/publicMethods.js?ver=vmd2.0.5.200306"></script>
+   
     
     {vmdworkspacePath}
+	{vmdprojectconfigjs}
+	
+	{vmdprojectjsfiles}
+    
     <style>
 
     </style>
@@ -79,6 +79,12 @@ function btnSave_click(sender, e) {
                 parent.reloadDataServiceCategory();
             }
         }
+         var s = new vmd.proxy.Log();
+        s.save("项目信息配置", getUrlParam("id"), Ext.util.Cookies.get('userName') + "在" + Ext.Date.dateFormat(new Date(), 'Y-m-d H:i:s') + "修改了" + projectName + "项目的配置信息", "项目", function() {
+            // alert("保存成功了！")
+        }, function() {
+            console.log("日志报存失败了！");
+        })
         // if(0 == tabIndex) {
         //     parent.getProject(workspaceId);
         // }
@@ -117,7 +123,7 @@ function ptcomlist_load(sender, records, options) {
 			{
 				xtype:"vmd.ux.TabProjectInfo",
 				id:"TabProjectInfo",
-				layout:"absolute",
+				layout:"fit",
 				x:0,
 				y:0,
 				reginfo_store:"store",

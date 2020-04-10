@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>复合组件日志查询</title>
+	<!--基本样式-->
+    <link href="{vmdvirtualPath}/css/common.css?ver=vmd2.0.5.200306" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="{vmdvirtualPath}/lib/ext-3.4/resources/css/ext-all.css?ver=vmd2.0.5.200306" rel="stylesheet" />
+   
+
+	<link href="{vmdvirtualPath}/lib/dhtmlx/skins/material/dhtmlx.css?ver=vmd2.0.5.200306" rel="stylesheet" />
+	  <!--样式快捷索引表-->
+    <link href="{vmdvirtualPath}/css/shortcut.css?ver=vmd2.0.5.200306" rel="stylesheet" />
+    <link href="{vmdvirtualPath}/lib/laydate/theme/default/laydate.css?ver=vmd2.0.5.200306" rel="stylesheet" />
+	<link href="{vmdvirtualPath}/lib/laydate/theme/default/laydate.css?ver=vmd2.0.5.200306" rel="stylesheet" />
+	{vmdprojectcssfiles}
+    
+    <script src="{vmdvirtualPath}/lib/labjs/LAB.min.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/config.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/ext-all-debug.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/js/util.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/lib/dhtmlx/codebase/dhtmlx.js?ver=vmd2.0.5.200306"></script>
+	
+    <script src="{vmdvirtualPath}/js/hwdas.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/js/vmdcore.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/js/vmdcomps.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/js/publicMethods.js?ver=vmd2.0.5.200306"></script>
+   
+    
+    {vmdworkspacePath}
+	{vmdprojectconfigjs}
+	<script src="{vmdvirtualPath}/lib/laydate/laydate.src.js?ver=vmd2.0.5.200306" ></script>
+	<script src="{vmdvirtualPath}/lib/laydate/laydate.src.js?ver=vmd2.0.5.200306" ></script>
+	<script src="{vmdvirtualPath}/lib/dhtmlx/codebase/ext/dhtmlx_grid_hwSimpleGridExt.js?ver=vmd2.0.5.200306" ></script>
+	{vmdprojectjsfiles}
+    
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        
+    </style>
+    <script>
+	    
+        vmd.virtualPath = '{vmdvirtualPath}';
+        
+        Ext.define("vmd.module.MyViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps([]),
+	xtype:"vmd.module.MyViewport",
+	layout:"border",
+	beforerender:"MyViewport_beforerender",
+	initComponent: function(){
+		function report_afterrender(sender) {
+    //设置报表内变量的值
+    //report.setParamValue("var1", var1.getValue());
+    report.query();
+}
+
+
+//查询按钮 
+function button_click(sender) {
+    store.toRefresh();
+}
+
+function report_c2_click(sender, grid, cell, params) {
+    //  /modules/qgr5KZcRgJ5mr62U1GVEkBWmDpPmBhue/hwsit8zolX/hwf919a001
+    var win = new vmd.window({
+        url: '/modules/qgr5KZcRgJ5mr62U1GVEkBWmDpPmBhue/hwsit8zolX/hwf919a001.html?' + params,
+        auto: true,
+        title: '复合组件详细日志信息',
+    })
+    window.closewinfrom1 = function() {
+        win.hide();
+    }
+    win.show()
+}
+
+function store1_load(sender, records, options) {
+    for (var i = 0; i < records.length; i++) {
+        if (i > 0 && isCzrExsit(records[i].data.username, records, i)) {
+            store1.remove(records[i]);
+            records.splice(i, 1);
+            i = 0;
+        }
+    }
+}
+
+function isCzrExsit(name, records, count) {
+    for (var i = 0; i < count; i++) {
+        if (name == records[i].data.username) {
+            return true;
+        }
+    }
+    return false;
+}
+var czrcomDate = [];
+var czrstore = new vmd.data.Store({
+    data: czrcomDate,
+    fields: ["username"]
+});
+
+var logStoreData1 = [];
+
+var comDatelist = []
+var comzjDatelist = []
+
+function store_load(sender, records, options) {
+    store.sort("operobj", "ASC");
+    modlieid = ""
+    creater = "";
+    maxDate = "";
+    logStoreData1 = [];
+    var xh = 0;
+    var rowInfo; //处理统计之后的每行记录信息
+    var i = 0;
+    store.each(function(rec) {
+        if (rec && rec.get("operobj")) {
+            if (comDatelist.indexOf(rec.data.username) < 0 && rec.data.username) {
+                comDatelist.push(rec.data.username);
+                czrcomDate.push(rec.data)
+            }
+            if (modlieid != rec.data.operobj) {
+                modlieid = rec.data.operobj;
+
+                if (rowInfo && (rowInfo.name || rowInfo.cname))
+                    logStoreData1.push(rowInfo)
+                xh++;
+                rowInfo = {
+                    xh: xh,
+                    id: modlieid,
+                    count: 1,
+                    timestamp: rec.data.timestamp,
+                    username: rec.data.username
+                };
+
+                //将通过模块id找到项目名称
+                if (modlieid == "导出复合组件" || modlieid == "导入复合组件") {
+                    rowInfo.name = modlieid;
+                    rowInfo.cname = modlieid
+                } else {
+                    fhzj.findBy(function(rec1) {
+                        if (rec1.get("id") == modlieid) {
+                            rowInfo.name = rec1.get("name");
+                            rowInfo.cname = rec1.get("uxname")
+                            if (comzjDatelist.indexOf(modlieid) < 0 && modlieid) {
+                                comzjDatelist.push(modlieid);
+                                zjcomDate.push(rowInfo)
+                            }
+                            rowInfo.createtime = rec1.get("row_created_date");
+                            rowInfo.createuser = rec1.get("row_created_by");
+                            return true
+                        }
+                    })
+                }
+            } else {
+                rowInfo.count = rowInfo.count + 1;
+                if (rec.data.timestamp > rowInfo.timestamp) {
+                    rowInfo.timestamp = rec.data.timestamp
+                    rowInfo.username = rec.data.username;
+                }
+            }
+            i++;
+        }
+    })
+    if (rowInfo && (rowInfo.name || rowInfo.cname))
+        logStoreData1.push(rowInfo)
+    czrstore.loadData(czrcomDate)
+    zjstore.loadData(zjcomDate)
+    //对模块分组之后再对项目进行分组。
+
+
+    fhzjczb.loadData(logStoreData1);
+    fhzjczb.sort("timestamp", "DESC")
+    fhzjczb.sort("name", "ASC")
+    for (var i = 0; i < fhzjczb.getCount(); i++) {
+        fhzjczb.getAt(i).set("xh", i + 1)
+    }
+    fhzjczb.sort("xh", "ASC")
+}
+
+var zjcomDate = [];
+var zjstore = new vmd.data.Store({
+    data: zjcomDate,
+    fields: ["id", "cname"]
+});
+
+
+
+function czr_beforerender(sender) {
+    czr.store = czrstore;
+    czr.displayField = "username";
+    czr.valueField = "username"
+}
+
+function zj_beforerender(sender) {
+    zj.store = zjstore;
+    zj.displayField = "cname";
+    zj.valueField = "id"
+}
+
+function hwSimpleGrid_name_link_click(sender, grid, cell, rId, cInd) {
+    var id = grid.cell.previousElementSibling.innerHTML;
+    var params = "id=" + id;
+    var win = new vmd.window({
+        url: '/system/modules/eQ9ULgcVb1/hwsit8zolX/hwf919a001.html?' + params,
+        auto: true,
+        title: '复合组件详细日志信息',
+    })
+    window.closewinfrom1 = function() {
+        win.hide();
+    }
+    win.show()
+}
+
+function fhzj_load(sender, records, options) {
+    store.toRefresh(function() {
+        // var comDatelist = []
+        // var comzjDatelist = []
+        // modlieid = ""
+        // store.each(function(rec) {
+        //     if (comDatelist.indexOf(rec.data.username) < 0 && rec.data.username) {
+        //         comDatelist.push(rec.data.username);
+        //         czrcomDate.push(rec.data)
+        //     }
+        //     if (modlieid != rec.data.operobj) {
+        //         modlieid = rec.data.operobj;
+        //         //将通过模块id找到项目名称
+        //         fhzj.findBy(function(rec1) {
+        //             if (rec1.get("id") == modlieid) {
+        //                 if (comzjDatelist.indexOf(modlieid) < 0 && rec1.get("uxname")) {
+        //                     zjcomDate.push({
+        //                         cname: rec1.get("uxname"),
+        //                         id: modlieid
+
+        //                     })
+        //                 }
+        //                 return true
+        //             }
+        //         })
+        //     }
+        // })
+        // czrstore.loadData(czrcomDate);
+        // zjstore.loadData(zjcomDate)
+
+    });
+}
+
+function MyViewport_beforerender(sender) {
+
+}
+			this.MyViewport_beforerender=MyViewport_beforerender;
+
+		store=new vmd.store.jsonStore({listeners:{load:function(){store_load.apply(this,arguments);}},"xtype":"vmd.jsonStore","id":"store","xcls":"vmd.store.jsonStore","autoLoad":false,"cid":"vmdJsonStore","storeConfig":"{\"id\":\"m63bgc22CU\",\"callcode\":\"vmdCode\",\"url\":\"rzzx/rzzx/rzzxcx\",\"host\":\"\",\"name\":\"日志查询\",\"isHwRest\":true,\"getMethods\":[{\"id\":\"operation\",\"name\":\"操作类型\",\"type\":\"String\",\"value1\":\"\",\"value2\":\"\",\"testValue\":\"\",\"defaultvalue\":\"\"},{\"id\":\"operobj\",\"name\":\"操作对象\",\"type\":\"String\",\"value1\":\"//返回值 \\r\\n return zj.getValue();\",\"value2\":\"\",\"testValue\":\"\",\"defaultvalue\":\"\"},{\"id\":\"topic\",\"name\":\"主题\",\"type\":\"String\",\"value1\":\" return \\\"复合组件\\\"\",\"value2\":\"\",\"testValue\":\"\",\"defaultvalue\":\"\"},{\"id\":\"usercode\",\"name\":\"用户编码\",\"type\":\"String\",\"value1\":\"\",\"value2\":\"\",\"testValue\":\"\",\"defaultvalue\":\"\"},{\"id\":\"code\",\"name\":\"应用标识\",\"type\":\"String\",\"value1\":\"\",\"value2\":\"\",\"testValue\":\"vmd\",\"defaultvalue\":\"vmd\"},{\"id\":\"username\",\"name\":\"用户名称\",\"type\":\"String\",\"value1\":\"//返回值 \\r\\n return czr.getValue();\",\"value2\":\"\",\"testValue\":\"\",\"defaultvalue\":\"\"},{\"id\":\"starttime\",\"name\":\"开始时间\",\"type\":\"String\",\"value1\":\"//返回值 \\r\\n return ksrq.getValue();\",\"value2\":\"\",\"testValue\":\"\",\"defaultvalue\":\"\"},{\"id\":\"endtime\",\"name\":\"结束时间\",\"type\":\"String\",\"value1\":\"//返回值 \\r\\n return jsrq.getValue();\",\"value2\":\"\",\"testValue\":\"\",\"defaultvalue\":\"\"}],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"exception\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"code\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"level\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"description\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"result\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"appname\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"port\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"thread_name\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"level_value\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"clientip\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"tenantId\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"host\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"topic\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"logger_name\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"usercode\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"operation\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"operobj\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"username\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"timestamp\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}}]}","load":"store_load"});
+		fhzjczb=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"fhzjczb","xcls":"vmd.store.jsonStore","autoLoad":true,"cid":"vmdJsonStore","virtualStore":true,"storeConfig":"{\"isHwRest\":false,\"fields\":[{\"name\":\"xh\",\"cname\":\"序号\",\"dname\":\"\",\"type\":\"VARCHAR2\",\"dtype\":\"\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"dunit\":\"\",\"rule\":{}},{\"name\":\"id\",\"cname\":\"组件id\",\"dname\":\"\",\"type\":\"VARCHAR2\",\"dtype\":\"\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"dunit\":\"\",\"rule\":{}},{\"name\":\"name\",\"cname\":\"组件\",\"dname\":\"\",\"type\":\"VARCHAR2\",\"dtype\":\"\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"dunit\":\"\",\"rule\":{}},{\"name\":\"cname\",\"cname\":\"中文名称\",\"dname\":\"\",\"type\":\"VARCHAR2\",\"dtype\":\"\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"dunit\":\"\",\"rule\":{}},{\"name\":\"count\",\"cname\":\"操作次数\",\"dname\":\"\",\"type\":\"VARCHAR2\",\"dtype\":\"\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"dunit\":\"\",\"rule\":{}},{\"name\":\"createuser\",\"cname\":\"创建人\",\"dname\":\"\",\"type\":\"VARCHAR2\",\"dtype\":\"\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"dunit\":\"\",\"rule\":{}},{\"name\":\"createtime\",\"cname\":\"创建时间\",\"dname\":\"\",\"type\":\"VARCHAR2\",\"dtype\":\"\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"dunit\":\"\",\"rule\":{}},{\"name\":\"username\",\"cname\":\"最后操作人\",\"dname\":\"\",\"type\":\"VARCHAR2\",\"dtype\":\"\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"dunit\":\"\",\"rule\":{}},{\"name\":\"timestamp\",\"cname\":\"最后操作时间\",\"dname\":\"\",\"type\":\"VARCHAR2\",\"dtype\":\"\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"dunit\":\"\",\"rule\":{}}]}"});
+		fhzj=new vmd.store.jsonStore({listeners:{load:function(){fhzj_load.apply(this,arguments);}},"xtype":"vmd.jsonStore","id":"fhzj","xcls":"vmd.store.jsonStore","autoLoad":true,"cid":"vmdJsonStore","storeConfig":"{\"id\":\"m8lBxzeJYp\",\"callcode\":\"vmdCode\",\"url\":\"rzzx/rzzx/fhzjxx\",\"host\":\"\",\"name\":\"复合组件信息\",\"isHwRest\":true,\"getMethods\":[],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"id\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"code\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"xh\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"name\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"uxname\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"type\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"category_id\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"shared\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"classname\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"modetype\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"project_id\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"remark\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"ppdm_guid\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"row_changed_by\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"row_changed_date\",\"cname\":\"\",\"type\":\"datetime\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"row_created_by\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"row_created_date\",\"cname\":\"\",\"type\":\"datetime\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"row_effective_date\",\"cname\":\"\",\"type\":\"datetime\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"row_expiry_date\",\"cname\":\"\",\"type\":\"datetime\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"row_quality\",\"cname\":\"\",\"type\":\"string\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"effective_date\",\"cname\":\"\",\"type\":\"datetime\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}},{\"name\":\"expiry_date\",\"cname\":\"\",\"type\":\"datetime\",\"primary\":\"\",\"nullable\":\"Y\",\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"rule\":{}}]}","load":"fhzj_load"});
+
+
+		this.items=[
+			{
+				xtype:"panel",
+				id:"panel",
+				layoutConfig:{
+					pack:"center",
+					align:"middle"
+				},
+				title:"Panel",
+				header:false,
+				border:false,
+				height:40,
+				x:-1,
+				y:0,
+				layout:"hbox",
+				region:"north",
+				items:[
+					{
+						xtype:"label",
+						id:"label",
+						text:"组件：",
+						cls:"font-bold"
+					},
+					{
+						xtype:"vmd.combo",
+						id:"zj",
+						width:111,
+						beforerender:"zj_beforerender",
+						listeners:{
+							beforerender:zj_beforerender
+						}
+					},
+					{
+						xtype:"label",
+						id:"label1",
+						text:"操作人：",
+						margins:"0 0 0 10",
+						cls:"font-bold"
+					},
+					{
+						xtype:"vmd.combo",
+						id:"czr",
+						width:111,
+						beforerender:"czr_beforerender",
+						listeners:{
+							beforerender:czr_beforerender
+						}
+					},
+					{
+						xtype:"label",
+						id:"label2",
+						text:"开始时间：",
+						margins:"0 0 0 10",
+						cls:"font-bold"
+					},
+					{
+						xtype:"vmd.dateTime",
+						id:"ksrq",
+						text:"dateTime",
+						width:150,
+						height:28,
+						format:"yyyy-MM-dd HH:mm:ss"
+					},
+					{
+						xtype:"label",
+						id:"hwLabel",
+						text:"结束时间：",
+						margins:"0 0 0 10",
+						cls:"font-bold"
+					},
+					{
+						xtype:"vmd.dateTime",
+						id:"jsrq",
+						text:"dateTime",
+						width:150,
+						height:28,
+						format:"yyyy-MM-dd HH:mm:ss"
+					},
+					{
+						xtype:"vmd.button",
+						id:"button",
+						text:"查询",
+						type:"(none)",
+						size:"small",
+						x:720,
+						y:20,
+						click:"button_click",
+						margins:"0 0 0 10",
+						cls:"font-bold",
+						listeners:{
+							click:button_click
+						}
+					}
+				]
+			},
+			{
+				xtype:"panel",
+				id:"panel1",
+				title:"Panel",
+				header:false,
+				border:false,
+				x:0,
+				y:70,
+				layout:"fit",
+				autoScroll:true,
+				region:"center",
+				items:[
+					{
+						xtype:"vmd.simplegrid",
+						id:"hwSimpleGrid",
+						skin:"material",
+						width:300,
+						height:200,
+						isdesign:true,
+						gridConfig:{
+							storeName:"fhzjczb",
+							columns:0,
+							displayMode:"0",
+							fieldsInfo:[
+								{
+									colId:"xh",
+									title:"序号",
+									unit:"",
+									length:"",
+									width:40,
+									allowSort:true,
+									fileInfo:{
+										type:"txt"
+									}
+								},
+								{
+									colId:"id",
+									title:"组件id",
+									unit:"",
+									length:"",
+									width:100,
+									hide:true,
+									allowSort:true,
+									fileInfo:{
+										type:"txt"
+									}
+								},
+								{
+									colId:"name",
+									title:"组件",
+									unit:"",
+									length:"",
+									width:100,
+									allowSort:true,
+									fileInfo:{
+										type:"link"
+									},
+									events:{
+										click:"hwSimpleGrid_name_link_click"
+									}
+								},
+								{
+									colId:"cname",
+									title:"中文名称",
+									unit:"",
+									length:"",
+									width:160,
+									allowSort:true,
+									fileInfo:{
+										type:"txt"
+									}
+								},
+								{
+									colId:"count",
+									title:"操作次数",
+									unit:"",
+									length:"",
+									width:100,
+									allowSort:true,
+									fileInfo:{
+										type:"txt"
+									}
+								},
+								{
+									colId:"createuser",
+									title:"创建人",
+									unit:"",
+									length:"",
+									width:100,
+									allowSort:true,
+									fileInfo:{
+										type:"txt"
+									}
+								},
+								{
+									colId:"createtime",
+									title:"创建时间",
+									unit:"",
+									length:"",
+									width:160,
+									allowSort:true,
+									fileInfo:{
+										type:"txt"
+									}
+								},
+								{
+									colId:"username",
+									title:"最后操作人",
+									unit:"",
+									length:"",
+									width:140,
+									allowSort:true,
+									fileInfo:{
+										type:"txt"
+									}
+								},
+								{
+									colId:"timestamp",
+									title:"最后操作时间",
+									unit:"",
+									length:"",
+									width:160,
+									allowSort:true,
+									fileInfo:{
+										type:"txt"
+									}
+								}
+							]
+						},
+						hwSimpleGrid_name_link_click:"hwSimpleGrid_name_link_click",
+						listeners:{
+							hwSimpleGrid_name_link_click:hwSimpleGrid_name_link_click
+						}
+					}
+				]
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+			me.on('beforerender',function(){ MyViewport_beforerender.call(me,me)})
+}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MyViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

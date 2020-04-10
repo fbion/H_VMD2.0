@@ -1,0 +1,524 @@
+﻿<!--节点列表浮动之前状态-->
+<div ng-controller="StencilController">
+    <div style="width: 100%;">
+        <!--放在canvasHelpWrapper中，会导致对象节点的调整手柄的位置错误-->
+        <div id="editor-header" class="subheader-hw editor-toolbar" style="width: 100%; float: left; padding-left: 12px; display: inline-block;">
+            <div class="btn-group-hw">
+                <div class="btn-toolbar pull-left" ng-controller="ToolbarController" ng-cloak>
+                    <button id="{{item.id}}"
+                        title="{{item.title | translate}}"
+                        ng-repeat="item in items"
+                        ng-switch on="item.type"
+                        class="btn toolbtn-hw btn-inverse-hw" ng-class="{'separator': item.type == 'separator'}"
+                        ng-disabled="item.type == 'separator' || item.enabled == false"
+                        ng-click="toolbarButtonClicked($index)"
+                        ng-if="item.id != 'nodelist-button' && item.id != 'properties-button'">
+                        <!--<i ng-switch-when="button" ng-class="item.cssClass" class="toolbar-button" data-toggle="tooltip" title="{{item.title | translate}}"></i>-->
+                        <i class="{{item.icon}}" style="color: #227fff; font-size: 20px; font-family: 'Microsoft YaHei';"></i>
+                        <div ng-switch-when="separator" ng-class="item.cssClass"></div>
+                    </button>
+                    <button id="btnNodeList"
+                        title="{{item.title | translate}}"
+                        ng-repeat="item in items"
+                        ng-switch on="item.type"
+                        class="btn toolbtn-hw btn-inverse-hw" ng-class="{'separator': item.type == 'separator'}"
+                        ng-disabled="item.type == 'separator' || item.enabled == false"
+                        ng-click="paletteToggle()"
+                        ng-if="item.id == 'nodelist-button'">
+                        <!--<i ng-switch-when="button" ng-class="item.cssClass" class="toolbar-button" data-toggle="tooltip" title="{{item.title | translate}}"></i>-->
+                        <i class="{{item.icon}}" style="color: #227fff; font-size: 22px; font-family: 'Microsoft YaHei';"></i>
+                        <div ng-switch-when="separator" ng-class="item.cssClass"></div>
+                    </button>
+                    <button id="btnProperty"
+                        title="{{item.title | translate}}"
+                        ng-repeat="item in items"
+                        ng-switch on="item.type"
+                        class="btn toolbtn-hw btn-inverse-hw" ng-class="{'separator': item.type == 'separator'}"
+                        ng-disabled="item.type == 'separator' || item.enabled == false"
+                        ng-click="propertyToggle()"
+                        ng-if="item.id == 'properties-button'">
+                        <!--<i ng-switch-when="button" ng-class="item.cssClass" class="toolbar-button" data-toggle="tooltip" title="{{item.title | translate}}"></i>-->
+                        <i class="{{item.icon}}" style="color: #227fff; font-size: 22px; font-family: 'Microsoft YaHei';"></i>
+                        <div ng-switch-when="separator" ng-class="item.cssClass"></div>
+                    </button>
+                </div>
+            </div>
+            <!--<div class="btn-group pull-right" ng-show="!secondaryItems.length">
+
+	            <div class="btn-toolbar pull-left" ng-controller="ToolbarController">
+                <button title="{{item.title | translate}}" ng-repeat="item in secondaryItems" ng-switch on="item.type" class="btn toolbtn-hw btn-inverse-hw" ng-class="{'separator': item.type == 'separator'}"
+                    ng-disabled="item.type == 'separator'" ng-click="propertyToggle()" id="idBtnProperty">
+        	        <i class="{{item.icon}}" style="color:#227fff; font-size:16px; font-family:'Microsoft YaHei';">属性</i>
+	                <div ng-switch-when="separator" ng-class="item.cssClass"></div>
+                </button>
+  		        </div>
+            </div>-->
+        </div>
+    </div>
+    <div class="full">
+        <div class="row row-no-gutter">
+            <!--<div id="paletteHelpWrapper" class="col-xs-3" style="width:55px; top:0px;" borderdrag-palettehelpwrapper ng-mousemove="checkMouseNearPaletteBorder()">-->
+            <div id="paletteHelpWrapper" class="col-xs-3" style="top: 50px; left: 40px; width: 215px; padding: 10px 0px 5px 8px; border: 1px solid #C7CACD; background-color: #ffffff; position: absolute;" ng-hide="paletteToggleFlag" borderdrag-palettehelpwrapper ng-mousemove="checkMouseNearPaletteBorder()">
+                <!--<div id="paletteHead" style="height: 20px; border-bottom: 1px solid #C7CACD; background-color: #F5F9FB;"></div>-->
+                <div class="stencils" id="paletteSection" style="overflow: hidden; border: none;">
+                    <div ng-if="stencilItemGroups.length > 1" style="margin: 0px;">
+                        <div ng-repeat="group in stencilItemGroups | filter:nodeName">
+
+                            <ul ng-if="group.visible && group.items" class="stencil-group" ng-class="{collapsed: !group.expanded, 'first': $first}">
+                                <li ng-include="'editor-app/partials/stencil-item-template.html?version=4'" style ="margin:0px;"></li>
+                            </ul>
+
+                            <div ng-if="!group.items" ng-include="'editor-app/partials/root-stencil-item-template.html?version=4'"></div>
+
+                        </div>
+                    </div>
+                    <div ng-if="stencilItemGroups.length == 1">
+                        <ul class="stencil-group">
+                            <li ng-repeat="item in stencilItemGroups[0].paletteItems" class="stencil-item"
+                                id="{{item.id}}"
+                                title="{{item.description}}"
+                                ng-model="draggedElement"
+                                data-drag="true"
+                                jqyoui-draggable="{onStart:'startDragCallback', onDrag:'dragCallback'}"
+                                data-jqyoui-options="{revert: 'invalid', helper: 'clone', opacity : 0.5}">
+
+                                <img ng-src="editor-app/stencilsets/bpmn2.0/icons/{{item.icon}}" width="16px;" height="16px;" />
+                                {{item.name}}
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div id="canvasHelpWrapper" class="col-xs-9" style="width: 100%;">
+                <div class="canvas-wrapper" id="canvasSection"
+                    ng-model="droppedElement"
+                    ng-model="droppedElement"
+                    data-drop="true"
+                    ng-mousemove="mouseMoveHandle()"
+                    data-jqyoui-options
+                    jqyoui-droppable="{onDrop:'dropCallback',onOver: 'overCallback', onOut: 'outCallback'}">
+                    <div class="canvas-message" id="model-modified-date"></div>
+                    <!--<div id="idFloatNodes" style="border: 1px #000000 solid; height:100px; width: 100px; background-color:#ffffff; background-color: rgba(255,255,255,0.7); display: none; position:absolute">-->
+                    <div id="idFloatNodes" class="Oryx_button_bk">
+                    </div>
+                    <div class="Oryx_button"
+                        id="delete-button"
+                        title="{{'BUTTON.ACTION.DELETE.TOOLTIP' | translate}}"
+                        ng-click="deleteShape()"
+                        style="display: none">
+                        <img src="editor-app/images/delete.png" />
+                    </div>
+                    <div class="Oryx_button"
+                        id="morph-button"
+                        title="{{'BUTTON.ACTION.MORPH.TOOLTIP' | translate}}"
+                        ng-click="morphShape()"
+                        style="display: none">
+                        <img src="editor-app/images/wrench.png" />
+                    </div>
+                    <div class="Oryx_button"
+                        ng-repeat="item in quickMenuItems"
+                        id="{{item.id}}"
+                        title="{{item.description}}"
+                        ng-click="quickAddItem(item.id)"
+                        ng-model="draggedElement"
+                        data-drag="true"
+                        jqyoui-draggable="{onStart:'startDragCallbackQuickMenu', onDrag:'dragCallbackQuickMenu'}"
+                        data-jqyoui-options="{revert: 'invalid', helper: 'clone', opacity : 0.5}"
+                        style="display: none">
+                        <!--<img ng-src="editor-app/stencilsets/bpmn2.0/icons/{{item.icon}}"/>-->
+                        <i class="{{item.vectoricon}}" style="color: #000000"></i>
+                    </div>
+                </div>
+            </div>
+            
+        <!------------------2017.12.29:测试属性面板自适应--------------------------------------------->
+<!--            <div id="propertiesHelpWrapper1" class="col-xs-9-ext" borderdrag-propertieshelpwrapper ng-mousemove="checkMouseNearPropertiesBorder()"
+                style ="position:absolute; left:100px; top: 100px; width: 300px; min-height: 50px; max-height: 300px; background-color: #ffd800; z-index: 200;">
+                <div class="propertySection" id="Div1" style ="border: 1px solid #ffd800; background-color: #ffd800; height: auto;"
+                    ng-class="{collapsed: propertyWindowState.collapsed}">
+                    <div class="selected-item-section">
+                        <div class="clearfix">
+                            <div class="pull-right" ng-if="selectedItem.auditData.createDate">
+                                <strong>{{'ELEMENT.DATE_CREATED' | translate}}: </strong>{{selectedItem.auditData.createDate}}
+                            </div>
+                            <div class="pull-right" ng-if="selectedItem.auditData.author">
+                                <strong>{{'ELEMENT.AUTHOR' | translate}}: </strong>{{selectedItem.auditData.author}}
+                            </div>
+                            <div class="dialog-border" id="Div2" 
+                                style ="border: 1px solid #ffd800; background-color: #ffd800; height: auto;">       
+                                <div class="selected-item-body" id="Div3" style="padding:0px; background-color: #ffd800;">
+                                    <div>
+                                     <div id="Div4" tab-bar1 class="dhtmlxTabBar" style="width:300px;position:relative;top:0px;left:0px;z-index:251;"> 
+                                        <div id="Div5" name="基本属性">  
+                                                <div class="property-row" style="display: flex; position: relative; padding: 0px 4px 0px 0px;" ng-repeat="property in selectedItem.properties"
+                                                    ng-class="{'clear' : $index%2 == 0}">
+                                                    <span class="title" ng-if="!property.hidden 
+                                                        && property.key != 'oryx-formproperties' && property.key != 'oryx-formkeydefinition'
+                                                        && property.key != 'oryx-executionlisteners' && property.key != 'oryx-eventlisteners'  && property.key != 'oryx-tasklisteners'
+                                                        && property.key != 'oryx-multiinstance_type' && property.key != 'oryx-multiinstance_cardinality' && property.key != 'oryx-multiinstance_collection' && property.key != 'oryx-multiinstance_variable' && property.key != 'oryx-multiinstance_condition'
+                                                        && property.key != 'oryx-mailtaskto' && property.key != 'oryx-mailtaskfrom' && property.key != 'oryx-mailtasksubject' && property.key != 'oryx-mailtaskcc' && property.key != 'oryx-mailtaskbcc' && property.key != 'oryx-mailtasktext' && property.key != 'oryx-mailtaskhtml' && property.key != 'oryx-mailtaskcharset'">{{ property.title }}：</span>
+                                                    <span class="title-removed" ng-if="property.hidden 
+                                                        && property.key != 'oryx-formproperties' && property.key != 'oryx-formkeydefinition' 
+                                                        && property.key != 'oryx-executionlisteners' && property.key != 'oryx-eventlisteners' && property.key != 'oryx-tasklisteners'
+                                                        && property.key != 'oryx-multiinstance_type' && property.key != 'oryx-multiinstance_cardinality' && property.key != 'oryx-multiinstance_collection' && property.key != 'oryx-multiinstance_variable' && property.key != 'oryx-multiinstance_condition'
+                                                        && property.key != 'oryx-mailtaskto' && property.key != 'oryx-mailtaskfrom' && property.key != 'oryx-mailtasksubject' && property.key != 'oryx-mailtaskcc' && property.key != 'oryx-mailtaskbcc' && property.key != 'oryx-mailtasktext' && property.key != 'oryx-mailtaskhtml' && property.key != 'oryx-mailtaskcharset'"><i>{{ property.title }}&nbsp;({{'PROPERTY.REMOVED' | translate}})：</i></span>
+                                                    <span ng-if="property.type != 'boolean' 
+                                                        && property.key != 'oryx-signalref' && property.key != 'oryx-messageref' 
+                                                        && property.key != 'oryx-formproperties' && property.key != 'oryx-formkeydefinition'
+                                                        && property.key != 'oryx-executionlisteners' && property.key != 'oryx-eventlisteners'  && property.key != 'oryx-tasklisteners'
+                                                        && property.key != 'oryx-multiinstance_type' && property.key != 'oryx-multiinstance_cardinality' && property.key != 'oryx-multiinstance_collection' && property.key != 'oryx-multiinstance_variable' && property.key != 'oryx-multiinstance_condition'
+                                                        && property.key != 'oryx-mailtaskto' && property.key != 'oryx-mailtaskfrom' && property.key != 'oryx-mailtasksubject' && property.key != 'oryx-mailtaskcc' && property.key != 'oryx-mailtaskbcc' && property.key != 'oryx-mailtasktext' && property.key != 'oryx-mailtaskhtml' && property.key != 'oryx-mailtaskcharset'" class="value" style="flex: 1;" ng-click="propertyClicked($index)">
+                                                        <ng-include
+                                                            src="getPropertyTemplateUrl($index)" ng-if="!property.hasReadWriteMode"></ng-include>
+                                                        <ng-include src="getPropertyReadModeTemplateUrl($index)"
+                                                            ng-if="property.hasReadWriteMode && property.mode == 'read'"></ng-include>
+                                                        <ng-include src="getPropertyWriteModeTemplateUrl($index)"
+                                                            ng-if="property.hasReadWriteMode && property.mode == 'write'"></ng-include>
+
+                                                    </span>
+
+                                                    <span ng-if="property.type == 'boolean'" class="value-ext" style="flex: 1;">
+                                                        <ng-include
+                                                            src="getPropertyTemplateUrl($index)" ng-if="!property.hasReadWriteMode"></ng-include>
+                                                        <ng-include src="getPropertyReadModeTemplateUrl($index)"
+                                                            ng-if="property.hasReadWriteMode && property.mode == 'read'"></ng-include>
+                                                        <ng-include src="getPropertyWriteModeTemplateUrl($index)"
+                                                            ng-if="property.hasReadWriteMode && property.mode == 'write'"></ng-include>
+
+                                                    </span>
+
+                                                    <span ng-if="property.key == 'oryx-signalref' || property.key == 'oryx-messageref'" class="value-ext" style="flex: 1;">
+                                                        <ng-include
+                                                            src="getPropertyTemplateUrl($index)" ng-if="!property.hasReadWriteMode"></ng-include>
+                                                        <ng-include src="getPropertyReadModeTemplateUrl($index)"
+                                                            ng-if="property.hasReadWriteMode && property.mode == 'read'"></ng-include>
+                                                        <ng-include src="getPropertyWriteModeTemplateUrl($index)"
+                                                            ng-if="property.hasReadWriteMode && property.mode == 'write'"></ng-include>
+
+                                                    </span>
+                                                    <div ng-show="property.type != 'string' && property.type != 'boolean' && property.type != 'kisbpm-multiinstance'" ng-click="propertyClicked($index)" class="property-button">
+                                                        ...
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div id="Div7" name="事件"> 
+                                                
+                                                <div class="property-row" style="display: flex; position: relative; padding: 0px 4px 0px 0px;" ng-repeat="property in selectedItem.properties"
+                                                    ng-class="{'clear' : $index%2 == 0}">
+                                                    <span class="title" ng-if="!property.hidden && (property.key == 'oryx-executionlisteners' || property.key == 'oryx-eventlisteners' || property.key == 'oryx-tasklisteners')">{{ property.title }}：</span>
+                                                    <span class="title-removed" ng-if="property.hidden && (property.key == 'oryx-executionlisteners' || property.key == 'oryx-eventlisteners' || property.key == 'oryx-tasklisteners')"><i>{{ property.title }}&nbsp;({{'PROPERTY.REMOVED' | translate}})：</i></span>
+                                                    <span ng-if="!property.hidden && (property.key == 'oryx-executionlisteners' || property.key == 'oryx-eventlisteners' || property.key == 'oryx-tasklisteners')" class="value" style="flex: 1;" ng-click="propertyClicked($index)">
+                                                        <ng-include
+                                                            src="getPropertyTemplateUrl($index)" ng-if="!property.hasReadWriteMode"></ng-include>
+                                                        <ng-include src="getPropertyReadModeTemplateUrl($index)"
+                                                            ng-if="property.hasReadWriteMode && property.mode == 'read'"></ng-include>
+                                                        <ng-include src="getPropertyWriteModeTemplateUrl($index)"
+                                                            ng-if="property.hasReadWriteMode && property.mode == 'write'"></ng-include>
+                                                    </span>
+
+                                                    <span ng-if="property.type == 'boolean' && (property.key == 'oryx-executionlisteners' || property.key == 'oryx-eventlisteners' || property.key == 'oryx-tasklisteners')" class="value-ext" style="flex: 1;">
+                                                        <ng-include
+                                                            src="getPropertyTemplateUrl($index)" ng-if="!property.hasReadWriteMode"></ng-include>
+                                                        <ng-include src="getPropertyReadModeTemplateUrl($index)"
+                                                            ng-if="property.hasReadWriteMode && property.mode == 'read'"></ng-include>
+                                                        <ng-include src="getPropertyWriteModeTemplateUrl($index)"
+                                                            ng-if="property.hasReadWriteMode && property.mode == 'write'"></ng-include>
+
+                                                    </span>
+                                                    <div ng-show="property.type != 'string' && property.type != 'boolean' && property.type != 'kisbpm-multiinstance' && (property.key == 'oryx-executionlisteners' || property.key == 'oryx-eventlisteners' || property.key == 'oryx-tasklisteners')" ng-click="propertyClicked($index)" class="property-button">
+                                                        ...
+                                                    </div>
+                                                </div>
+                                            </div> -->
+                                            
+                                            
+                                          <!--<div id="Div5" name="基本属性">  
+                                         First name: <input type="text" name="firstname"><br>
+Last name: <input type="text" name="lastname"><br>
+Last name: <input type="text" name="lastname"><br>
+Last name: <input type="text" name="lastname"><br>
+Last name: <input type="text" name="lastname"><br>
+Last name: <input type="text" name="lastname"><br>
+Last name: <input type="text" name="lastname"><br>
+                                            </div>-->
+
+                    
+<!--            </div>
+            </div>
+            </div>
+            </div>
+            </div>
+            </div>
+            </div>
+            </div>-->
+        <!--------------------------------------------------------------------------------------------------------------->
+            
+        <!--------------------------------------------------------------------------------------------------------------->
+            <div id="propertiesHelpWrapper" class="col-xs-9-ext" borderdrag-propertieshelpwrapper ng-mousemove="checkMouseNearPropertiesBorder()" ng-hide="propertyToggleFlag">
+                <div class="propertySection" id="propertySection"
+                    ng-class="{collapsed: propertyWindowState.collapsed}">
+                    <div class="selected-item-section">
+                        <div class="clearfix">
+                            <div class="pull-right" ng-if="selectedItem.auditData.createDate">
+                                <strong>{{'ELEMENT.DATE_CREATED' | translate}}: </strong>{{selectedItem.auditData.createDate}}
+                            </div>
+                            <div class="pull-right" ng-if="selectedItem.auditData.author">
+                                <strong>{{'ELEMENT.AUTHOR' | translate}}: </strong>{{selectedItem.auditData.author}}
+                            </div>
+
+                            <div class="dialog-border" id="idPropertiesBorder">
+                                <!--<div>-->
+<!--                                <div class="selected-item-title" id="idPropertiesTitle">
+                                    <button id="idPropertiesCloseBtn" type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="propertyToggle()">×&nbsp;</button>
+                                    <span ng-show="selectedItem.title != undefined && selectedItem.title != null && selectedItem.title.length > 0">{{selectedItem.title}}</span>
+                                    <span ng-show="!selectedItem || selectedItem.title == undefined || selectedItem.title == null || selectedItem.title.length == 0">{{modelData.name}}</span>
+                                </div>-->
+                                
+                                <!--2017.12.28：整体修改布局前-->             
+                                <div class="selected-item-body" id="idPropertiesBody" style="padding:0px;">
+                                    <div>
+                                        <div id="tabbarProperties" tab-bar class="dhtmlxTabBar" style="width:300px; height:220px;position:relative;top:0px;left:0px;z-index:51;"> 
+                                            <div id="tabIdJbsx" name="基本属性">  
+                                                <div class="property-row" style="display: flex; position: relative; padding: 0px 4px 0px 0px;" ng-repeat="property in selectedItem.properties"
+                                                    ng-class="{'clear' : $index%2 == 0}">
+                                                    <!--表单键、表单属性-->                                                
+                                                    <!--执行监听、事件监听、任务监听-->
+                                                    <!--多实例类型、基数、采集、元素变量、完成条件-->
+                                                <!--接收人、发送人、主题、抄送、密件抄送、内容、Html、字符集-->
+                                                    <span class="title" ng-if="!property.hidden 
+                                                        && property.key != 'oryx-formproperties' && property.key != 'oryx-formkeydefinition'
+                                                        && property.key != 'oryx-executionlisteners' && property.key != 'oryx-eventlisteners'  && property.key != 'oryx-tasklisteners'
+                                                        && property.key != 'oryx-multiinstance_type' && property.key != 'oryx-multiinstance_cardinality' && property.key != 'oryx-multiinstance_collection' && property.key != 'oryx-multiinstance_variable' && property.key != 'oryx-multiinstance_condition'
+                                                        && property.key != 'oryx-mailtaskto' && property.key != 'oryx-mailtaskfrom' && property.key != 'oryx-mailtasksubject' && property.key != 'oryx-mailtaskcc' && property.key != 'oryx-mailtaskbcc' && property.key != 'oryx-mailtasktext' && property.key != 'oryx-mailtaskhtml' && property.key != 'oryx-mailtaskcharset'">{{ property.title }}：</span>
+                                                    <span class="title-removed" ng-if="property.hidden 
+                                                        && property.key != 'oryx-formproperties' && property.key != 'oryx-formkeydefinition' 
+                                                        && property.key != 'oryx-executionlisteners' && property.key != 'oryx-eventlisteners' && property.key != 'oryx-tasklisteners'
+                                                        && property.key != 'oryx-multiinstance_type' && property.key != 'oryx-multiinstance_cardinality' && property.key != 'oryx-multiinstance_collection' && property.key != 'oryx-multiinstance_variable' && property.key != 'oryx-multiinstance_condition'
+                                                        && property.key != 'oryx-mailtaskto' && property.key != 'oryx-mailtaskfrom' && property.key != 'oryx-mailtasksubject' && property.key != 'oryx-mailtaskcc' && property.key != 'oryx-mailtaskbcc' && property.key != 'oryx-mailtasktext' && property.key != 'oryx-mailtaskhtml' && property.key != 'oryx-mailtaskcharset'"><i>{{ property.title }}&nbsp;({{'PROPERTY.REMOVED' | translate}})：</i></span>
+                                                    <span ng-if="property.type != 'boolean' 
+                                                        && property.key != 'oryx-signalref' && property.key != 'oryx-messageref' 
+                                                        && property.key != 'oryx-formproperties' && property.key != 'oryx-formkeydefinition'
+                                                        && property.key != 'oryx-executionlisteners' && property.key != 'oryx-eventlisteners'  && property.key != 'oryx-tasklisteners'
+                                                        && property.key != 'oryx-multiinstance_type' && property.key != 'oryx-multiinstance_cardinality' && property.key != 'oryx-multiinstance_collection' && property.key != 'oryx-multiinstance_variable' && property.key != 'oryx-multiinstance_condition'
+                                                        && property.key != 'oryx-mailtaskto' && property.key != 'oryx-mailtaskfrom' && property.key != 'oryx-mailtasksubject' && property.key != 'oryx-mailtaskcc' && property.key != 'oryx-mailtaskbcc' && property.key != 'oryx-mailtasktext' && property.key != 'oryx-mailtaskhtml' && property.key != 'oryx-mailtaskcharset'" class="value" style="flex: 1;" ng-click="propertyClicked($index)">
+                                                        <ng-include
+                                                            src="getPropertyTemplateUrl($index)" ng-if="!property.hasReadWriteMode"></ng-include>
+                                                        <ng-include src="getPropertyReadModeTemplateUrl($index)"
+                                                            ng-if="property.hasReadWriteMode && property.mode == 'read'"></ng-include>
+                                                        <ng-include src="getPropertyWriteModeTemplateUrl($index)"
+                                                            ng-if="property.hasReadWriteMode && property.mode == 'write'"></ng-include>
+
+                                                    </span>
+
+                                                    <span ng-if="property.type == 'boolean'" class="value-ext" style="flex: 1;">
+                                                        <ng-include
+                                                            src="getPropertyTemplateUrl($index)" ng-if="!property.hasReadWriteMode"></ng-include>
+                                                        <ng-include src="getPropertyReadModeTemplateUrl($index)"
+                                                            ng-if="property.hasReadWriteMode && property.mode == 'read'"></ng-include>
+                                                        <ng-include src="getPropertyWriteModeTemplateUrl($index)"
+                                                            ng-if="property.hasReadWriteMode && property.mode == 'write'"></ng-include>
+
+                                                    </span>
+
+                                                    <span ng-if="property.key == 'oryx-signalref' || property.key == 'oryx-messageref'" class="value-ext" style="flex: 1;">
+                                                        <ng-include
+                                                            src="getPropertyTemplateUrl($index)" ng-if="!property.hasReadWriteMode"></ng-include>
+                                                        <ng-include src="getPropertyReadModeTemplateUrl($index)"
+                                                            ng-if="property.hasReadWriteMode && property.mode == 'read'"></ng-include>
+                                                        <ng-include src="getPropertyWriteModeTemplateUrl($index)"
+                                                            ng-if="property.hasReadWriteMode && property.mode == 'write'"></ng-include>
+
+                                                    </span>
+                                                    <div ng-show="property.type != 'string' && property.type != 'boolean' && property.type != 'kisbpm-multiinstance'" ng-click="propertyClicked($index)" class="property-button">
+                                                        ...
+                                                    </div>
+
+
+                                                    <!--                                            <div ng-show="property.type != 'string' && property.type != 'boolean' && property.type != 'kisbpm-multiinstance'" ng-click="propertyClicked($index)" style ="position:absolute; right:10px; padding:10px 0px 0px 0px; cursor: pointer;">
+                                                        ...
+                                                    </div>-->
+                                                    <!--                                            <div ng-show="property.type != 'string' && property.type != 'boolean' && property.type != 'kisbpm-multiinstance'" style ="position:absolute; right:0;">
+                                                        <button type="button" class="value" style="padding:6px 0px 0px 0px; margin:2px;   font-size: 6px; width: 26px; background-color:white;border-style:solid; border-width:1px; border-color:#ababab; cursor: pointer;">...</button>
+                                                    </div>-->
+
+                                                </div>
+                                            </div>
+
+                                            <div id="tabIdBl" name="变量"> 
+                                                
+                                                <!--表单键、表单属性-->
+                                                <div class="property-row" style="display: flex; position: relative; padding: 0px 4px 0px 0px;" ng-repeat="property in selectedItem.properties"
+                                                    ng-class="{'clear' : $index%2 == 0}">
+                                                    <span class="title" ng-if="!property.hidden && (property.key == 'oryx-formproperties' || property.key == 'oryx-formkeydefinition')">{{ property.title }}：</span>
+                                                    <span class="title-removed" ng-if="property.hidden && (property.key == 'oryx-formproperties' || property.key == 'oryx-formkeydefinition')"><i>{{ property.title }}&nbsp;({{'PROPERTY.REMOVED' | translate}})：</i></span>
+                                                    <span ng-if="!property.hidden && (property.key == 'oryx-formproperties' || property.key == 'oryx-formkeydefinition')" class="value" style="flex: 1;" ng-click="propertyClicked($index)">
+                                                        <ng-include
+                                                            src="getPropertyTemplateUrl($index)" ng-if="!property.hasReadWriteMode"></ng-include>
+                                                        <ng-include src="getPropertyReadModeTemplateUrl($index)"
+                                                            ng-if="property.hasReadWriteMode && property.mode == 'read'"></ng-include>
+                                                        <ng-include src="getPropertyWriteModeTemplateUrl($index)"
+                                                            ng-if="property.hasReadWriteMode && property.mode == 'write'"></ng-include>
+                                                    </span>
+
+                                                    <span ng-if="property.type == 'boolean' && (property.key == 'oryx-formproperties' || property.key == 'oryx-formkeydefinition')" class="value-ext" style="flex: 1;">
+                                                        <ng-include
+                                                            src="getPropertyTemplateUrl($index)" ng-if="!property.hasReadWriteMode"></ng-include>
+                                                        <ng-include src="getPropertyReadModeTemplateUrl($index)"
+                                                            ng-if="property.hasReadWriteMode && property.mode == 'read'"></ng-include>
+                                                        <ng-include src="getPropertyWriteModeTemplateUrl($index)"
+                                                            ng-if="property.hasReadWriteMode && property.mode == 'write'"></ng-include>
+
+                                                    </span>
+                                                    <div ng-show="property.type != 'string' && property.type != 'boolean' && property.type != 'kisbpm-multiinstance' && (property.key == 'oryx-formproperties' || property.key == 'oryx-formkeydefinition')" ng-click="propertyClicked($index)" class="property-button">
+                                                        ...
+                                                    </div>
+                                                </div>
+                                            </div> 
+                                            <div id="tabIdSj" name="事件"> 
+                                                
+                                                <!--执行监听、事件监听、任务监听-->
+                                                <div class="property-row" style="display: flex; position: relative; padding: 0px 4px 0px 0px;" ng-repeat="property in selectedItem.properties"
+                                                    ng-class="{'clear' : $index%2 == 0}">
+                                                    <span class="title" ng-if="!property.hidden && (property.key == 'oryx-executionlisteners' || property.key == 'oryx-eventlisteners' || property.key == 'oryx-tasklisteners')">{{ property.title }}：</span>
+                                                    <span class="title-removed" ng-if="property.hidden && (property.key == 'oryx-executionlisteners' || property.key == 'oryx-eventlisteners' || property.key == 'oryx-tasklisteners')"><i>{{ property.title }}&nbsp;({{'PROPERTY.REMOVED' | translate}})：</i></span>
+                                                    <span ng-if="!property.hidden && (property.key == 'oryx-executionlisteners' || property.key == 'oryx-eventlisteners' || property.key == 'oryx-tasklisteners')" class="value" style="flex: 1;" ng-click="propertyClicked($index)">
+                                                        <ng-include
+                                                            src="getPropertyTemplateUrl($index)" ng-if="!property.hasReadWriteMode"></ng-include>
+                                                        <ng-include src="getPropertyReadModeTemplateUrl($index)"
+                                                            ng-if="property.hasReadWriteMode && property.mode == 'read'"></ng-include>
+                                                        <ng-include src="getPropertyWriteModeTemplateUrl($index)"
+                                                            ng-if="property.hasReadWriteMode && property.mode == 'write'"></ng-include>
+                                                    </span>
+
+                                                    <span ng-if="property.type == 'boolean' && (property.key == 'oryx-executionlisteners' || property.key == 'oryx-eventlisteners' || property.key == 'oryx-tasklisteners')" class="value-ext" style="flex: 1;">
+                                                        <ng-include
+                                                            src="getPropertyTemplateUrl($index)" ng-if="!property.hasReadWriteMode"></ng-include>
+                                                        <ng-include src="getPropertyReadModeTemplateUrl($index)"
+                                                            ng-if="property.hasReadWriteMode && property.mode == 'read'"></ng-include>
+                                                        <ng-include src="getPropertyWriteModeTemplateUrl($index)"
+                                                            ng-if="property.hasReadWriteMode && property.mode == 'write'"></ng-include>
+
+                                                    </span>
+                                                    <div ng-show="property.type != 'string' && property.type != 'boolean' && property.type != 'kisbpm-multiinstance' && (property.key == 'oryx-executionlisteners' || property.key == 'oryx-eventlisteners' || property.key == 'oryx-tasklisteners')" ng-click="propertyClicked($index)" class="property-button">
+                                                        ...
+                                                    </div>
+                                                </div>
+                                            </div> 
+                                            
+                                            <div id="tabIdHq" name="会签"> 
+                                                
+                                                <!--多实例类型、基数、采集、元素变量、完成条件-->
+                                                <div class="property-row" style="display: flex; position: relative; padding: 0px 4px 0px 0px;" ng-repeat="property in selectedItem.properties"
+                                                    ng-class="{'clear' : $index%2 == 0}">
+                                                    <span class="title" ng-if="!property.hidden && (property.key == 'oryx-multiinstance_type' || property.key == 'oryx-multiinstance_cardinality' || property.key == 'oryx-multiinstance_collection' || property.key == 'oryx-multiinstance_variable' || property.key == 'oryx-multiinstance_condition')">{{ property.title }}：</span>
+                                                    <span class="title-removed" ng-if="property.hidden && (property.key == 'oryx-multiinstance_type' || property.key == 'oryx-multiinstance_cardinality' || property.key == 'oryx-multiinstance_collection' || property.key == 'oryx-multiinstance_variable' || property.key == 'oryx-multiinstance_condition')"><i>{{ property.title }}&nbsp;({{'PROPERTY.REMOVED' | translate}})：</i></span>
+                                                    <span ng-if="!property.hidden && (property.key == 'oryx-multiinstance_type' || property.key == 'oryx-multiinstance_cardinality' || property.key == 'oryx-multiinstance_collection' || property.key == 'oryx-multiinstance_variable' || property.key == 'oryx-multiinstance_condition')" class="value" style="flex: 1;" ng-click="propertyClicked($index)">
+                                                        <ng-include
+                                                            src="getPropertyTemplateUrl($index)" ng-if="!property.hasReadWriteMode"></ng-include>
+                                                        <ng-include src="getPropertyReadModeTemplateUrl($index)"
+                                                            ng-if="property.hasReadWriteMode && property.mode == 'read'"></ng-include>
+                                                        <ng-include src="getPropertyWriteModeTemplateUrl($index)"
+                                                            ng-if="property.hasReadWriteMode && property.mode == 'write'"></ng-include>
+                                                    </span>
+
+                                                    <span ng-if="property.type == 'boolean' && (property.key == 'oryx-multiinstance_type' || property.key == 'oryx-multiinstance_cardinality' || property.key == 'oryx-multiinstance_collection' || property.key == 'oryx-multiinstance_variable' || property.key == 'oryx-multiinstance_condition')" class="value-ext" style="flex: 1;">
+                                                        <ng-include
+                                                            src="getPropertyTemplateUrl($index)" ng-if="!property.hasReadWriteMode"></ng-include>
+                                                        <ng-include src="getPropertyReadModeTemplateUrl($index)"
+                                                            ng-if="property.hasReadWriteMode && property.mode == 'read'"></ng-include>
+                                                        <ng-include src="getPropertyWriteModeTemplateUrl($index)"
+                                                            ng-if="property.hasReadWriteMode && property.mode == 'write'"></ng-include>
+
+                                                    </span>
+                                                    <div ng-show="property.type != 'string' && property.type != 'boolean' && property.type != 'kisbpm-multiinstance' && (property.key == 'oryx-multiinstance_type' || property.key == 'oryx-multiinstance_cardinality' || property.key == 'oryx-multiinstance_collection' || property.key == 'oryx-multiinstance_variable' || property.key == 'oryx-multiinstance_condition')" ng-click="propertyClicked($index)" class="property-button">
+                                                        ...
+                                                    </div>
+                                                </div>
+                                            </div> 
+                                            
+                                            <div id="tabIdYj" name="邮件"> 
+                                                
+                                                <!--接收人、发送人、主题、抄送、密件抄送、内容、Html、字符集-->
+                                                <div class="property-row" style="display: flex; position: relative; padding: 0px 4px 0px 0px;" ng-repeat="property in selectedItem.properties"
+                                                    ng-class="{'clear' : $index%2 == 0}">
+                                                    <span class="title" ng-if="!property.hidden && (property.key == 'oryx-mailtaskto' || property.key == 'oryx-mailtaskfrom' || property.key == 'oryx-mailtasksubject' || property.key == 'oryx-mailtaskcc' || property.key == 'oryx-mailtaskbcc' || property.key == 'oryx-mailtasktext' || property.key == 'oryx-mailtaskhtml' || property.key == 'oryx-mailtaskcharset')">{{ property.title }}：</span>
+                                                    <span class="title-removed" ng-if="property.hidden && (property.key == 'oryx-mailtaskto' || property.key == 'oryx-mailtaskfrom' || property.key == 'oryx-mailtasksubject' || property.key == 'oryx-mailtaskcc' || property.key == 'oryx-mailtaskbcc' || property.key == 'oryx-mailtasktext' || property.key == 'oryx-mailtaskhtml' || property.key == 'oryx-mailtaskcharset')"><i>{{ property.title }}&nbsp;({{'PROPERTY.REMOVED' | translate}})：</i></span>
+                                                    <span ng-if="!property.hidden && (property.key == 'oryx-mailtaskto' || property.key == 'oryx-mailtaskfrom' || property.key == 'oryx-mailtasksubject' || property.key == 'oryx-mailtaskcc' || property.key == 'oryx-mailtaskbcc' || property.key == 'oryx-mailtasktext' || property.key == 'oryx-mailtaskhtml' || property.key == 'oryx-mailtaskcharset')" class="value" style="flex: 1;" ng-click="propertyClicked($index)">
+                                                        <ng-include
+                                                            src="getPropertyTemplateUrl($index)" ng-if="!property.hasReadWriteMode"></ng-include>
+                                                        <ng-include src="getPropertyReadModeTemplateUrl($index)"
+                                                            ng-if="property.hasReadWriteMode && property.mode == 'read'"></ng-include>
+                                                        <ng-include src="getPropertyWriteModeTemplateUrl($index)"
+                                                            ng-if="property.hasReadWriteMode && property.mode == 'write'"></ng-include>
+                                                    </span>
+
+                                                    <span ng-if="property.type == 'boolean' && (property.key == 'oryx-mailtaskto' || property.key == 'oryx-mailtaskfrom' || property.key == 'oryx-mailtasksubject' || property.key == 'oryx-mailtaskcc' || property.key == 'oryx-mailtaskbcc' || property.key == 'oryx-mailtasktext' || property.key == 'oryx-mailtaskhtml' || property.key == 'oryx-mailtaskcharset')" class="value-ext" style="flex: 1;">
+                                                        <ng-include
+                                                            src="getPropertyTemplateUrl($index)" ng-if="!property.hasReadWriteMode"></ng-include>
+                                                        <ng-include src="getPropertyReadModeTemplateUrl($index)"
+                                                            ng-if="property.hasReadWriteMode && property.mode == 'read'"></ng-include>
+                                                        <ng-include src="getPropertyWriteModeTemplateUrl($index)"
+                                                            ng-if="property.hasReadWriteMode && property.mode == 'write'"></ng-include>
+
+                                                    </span>
+                                                    <div ng-show="property.type != 'string' && property.type != 'boolean' && property.type != 'kisbpm-multiinstance' && (property.key == 'oryx-mailtaskto' || property.key == 'oryx-mailtaskfrom' || property.key == 'oryx-mailtasksubject' || property.key == 'oryx-mailtaskcc' || property.key == 'oryx-mailtaskbcc' || property.key == 'oryx-mailtasktext' || property.key == 'oryx-mailtaskhtml' || property.key == 'oryx-mailtaskcharset')" ng-click="propertyClicked($index)" class="property-button">
+                                                        ...
+                                                    </div>
+                                                </div>
+                                            </div> 
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    //window.onresize = function () {
+    //    // 2017.12.14:窗口变化时重新调整流程图绘图区域的大小
+    //    changeCanvasRegion();
+    //};
+
+    //function changeCanvasRegion() {
+
+    //    // 2017.12.14：绘图区域显示滚动条
+    //    var nToolbarHei = 0;
+    //    var nPaletteHelpWrapperHei = 0;
+    //    var nPaletteHelpWrapperWid = 55;
+    //    var objEditorHeader = document.getElementById("editor-header");
+    //    var objPaletteHelpWrapper = document.getElementById("paletteHelpWrapper");
+    //    var objCanvasHelpWrapper = document.getElementById("canvasSection");
+
+    //    if (objEditorHeader) {
+    //        nToolbarHei = objEditorHeader.offsetHeight;
+    //    }
+    //    //if (objPaletteHelpWrapper) {
+    //    //    //nPaletteHelpWrapperHei = objPaletteHelpWrapper.offsetHeight;
+    //    //    //nPaletteHelpWrapperWid = objPaletteHelpWrapper.offsetWidth;
+    //    //    objPaletteHelpWrapper.style.height = nPaletteHelpWrapperWid + "px";
+    //    //}
+    //    var nCanvasWid = document.body.clientWidth - nPaletteHelpWrapperWid;
+    //    objCanvasHelpWrapper.style.width = nCanvasWid + "px";
+    //    objCanvasHelpWrapper.style.height = document.body.clientHeight - nToolbarHei + "px";
+    //    objCanvasHelpWrapper.style.overflow = "auto"; // 2017.12.14:设置绘图区域可以显示滚动条
+
+    //    var arrSvgCanvas = document.getElementsByClassName("ORYX_Editor");
+    //    if (arrSvgCanvas) {
+    //        for (var i = 0; i < arrSvgCanvas.length; i++) {
+    //            arrSvgCanvas[i].style.width = nCanvasWid + "px";
+    //            arrSvgCanvas[i].style.height = document.body.clientHeight - nToolbarHei + "px";
+    //            arrSvgCanvas[i].style.overflow = "auto"; // 2017.12.14:设置绘图区域可以显示滚动条
+    //        }
+    //    }
+    //};
+</script>
+

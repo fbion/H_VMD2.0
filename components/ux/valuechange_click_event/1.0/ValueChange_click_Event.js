@@ -341,7 +341,7 @@ Ext.define("vmd.ux.ValueChange_click_Event", {
             }
 
             function setInfo(info, type) {
-                debugger
+                
                 switch (type) {
                     case 'wb':
                         if (info.text_change)
@@ -404,7 +404,7 @@ Ext.define("vmd.ux.ValueChange_click_Event", {
             function ValueChange_click_Event_beforerender(sender) {}
 
             function button1_click(sender, e) {
-                debugger
+                
                 var hot = sheetHot;
                 var cell = hot.dealInvert()[0];
                 if (cell.sr == cell.er && cell.sc == cell.ec) {

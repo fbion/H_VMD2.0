@@ -6,32 +6,26 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>下拉框选择框</title>
     <!--基本样式-->
-    <link href="/css/common.css?ver=vmd2.0.5.190911" rel="stylesheet" />
+    <link href="/css/common.css?ver=vmd2.0.5.200306" rel="stylesheet" />
     <!--加载dhx组件-->
-    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=vmd2.0.5.190911" rel="stylesheet" />
-    <link href="/design/css/icons.css?ver=vmd2.0.5.190911" rel="stylesheet" />
-    <link href="/lib/dhtmlx/skins/material/dhtmlx.css?ver=vmd2.0.5.190911" rel="stylesheet" />
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=vmd2.0.5.200306" rel="stylesheet" />
+    <link href="/lib/dhtmlx/skins/material/dhtmlx.css?ver=vmd2.0.5.200306" rel="stylesheet" />
     <!--样式快捷索引表-->
-    <link href="/css/shortcut.css?ver=vmd2.0.5.190911" rel="stylesheet" />
-    <script src="/lib/labjs/LAB.min.js?ver=vmd2.0.5.190911"></script>
-    <script src="/config.js?ver=vmd2.0.5.190911"></script>
-    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=vmd2.0.5.190911"></script>
-    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=vmd2.0.5.190911"></script>
-    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=vmd2.0.5.190911"></script>
-    <script src="/lib/ext-3.4/ext-all-debug.js?ver=vmd2.0.5.190911"></script>
-    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=vmd2.0.5.190911"></script>
-    <script src="/js/util.js?ver=vmd2.0.5.190911"></script>
-    <script src="/lib/dhtmlx/codebase/dhtmlx.js?ver=vmd2.0.5.190911"></script>
-    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=vmd2.0.5.190911"></script>
-    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=vmd2.0.5.190911"></script>
-    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=vmd2.0.5.190911"></script>
-    <script src="/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=vmd2.0.5.190911"></script>
-    <script src="/js/hwdas.js?ver=vmd2.0.5.190911"></script>
-    <script src="/js/vmdcore.js?ver=vmd2.0.5.190911"></script>
-    <script src="/js/vmdcomps.js?ver=vmd2.0.5.190911"></script>
-    <script src="/js/publicMethods.js?ver=vmd2.0.5.190911"></script>
-    <script src="/js/vmdreport.js?ver=vmd2.0.5.190911"></script>
-    <script src="/system/modules/eQ9ULgcVb1/project.config.js"></script>
+    <link href="/css/shortcut.css?ver=vmd2.0.5.200306" rel="stylesheet" />
+    <script src="/lib/labjs/LAB.min.js?ver=vmd2.0.5.200306"></script>
+    <script src="/config.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=vmd2.0.5.200306"></script>
+    <script src="/js/util.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/dhtmlx/codebase/dhtmlx.js?ver=vmd2.0.5.200306"></script>
+    <script src="/js/hwdas.js?ver=vmd2.0.5.200306"></script>
+    <script src="/js/vmdcore.js?ver=vmd2.0.5.200306"></script>
+    <script src="/js/vmdcomps.js?ver=vmd2.0.5.200306"></script>
+    <script src="/js/publicMethods.js?ver=vmd2.0.5.200306"></script>
+    <script src="/system/modules/eQ9ULgcVb1/eQ9ULgcVb5/hwk9PgTMpg/hwpfrhVj8e.vmdproject.config.js"></script>
     <style> </style>
     <style type="text/css" id="vmdcss">
         .aaa .x-grid3-row {
@@ -50,14 +44,15 @@
         vmd.previewMode = true;
         vmd.virtualPath = '';
         vmd.workspace = {
-            "workspaceid": "e47d5ad1-b8c1-4d19-bb2b-b2373006ee4f",
+            "workspaceid": "1174c7d2-f008-4f84-bb61-1845b5d28814",
             "workflowIp": "",
             "dataServiceIp": "",
             "msgIp": "",
             "projectid": "eQ9ULgcVb1"
         }
         vmd.resourceSettings = {
-            "资源中心&&资源中心服务器": "http://www.hanweikeji.com:10050/resource"
+            "test&&资源中心服务器": "http://192.168.1.181:9050/resource",
+            "test&&测试文件服务": "http://192.168.1.82:31884/resource"
         }
         vmd.projectInfo = {
             "projectId": "eQ9ULgcVb1",
@@ -68,6 +63,7 @@
             "authIp": "",
             "docIp": "",
             "reoprtIp": "",
+            "reportIp": "",
             "logIp": ""
         }
         Ext.define("vmd.module.MyViewport", {
@@ -79,6 +75,10 @@
                 var page = this;
                 var data = parent.selectorWin.data;
                 var data1 = parent.selectorWin.data1
+                for (var i = 0; i < data1.length; i++) {
+                    if (!data1[i].cellColname)
+                        data1[i].cellColname = data1[i].cellid;
+                }
                 var urlCode = parent.selectorWin.type;
                 var selected = parent.selectorWin.selected;
                 var store = new Ext.data.JsonStore({
@@ -88,12 +88,12 @@
                 store.loadData(data)
                 var store1 = new Ext.data.JsonStore({
                     proxy: new Ext.data.MemoryProxy(),
-                    fields: ['name', 'cname', 'cellid', 'width']
+                    fields: ['name', 'cname', 'cellColname', 'width']
                 });
                 store1.loadData(data1)
 
                 function button4_click(sender, e) {
-                    debugger
+                    
                     parent.selectorWin.close(data1, urlCode);
                 }
 
@@ -214,7 +214,7 @@
                                 options += '<option>' + temp[i].dictionary.name + '</option>'
                             }
                         }
-                        return "<div><select id = 'cellid' value = '" + value + "' onchange = 'gridGetCell(this,this.value," + "\"" + record.id + "\" " + ")'>" + options + "</select></div>"
+                        return "<div><select id = 'cellColname' value = '" + value + "' onchange = 'gridGetCell(this,this.value," + "\"" + record.id + "\" " + ")'>" + options + "</select></div>"
                     }
                     listCol[2].renderer = function(value, cellmeta, record) { //可以根据行字段的某个类型进行转换设置显示值
                         return '<input type="text" style="border:none;width:100%;height:100%;background: none;" value="' + value + '" onchange="grid1cname(this,this.value,\'' + record.id + '\')">'
@@ -286,7 +286,8 @@
                             // MyGrid1.store.data.items[i].set('search', value)
                             for (var n = 0; n < data1.length; n++) {
                                 if (data1[n].name == MyGrid1.store.data.items[i].get('name')) {
-                                    data1[n].cellid = value
+                                    data1[n].cellid = value;
+                                    data1[n].cellColname = value;
                                     sender.value = value;
                                     return;
                                 }
@@ -480,7 +481,7 @@
                                         header: "目标字段",
                                         sortable: true,
                                         resizable: true,
-                                        dataIndex: "cellid",
+                                        dataIndex: "cellColname",
                                         width: 100,
                                         tpl: "<!--<input type=\"text\" style=\"border:none;width:100%;height:100%;background: none;\" value=\"\">--><div>    <label for=\"sex\">性别:</label>    <select id=\"sex\">        <option>男</option>        <option>女</option>    </select></div>"
                                     },

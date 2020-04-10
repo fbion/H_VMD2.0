@@ -8,12 +8,15 @@ vmdSettings.vmdUploadIp="www.hanweikeji.com:10050";
 //vmd文件服务
 vmdSettings.vmdFileServiceIp="www.hanweikeji.com:10050";
 //报表服务
-//vmdSettings.vmdReportIp="www.hanweikeji.com:10050";
-//报表服务
 vmdSettings.vmdReportIp="www.hanweikeji.com:10050";
-
 //认证服务
 vmdSettings.vmdAuthIp="www.hanweikeji.com:10050";
+// 日志中心
+vmdSettings.vmdLogIp="www.hanweikeji.com:10053";//"192.168.1.28:9003";
+// 图形数据解析服务
+vmdSettings.grapDasIp="192.168.1.186:5015";
+//图形算法解析服务
+vmdSettings.grapAasIp="192.168.1.186:5015";
 
  vmdSettings.modulePath="modules/"; 
  vmdSettings.componentPath="components/"; 
@@ -30,7 +33,7 @@ vmdSettings.vmdAuthIp="www.hanweikeji.com:10050";
  var bootPATH=__CreateJSPath("config.js"); 
  vmdSettings.bootPATH=bootPATH; vmdSettings.ideTpl={}
  vmdSettings.resourcePath=bootPATH+"/system/modules/eQ9ULgcVb1/hw3ce0447e/hw48PbnNSJ/hw4ePzOpko.html"; 
- vmdSettings.vmdVersion="vmd2.0.5.200306" ;
+ vmdSettings.vmdVersion="vmd2.0.7.200328" ;
  /*开启是否加载所有的组件，默认false，true为加载全部组件*/
  vmdSettings.isLoadAllCmps=false; 
  /*加载公共组件*/ vmdSettings.loadPublicCmps=["DatePicker"];

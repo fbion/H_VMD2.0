@@ -164,6 +164,10 @@ Ext.define("vmd.ux.SeriesClass", {
             function maxPointWidth_szDecimalChanged(sender, value, describe) {
                 page.fireEvent("maxPointWidthChange", sender, value)
             }
+
+            function LineStyle_lineStyleChange(sender, line) {
+                page.fireEvent("LineStyleChange", LineStyle, line)
+            }
         } catch (ex) {
             vmd.Error.log('003-3', {
                 p1: 'vmd.ux.SeriesClass',
@@ -710,11 +714,13 @@ Ext.define("vmd.ux.SeriesClass", {
                                     items: [{
                                         xtype: "vmd.ux.LineStyle",
                                         id: "LineStyle",
+                                        DataViewWidth: 150,
                                         layout: "fit",
                                         width: 142,
                                         lineChagen: "LineStyle_lineChagen",
+                                        lineStyleChange: "LineStyle_lineStyleChange",
                                         listeners: {
-                                            lineChagen: LineStyle_lineChagen
+                                            lineStyleChange: LineStyle_lineStyleChange
                                         }
                                     }]
                                 }]

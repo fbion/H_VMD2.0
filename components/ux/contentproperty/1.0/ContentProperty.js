@@ -3,12 +3,13 @@ Ext.define('vmd.ux.contentProperty.Controller', {
     constructor: function(options) {}
 })
 Ext.define("vmd.ux.ContentProperty", {
-    extend: "Ext.Panel",
+    extend: "vmd.base.Ux",
     requires: vmd.getCmpDeps(["vmd.ux.ExtraPropertyChange$1.0$ExtraPropertyChange", "vmd.ux.CellTypeProperty$1.0$CellTypeProperty", "vmd.ux.NewNumber$1.0$NewNumber", "vmd.ux.PrintConfig$1.0$PrintConfig", "vmd.ux.LinkAndMenu$1.0$LinkAndMenu", "vmd.ux.Segmentation$1.0$Segmentation", "vmd.ux.FP$1.0$FP", "vmd.ux.Reporting$1.0$Reporting", "vmd.ux.PrintSetting$1.0$PrintSetting"]),
     version: "1.0",
     xtype: "vmd.ux.ContentProperty",
     header: false,
     border: false,
+    panelWidth: 240,
     width: 291,
     height: 656,
     layout: "fit",
@@ -29,7 +30,7 @@ Ext.define("vmd.ux.ContentProperty", {
         }
     },
     uxCss: ".b {    border: 1px solid #dddddd}.contentprp .x-tab-strip-active span.x-tab-strip-text {    color: #409EFF;    font-weight: bold;}.contentprp .x-tab-strip-active,.x-tab-strip-active a.x-tab-right {    background-color: #fff;}.contentprp .x-tab-strip-top .x-tab-right {    padding: 0 12px;    height: 30px;    background-color: #fff;}.contentprp .x-tab-panel-header, .x-tab-panel-body, .x-tab-panel-footer {    border-color: #dfdfdf;    border-top: 0px;    border-left: 0px;}.contentprp ul.x-tab-strip-top {    border: 0;    background-image: none;    background-color: #fff;    border-color: #dfdfdf;}.fonttitle .x-tab-strip-top .x-tab-right {    padding: 0 16px;    height: 30px;    background-color: #fff;}",
-    uxrequirejs: "[\"lib/ace/ace.js?ver=vmd2.0.5.191031\",\"lib/ace/mode-base.js?ver=vmd2.0.5.191031\",\"lib/ace/theme-xcode.js?ver=vmd2.0.5.191031\",\"lib/ace/ext-language_tools.js?ver=vmd2.0.5.191031\"]",
+    uxrequirejs: "[\"lib/ace/ace.js?ver=vmd2.0.7.200328\",\"lib/ace/mode-base.js?ver=vmd2.0.7.200328\",\"lib/ace/theme-xcode.js?ver=vmd2.0.7.200328\",\"lib/ace/ext-language_tools.js?ver=vmd2.0.7.200328\"]",
     initComponent: function() {
         function resetCmpScope() {
             var cmpList = me._reloadCmpList;
@@ -1052,6 +1053,7 @@ Ext.define("vmd.ux.ContentProperty", {
             header: false,
             border: true,
             height: 100,
+            autoHeight: true,
             items: [{
                 xtype: "tabpanel",
                 id: "MyTabs1",

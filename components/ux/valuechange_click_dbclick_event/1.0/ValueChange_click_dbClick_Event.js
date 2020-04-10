@@ -423,7 +423,7 @@ Ext.define("vmd.ux.ValueChange_click_dbClick_Event", {
         }
 
         function setInfo(info, type) {
-            debugger
+            
             switch (type) {
                 case 'sczj':
                     if (info && info[0]) {
@@ -508,7 +508,7 @@ Ext.define("vmd.ux.ValueChange_click_dbClick_Event", {
         }
 
         function changeForUpload() {
-            debugger
+            
         }
         this.items = [{
                 xtype: "label",

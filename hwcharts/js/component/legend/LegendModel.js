@@ -250,12 +250,12 @@
             // 'auto' | 'left' | 'right'
             // 默认为 'auto', 根据 x 的位置判断是左对齐还是右对齐
             align: 'auto',
-            backgroundColor: 'rgba(0,0,0,0)',
+            backgroundColor: 'rgba(255,255,255,1)',
             // 图例边框颜色
-            borderColor: '#ccc',
+            borderColor: 'rgba(0,0,0,1)',
             borderRadius: 0,
             // 图例边框线宽，单位px，默认为0（无边框）
-            borderWidth: 0,
+            borderWidth: 2,
             // 图例内边距，单位px，默认各方向内边距为5，
             // 接受数组分别设定上右下左边距，同css
             padding: 5,

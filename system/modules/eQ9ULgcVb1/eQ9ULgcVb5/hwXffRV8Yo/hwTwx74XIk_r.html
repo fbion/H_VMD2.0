@@ -6,36 +6,32 @@
 
     <title>导出项目镜像</title>
 	<!--基本样式-->
-    <link href="{vmdvirtualPath}/css/common.css?ver=vmd2.0.6.200119" rel="stylesheet" />
+    <link href="{vmdvirtualPath}/css/common.css?ver=vmd2.0.5.200306" rel="stylesheet" />
     <!--加载dhx组件-->
-    <link href="{vmdvirtualPath}/lib/ext-3.4/resources/css/ext-all.css?ver=vmd2.0.6.200119" rel="stylesheet" />
+    <link href="{vmdvirtualPath}/lib/ext-3.4/resources/css/ext-all.css?ver=vmd2.0.5.200306" rel="stylesheet" />
    
-    <link href="{vmdvirtualPath}/design/css/icons.css?ver=vmd2.0.6.200119" rel="stylesheet" />
 
-	<link href="{vmdvirtualPath}/lib/dhtmlx/skins/material/dhtmlx.css?ver=vmd2.0.6.200119" rel="stylesheet" />
+	<link href="{vmdvirtualPath}/lib/dhtmlx/skins/material/dhtmlx.css?ver=vmd2.0.5.200306" rel="stylesheet" />
 	  <!--样式快捷索引表-->
-    <link href="{vmdvirtualPath}/css/shortcut.css?ver=vmd2.0.6.200119" rel="stylesheet" />
+    <link href="{vmdvirtualPath}/css/shortcut.css?ver=vmd2.0.5.200306" rel="stylesheet" />
     
 	{vmdprojectcssfiles}
     
-    <script src="{vmdvirtualPath}/lib/labjs/LAB.min.js?ver=vmd2.0.6.200119"></script>
-    <script src="{vmdvirtualPath}/config.js?ver=vmd2.0.6.200119"></script>
-    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=vmd2.0.6.200119"></script>
-    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=vmd2.0.6.200119"></script>
-    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=vmd2.0.6.200119"></script>
-    <script src="{vmdvirtualPath}/lib/ext-3.4/ext-all-debug.js?ver=vmd2.0.6.200119"></script>
-    <script src="{vmdvirtualPath}/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=vmd2.0.6.200119"></script>
-    <script src="{vmdvirtualPath}/js/util.js?ver=vmd2.0.6.200119"></script>
-    <script src="{vmdvirtualPath}/lib/dhtmlx/codebase/dhtmlx.js?ver=vmd2.0.6.200119"></script>
-	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=vmd2.0.6.200119"></script>
-	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=vmd2.0.6.200119"></script>
-    <script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=vmd2.0.6.200119"></script>
-	<script src="{vmdvirtualPath}/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=vmd2.0.6.200119"></script>
-    <script src="{vmdvirtualPath}/js/hwdas.js?ver=vmd2.0.6.200119"></script>
-    <script src="{vmdvirtualPath}/js/vmdcore.js?ver=vmd2.0.6.200119"></script>
-    <script src="{vmdvirtualPath}/js/vmdcomps.js?ver=vmd2.0.6.200119"></script>
-    <script src="{vmdvirtualPath}/js/publicMethods.js?ver=vmd2.0.6.200119"></script>
-    <script src="{vmdvirtualPath}/js/vmdreport.js?ver=vmd2.0.6.200119"></script>
+    <script src="{vmdvirtualPath}/lib/labjs/LAB.min.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/config.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/ext-all-debug.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/js/util.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/lib/dhtmlx/codebase/dhtmlx.js?ver=vmd2.0.5.200306"></script>
+	
+    <script src="{vmdvirtualPath}/js/hwdas.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/js/vmdcore.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/js/vmdcomps.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/js/publicMethods.js?ver=vmd2.0.5.200306"></script>
+   
     
     {vmdworkspacePath}
 	{vmdprojectconfigjs}
@@ -190,7 +186,7 @@ function button_click(sender, e) {
         myMask.show();
         //文件不存在，则先调用服务save镜像再下载
         vmd.ajax({
-            url: "http://" + imageServer + "/VMDCI/saveImage/" + proCode+ ":" + selname, //"http://" + imageServer + "/VMDCI/saveImage/vmdrun:vmd2.0.6.200119" ,//
+            url: "http://" + imageServer + "/VMDCI/saveImage/" + proCode + ":" + selname, //"http://" + imageServer + "/VMDCI/saveImage/vmdrun:vmd2.0.6.200119" ,//
             type: 'post',
             timeout: 5 * 60 * 1000,
             data: {
@@ -244,6 +240,13 @@ function MyGrid_cellclick(sender, rowIndex, columnIndex, e) {
             hwTextArea.setValue(result.data)
         }, function() {})
     }
+}
+
+function button1_click(sender, e) {
+    if (parent && parent.downimagesWin)
+        parent.downimagesWin.close();
+    //记录日志信息 
+    //vmd.webBase.syslog(loginfo,logtype,operationtype,function(res){}) 
 }
 	
 
@@ -405,7 +408,11 @@ function MyGrid_cellclick(sender, rowIndex, columnIndex, e) {
 				type:"(none)",
 				size:"small",
 				x:440,
-				y:410
+				y:410,
+				click:"button1_click",
+				listeners:{
+					click:button1_click
+				}
 			}
 		]
 		this.callParent();

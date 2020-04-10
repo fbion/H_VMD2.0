@@ -3,14 +3,15 @@ Ext.define('vmd.ux.lineStyle.Controller', {
     constructor: function(options) {}
 })
 Ext.define("vmd.ux.LineStyle", {
-    extend: "Ext.Panel",
+    extend: "vmd.base.Ux",
     requires: vmd.getCmpDeps([]),
     version: "1.0",
     xtype: "vmd.ux.LineStyle",
     title: "Panel",
     header: false,
     border: false,
-    width: 160,
+    panelWidth: 240,
+    width: 150,
     height: 28,
     layout: "fit",
     autoHeight: true,
@@ -18,9 +19,17 @@ Ext.define("vmd.ux.LineStyle", {
     afterrender: "LineStyle_afterrender",
     listeners: {
         vmdafterrender: function() {
-            this.LineStyle_afterrender(this)
+            try {
+                this.LineStyle_afterrender(this)
+            } catch (ex) {
+                vmd.Error.log('003-2', {
+                    p1: 'vmd.ux.LineStyle'
+                }, ex, 50);
+            }
         }
     },
+    DataViewWidth: 150,
+    LineBorder: false,
     uxCss: ".info{    height: 22px;    margin: 0 6px;}li.info-hover {    cursor: pointer;    background-color: #e6e6e6;}",
     initComponent: function() {
         function resetCmpScope() {
@@ -33,84 +42,96 @@ Ext.define("vmd.ux.LineStyle", {
                 })
             })
         }
-        var isCp = false,
-            value = '',
-            selectValue = '';
-        var page = this
-        var lineData = [{
-            id: 'Solid',
-            url: '/img/public/Solid.png'
-        }, {
-            id: 'ShortDash',
-            url: '/img/public/ShortDash.png'
-        }, {
-            id: 'ShortDot',
-            url: '/img/public/ShortDot.png'
-        }, {
-            id: 'ShortDashDot',
-            url: '/img/public/ShortDashDot.png'
-        }, {
-            id: 'ShortDashDotDot',
-            url: '/img/public/ShortDashDotDot.png'
-        }, {
-            id: 'Dot',
-            url: '/img/public/Dot.png'
-        }, {
-            id: 'Dash',
-            url: '/img/public/Dash.png'
-        }, {
-            id: 'LongDash',
-            url: '/img/public/LongDash.png'
-        }, {
-            id: 'DashDot',
-            url: '/img/public/DashDot.png'
-        }, {
-            id: 'LongDashDot',
-            url: '/img/public/LongDashDot.png'
-        }, {
-            id: 'LongDashDotDot',
-            url: '/img/public/LongDashDotDot.png'
-        }]
+        try {
+            var isCp = false,
+                value = '',
+                selectValue = '';
+            var page = this
+            var lineData = [{
+                id: 'Solid',
+                url: '/img/public/Solid.png'
+            }, {
+                id: 'ShortDash',
+                url: '/img/public/ShortDash.png'
+            }, {
+                id: 'ShortDot',
+                url: '/img/public/ShortDot.png'
+            }, {
+                id: 'ShortDashDot',
+                url: '/img/public/ShortDashDot.png'
+            }, {
+                id: 'ShortDashDotDot',
+                url: '/img/public/ShortDashDotDot.png'
+            }, {
+                id: 'Dot',
+                url: '/img/public/Dot.png'
+            }, {
+                id: 'Dash',
+                url: '/img/public/Dash.png'
+            }, {
+                id: 'LongDash',
+                url: '/img/public/LongDash.png'
+            }, {
+                id: 'DashDot',
+                url: '/img/public/DashDot.png'
+            }, {
+                id: 'LongDashDot',
+                url: '/img/public/LongDashDot.png'
+            }, {
+                id: 'LongDashDotDot',
+                url: '/img/public/LongDashDotDot.png'
+            }]
 
-        function lineDiv_click(sender, e) {
-            if (myline.hidden) {
-                var x = lineDiv.el.getRegion().left,
-                    y = lineDiv.el.getRegion().top + 28;
-                myline.setPosition(x, y)
-                myline.show();
-                Ext.getBody().appendChild(myline.el);
-            } else {
-                myline.hide();
-            }
-        }
-
-        function hwDataView_click(sender, index, node, e) {
-            var id = node.getAttribute('data-id');
-            var url = node.getAttribute('data-url');
-            selectValue = id;
-            setBackground(id);
-            myline.hide();
-            page.fireEvent("lineChagen", hwDataView, id)
-        }
-
-        function setBackground(line) {
-            selectValue = line;
-            var el = vmd.getElement(lineBox.id);
-            for (var i = 0; i < lineData.length; i++) {
-                if (lineData[i].id == line) {
-                    var t = lineData[i].url
-                    el.applyStyles('background:url(' + t + ')');
-                    break
+            function lineDiv_click(sender, e) {
+                if (myline.hidden) {
+                    var x = lineDiv.el.getRegion().left,
+                        y = lineDiv.el.getRegion().top + 28;
+                    myline.setPosition(x, y)
+                    myline.show();
+                    Ext.getBody().appendChild(myline.el);
+                } else {
+                    myline.hide();
                 }
+                stopPP(e)
             }
-        }
 
-        function lineButton_click(sender, e) {}
+            function hwDataView_click(sender, index, node, e) {
+                var id = node.getAttribute('data-id');
+                var url = node.getAttribute('data-url');
+                selectValue = id;
+                setBackground(id);
+                myline.hide();
+                page.fireEvent("lineStyleChange", hwDataView, id)
+            }
 
-        function LineStyle_afterrender(sender) {
-            Ext.defer(function() {
-                Ext.getBody().appendChild(myline.el);
-            }, 50)
+            function setBackground(line) {
+                selectValue = line;
+                vmd.taskRunner(function() {
+                    if (lineBox.el.dom) return true;
+                }, function() {
+                    var el = vmd.getElement(lineBox.id);
+                    for (var i = 0; i < lineData.length; i++) {
+                        if (lineData[i].id.toUpperCase() == line.toUpperCase()) {
+                            var t = lineData[i].url
+                            el.applyStyles('background:url(' + t + ')');
+                            break
+                        }
+                    }
+                })
+            }
+
+            function lineButton_click(sender, e) {}
+
+            function LineStyle_afterrender(sender) {
+                myline.on('afterlayout', function() {
+                    Ext.getBody().appendChild(myline.el);
+                })
+            }
+        } catch (ex) {
+            vmd.Error.log('003-3', {
+                p1: 'vmd.ux.LineStyle',
+                p2: ex.message
+            }, ex, 100);
         }
         this.LineStyle_afterrender = LineStyle_afterrender;
         this.items = [{
@@ -121,7 +142,7 @@ Ext.define("vmd.ux.LineStyle", {
                 border: false,
                 height: 28,
                 layout: "fit",
-                width: 160,
+                width: 100,
                 x: 1,
                 y: 1,
                 region: "center",
@@ -129,7 +150,7 @@ Ext.define("vmd.ux.LineStyle", {
                     xtype: "vmd.div",
                     id: "lineBox",
                     autoEl: "div",
-                    border: true,
+                    border: this.LineBorder,
                     backgroundRepeat: "no-repeat",
                     backgroundPosition: "top left",
                     width: 140,
@@ -138,7 +159,7 @@ Ext.define("vmd.ux.LineStyle", {
                     y: 0,
                     region: "center",
                     click: "lineDiv_click",
-                    style: "padding-left: 8px;    border: 1px solid #ddd;",
+                    style: "padding-left: 8px;",
                     html: "<div id=\"lineBox\" style=\"height:100%\"></div>",
                     layout: "border",
                     listeners: {
@@ -196,7 +217,7 @@ Ext.define("vmd.ux.LineStyle", {
                 items: [{
                     xtype: "vmd.dataview",
                     id: "hwDataView",
-                    width: 150,
+                    width: this.DataViewWidth,
                     height: 125,
                     itemSelector: "li.info",
                     overClass: "info-hover",

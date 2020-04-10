@@ -76,7 +76,7 @@ function button4_click(sender, e) {
 }
 
 function button_click(sender, e) {
-    debugger
+    
     var temp = [];
     for (var i = 0; i < data.length; i++) {
         temp.push({
@@ -151,7 +151,7 @@ function button1_click(sender, e) {
         }
     }
     // data = [];
-    debugger
+    
     var row = parent.sheetHot.countRows();
     var col = parent.sheetHot.countCols();
     for (var n = 0; n < temp.length; n++) {
@@ -224,7 +224,7 @@ function MyGrid_beforerender(sender) {
 }
 
 function MyGrid1_beforerender(sender) {
-    debugger
+    
     sender.enableColumnHide = true;
     sender.enableHdMenu = false;
     var listCol = this.colModel.config;

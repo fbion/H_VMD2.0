@@ -48,14 +48,14 @@ Ext.define("vmd.ux.TestDemo", {
             var page = this
 
             function button_click(sender, e) {
-                debugger
+                
                 //alert(vmduxpath);
                 hwImg.src = '/components/ux/testdemo/1.0/img/物质平衡油藏-气顶驱和溶解气驱油藏.png'
                 //hwImg.src='{vmduxpath}/components/ux/testdemo/1.0/img/物质平衡油藏-气顶驱和溶解气驱油藏.png'
             }
 
             function button2_click(sender, e) {
-                debugger
+                
                 //记录日志信息 
                 //vmd.webBase.syslog(loginfo,logtype,operationtype,function(res){}) 
             }

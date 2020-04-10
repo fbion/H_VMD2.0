@@ -32,7 +32,7 @@ Ext.define("vmd.ux.H111", {
         }
 
         function hwDropDownButton_clickRight(e) {
-            debugger
+            
             hwMenu.showAt(e.xy)
         }
         this.H111_afterrender = H111_afterrender;

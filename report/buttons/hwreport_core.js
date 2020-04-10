@@ -531,7 +531,7 @@ copyright：Copyright @1999-2016, hwkj, All Rights Reserved
         */
         this.getExpVariables = function (exp) {
             var presult = this.parse(exp);
-            debugger
+            
         },
         /**
          * 数据集表达式处理

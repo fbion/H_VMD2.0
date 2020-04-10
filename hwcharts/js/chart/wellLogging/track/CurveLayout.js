@@ -3,6 +3,13 @@ Vmd.define('hwchart.chart.wellLogging.track.CurveLayout', {
 }, function () {
     var zrUtil = zrender.util;
 
+    /**
+     * 过滤min-max之外的数据
+     * @param data
+     * @param min
+     * @param max
+     * @returns {[]|*}
+     */
     function filterDataByAxis(data, min, max){
         if(data.length == 0 || (min <= data[0][1] && max >= data[data.length - 1][1])){
             return data;

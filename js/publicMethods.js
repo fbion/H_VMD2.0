@@ -129,6 +129,15 @@ Ext.applyIf(vmd.MicService, {
 			return dIp || "";
 		else
 			return proIp || dIp || "";
+	},
+	getMicService:function(code,isVmd)
+	{		
+		var proIp = vmd.projectInfo?vmd.projectInfo[code]:"";
+		var dIp = vmdSettings?vmdSettings[code]:"";
+		if(isVmd)
+			return dIp || "";
+		else
+			return proIp || dIp || "";
 	}
 })
 //----------------------------------------------------------------------------------------------------------

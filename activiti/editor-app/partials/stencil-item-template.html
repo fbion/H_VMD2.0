@@ -1,0 +1,12 @@
+<!-- 2017.12.25：float: left;放到外层节点li上就不会出现拖动添加节点时拖动图标相对位置偏移的问题 -->
+<li ng-repeat="item in group.paletteItems | filter:nodeName" ng-if = "!item.removed" class="stencil-item" style="float: left; color:#000000; font-family:'Verdana, sans-serif'; padding:0px; margin: 0px;"
+    id="{{item.id}}"
+    title="{{item.name}}"
+    ng-model="draggedElement"
+    data-drag="true"
+    jqyoui-draggable="{onStart:'startDragCallback', onDrag:'dragCallback'}"
+    data-jqyoui-options="{revert: 'invalid', helper: 'clone', opacity : 0.5}">
+        
+    <!--<img ng-src="editor-app/stencilsets/bpmn2.0/icons/{{item.icon}}" width="16px;" height="16px;"/>-->
+    <i class={{item.vectoricon}} style="padding-left: 7px; padding-right: 0px; color:#F4A130; font-size:20px; font-family: 'Microsoft YaHei';""></i>
+</li>

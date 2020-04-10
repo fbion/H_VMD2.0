@@ -1022,7 +1022,7 @@ Ext.define('ide.ext.DataInputUtils', {
 		})
 		settingWin.show(); //窗口显示
 		settingWin.setBack = function(controller, flag) {
-			debugger
+			
 			flag ? page.controller = controller : page.controller.setValue(JSON.parse(backpack));
 			page.fireEvent('settingChangeEvents')
 			settingWin.close()
@@ -1399,7 +1399,7 @@ Ext.define('vmd.design.Datainput', {
 				saveInfo.formJson = tf;
 				bucket[i].component.setConfig('inputConfig', JSON.stringify(saveInfo))
 
-				debugger
+				
 				utils.saveEvents(bucket[i].component, saveInfo)
 			}
 		}

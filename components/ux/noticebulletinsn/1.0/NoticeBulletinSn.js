@@ -55,7 +55,7 @@ function loadData() {
     tzggDataList = [];
     var url = '/platform/v1/noticebylogin';
     hwDao.get(url, {}, {}, function(res) {
-        debugger
+        
         if(res.isSucceed) {
             if(res.data && res.data[0].datas.length > 0) {
                 var data = res.data[0].datas;

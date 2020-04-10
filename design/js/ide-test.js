@@ -6942,7 +6942,7 @@ xds.Inspector = Ext.extend(Ext.tree.TreePanel, {
 					iconCls: "icon-save",
 					handler: function() {
 
-						debugger
+						
 						var mode = designer.mode;
 						//定义组件类与模块区分开
 						if(mode == "ux") {

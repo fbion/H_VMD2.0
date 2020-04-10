@@ -189,7 +189,7 @@ Ext.define("vmd.ux.GridFieldInfo", {
             }
 
             function colWidthTxt_keyup(sender, e) {
-                debugger
+                
                 mypage.selFiledInfo.width = colWidthTxt.getValue()
             }
 

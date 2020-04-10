@@ -834,7 +834,7 @@ xds.vmdJsonStore = Ext.extend(xds.Component, {
 	},
 	copyFileInfo:function(field)
 	{
-		debugger
+		
 		var storeInfostr=this.userConfig.storeConfig
 		var storeInfo= JSON.parse(storeInfostr);
 		var storeFileInfo=storeInfo.fields||[];
@@ -1558,9 +1558,11 @@ xds.types.uxPanel = Ext.extend(xds.PanelBase, {
 			enableLoading: true,
 			title: '属性面板选择',
 			callback:function(settings,cmp){
+				
 				cmp.component.setConfig('bindCmp',settings.cls);
 				cmp.component.setConfig('bindCmpVersion',settings.version);
 				cmp.view.fireEvent("change", cmp.view, settings.cls);
+				
 			}
 		}
 	}, 
@@ -1661,6 +1663,7 @@ xds.types.uxPanel = Ext.extend(xds.PanelBase, {
 });
 xds.Registry.register(xds.types.uxPanel);
 
+
 //复合组件属性面板配置
 xds.types.uxPanelSettings = Ext.extend(xds.PanelBase, {
     cid: "uxpanelsettings",
@@ -1725,6 +1728,7 @@ xds.types.uxPanelSettings = Ext.extend(xds.PanelBase, {
         }, {
             name: "unstyled",
             group: "Ext.Panel",
+
             ctype: "boolean"
         }, {
             name: "autoHeight",
@@ -1768,6 +1772,8 @@ xds.types.uxPanelSettings = Ext.extend(xds.PanelBase, {
     ]
 });
 xds.Registry.register(xds.types.uxPanelSettings);
+
+
 //复合组件属性
 xds.uxprops = Ext.extend(xds.Component, {
     cid: 'vmduxprops',
@@ -5015,5 +5021,7 @@ Ext.define('vmd.design.Datainput', {
 })
 
 
+//图形组件封装
+xds.vmdWebChart={}
 
 

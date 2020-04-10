@@ -290,7 +290,7 @@ Ext.define("vmd.ux.Click_dbClick_Event", {
             }
 
             function setInfo(info) {
-                debugger
+                
                 buttoneve_click.setValue(info.buttoneve_click.value)
                 buttoneve_dbClick.setValue(info.buttoneve_dbClick.value)
             }

@@ -34,7 +34,7 @@
         proceed.apply(this, Array.prototype.slice.call(arguments, 1));
         var pointer = this,
             chart = pointer.chart;
-			debugger
+			
         chart.HideContextMenu();
     });
 

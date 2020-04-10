@@ -17,11 +17,13 @@ xds["vmd.ux.PublishResource"] = Ext.extend(xds.Component, {
     requireJs: [],
 	requireCmpType:'',
     //默认属性设置
-    defaultConfig: {"layout":"column"},
+    defaultConfig: {"layout":"absolute"},
     isResizable: function (a, b) {
 
         return true;
     },
+	//属性面板
+    
     //标准属性设置
     configs: [
          {

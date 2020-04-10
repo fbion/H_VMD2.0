@@ -73,12 +73,12 @@ var store1 = new Ext.data.JsonStore({
 store1.loadData(data1)
 
 function button4_click(sender, e) {
-    debugger
+    
     parent.selectorWin.close(data1, urlCode, true);
 }
 
 function button_click(sender, e) {
-    debugger
+    
     var temp = [];
     for (var i = 0; i < data.length; i++) {
         temp.push({
@@ -98,7 +98,7 @@ function button_click(sender, e) {
 }
 
 function button3_click(sender, e) {
-    debugger
+    
     var temp = [];
     for (var i = 0; i < data1.length; i++) {
         temp.push(data1[i])
@@ -114,7 +114,7 @@ function button3_click(sender, e) {
 }
 
 function button1_click(sender, e) {
-    debugger
+    
     var group = MyGrid.getSelectionModel().selections.items;
     var temp = []
     for (var i = 0; i < group.length; i++) {
@@ -173,7 +173,7 @@ function MyGrid_beforerender(sender) {
 }
 
 function MyGrid1_beforerender(sender) {
-    debugger
+    
     sender.enableColumnHide = true;
     sender.enableHdMenu = false;
     var listCol = this.colModel.config;
@@ -213,7 +213,7 @@ function button7_click(sender, e) {
     store1.loadData(data1)
 }
 window.gridValue = function(sender, value, id) {
-    debugger
+    
     for (var i = 0; i < MyGrid1.store.data.items.length; i++) {
         if (id == MyGrid1.store.data.items[i].id) {
             MyGrid1.store.data.items[i].set('value', value)

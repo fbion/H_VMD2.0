@@ -914,7 +914,7 @@ Ext.define("vmd.ux.ChartSeting", {
             }
 
             function hwChartTb_chartminHeightChange(sender, value, describe) {
-                chartInfo.minHeight = parseFloat(value) || 200;
+                chartInfo.minHeight = parseFloat(value) || 20;
             }
             // 图表上边距
             function hwChartTb_chartTopMarginChange(sender, value, describe) {

@@ -150,7 +150,7 @@ Ext.define("vmd.ux.Data_xls", {
         }
 
         function setInfo(info) {
-            debugger
+            
             if (info) {
                 xls_dataSet.setValue(info.xls_dataSet.value);
                 xls_myDisplayFiled.setValue(info.xls_myDisplayFiled.value);

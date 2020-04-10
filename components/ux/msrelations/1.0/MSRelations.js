@@ -381,7 +381,7 @@ Ext.define("vmd.ux.MSRelations", {
                         iconCls: 'ion-res',
                         listeners: {
                             click: function(menu, item, e) {
-                                debugger
+                                
                                 submitStore(menu.name)
                                 hwDiv1.doLayout();
                             }

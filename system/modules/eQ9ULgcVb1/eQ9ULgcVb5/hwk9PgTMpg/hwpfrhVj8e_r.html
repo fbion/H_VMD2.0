@@ -6,36 +6,32 @@
 
     <title>下拉框选择框</title>
 	<!--基本样式-->
-    <link href="{vmdvirtualPath}/css/common.css?ver=vmd2.0.5.190911" rel="stylesheet" />
+    <link href="{vmdvirtualPath}/css/common.css?ver=vmd2.0.5.200306" rel="stylesheet" />
     <!--加载dhx组件-->
-    <link href="{vmdvirtualPath}/lib/ext-3.4/resources/css/ext-all.css?ver=vmd2.0.5.190911" rel="stylesheet" />
+    <link href="{vmdvirtualPath}/lib/ext-3.4/resources/css/ext-all.css?ver=vmd2.0.5.200306" rel="stylesheet" />
    
-    <link href="{vmdvirtualPath}/design/css/icons.css?ver=vmd2.0.5.190911" rel="stylesheet" />
 
-	<link href="{vmdvirtualPath}/lib/dhtmlx/skins/material/dhtmlx.css?ver=vmd2.0.5.190911" rel="stylesheet" />
+	<link href="{vmdvirtualPath}/lib/dhtmlx/skins/material/dhtmlx.css?ver=vmd2.0.5.200306" rel="stylesheet" />
 	  <!--样式快捷索引表-->
-    <link href="{vmdvirtualPath}/css/shortcut.css?ver=vmd2.0.5.190911" rel="stylesheet" />
+    <link href="{vmdvirtualPath}/css/shortcut.css?ver=vmd2.0.5.200306" rel="stylesheet" />
     
 	{vmdprojectcssfiles}
     
-    <script src="{vmdvirtualPath}/lib/labjs/LAB.min.js?ver=vmd2.0.5.190911"></script>
-    <script src="{vmdvirtualPath}/config.js?ver=vmd2.0.5.190911"></script>
-    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=vmd2.0.5.190911"></script>
-    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=vmd2.0.5.190911"></script>
-    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=vmd2.0.5.190911"></script>
-    <script src="{vmdvirtualPath}/lib/ext-3.4/ext-all-debug.js?ver=vmd2.0.5.190911"></script>
-    <script src="{vmdvirtualPath}/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=vmd2.0.5.190911"></script>
-    <script src="{vmdvirtualPath}/js/util.js?ver=vmd2.0.5.190911"></script>
-    <script src="{vmdvirtualPath}/lib/dhtmlx/codebase/dhtmlx.js?ver=vmd2.0.5.190911"></script>
-	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=vmd2.0.5.190911"></script>
-	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=vmd2.0.5.190911"></script>
-    <script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=vmd2.0.5.190911"></script>
-	<script src="{vmdvirtualPath}/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=vmd2.0.5.190911"></script>
-    <script src="{vmdvirtualPath}/js/hwdas.js?ver=vmd2.0.5.190911"></script>
-    <script src="{vmdvirtualPath}/js/vmdcore.js?ver=vmd2.0.5.190911"></script>
-    <script src="{vmdvirtualPath}/js/vmdcomps.js?ver=vmd2.0.5.190911"></script>
-    <script src="{vmdvirtualPath}/js/publicMethods.js?ver=vmd2.0.5.190911"></script>
-    <script src="{vmdvirtualPath}/js/vmdreport.js?ver=vmd2.0.5.190911"></script>
+    <script src="{vmdvirtualPath}/lib/labjs/LAB.min.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/config.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/ext-all-debug.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/js/util.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/lib/dhtmlx/codebase/dhtmlx.js?ver=vmd2.0.5.200306"></script>
+	
+    <script src="{vmdvirtualPath}/js/hwdas.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/js/vmdcore.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/js/vmdcomps.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/js/publicMethods.js?ver=vmd2.0.5.200306"></script>
+   
     
     {vmdworkspacePath}
 	{vmdprojectconfigjs}
@@ -64,6 +60,12 @@
 
 var data = parent.selectorWin.data;
 var data1 = parent.selectorWin.data1
+for(var i=0;i<data1.length;i++)
+{
+    if(!data1[i].cellColname)
+        data1[i].cellColname=data1[i].cellid;
+}
+
 var urlCode = parent.selectorWin.type;
 var selected = parent.selectorWin.selected;
 var store = new Ext.data.JsonStore({
@@ -73,12 +75,12 @@ var store = new Ext.data.JsonStore({
 store.loadData(data)
 var store1 = new Ext.data.JsonStore({
     proxy: new Ext.data.MemoryProxy(),
-    fields: ['name', 'cname', 'cellid', 'width']
+    fields: ['name', 'cname', 'cellColname', 'width']
 });
 store1.loadData(data1)
 
 function button4_click(sender, e) {
-    debugger
+    
     parent.selectorWin.close(data1, urlCode);
 }
 
@@ -200,7 +202,7 @@ function MyGrid1_beforerender(sender) {
                 options += '<option>' + temp[i].dictionary.name + '</option>'
             }
         }
-        return "<div><select id = 'cellid' value = '" + value + "' onchange = 'gridGetCell(this,this.value," + "\"" + record.id + "\" " + ")'>" + options + "</select></div>"
+        return "<div><select id = 'cellColname' value = '" + value + "' onchange = 'gridGetCell(this,this.value," + "\"" + record.id + "\" " + ")'>" + options + "</select></div>"
     }
     listCol[2].renderer = function(value, cellmeta, record) { //可以根据行字段的某个类型进行转换设置显示值
         return '<input type="text" style="border:none;width:100%;height:100%;background: none;" value="' + value + '" onchange="grid1cname(this,this.value,\'' + record.id + '\')">'
@@ -276,7 +278,8 @@ window.gridGetCell = function(sender, value, id) {
             // MyGrid1.store.data.items[i].set('search', value)
             for (var n = 0; n < data1.length; n++) {
                 if (data1[n].name == MyGrid1.store.data.items[i].get('name')) {
-                    data1[n].cellid = value
+                    data1[n].cellid = value ;
+                    data1[n].cellColname = value;
                     sender.value = value;
                     return;
                 }
@@ -477,7 +480,7 @@ function button3_afterrender(sender) {
 								header:"目标字段",
 								sortable:true,
 								resizable:true,
-								dataIndex:"cellid",
+								dataIndex:"cellColname",
 								width:100,
 								tpl:"<!--<input type=\"text\" style=\"border:none;width:100%;height:100%;background: none;\" value=\"\">--><div>    <label for=\"sex\">性别:</label>    <select id=\"sex\">        <option>男</option>        <option>女</option>    </select></div>"
 							},

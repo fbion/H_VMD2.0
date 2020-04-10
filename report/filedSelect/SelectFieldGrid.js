@@ -58,7 +58,7 @@ function selectField(datavalue, configData,configFile,ReportID) {
 	if(!configData){
 		configData={};
 	}
-    debugger
+    
 	var headerObj=datavalue.headerdefine;
     var domContent=datavalue.getCellsDom();
     if(domContent.title&&domContent.title.length>0){

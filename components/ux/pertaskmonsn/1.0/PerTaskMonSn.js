@@ -53,7 +53,7 @@ Ext.define("vmd.ux.PerTaskMonSn", {
             var hwDao = new HwDao(ptServer.ip, ptServer.callcode); //地址:端口和授权码(服务管理员分配)
             var url = ptServer.userschedrun;
             hwDao.get(url, {}, ob, function(res) {
-                debugger
+                
                 if (res.isSucceed) {
                     if (res.data && res.data[0].datas.length > 0) {
                         var data = res.data[0].datas;

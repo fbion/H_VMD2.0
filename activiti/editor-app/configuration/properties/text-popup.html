@@ -1,0 +1,35 @@
+﻿
+<div class="modal" ng-controller="KisBpmTextPropertyPopupCtrl">
+    <div class="modal-dialog">
+        <div class="modal-content" style="width:520px;">
+			<div class="modal-header">
+				<button type="button" class="close" style="padding: 2px 10px 0px 0px; font-size:26px;" data-dismiss="modal" aria-hidden="true" ng-click="close()">&times;</button>
+			    {{'PROPERTY.PROPERTY.EDIT.TITLE' | translate:property}}
+			</div>
+			<div class="modal-body" style="padding:15px;">
+                    <textarea auto-focus class="form-control" ng-model="property.value" style="width:100%; height:100%; max-width: 100%; max-height: 100%; min-height: 200px"/>
+			</div>
+			<div class="modal-footer" style="margin-top:0px; padding: 10px 15px 10px;">
+				<button ng-click="save()" class="btn btn-primary btn-hw" translate >ACTION.SAVE</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!--<div class="modal" ng-controller="KisBpmTextPropertyPopupCtrl">
+    <div class="modal-dialog">
+        <div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="close()">&times;</button>
+			    <h3>{{'PROPERTY.PROPERTY.EDIT.TITLE' | translate:property}}</h3>
+			</div>
+			<div class="modal-body">
+				<p><textarea auto-focus class="form-control" ng-model="property.value" style="width:70%; height:100%; max-width: 100%; max-height: 100%; min-height: 200px"/></p>
+			</div>
+			<div class="modal-footer">
+				<button ng-click="save()" class="btn btn-primary" translate >ACTION.SAVE</button>
+			</div>
+		</div>
+	</div>
+</div>-->

@@ -3,13 +3,14 @@ Ext.define('vmd.ux.reporting.Controller', {
     constructor: function(options) {}
 })
 Ext.define("vmd.ux.Reporting", {
-    extend: "Ext.Panel",
+    extend: "vmd.base.Ux",
     requires: vmd.getCmpDeps([]),
     version: "1.0",
     xtype: "vmd.ux.Reporting",
     title: "Panel",
     header: false,
     border: false,
+    panelWidth: 240,
     width: 290,
     height: 670,
     layout: "fit",
@@ -144,6 +145,20 @@ Ext.define("vmd.ux.Reporting", {
                 re_alert.setValue("");
                 // hwCheckbox.setValue(true);
                 sheetHot.removeAllSubmit();
+            }
+
+            function button7_click(sender, e) {
+                if (typeof sheetHot == 'undefined') vmd.alert('警告', '请首先选择嵌套表子表任意单元格激活子表填报设置')
+                if (typeof sheetHot != 'undefined') {
+                    parent.openVisualEditor('saveRlue', enter_store_express.getValue());
+                }
+            }
+
+            function enter_store_express_keyup(sender, e) {
+                if (typeof sheetHot == 'undefined') vmd.alert('警告', '请首先选择嵌套表子表任意单元格激活子表填报设置')
+                if (typeof sheetHot != 'undefined') {
+                    sheetHot.addSumitBlue(enter_store_express.getValue());
+                }
             }
         } catch (ex) {
             vmd.Error.log('003-3', {
@@ -402,6 +417,40 @@ Ext.define("vmd.ux.Reporting", {
                             checked: true,
                             listeners: {
                                 check: hwCheckbox_check
+                            }
+                        },
+                        {
+                            xtype: "textfield",
+                            id: "enter_store_express",
+                            allowBlank: true,
+                            enableKeyEvents: true,
+                            x: 75,
+                            y: 570,
+                            width: 160,
+                            readOnly: false,
+                            keyup: "enter_store_express_keyup",
+                            listeners: {
+                                keyup: enter_store_express_keyup
+                            }
+                        },
+                        {
+                            xtype: "label",
+                            id: "hwLabel",
+                            text: "入库规则：",
+                            x: 15,
+                            y: 575
+                        },
+                        {
+                            xtype: "vmd.button",
+                            id: "button7",
+                            text: "...",
+                            type: "(none)",
+                            size: "small",
+                            x: 245,
+                            y: 570,
+                            click: "button7_click",
+                            listeners: {
+                                click: button7_click
                             }
                         }
                     ]

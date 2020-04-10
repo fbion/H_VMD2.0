@@ -51,7 +51,7 @@ Ext.define("vmd.ux.NumberProperty", {
                             NumberType.setInfo(info.cell_NumberInfo, cell);
                             break;
                         case "事件":
-                            debugger
+                            
                             ValueChange_click_Event.setInfo(info.cell_NumberInfo, 'sz')
                             break;
                     }
@@ -66,8 +66,7 @@ Ext.define("vmd.ux.NumberProperty", {
                     case "属性":
                         NumberType.setInfo(info.cell_NumberInfo[0], cell);
                         break;
-                    case "事件":
-                        debugger
+                    case "事件":                        
                         ValueChange_click_Event.setInfo(info.cell_NumberInfo[0], 'sz')
                         break;
                 }

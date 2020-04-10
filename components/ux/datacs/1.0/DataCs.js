@@ -47,7 +47,7 @@ Ext.define("vmd.ux.DataCs", {
         }
 
         function button1_click(sender, e) {
-            debugger
+            
             page.fireEvent("bt1click", sender, e);
             hwPicker.setValue('8200', '8260', '', 'detail1')
         }
@@ -57,18 +57,18 @@ Ext.define("vmd.ux.DataCs", {
         }
 
         function hwPicker_detailkeyup(sender, sender, e) {
-            debugger
+            
             //alert('12');
             page.fireEvent("detailkeyup", sender, e);
         }
 
         function _setValue(province_id, city_id, county_id, detail_info) {
-            debugger
+            
             hwPicker.setValue(province_id, city_id, county_id, detail_info)
         }
 
         function _getValue(attr) {
-            debugger
+            
             return hwPicker.getValue(attr);
         }
 

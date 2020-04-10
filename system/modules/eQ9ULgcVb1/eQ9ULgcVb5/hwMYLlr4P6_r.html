@@ -10,7 +10,6 @@
     <!--加载dhx组件-->
     <link href="{vmdvirtualPath}/lib/ext-3.4/resources/css/ext-all.css?ver=vmd2.0.5.200306" rel="stylesheet" />
    
-    <link href="{vmdvirtualPath}/design/css/icons.css?ver=vmd2.0.5.200306" rel="stylesheet" />
 
 	<link href="{vmdvirtualPath}/lib/dhtmlx/skins/material/dhtmlx.css?ver=vmd2.0.5.200306" rel="stylesheet" />
 	  <!--样式快捷索引表-->
@@ -27,15 +26,12 @@
     <script src="{vmdvirtualPath}/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=vmd2.0.5.200306"></script>
     <script src="{vmdvirtualPath}/js/util.js?ver=vmd2.0.5.200306"></script>
     <script src="{vmdvirtualPath}/lib/dhtmlx/codebase/dhtmlx.js?ver=vmd2.0.5.200306"></script>
-	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=vmd2.0.5.200306"></script>
-	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=vmd2.0.5.200306"></script>
-    <script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=vmd2.0.5.200306"></script>
-	<script src="{vmdvirtualPath}/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=vmd2.0.5.200306"></script>
+	
     <script src="{vmdvirtualPath}/js/hwdas.js?ver=vmd2.0.5.200306"></script>
     <script src="{vmdvirtualPath}/js/vmdcore.js?ver=vmd2.0.5.200306"></script>
     <script src="{vmdvirtualPath}/js/vmdcomps.js?ver=vmd2.0.5.200306"></script>
     <script src="{vmdvirtualPath}/js/publicMethods.js?ver=vmd2.0.5.200306"></script>
-    <script src="{vmdvirtualPath}/js/vmdreport.js?ver=vmd2.0.5.200306"></script>
+   
     
     {vmdworkspacePath}
 	{vmdprojectconfigjs}
@@ -326,6 +322,12 @@ function btnExp_click(sender, e) {
                 parent.ExpModules(true,expPro.data.project_name, expPro.data.project_id);
             parent.expProSelWin.close();
         }
+         var s = new vmd.proxy.Log();
+        s.save("导出项目", expPro.data.project_id, Ext.util.Cookies.get('userName')+"在"+Ext.Date.dateFormat(new Date(), 'Y-m-d H:i:s')+"导出了"+expPro.data.project_name+"的项目", "项目", function() {
+           // alert("保存成功了！")
+        }, function() {
+            console.log("日志报存失败了！");
+        })
     } else
         vmd.alert("提示", "请选择要导出的项目！")
 }

@@ -4,7 +4,7 @@
  */
 
 (function(H) {
-	vmd.tip('请重新拖拽工具条组件',"info",3000);
+	vmd.tip('请重新拖拽工具条组件',"info",1000);
 	var path = CreateJSPath("hwAPI.js", -2),
 		addEvent = H.addEvent,
 		removeEvent = H.removeEvent,
@@ -339,243 +339,293 @@
 			}
 			switch (id) {
 				case "copyChart":
-					if (chart.seleBorder) {
-						chart.seleBorder.attr({
-							visibility: 'hidden',
-						})
-					}
-					if (!ContainsJS("html2canvas.js")) {
-						$LAB.script(path + "/js/load/bluebird.js").wait();
-						$LAB.script(path + "/js/load/html2canvas.js").wait();
-						$LAB.script(path + "/js/load/downloadify.js").wait();
-						$LAB.script(path + "/js/load/canvg.js").wait(function() {
+					isFire = chartParent.fireEvent('toolBarClick', chartParent, chart, id);
+					if (isFire) {
+						if (chart.seleBorder) {
+							chart.seleBorder.attr({
+								visibility: 'hidden',
+							})
+						}
+						if (!ContainsJS("html2canvas.js")) {
+							$LAB.script(vmd.virtualPath + "/chart/js/load/bluebird.js").wait();
+							$LAB.script(vmd.virtualPath + "/chart/js/load/html2canvas.js").wait();
+							$LAB.script(vmd.virtualPath + "/chart/js/load/downloadify.js").wait();
+							$LAB.script(vmd.virtualPath + "/chart/js/load/canvg.js").wait(function() {
+								chart.copyChartImage();
+							});
+						} else {
 							chart.copyChartImage();
-						});
-					} else {
-						chart.copyChartImage();
+						}
 					}
-					chartParent.fireEvent('toolBarEvent',chartParent,id);
 					break;
 				case "saveChart":
-					if (chart.seleBorder) {
-						chart.seleBorder.attr({
-							visibility: 'hidden',
-						})
+					isFire = chartParent.fireEvent('toolBarClick', chartParent, chart, id);
+					if (isFire) {
+						if (chart.seleBorder) {
+							chart.seleBorder.attr({
+								visibility: 'hidden',
+							})
+						}
+						if (!ContainsJS("html2canvas.js")) {
+							$LAB.script(vmd.virtualPath + "/chart/js/load/bluebird.js").wait();
+							$LAB.script(vmd.virtualPath + "/chart/js/load/html2canvas.js").wait();
+							$LAB.script(vmd.virtualPath + "/chart/js/load/downloadify.js").wait();
+							$LAB.script(vmd.virtualPath + "/chart/js/load/canvg.js").wait(function() {
+								chart.exportChartImage();
+							});
+						} else {
+							chart.exportChartImage();;
+						}
 					}
-					if (!ContainsJS("html2canvas.js")) {
-						$LAB.script(path + "/js/load/bluebird.js").wait();
-						$LAB.script(path + "/js/load/html2canvas.js").wait();
-						$LAB.script(path + "/js/load/downloadify.js").wait();
-						$LAB.script(path + "/js/load/canvg.js").wait(function() {
-							chart.exportChartImage(e);
-						});
-					} else {
-						chart.exportChartImage(e);;
-					}
-					chartParent.fireEvent('toolBarEvent',chartParent,id);
 					break;
 				case "printChart":
-					if (chart.seleBorder) {
-						chart.seleBorder.attr({
-							visibility: 'hidden',
-						})
+					isFire = chartParent.fireEvent('toolBarClick', chartParent, chart, id);
+					if (isFire) {
+						if (chart.seleBorder) {
+							chart.seleBorder.attr({
+								visibility: 'hidden',
+							})
+						}
+						if (!ContainsJS("jQuery.print.js")) {
+							$LAB.script(vmd.virtualPath + "/chart/libs/jquery/jQuery.print.js").wait(function() {
+								chart.chartPrint();
+							});
+						}
 					}
-					chart.chartPrint();;
-					chartParent.fireEvent('toolBarEvent',chartParent,id);
 					break;
 				case "addFontSize":
-					var type = null,
-						obj = null;
-					for (var attr in chart.myChart) {
-						if (chart.myChart[attr]) {
-							type = attr;
-							obj = chart.myChart[attr]
+					isFire = chartParent.fireEvent('toolBarClick', chartParent, chart, id);
+					if (isFire) {
+						var type = null,
+							obj = null;
+						for (var attr in chart.myChart) {
+							if (chart.myChart[attr]) {
+								type = attr;
+								obj = chart.myChart[attr]
+							}
 						}
+						chart.setFontSize(true, type, obj);
 					}
-					chart.setFontSize(true, type, obj);
-					chartParent.fireEvent('toolBarEvent',chartParent,id);
 					break;
 				case "delFontSize":
-					var type = null,
-						obj = null;
-					for (var attr in chart.myChart) {
-						if (chart.myChart[attr]) {
-							type = attr;
-							obj = chart.myChart[attr]
+					isFire = chartParent.fireEvent('toolBarClick', chartParent, chart, id);
+					if (isFire) {
+						var type = null,
+							obj = null;
+						for (var attr in chart.myChart) {
+							if (chart.myChart[attr]) {
+								type = attr;
+								obj = chart.myChart[attr]
+							}
 						}
+						chart.setFontSize(false, type, obj);
 					}
-					chart.setFontSize(false, type, obj);
-					chartParent.fireEvent('toolBarEvent',chartParent,id);
 					break;
 				case "addLine":
-					var type = null,
-						obj = null;
-					for (var attr in chart.myChart) {
-						if (chart.myChart[attr]) {
-							type = attr;
-							obj = chart.myChart[attr]
+					isFire = chartParent.fireEvent('toolBarClick', chartParent, chart, id);
+					if (isFire) {
+						var type = null,
+							obj = null;
+						for (var attr in chart.myChart) {
+							if (chart.myChart[attr]) {
+								type = attr;
+								obj = chart.myChart[attr]
+							}
 						}
+						chart.setLineWidth(true, type, obj);
 					}
-					chart.setLineWidth(true, type, obj);
-					chartParent.fireEvent('toolBarEvent',chartParent,id);
 					break;
 				case "delLine":
-					var type = null,
-						obj = null;
-					for (var attr in chart.myChart) {
-						if (chart.myChart[attr]) {
-							type = attr;
-							obj = chart.myChart[attr]
+					isFire = chartParent.fireEvent('toolBarClick', chartParent, chart, id);
+					if (isFire) {
+						var type = null,
+							obj = null;
+						for (var attr in chart.myChart) {
+							if (chart.myChart[attr]) {
+								type = attr;
+								obj = chart.myChart[attr]
+							}
 						}
+						chart.setLineWidth(false, type, obj);
 					}
-					chart.setLineWidth(false, type, obj);
-					chartParent.fireEvent('toolBarEvent',chartParent,id);
 					break;
 				case "lableShow":
-					chart.setlablesIsShow(chart.myChart.series);
-					chartParent.fireEvent('toolBarEvent',chartParent,id);
+					isFire = chartParent.fireEvent('toolBarClick', chartParent, chart, id);
+					if (isFire) {
+						chart.setlablesIsShow(chart.myChart.series);
+					}
 					break;
 				case "delPoint": // 抽稀
-					var obj = null;
-					if (chart.myChart.series) {
-						obj = chart.myChart.series;
-					}
-					if(!ContainsJS("jQuery.print.js")){
-						$LAB.script(vmd.virtualPath + "/chart/libs/jquery/jQuery.print.js").wait(function() {
-							chart.chartPrint();
-							me.fireEvent('toolBarEvent',chart,id);
-						});
+					isFire = chartParent.fireEvent('toolBarClick', chartParent, chart, id);
+					if (isFire) {
+						var obj = null;
+						if (chart.myChart.series) {
+							obj = chart.myChart.series;
+						}
+						chart.ChangeStep(true, obj);
 					}
 					break;
 				case "passPoint": // 加密
-					var obj = null;
-					if (chart.myChart.series) {
-						obj = chart.myChart.series;
+					isFire = chartParent.fireEvent('toolBarClick', chartParent, chart, id);
+					if (isFire) {
+						var obj = null;
+						if (chart.myChart.series) {
+							obj = chart.myChart.series;
+						}
+						chart.ChangeStep(false, obj);
 					}
-					chart.ChangeStep(false, obj);
-					chartParent.fireEvent('toolBarEvent',chartParent,id);
 					break;
 				case "delDecimals": // 减小小数位数
-					var obj = null;
-					if (chart.myChart.series) {
-						obj = chart.myChart.series;
+					isFire = chartParent.fireEvent('toolBarClick', chartParent, chart, id);
+					if (isFire) {
+						var obj = null;
+						if (chart.myChart.series) {
+							obj = chart.myChart.series;
+						}
+						chart.ChangeDecimals(false, obj);
 					}
-					chart.ChangeDecimals(false, obj);
-					chartParent.fireEvent('toolBarEvent',chartParent,id);
 					break;
 				case "addDecimals": // 增加小数位数
-					var obj = null;
-					if (chart.myChart.series) {
-						obj = chart.myChart.series;
+					isFire = chartParent.fireEvent('toolBarClick', chartParent, chart, id);
+					if (isFire) {
+						var obj = null;
+						if (chart.myChart.series) {
+							obj = chart.myChart.series;
+						}
+						chart.ChangeDecimals(true, obj);
 					}
-					chart.ChangeDecimals(true, obj);
-					chartParent.fireEvent('toolBarEvent',chartParent,id);
 					break;
 				case "delPadding":
-					var obj = null;
-					if (chart.myChart.axise) {
-						obj = chart.myChart.axise;
+					isFire = chartParent.fireEvent('toolBarClick', chartParent, chart, id);
+					if (isFire) {
+						var obj = null;
+						if (chart.myChart.axise) {
+							obj = chart.myChart.axise;
+						}
+						chart.ChangePadding(false, obj);
 					}
-					chart.ChangePadding(false, obj);
-					chartParent.fireEvent('toolBarEvent',chartParent,id);
 					break;
 				case "addPadding":
-					if (chart.myChart.axise) {
-						obj = chart.myChart.axise;
+					isFire = chartParent.fireEvent('toolBarClick', chartParent, chart, id);
+					if (isFire) {
+						if (chart.myChart.axise) {
+							obj = chart.myChart.axise;
+						}
+						chart.ChangePadding(true, obj);
 					}
-					chart.ChangePadding(true, obj);
-					chartParent.fireEvent('toolBarEvent',chartParent,id);
 					break;
 				case "line":
-					var obj = null;
-					if (chart.myChart.series) {
-						obj = chart.myChart.series;
+					isFire = chartParent.fireEvent('toolBarClick', chartParent, chart, id);
+					if (isFire) {
+						var obj = null;
+						if (chart.myChart.series) {
+							obj = chart.myChart.series;
+						}
+						chart.setChartType("line", obj);
 					}
-					chart.setChartType("line", obj);
-					chartParent.fireEvent('toolBarEvent',chartParent,id);
 					break;
 				case "area":
-					var obj = null;
-					if (chart.myChart.series) {
-						obj = chart.myChart.series;
+					isFire = chartParent.fireEvent('toolBarClick', chartParent, chart, id);
+					if (isFire) {
+						var obj = null;
+						if (chart.myChart.series) {
+							obj = chart.myChart.series;
+						}
+						chart.setChartType("area", obj);
 					}
-					chart.setChartType("area", obj);
-					chartParent.fireEvent('toolBarEvent',chartParent,id);
 					break;
 				case "column":
-					var obj = null;
-					if (chart.myChart.series) {
-						obj = chart.myChart.series;
+					isFire = chartParent.fireEvent('toolBarClick', chartParent, chart, id);
+					if (isFire) {
+						var obj = null;
+						if (chart.myChart.series) {
+							obj = chart.myChart.series;
+						}
+						chart.setChartType("column", obj);
 					}
-					chart.setChartType("column", obj);
-					chartParent.fireEvent('toolBarEvent',chartParent,id);
 					break;
 				case "pie":
-					var obj = null;
-					if (chart.myChart.series) {
-						obj = chart.myChart.series;
+					isFire = chartParent.fireEvent('toolBarClick', chartParent, chart, id);
+					if (isFire) {
+						var obj = null;
+						if (chart.myChart.series) {
+							obj = chart.myChart.series;
+						}
+						chart.setChartType("pie", obj);
 					}
-					chart.setChartType("pie", obj);
-					chartParent.fireEvent('toolBarEvent',chartParent,id);
 					break;
 				case "scatter":
-					var obj = null;
-					if (chart.myChart.series) {
-						obj = chart.myChart.series;
+					isFire = chartParent.fireEvent('toolBarClick', chartParent, chart, id);
+					if (isFire) {
+						var obj = null;
+						if (chart.myChart.series) {
+							obj = chart.myChart.series;
+						}
+						chart.setChartType("scatter", obj);
 					}
-					chart.setChartType("scatter", obj);
-					chartParent.fireEvent('toolBarEvent',chartParent,id);
 					break;
 				case "exportChartData":
-					chart.exportChartData();
-					chartParent.fireEvent('toolBarEvent',chartParent,id);
+					isFire = chartParent.fireEvent('toolBarClick',chartParent,chart,id);
+					if(isFire){
+						chart.chartDataViev();
+					}
 					break;
 				case "colseBar":
-					chart.seleBorder.attr({
-						visibility: 'hidden'
-					})
-					ToolBarPlan = null;
-					document.body.removeChild(tbContainer);
-					firstNode.style.marginTop = '0px';
-					chartParent.fireEvent('toolBarEvent',chartParent,id);
+					isFire = chartParent.fireEvent('toolBarClick', chartParent, chart, id);
+					if (isFire) {
+						chart.seleBorder.attr({
+							visibility: 'hidden'
+						})
+						ToolBarPlan = null;
+					}
 					break;
 				case "saveTemplate":
-					if (chart.seleBorder) {
-						chart.seleBorder.attr({
-							visibility: 'hidden',
-						})
-					}
-					var tpJson = JSON.stringify(chart.saveTemplate());
-					if (!ContainsJS("html2canvas.js")) {
-						$LAB.script(path + "/js/load/bluebird.js").wait();
-						$LAB.script(path + "/js/load/html2canvas.js").wait();
-						$LAB.script(path + "/js/load/downloadify.js").wait();
-						$LAB.script(path + "/js/load/canvg.js").wait(function() {
-							chart.getChartImage(function(imgUrl){
-								var params = {
-									tpJson:tpJson,
-									imgUrl:imgUrl
-								}
-								chartParent.fireEvent('saveTemplate',chart,params);
+					isFire = chartParent.fireEvent('toolBarClick', chartParent, chart, id);
+					if (isFire) {
+						if (chart.seleBorder) {
+							chart.seleBorder.attr({
+								visibility: 'hidden',
+							})
+						}
+						var tpJson = JSON.stringify(chart.saveTemplate());
+						if (!ContainsJS("html2canvas.js")) {
+							$LAB.script(vmd.virtualPath + "/chart/js/load/bluebird.js").wait();
+							$LAB.script(vmd.virtualPath + "/chart/js/load/html2canvas.js").wait();
+							$LAB.script(vmd.virtualPath + "/chart/js/load/downloadify.js").wait();
+							$LAB.script(vmd.virtualPath + "/chart/js/load/canvg.js").wait(function() {
+								chart.getChartImage(function(imgUrl) {
+									var params = {
+										tpJson: tpJson,
+										imgUrl: imgUrl
+									}
+									chartParent.fireEvent('saveTemplate', chart, params);
+								});
 							});
-						});
-					} else {
-						chart.getChartImage(function(imgUrl){
-							var params = {
-								tpJson:tpJson,
-								imgUrl:imgUrl
-							}
-							chartParent.fireEvent('saveTemplate',chart,params);
-						});
+						} else {
+							chart.getChartImage(function(imgUrl) {
+								var params = {
+									tpJson: tpJson,
+									imgUrl: imgUrl
+								}
+								chartParent.fireEvent('saveTemplate', chart, params);
+							});
+						}
 					}
-					chartParent.fireEvent('toolBarEvent',chartParent,id);
 					break;
 				case "loadTemplate":
-					chartParent.fireEvent('loadTemplate',chartParent,chart.parentObject.userTemplateUrl);
-					chartParent.fireEvent('toolBarEvent',chartParent,id);
+					isFire = chartParent.fireEvent('toolBarClick', chartParent, chart, id);
+					if (isFire) {
+						chartParent.fireEvent('loadTemplate', chartParent, chart.parentObject.userTemplateUrl);
+					}
+					break;
+				case "zoomOut":
+					isFire = chartParent.fireEvent('toolBarClick',chartParent,chart,id);
+					if(isFire){
+						chart.zoomOut();
+					}
 					break;
 				default:
-					chartParent.fireEvent('toolBarEvent',chartParent,id);
+					isFire = chartParent.fireEvent('toolBarClick', chartParent, chart, id);
 					break;
 			}
 		});

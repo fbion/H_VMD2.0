@@ -266,21 +266,23 @@ function eXcell_vmdcombo(cell) {
 	                        text: tmpVal[cm.rule['text']] + ""
 	                    }
 	                }
-	                else if (this.cellType && this.cellType.noValueClear) {
+	                else if (this.cellType && this.cellType.noValueClear) {						
 	                    val = {
 	                        value: "",
 	                        text: "&nbsp;"
 	                    }
-	                    if (cm.rptStore.dataRequestCompleted) {
-	                        var oCell = this.hwReport.getOriginCellById(this.cell._attrs.sid);
-	                        var dsName = oCell && oCell.dsName && oCell.dsName[0];
-	                        var dsField = oCell && oCell.dsField && oCell.dsField[0];
-	                        var dsStore = this.hwReport.queryDatastores.get(dsName) || this.hwReport.bindDatastore;
-	                        var rowId = this.cell.parentNode.idd;
-	                        if (dsStore && dsField) {
-	                            dsStore.updateValue(rowId, dsField, '')
-	                        }
-	                    }
+                      if (cm.rptStore.dataRequestCompleted) {
+                          var oCell = this.hwReport.getOriginCellById(this.cell._attrs.sid);
+                          var dsName = oCell && oCell.dsName && oCell.dsName[0];
+                          var dsField = oCell && oCell.dsField && oCell.dsField[0];
+                          var dsStore = this.hwReport.queryDatastores.get(dsName) || this.hwReport.bindDatastore;
+                          var rowId = this.cell.parentNode.idd;
+                          if (dsStore && dsField) {
+                              dsStore.updateValue(rowId, dsField, '')
+                          }
+						  
+							this.cell.combo_value=tmpVal||"";
+                      }
 	                }
 	            }
 	            val = dhx._isObj(val) ? val.text : val;
@@ -402,13 +404,13 @@ eXcell_vmdcombo.prototype.fillCellCombos = function (hwReport, cellId) {
     if (hwReport.bindDatastore) {
         for (var i = 0; i < grid.rowsCol.length; i++) {
             var cellObj = grid.cells3(grid.rowsCol[i], oCell.index);
-            cellObj.refreshCell();
+            cellObj.refreshCell&& cellObj.refreshCell();
         }
     }
     else {
         for (var i = 0; i < oCell.childs.length; i++) {
             var cellObj = grid.cells.apply(grid, oCell.childs[i].split("_"));
-            cellObj.refreshCell();
+			cellObj.refreshCell&&cellObj.refreshCell();
         }
     }
 };

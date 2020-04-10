@@ -377,7 +377,7 @@ Ext.define("vmd.ux.NewNumber", {
                 areaCom2.setValue(numInfo.areaCom2.value);
                 symbolCom.setValue(numInfo.symbolCom.value);
                 symbolCom1.setValue(numInfo.symbolCom1.value);
-                debugger
+                
                 textControl.setValue(alignInfo.textControl.value)
                 textDirection.setValue(alignInfo.textDirection.value)
                 escapelabel.setValue(alignInfo.escapelabel.checked)

@@ -1,0 +1,379 @@
+/* 创建人：杜昊天 */
+/* 创建时间：2018-10-19 */
+/* 功能描述：基于VMD 2.0设计的公共样式 */
+/* 使用规范：为了不影响设计器的样式，需在每个组件下引入class，比如vmd-global */
+
+/* 修改时间：2020-03-03 */
+/* 功能描述：新增新版日期组件样式vmd-date-new,报表重写样式vmd-report */
+
+/* =========================================== MainViewport =========================================== */
+/* 总体字体样式 */
+.vmd-global {
+    font-family: "Microsoft YaHei";
+    font-size: 14px;
+    color: #2e2e2e;
+}
+
+.vmd-global div.x-form-img {
+    background-image: url("../images/dhxform_chbxrd.png")
+}
+
+/* 重写下拉框选中样式 */
+.vmd-global div.dhxcombo_material.dhxcombo_actv {
+    padding-bottom: 1px;
+    border: 1px solid #3c8fff;
+}
+
+/* 重写日期选择框选中样式 */
+.vmd-global .x-form-text.x-form-focus {
+    height: 22px;
+    border-bottom: 1px solid #e3e2e8;
+}
+
+/* 重写下拉框边框样式 */
+.vmd-global .dhxcombo_material {
+    border-radius: 4px;
+    border: 1px solid #e4e4e4;
+}
+
+/* 鼠标悬停 */
+.vmd-global .dhxcombo_material:hover {
+    border: 1px solid #3c8fff;
+}
+
+/* 重写下拉框箭头样式 */
+.vmd-global .dhxcombo_material .dhxcombo_select_button {
+    height: 25px;
+    background: none;
+    padding-right: 6px;
+    filter: none;
+}
+
+/* 箭头图片替换 */
+.vmd-global .dhxcombo_material .dhxcombo_select_img {
+    background-image: url("../images/dhxcombo_arrow_down.gif") !important;
+}
+
+/* 重写下拉框输入框样式 */
+.vmd-global .dhxcombo_material .dhxcombo_input {
+    height: 30px;
+    line-height: 30px;
+    margin-left: 7px;
+    font-family: "Microsoft YaHei" !important;
+    font-size: 14px;
+    color: #2E2E2E;
+}
+
+/* 重写下拉框内容样式 */
+.vmd-global .dhxcombolist_material {
+    border-color: #e4e7ed;
+    border-radius: 4px;
+    margin-top: 2px;
+}
+
+/* 重写下拉框内容项样式 */
+.vmd-global .dhxcombolist_material .dhxcombo_option {
+    height: 30px;
+    line-height: 30px;
+    font-family: "Microsoft YaHei" !important;
+    font-size: 14px;
+    color: #2E2E2E;
+    border-width: 0;
+}
+
+/* 重写下拉框内容项鼠标悬停样式 */
+.vmd-global .dhxcombolist_material .dhxcombo_option :hover {
+    background-color: #daecfd;
+}
+
+/* 重写下拉框内容项文本样式 */
+.vmd-global .dhxcombolist_material .dhxcombo_option .dhxcombo_option_text {
+    padding-left: 8px;
+}
+
+/* 重写下拉框内容项选中样式 */
+.vmd-global .dhxcombolist_material .dhxcombo_option_selected.dhxcombo_option {
+    border-width: 0 !important;
+    background-color: #fdebda !important;
+}
+
+/* =========================================== MainViewport =========================================== */
+
+/* =========================================== Date Field =========================================== */
+/* 日期选择框样式 */
+.vmd-date {
+    border-radius: 4px;
+    border: 1px solid #e4e4e4;
+    height: 30px !important;
+    background-image: url("../images/calendar.png");
+    background-repeat: no-repeat;
+    background-position: 90%;
+    font-family: "Microsoft YaHei";
+    font-size: 14px;
+}
+
+.vmd-date-border-bottom {
+    border-bottom: 1px solid #e4e4e4;
+    height: 30px !important;
+    background-image: url("../images/calendar.png");
+    background-repeat: no-repeat;
+    background-position: 90%;
+    font-family: "Microsoft YaHei";
+    font-size: 14px;
+    padding-left: 10px;
+}
+
+.vmd-date-new {
+    top: 8px !important;
+    height: 30px !important;
+    border: 1px solid #e4e4e4 !important;
+    border-radius: 4px;
+    padding-left: 5px !important;
+    background-image: url("../images/calendar.png") !important;
+    background-repeat: no-repeat;
+    background-position: 90%;
+    cursor: pointer;
+}
+
+.vmd-date-new input {
+    width: 70% !important;
+    font-size: 12px !important;
+    cursor: pointer;
+}
+
+.vmd-date-new img {
+    display: none;
+}
+
+/* =========================================== Date Field =========================================== */
+
+/* =========================================== Button =========================================== */
+/* 一般按钮样式 */
+.btn {
+    font-family: "Microsoft YaHei";
+    font-size: 14px;
+    padding: 0;
+    text-align: center;
+    height: 30px;
+    line-height: 27px;
+    color: #fff;
+    border: 1px solid #4a67d2;
+    background-color: #4a67d2;
+    border-radius: 4px;
+    width: 80px;
+}
+
+/* 鼠标悬停 */
+.btn:hover {
+    border: 1px solid #6e88e5;
+    background-color: #6e88e5;
+    color: white;
+    cursor: pointer;
+}
+
+/* 鼠标点击 */
+.btn:active {
+    border: 1px solid #3652bb;
+    background-color: #3652bb;
+    color: white;
+    cursor: pointer;
+}
+
+/* 屏蔽按钮选中样式 */
+.btn.vmd-button-selected {
+    color: white !important;
+}
+
+/* 取消按钮样式 */
+.btn-cancel {
+    font-family: "Microsoft YaHei";
+    font-size: 14px;
+    padding: 0;
+    text-align: center;
+    height: 30px;
+    line-height: 27px;
+    color: #353535;
+    border: 1px solid #e3e2e8;
+    background-color: #fff;
+    border-radius: 4px;
+    width: 80px;
+}
+
+/* 鼠标悬停 */
+.vmd-btn-cancel:hover {
+    color: #353535;
+    cursor: pointer;
+    border: 1px solid #e3e2e8;
+}
+
+/* 鼠标点击 */
+.vmd-btn-cancel:active {
+    border: 1px solid #e2e2e2;
+    background-color: #e2e2e2;
+    color: black;
+    cursor: pointer;
+}
+
+/* 屏蔽按钮选中样式 */
+.vmd-btn-cancel.vmd-button-selected {
+    color: #353535 !important;
+    border: 1px solid #e3e2e8;
+}
+
+/* =========================================== Button =========================================== */
+
+/* =========================================== Grid Panel =========================================== */
+.vmd-grid .x-grid3-check-col {
+    height: 32px;
+    background-image: url("../images/item_chk0.gif");
+}
+
+.vmd-grid .x-grid3-check-col-on {
+    height: 32px;
+    background-image: url("../images/item_chk1.gif");
+}
+
+.vmd-grid .x-grid3-dirty-cell {
+    background-image: none;
+}
+
+/* 表格线样式兼容 */
+.vmd-grid table {
+    border-collapse: collapse;
+}
+
+/* 表头背景色 */
+.vmd-grid .x-grid3-header {
+    background-color: white;
+}
+
+/* 表头鼠标悬停背景色 */
+.vmd-grid .x-grid3-hd-over .x-grid3-hd-inner {
+    background-color: #f7f7f7;
+}
+
+/* 表头错位兼容 */
+.vmd-grid .x-grid3-header-offset {
+    padding: 0;
+}
+
+/* 表头单元格 */
+.vmd-grid .x-grid3-header td {
+    background-color: #f7f7f7;
+    border: 1px solid #e3e2e8;
+    font-size: 14px;
+}
+
+/* 表体单元格 */
+.vmd-grid .x-grid3-body td {
+    border: 1px solid #e3e2e8;
+    border-top-width: 0;
+    padding: 0;
+    font-size: 14px;
+}
+
+/* 表体行 */
+.vmd-grid .x-grid3-row {
+    border: none;
+}
+
+/* 表体行鼠标悬停背景色 */
+.vmd-grid .x-grid3-row-over {
+    background-color: white;
+}
+
+/* 表体行选中背景色 */
+.vmd-grid .x-grid3-row-selected {
+    background-color: #F5F7FC !important;
+}
+
+/* =========================================== Grid Panel =========================================== */
+
+/* =========================================== Text Field =========================================== */
+/* 带边框的输入框 */
+.vmd-text {
+    height: 30px !important;
+    line-height: 30px;
+    padding-left: 8px;
+    border: 1px solid #e4e4e4;
+    border-radius: 4px;
+    font-family: "Microsoft YaHei";
+    font-size: 14px;
+}
+
+/* 获得焦点 */
+.vmd-text:focus {
+    border: 1px solid #3c8fff !important;
+}
+
+/* 不带边框的输入框 */
+.vmd-text-border-none {
+    height: 30px !important;
+    line-height: 30px;
+    padding-left: 8px;
+    border: none;
+    font-family: "Microsoft YaHei";
+    font-size: 14px;
+}
+
+/* 获得焦点 */
+.vmd-text-border-none:focus {
+    border: none !important;
+}
+
+/* 带底部边框的输入框 */
+.vmd-text-border-bottom {
+    height: 30px;
+    line-height: 30px;
+    padding-left: 8px;
+    border-width: 0;
+    border-bottom: 1px solid #e4e4e4;
+    font-family: "Microsoft YaHei";
+    font-size: 14px;
+}
+
+/* =========================================== Text Field =========================================== */
+
+/* =========================================== Text Area =========================================== */
+/* 文本域样式 */
+.vmd-textarea {
+    line-height: 30px;
+    padding-left: 8px;
+    border: 1px solid #e4e4e4;
+    border-radius: 4px;
+    font-family: "Microsoft YaHei";
+    font-size: 14px;
+}
+
+/* 获得焦点 */
+.vmd-textarea:focus {
+    border: 1px solid #3c8fff !important;
+}
+
+/* 无边框文本域样式 */
+.vmd-textarea-border-none {
+    line-height: 30px;
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+    border: none !important;
+    font-family: "Microsoft YaHei";
+    font-size: 14px;
+}
+
+/* 获得焦点 */
+.vmd-textarea-border-none:focus {
+    border: none !important;
+}
+
+/* =========================================== Text Area =========================================== */
+
+/* =========================================== hwReport =========================================== */
+.vmd-report div.dhxcombo_material.dhxcombo_actv {
+    border-bottom: none;
+}
+
+.vmd-report div.dhxcombo_material div.dhxcombo_select_button div.dhxcalendar_select_img {
+    background-image: url("../images/calendar.png");
+}
+
+/* =========================================== hwReport =========================================== */

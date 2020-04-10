@@ -40,37 +40,13 @@ function eXcell_vmdtree(cell) {
 	this.combo_tree = this.cellType.obj;
 
 	this._combo_pre = "";
-
-	if (this.grid._disabled || this.isDisabled()) {
-	    this.combo_tree.DOMelem_input.setAttribute("readonly", "readonly");
-	}
-
-	this.isDisabled = function () {
-	    if (this.grid._disabled) {
-	        return true;
-	    }
-	    return this.cell._disabled;
-	}
-
-	this.setDisabled = function (fl) {
-	    if (fl != 'true' && fl != 1)
-	        fl = false;
-
-	    this.cell._disabled = fl;
-	    if (fl) {
-	        if (this.cell.firstChild && this.cell.firstChild.firstChild && this.cell.firstChild.firstChild.firstChild) {
-	            this.cell.firstChild.firstChild.firstChild.setAttribute("readonly", "readonly");
-	        }
-	        this.combo_tree.DOMelem_input.setAttribute("readonly", "readonly");
-	    }
-	    else {
-	        if (this.cell.firstChild && this.cell.firstChild.firstChild && this.cell.firstChild.firstChild.firstChild) {
-	            this.cell.firstChild.firstChild.firstChild.removeAttribute("readonly");
-	        }
-	        this.combo_tree.DOMelem_input.removeAttribute("readonly");
-	    }
-	}
-
+		if(this.hwReport&&this.hwReport.vmdreport&&this.hwReport.vmdreport.xtype=="vmd.datainput")
+	{
+		var originCell = this.hwReport.getOriginCellById(this.cell._attrs.sid);
+		if (originCell && cell.rowSpan == 1&&originCell.childs.indexOf(cell.parentNode.idd + "_" + cell.cellIndex)<0) {
+             originCell.childs.push(cell.parentNode.idd + "_" + cell.cellIndex);	
+		}
+	}	
 	this.edit = function () {
 	    var that = this;
 		if(!window.dhx_globalImgPath) window.dhx_globalImgPath = this.grid.imgURL;
@@ -112,13 +88,33 @@ function eXcell_vmdtree(cell) {
 		this.cell.innerHTML = "";
 		this.cell.appendChild(this.combo_tree.DOMParent);
 
-		this.combo_tree.DOMelem.style.top = Math.max(0, (this.combo_tree.DOMParent.clientHeight - this.combo_tree.DOMelem.clientHeight) / 2) + "px";
+		var top = (this.combo_tree.DOMParent.clientHeight - this.combo_tree.DOMelem.clientHeight) / 2;
+		if (top < 1) {
+		    top = 0;
+		}
+		this.combo_tree.DOMelem.style.top = top + "px";
 		this.combo_tree.DOMParent.firstChild.style.width = this.cell.clientWidth + "px";
 		this.combo_tree.DOMelem_input.style.width = (this.cell.clientWidth - 24) + "px";
 		this.combo_tree.DOMelem_input.focus();
 		this.combo_tree.DOMelem_input.value = val;
+        var h=0;
+		if(this.combo_tree.base.style.height){
+			h=	this.combo_tree.base.style.height.split('p')[0];
+		}
+		var ch=document.body.clientHeight;
+		if(ch-cellBoundingRect.top - cellBoundingRect.height>h){
+			this.combo_tree.base.style.top =(cellBoundingRect.top +cellBoundingRect.height)+"px";
+		}else {
+			if(cellBoundingRect.top>h){
+				this.combo_tree.base.style.top = (cellBoundingRect.top-h) + "px"
+			}else{
+				if(ch>h){
+					this.combo_tree.base.style.top =(ch- h )+ "px"
+				}
+			}
+		}
 
-		this.combo_tree.base.style.top = top + "px"
+	//	this.combo_tree.base.style.top = top + "px"
 		this.combo_tree.base.style.left = (left - 1) + "px"
 		this.combo_tree.base.style.visibility = "visible"
 		this.combo_tree.area.focus();
@@ -162,7 +158,6 @@ function eXcell_vmdtree(cell) {
     * 显示编辑器
     */
 	this.showEditor = function () {
-	    var that = this;
 	    var val = this.getText();
 	    this.cell.innerHTML = ""
 	    this.combo_tree.DOMelem.style.width = this.cell.clientWidth + "px";
@@ -172,16 +167,6 @@ function eXcell_vmdtree(cell) {
 	    this.combo_tree.DOMelem.style.top = (this.combo_tree.DOMParent.clientHeight - this.combo_tree.DOMelem.clientHeight) / 2 + "px";
 
 	    this.cell._editorshow = true;
-
-	    this.grid.attachEvent("onSetSizes", function () {
-	        if (that.cell.firstChild && that.cell.firstChild.firstChild) {
-	            that.cell.firstChild.firstChild.style.width = that.cell.clientWidth + "px";
-	            that.cell.firstChild.firstChild.firstChild.style.width = (that.cell.clientWidth - 24) + "px";
-	        }
-
-	        that.combo_tree.DOMelem.style.width = that.cell.clientWidth + "px";
-	        that.combo_tree.DOMelem_input.style.width = (that.cell.clientWidth - 24) + "px";
-	    });
 	}
 
 
@@ -219,7 +204,7 @@ function eXcell_vmdtree(cell) {
 	                }
 	            }
 	        }
-	        val = dhx._isObj(val) ? val.text : val;
+	        val = (val || {}).text || val;
 	    }
 
 	    if ((val || "").toString()._dhx_trim() == "") val = null;
@@ -299,18 +284,9 @@ eXcell_vmdtree.prototype.init = function(index) {
 eXcell_vmdtree.prototype.fillCellCombos = function (hwReport, cellId) {
     var grid = hwReport.grid;
     var oCell = hwReport.getOriginCellById(cellId);
-
-    if (hwReport.bindDatastore) {
-        for (var i = 0; i < grid.rowsCol.length; i++) {
-            var cellObj = grid.cells3(grid.rowsCol[i], oCell.index);
-            cellObj.refreshCell();
-        }
-    }
-    else {
-        for (var i = 0; i < oCell.childs.length; i++) {
-            var cellObj = grid.cells.apply(grid, oCell.childs[i].split("_"));
-            cellObj.refreshCell();
-        }
+    for (var i = 0; i < oCell.childs.length; i++) {
+        var cellObj = grid.cells.apply(grid, oCell.childs[i].split("_"));
+        cellObj.refreshCell();
     }
 };
 
@@ -325,7 +301,19 @@ eXcell_vmdtree.prototype.setComboCValue = function (value, value2) {
         ]);
     }
     else {
+        //this.setCValue(value, value2);
+    
+    //IE下的兼容
+    var oldsubgridhtml;
+    if(dhx.isIE)  oldsubgridhtml=this.combo_tree.DOMParent.innerHTML;
+    
         this.setCValue(value, value2);
+    
+    if(dhx.isIE && oldsubgridhtml){
+      this.combo_tree.DOMParent.innerHTML=oldsubgridhtml;
+        this.combo_tree.DOMParent.firstChild.firstChild.value=(value == "&nbsp;" ? "" : value);
+    }
+
     }
 };
 

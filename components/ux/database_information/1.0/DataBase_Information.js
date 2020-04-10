@@ -885,7 +885,7 @@ Ext.define("vmd.ux.DataBase_Information", {
             sjfwdz.setValue("");
             sm.setValue("");
             cjr.setValue("");
-            debugger
+            
             cjsj.setValue(date);
             del_password = '0';
         }

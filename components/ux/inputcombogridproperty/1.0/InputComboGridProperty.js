@@ -428,7 +428,7 @@ Ext.define("vmd.ux.InputComboGridProperty", {
         this.items = [{
             xtype: "tabpanel",
             id: "MyTabs",
-            activeTab: 2,
+            activeTab: 0,
             height: 150,
             width: 500,
             tabchange: "MyTabs_tabchange",

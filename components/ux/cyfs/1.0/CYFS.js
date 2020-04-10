@@ -38,7 +38,7 @@ Ext.define("vmd.ux.CYFS", {
 
         function CYFS_afterrender(sender) {
             this.cascade(function(item) {
-                debugger
+                
             })
         }
         this.CYFS_afterrender = CYFS_afterrender;

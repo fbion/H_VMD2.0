@@ -1,0 +1,41 @@
+﻿<!DOCTYPE html>
+<html>
+<head> 
+<meta charset="utf-8"> 
+<title>汉威工作流iframe测试</title> 
+</head> 
+<body>
+
+<iframe src="http://localhost:13286/webapp/modeler-visual.html?modelId=2501&mode=visual&info=kermit" width="100%" height="600px"></iframe>
+
+<p>一些旧的浏览器不支持 iframe。</p>
+<p>如果浏览器不支持 iframes 则不会显示。</p>
+
+<script type="text/javascript" >
+    function iframeTest(varInfo) {
+        alert(varInfo);
+    }
+
+    ////页面初始化前方法 控制权限 记录编辑权限
+    //function MyViewport_beforerender(sender) {
+    //    //模拟平台5的token传参登陆,默认设置cookie 为dbadmin 管理员
+    //    var urlToken = getUrlParam("token");
+    //    if (urlToken != null && urlToken != "") {
+    //        Ext.util.Cookies.set('userName', "管理员");
+    //        Ext.util.Cookies.set('login', "dbadmin");// 获取Cookie
+    //        return
+    //    }
+    //    var userType = Ext.util.Cookies.get("userType");
+    //    allowedDesigner = userType == "vmdDesigner" ? true : false;
+
+    // "token=eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6IjEiLCJMb2dpbiI6ImRiYWRtaW4iLCJOYW1lIjoi566h55CG5ZGYIiwibmJmIjoxNTExMTM3MjQ4LCJleHAiOjE1MTExNDA4NDgsImlhdCI6MTUxMTEzNzI0OCwiaXNzIjoiSGFuV2VpS2VKaSIsImF1ZCI6IkhXRGF0YVNlcnZpY2UifQ.hFJBrQpJOACM1SiCN8yp9khQ9D0AONVO4ahbN7qyXXpVa7krkSvcXf9X7WbjTsFYeE2NrI4_lUbKri3T2FxRbgzY9u26vwUnDZyE8aYgUBO2EiugRhWRI9_HhkEL2DaMq6ErwApxhpSs2k3mGp7r_nDaHjm_yY471yhZ91Sgh63B5nIFseUwwF0bAeQf9NBWUYcb_QURrrj2PZLEyLVyjLGvzm2hx-S9wLncVCVMDYJU4aQX5eQr-JKkuy2QS7OThW8yhapnL9mCJYZgkRqPzFvUV640_mnhWT8k2DpqSXMvtb_YFp2vIjsJJ4WHnM84XHM_xpIJkjHaY7lx9mjxFg; userName=%u7BA1%u7406%u5458; login=dbadmin; ecyLogin=undefined; userType=vmdDesigner"
+    //    var login = Ext.util.Cookies.get("login"); // 获取Cookie（info：login=dbadmin; einfo：ecyLogin=undefined;）
+    //    if (!login) {
+    //        window.location.href = window.location.origin;
+    //    }
+    //}
+</script>
+
+</body>
+</html>
+

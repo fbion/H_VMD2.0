@@ -84,7 +84,7 @@ window.more = function() {
 }
 //获取用户信息
 function loadUserInfo(callback) {
-    debugger;
+    
     if(usermodel && usermodel.login) {
         callback()
     } else {

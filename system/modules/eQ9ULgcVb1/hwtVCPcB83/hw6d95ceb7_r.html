@@ -6,36 +6,32 @@
 
     <title>版本提取下载</title>
 	<!--基本样式-->
-    <link href="{vmdvirtualPath}/css/common.css?ver=vmd2.0.5.191024" rel="stylesheet" />
+    <link href="{vmdvirtualPath}/css/common.css?ver=vmd2.0.5.200306" rel="stylesheet" />
     <!--加载dhx组件-->
-    <link href="{vmdvirtualPath}/lib/ext-3.4/resources/css/ext-all.css?ver=vmd2.0.5.191024" rel="stylesheet" />
+    <link href="{vmdvirtualPath}/lib/ext-3.4/resources/css/ext-all.css?ver=vmd2.0.5.200306" rel="stylesheet" />
    
-    <link href="{vmdvirtualPath}/design/css/icons.css?ver=vmd2.0.5.191024" rel="stylesheet" />
 
-	<link href="{vmdvirtualPath}/lib/dhtmlx/skins/material/dhtmlx.css?ver=vmd2.0.5.191024" rel="stylesheet" />
+	<link href="{vmdvirtualPath}/lib/dhtmlx/skins/material/dhtmlx.css?ver=vmd2.0.5.200306" rel="stylesheet" />
 	  <!--样式快捷索引表-->
-    <link href="{vmdvirtualPath}/css/shortcut.css?ver=vmd2.0.5.191024" rel="stylesheet" />
+    <link href="{vmdvirtualPath}/css/shortcut.css?ver=vmd2.0.5.200306" rel="stylesheet" />
     
 	{vmdprojectcssfiles}
     
-    <script src="{vmdvirtualPath}/lib/labjs/LAB.min.js?ver=vmd2.0.5.191024"></script>
-    <script src="{vmdvirtualPath}/config.js?ver=vmd2.0.5.191024"></script>
-    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=vmd2.0.5.191024"></script>
-    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=vmd2.0.5.191024"></script>
-    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=vmd2.0.5.191024"></script>
-    <script src="{vmdvirtualPath}/lib/ext-3.4/ext-all-debug.js?ver=vmd2.0.5.191024"></script>
-    <script src="{vmdvirtualPath}/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=vmd2.0.5.191024"></script>
-    <script src="{vmdvirtualPath}/js/util.js?ver=vmd2.0.5.191024"></script>
-    <script src="{vmdvirtualPath}/lib/dhtmlx/codebase/dhtmlx.js?ver=vmd2.0.5.191024"></script>
-	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=vmd2.0.5.191024"></script>
-	<script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=vmd2.0.5.191024"></script>
-    <script src="{vmdvirtualPath}/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=vmd2.0.5.191024"></script>
-	<script src="{vmdvirtualPath}/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=vmd2.0.5.191024"></script>
-    <script src="{vmdvirtualPath}/js/hwdas.js?ver=vmd2.0.5.191024"></script>
-    <script src="{vmdvirtualPath}/js/vmdcore.js?ver=vmd2.0.5.191024"></script>
-    <script src="{vmdvirtualPath}/js/vmdcomps.js?ver=vmd2.0.5.191024"></script>
-    <script src="{vmdvirtualPath}/js/publicMethods.js?ver=vmd2.0.5.191024"></script>
-    <script src="{vmdvirtualPath}/js/vmdreport.js?ver=vmd2.0.5.191024"></script>
+    <script src="{vmdvirtualPath}/lib/labjs/LAB.min.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/config.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/ext-all-debug.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/js/util.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/lib/dhtmlx/codebase/dhtmlx.js?ver=vmd2.0.5.200306"></script>
+	
+    <script src="{vmdvirtualPath}/js/hwdas.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/js/vmdcore.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/js/vmdcomps.js?ver=vmd2.0.5.200306"></script>
+    <script src="{vmdvirtualPath}/js/publicMethods.js?ver=vmd2.0.5.200306"></script>
+   
     
     {vmdworkspacePath}
 	{vmdprojectconfigjs}
@@ -315,8 +311,46 @@ function hwDiv14_afterrender(sender) {
 function button8_click(sender, e) {
     var path = "/version/VMD2.0.4/vmd2.0部署文档.docx";
     window.open(path, '_self')
-    //记录日志信息 
-    //vmd.webBase.syslog(loginfo,logtype,operationtype,function(res){}) 
+}
+
+function button9_click(sender, e) {
+    var path = "/version/日志中心/日志中心.rar";
+    window.open(path, '_self')
+}
+
+function button10_click(sender, e) {
+    var path = "/version/日志中心/日志中心部署手册.docx";
+    window.open(path, '_self')
+}
+
+function button11_click(sender, e) {
+    var path = "/version/云/镜像服务/vmdcicd.tar";
+    window.open(path, '_self')
+}
+
+function button13_click(sender, e) {
+    var path = "/version/图形服务/Web图形算法服务部署包.rar";
+    window.open(path, '_self')
+}
+
+function button14_click(sender, e) {
+    var path = "/version/图形服务/WEB图形部署手册.docx";
+    window.open(path, '_self')
+}
+
+function button12_click(sender, e) {
+    var path = "/version/云/镜像服务/镜像服务部署文档.docx";
+    window.open(path, '_self')
+}
+
+function button15_click(sender, e) {
+    var path = "/version/云/文件服务/fasservice.tar";
+    window.open(path, '_self')
+}
+
+function button16_click(sender, e) {
+    var path = "/version/云/文件服务/文件服务镜像部署文档.docx";
+    window.open(path, '_self')
 }
 			this.MainViewport_beforerender=MainViewport_beforerender;
 
@@ -413,6 +447,7 @@ function button8_click(sender, e) {
 						region:"west",
 						tabchange:"hwMyTabs_tabchange",
 						cls:"aaaaa",
+						bodyStyle:"font-size:14px;",
 						listeners:{
 							tabchange:hwMyTabs_tabchange
 						},
@@ -880,6 +915,151 @@ function button8_click(sender, e) {
 										height:440,
 										x:40,
 										y:110
+									}
+								]
+							},
+							{
+								xtype:"panel",
+								id:"panel5",
+								title:"其它",
+								header:true,
+								border:true,
+								height:100,
+								layout:"absolute",
+								bodyStyle:"font-size:14px;",
+								items:[
+									{
+										xtype:"vmd.button",
+										id:"button9",
+										text:"日志中心安装包下载",
+										type:"text",
+										size:"small",
+										x:50,
+										y:30,
+										click:"button9_click",
+										listeners:{
+											click:button9_click
+										}
+									},
+									{
+										xtype:"vmd.button",
+										id:"button10",
+										text:"日志中心部署手册",
+										type:"text",
+										size:"small",
+										x:50,
+										y:60,
+										click:"button10_click",
+										listeners:{
+											click:button10_click
+										}
+									},
+									{
+										xtype:"label",
+										id:"hwLabel16",
+										text:"日志中心：",
+										x:30,
+										y:10
+									},
+									{
+										xtype:"label",
+										id:"hwLabel17",
+										text:"镜像服务",
+										x:320,
+										y:10
+									},
+									{
+										xtype:"vmd.button",
+										id:"button11",
+										text:"镜像下载",
+										type:"text",
+										size:"small",
+										x:340,
+										y:30,
+										click:"button11_click",
+										listeners:{
+											click:button11_click
+										}
+									},
+									{
+										xtype:"vmd.button",
+										id:"button12",
+										text:"镜像使用文档",
+										type:"text",
+										size:"small",
+										x:340,
+										y:60,
+										click:"button12_click",
+										listeners:{
+											click:button12_click
+										}
+									},
+									{
+										xtype:"label",
+										id:"hwLabel18",
+										text:"图形服务：",
+										x:30,
+										y:110,
+										height:20
+									},
+									{
+										xtype:"vmd.button",
+										id:"button13",
+										text:"服务下载",
+										type:"text",
+										size:"small",
+										x:50,
+										y:130,
+										click:"button13_click",
+										listeners:{
+											click:button13_click
+										}
+									},
+									{
+										xtype:"vmd.button",
+										id:"button14",
+										text:"服务部署手册",
+										type:"text",
+										size:"small",
+										x:50,
+										y:160,
+										click:"button14_click",
+										listeners:{
+											click:button14_click
+										}
+									},
+									{
+										xtype:"label",
+										id:"hwLabel19",
+										text:"文件服务镜像",
+										x:320,
+										y:110
+									},
+									{
+										xtype:"vmd.button",
+										id:"button15",
+										text:"镜像下载",
+										type:"text",
+										size:"small",
+										x:340,
+										y:130,
+										click:"button15_click",
+										listeners:{
+											click:button15_click
+										}
+									},
+									{
+										xtype:"vmd.button",
+										id:"button16",
+										text:"镜像使用文档",
+										type:"text",
+										size:"small",
+										x:340,
+										y:160,
+										click:"button16_click",
+										listeners:{
+											click:button16_click
+										}
 									}
 								]
 							}

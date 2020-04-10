@@ -132,7 +132,7 @@ function loginInfo(id) {
 //获取用户信息
 function loginInfo1() {
     wxDataList1
-    debugger
+    
     if(noticeid != '' && choosList.length == 0) {
         var userUrl = 'platform/v1/recieve';
         hwDao.get(userUrl, {}, {
@@ -181,7 +181,7 @@ window.getMyData = function() {
 
 window.setData = function(param) {
     arrList = param;
-    debugger
+    
 }
 			this.SelectorComponent_afterrender=SelectorComponent_afterrender;
 		this.items=[

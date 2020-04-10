@@ -14,7 +14,7 @@ var Data_Control = {
         },
 		autoHeight: {
 			Description: "True表示为使用height:'auto'，false表示为使用固定高度（缺省为false）。",
-			Prototype: "Boolean  autoHeight   ",
+			Prototype: "Boolean  autoHeight",
             Name:"自动高度",
 			Args: {
 				_Return_: "Boolean   "
@@ -9536,6 +9536,17 @@ var Data_vmdReport={
 		    },
 		    Example: "report.setValue('A1','')"
 		},
+        setColumnHidden: {
+		    Description: "隐藏显示列",
+		    Prototype: "setColumnHidden(ind, state)",
+		    Name: "隐藏显示列",
+		    Args: {
+		        _Return_: "void",
+		        ind: "列号（从零开始）",
+		        state: "状态（true:隐藏；false:显示)"
+		    },
+		    Example: "report.setColumnHidden(0,true)"
+		},
 		refresh: {
 			Description: "刷新报表",
 			Prototype: "refresh()",
@@ -10558,6 +10569,7 @@ var Data_vmdSubWindow = {
 }
 ControlsDataManage._add(Data_vmdSubWindow);
 
+//数据准备
 var Data_vmdDataPre = {
     BaseType: "vmdButton",
     Type: 'vmdDataPre',
@@ -10615,6 +10627,51 @@ var Data_vmdDataPre = {
 
 }
 ControlsDataManage._add(Data_vmdDataPre);
+
+ //通用录入采集
+ var Data_vmdDataInput = {
+    BaseType: "Control",
+    Type: 'vmdDataInput',
+    Property: {},
+	Method: {
+           showOperateBar: {
+            Description: "控制编辑栏按钮的显示与隐藏",
+            Prototype: "showOperateBar(['add','del','save','export','import'])",
+            Name: "控制编辑栏按钮的显示与隐藏",
+            Args: {
+             params: "格式为数组，如['add','del','save','export','import']",
+                _Return_: "void  "
+            },
+            Example: ""
+        },
+         showNavigationBar: {
+            Description: "控制导航栏按钮的显示与隐藏",
+            Prototype: "showNavigationBar(['forward','next','start','end','index'])",
+            Name: "控制导航栏按钮的显示与隐藏",
+            Args: {
+             params: "格式为数组，如['forward','next','start','end','index']",
+                _Return_: "void  "
+            },
+            Example: ""
+        },
+        customAttachHeaders: {
+		    Description: "自定义多层表头",
+		    Prototype: "customAttachHeaders=['A,B,C,D,E,#cspan','#rspan,#rspan,#rspan,#rspan,F,G']",
+		    Name: "自定义多层表头",
+		    Args: {		       
+		        params: "格式为数组，如['A,B,C,D,E,#cspan','#rspan,#rspan,#rspan,#rspan,F,G']",
+                 _Return_: "void"
+		    },
+		    Example: ""
+		}
+	},
+    Event: {}
+
+}
+ControlsDataManage._add(Data_vmdDataInput);
+
+
+
 
 
 

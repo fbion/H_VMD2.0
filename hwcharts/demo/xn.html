@@ -25,7 +25,6 @@
 </head>
 <body oncontextmenu="return false">
     <div id="main"></div>
-    <div id="main1"></div>
     <script>
         Vmd.onReady(function () {
 
@@ -67,48 +66,6 @@
                 },false)
           })
         });
-        // Vmd.onReady(function () {
-        //
-        //     Vmd.require([
-        //         'hwchart.component.Geo',
-        //         'hwchart.chart.WellGroup',
-        //         'hwchart.chart.Area',
-        //         'hwchart.component.Legend',
-        //         'hwchart.chart.WellSymbol',
-        //         'hwchart.chart.WellTrace',
-        //         'hwchart.chart.WellLabel',
-        //         'hwchart.chart.IsoLine',
-        //         'hwchart.chart.SymbolLine',
-        //         'hwchart.chart.FaultLine',
-        //         'hwchart.component.Title',
-        //         'hwchart.chart.MiningIndex',
-        //         'hwchart.chart.IsoArea',
-        //         'hwchart.component.VisualMap'
-        //
-        //
-        //     ], function () {
-        //         var chart1=hwcharts.init(document.getElementById('main1'));
-        //         var path = hwchartsPATH + 'templates/defaults/xn-test.json';
-        //         /*
-        //            path: string 模板路径，
-        //            option ：boject
-        //            isUser： bool 是否使用用户自定模板
-        //        */
-        //
-        //
-        //         chart1.loadTemplate(path,{
-        //             host:'www.hanweikeji.com:8050', // 数据访问服务地址
-        //             GeologyAlgorithmHost:'192.168.1.186:5015/GeologyAlgorithm', // 后台计算数据服务地址
-        //             callCode:'txwebh',
-        //             fileHost:'192.168.1.181:9050', //模板及配置文件保存读取路径 （与数据访问服务设置一样时，可不填）
-        //             fileCallCode:'hwchart', //模板及配置文件保存读取路径识别码 （与数据访问服务设置一样时，可不填）
-        //             timeout:60*1000 , // 选填
-        //             params:{
-        //                 dwdm:'J_154_14'
-        //             }
-        //         },false)
-        //     })
-        // });
     </script>
 </body>
 </html>

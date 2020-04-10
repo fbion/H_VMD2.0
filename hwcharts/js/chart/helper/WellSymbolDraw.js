@@ -185,7 +185,7 @@
         var labelPosition = labelModel.get("position");
         var labelDistance = labelModel.get("distance");
         var labelOffset = labelModel.get("offset");
-
+        
         if(!roamType){
             WellManager.setData(data);
         }
@@ -210,9 +210,6 @@
                     ));
 
                     wellGroup.attr('scale', [zoomScale, zoomScale]);
-                }
-                else{
-                    //WellManager.setSymbolShow(data, newIdx, false);
                 }
             })
             .update(function (newIdx, oldIdx) {
@@ -301,16 +298,20 @@
                 wellGroup.attr('scale', [zoomScale, zoomScale]);
             })
             .remove(function (oldIdx) {
-                var wellGroup = oldData.getItemGraphicEl(oldIdx);
-                wellGroup && wellGroup.fadeOut(function () {
-                    WellManager.removeWellSymbol(oldData, oldIdx);
-                    WellManager.setSymbolShow(oldData, oldIdx, false);
-                });
+                //var wellGroup = oldData.getItemGraphicEl(oldIdx);
+                WellManager.removeWellSymbol(oldData, oldIdx);
+                WellManager.setSymbolShow(oldData, oldIdx, false);
+                
+                // wellGroup && wellGroup.fadeOut(function () {
+                //     WellManager.removeWellSymbol(oldData, oldIdx);
+                //     WellManager.setSymbolShow(oldData, oldIdx, false);
+                // });
             })
             .execute();
 
         this._data = data;
         this._lastZoom = zoom;
+       
     };
 
     wellSymbolDrawProto.isPersistent = function () {
@@ -374,9 +375,6 @@
 
                 wellGroup.attr('scale', [zoomScale, zoomScale]);
                 data.setItemGraphicEl(idx, wellGroup);
-            }
-            else{
-                //WellManager.setSymbolShow(data, idx, false);
             }
         }
     };

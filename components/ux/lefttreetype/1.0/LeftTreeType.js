@@ -268,7 +268,7 @@ Ext.define("vmd.ux.LeftTreeType", {
                     host: vmd.workspace.dataServiceIp,
                     url: _url
                 }, {}, _params, function(result) {
-                    debugger;
+                    
                     var datajson = result.data[0].datas;
                     //datajson=[{id:"dzjs",name:"js",pid:0,xh:1}]
                     if (_type === "GW") {
@@ -317,7 +317,7 @@ Ext.define("vmd.ux.LeftTreeType", {
                         }
                     } else if (_type === "GW_SXJG") {
                         //datajson=[{id:"dzjs",name:"js",pid:0,xh:1}]
-                        debugger;
+                        
                         var nodeList = datajson.filter(function(elem) {
                             return elem.sjdm === "0";
                         });
@@ -368,7 +368,7 @@ Ext.define("vmd.ux.LeftTreeType", {
                         fun();
                     }
                 }, function(err) {
-                    debugger;
+                    
                     myMask.hide();
                     Ext.Msg.alert("提示", "获取单位树分类信息失败", function() {})
                 });
@@ -407,7 +407,7 @@ Ext.define("vmd.ux.LeftTreeType", {
                     host: vmd.workspace.dataServiceIp,
                     url: 'wdk/Directory/SysDirectoryByPower'
                 }, {}, _params, function(result) {
-                    debugger;
+                    
                     var datajson = result.data[0].datas;
                     //datajson=[{id:"dzjs",name:"js",pid:0,xh:1}]
                     var nodeList = datajson.filter(function(elem) {
@@ -435,7 +435,7 @@ Ext.define("vmd.ux.LeftTreeType", {
                     }
                     myMask.hide();
                 }, function(err) {
-                    debugger;
+                    
                     myMask.hide();
                     Ext.Msg.alert("提示", "获取单位树分类信息失败", function() {})
                 });
@@ -680,7 +680,7 @@ Ext.define("vmd.ux.LeftTreeType", {
                         callback()
                     }
                     try {
-                        debugger;
+                        
                         if (flag == 1) {
                             mytree.insertNewChild(parentId, newnodeid, nodename);
                             SetTreeNodeImage2(mytree, newnodeid, "module");
@@ -709,7 +709,7 @@ Ext.define("vmd.ux.LeftTreeType", {
                             treenode.loadChild = true;
                         }
                         mytree.itemObj[newnodeid] = treenode;
-                        debugger;
+                        
                         hwDas.add({
                                 host: vmd.workspace.dataServiceIp,
                                 url: 'rypx/classsys/classtree'
@@ -804,7 +804,7 @@ Ext.define("vmd.ux.LeftTreeType", {
                         var data = {
                             v_id: selId
                         }
-                        debugger;
+                        
                         hwDas.del({
                                 host: vmd.workspace.dataServiceIp,
                                 url: 'rypx/classsys/classtree'
@@ -990,7 +990,7 @@ Ext.define("vmd.ux.LeftTreeType", {
         }
         this.getSelectedItemIdOrFirstId = function() {
             //直接填写方法内容
-            debugger;
+            
             var selectId = treeObject.getSelectedItemId();
             if (selectId) {
                 return selectId;

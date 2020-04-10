@@ -226,6 +226,7 @@ Vmd.define('hwchart.chart.helper.MiningIndexDraw', {
                     var point = WellManager.getWellLayout(data,newIdx);
                     var id = data.getId(newIdx);
                     if(point){
+                        //var itemLayout = WellManager.getLayoutPosition(data,newIdx, indexEl, point, position, 0, [-200,-15], zoomScale);
                         var itemLayout = WellManager.getLayoutPosition(data,newIdx, indexEl, point, position, 0, [-20,50], zoomScale);
                         indexEl.attr('position', itemLayout);
                         group.add(indexEl);
@@ -280,13 +281,16 @@ Vmd.define('hwchart.chart.helper.MiningIndexDraw', {
             })
             .remove(function (oldIdx) {
                 var el = oldData.getItemGraphicEl(oldIdx);
-                var wellData = self.getWellDatas(oldData, oldIdx);
-                if(el && el.fadeOut){
-                    el.fadeOut(function () {
-                        el._state = 'delete';
-                        self._deleteFromWell(wellData, el);
-                    });
+                if(el){
+                    el.removeAll();
                 }
+                // var wellData = self.getWellDatas(oldData, oldIdx);
+                // if(el && el.fadeOut){
+                //     el.fadeOut(function () {
+                //         el._state = 'delete';
+                //         self._deleteFromWell(wellData, el);
+                //     });
+                // }
                 _hasUpdate = true;
             })
             .execute();
@@ -450,7 +454,7 @@ Vmd.define('hwchart.chart.helper.MiningIndexDraw', {
             var nameIsShow =  rawDataItem.nameIsShow||[];
             var companyIsShow = rawDataItem.companyIsShow||[];
             var n = 0;
-            var W = rawDataItem.cloumnWidth ||15;
+            var W = rawDataItem.cloumnWidth ||12;
             var topH = 15;
             var bottomH = 15;
             var maxH;
@@ -498,7 +502,7 @@ Vmd.define('hwchart.chart.helper.MiningIndexDraw', {
                         if(item<min[i]){
                             item = min[i]
                         }
-
+    
                         var h = item/(max[i])*maxHr[i];
                         if(h<minHr[i]){
                             h = minHr[i]
@@ -560,13 +564,17 @@ Vmd.define('hwchart.chart.helper.MiningIndexDraw', {
                             }
                             obj.layers.push(lay3);
                         }
-                       
                         n++;
                     }
                 }
             });
             obj.width = n*W+20;
         }
+		obj.layers.push({
+			type: "rect",
+			shape: {x: 0, y: 0, width: 100, height: 100},
+			style: {fill: "rgba(255,0,0,0)"}
+		})
         rawDataItem.ColumnSymbol = obj;
         return obj
     };
@@ -842,14 +850,14 @@ Vmd.define('hwchart.chart.helper.MiningIndexDraw', {
         return obj
     };
 
-    miningIndexDrawProto.remove = function (enableAnimation) {
+    miningIndexDrawProto.remove = function (ecModel, api) {
         var data = this._data;
         if (data) {
-            if (enableAnimation) {
-                data.eachItemGraphicEl(function (el) {
-                    el.removeAll()
-                });
-            }
+            data.eachItemGraphicEl(function (el) {
+                el.removeAll()
+            });
+        }else{
+            this.group.removeAll();
         }
     };
     function makeSeriesScope(data) {

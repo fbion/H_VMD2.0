@@ -6,66 +6,67 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>可视化定制工具VMD2.0</title>
-    <link href="../lib/ext-3.4/resources/css/ext-all.css?ver=vmd2.0.5.200306" rel="stylesheet" />
+    <link href="../lib/ext-3.4/resources/css/ext-all.css?ver=vmd2.0.7.200328" rel="stylesheet" />
     <!--基本样式-->
-    <link href="../css/common.css?ver=vmd2.0.5.200306" rel="stylesheet" />
+    <link href="../css/common.css?ver=vmd2.0.7.200328" rel="stylesheet" />
     <!--设计器样式-->
-    <link href="css/designer.css?ver=vmd2.0.5.200306" rel="stylesheet" />
-    <link href="css/icons.css?ver=vmd2.0.5.200306" rel="stylesheet" />
+    <link href="css/designer.css?ver=vmd2.0.7.200328" rel="stylesheet" />
+    <link href="css/icons.css?ver=vmd2.0.7.200328" rel="stylesheet" />
     <!--加载dhx组件-->
-    <!--<link href="../lib/dhtmlx/dhtmlxCombo/codebase/skins/dhtmlxcombo_material.css?ver=vmd2.0.5.200306" rel="stylesheet" />
-    <link href="../lib/dhtmlx/dhtmlxGrid/codebase/skins/dhtmlxgrid_material.css?ver=vmd2.0.5.200306" rel="stylesheet" />-->
-    <!--<link href="../lib/dhtmlx/codebase/dhtmlx.css?ver=vmd2.0.5.200306" />-->
-    <link href="../lib/dhtmlx/skins/material/dhtmlx.css?ver=vmd2.0.5.200306" rel="stylesheet" />
+    <!--<link href="../lib/dhtmlx/dhtmlxCombo/codebase/skins/dhtmlxcombo_material.css?ver=vmd2.0.7.200328" rel="stylesheet" />
+    <link href="../lib/dhtmlx/dhtmlxGrid/codebase/skins/dhtmlxgrid_material.css?ver=vmd2.0.7.200328" rel="stylesheet" />-->
+    <!--<link href="../lib/dhtmlx/codebase/dhtmlx.css?ver=vmd2.0.7.200328" />-->
+    <link href="../lib/dhtmlx/skins/material/dhtmlx.css?ver=vmd2.0.7.200328" rel="stylesheet" />
     <!--样式快捷索引表-->
-    <link href="../css/shortcut.css?ver=vmd2.0.5.200306" rel="stylesheet" />
-    <link href="css/report.css?ver=vmd2.0.5.200306" rel="stylesheet" />
-    <script src="../lib/labjs/LAB.min.js?ver=vmd2.0.5.200306"></script>
-    <script src="../config.js?ver=vmd2.0.5.200306"></script>
-    <script src="../lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=vmd2.0.5.200306"></script>
-    <script src="../lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=vmd2.0.5.200306"></script>
-    <script src="../lib/ext-3.4/adapter/ext/ext-base-class.js?ver=vmd2.0.5.200306"></script>
-    <script src="../lib/ext-3.4/ext-all-debug.js?ver=vmd2.0.5.200306"></script>
-    <script src="../js/util.js?ver=vmd2.0.5.200306"></script>
-    <script src="js/ide.js?ver=vmd2.0.5.200306"></script>
-    <script src="../js/vmdcomps.js?ver=vmd2.0.5.200306"></script>
-    <script src="js/ide-ext.js?ver=vmd2.0.5.200306"></script>
-    <script src="js/ide-automatch.js?ver=vmd2.0.5.200306"></script>
-    <script src="js/ide-automatch-zh-config.js?ver=vmd2.0.5.200306"></script>
-    <script src="../lib/dhtmlx/codebase/dhtmlx.js?ver=vmd2.0.5.200306"></script>
-    <link href="../lib/handsontable/handsontable.min.css?ver=vmd2.0.5.200306" rel="stylesheet" />
-    <script src="../report/js/gridcellinfo.js?ver=vmd2.0.5.200306"></script>
-    <script src="../report/js/reportInfo.js?ver=vmd2.0.5.200306"></script>
-    <script src="../report/js/gridcellinfo_ext.js?ver=vmd2.0.5.200306"></script>
-    <script src="../report/js/Base64.js?ver=vmd2.0.5.200306"></script>
-    <script src="../js/hwdas.js?ver=vmd2.0.5.200306"></script>
-    <script src="../js/hwMSC.js?ver=vmd2.0.5.200306"></script>
-    <script src="../js/vmdcore.js?ver=vmd2.0.5.200306"></script>
-    <script src="../js/publicMethods.js?ver=vmd2.0.5.200306"></script>
-    <script src="../report/buttons/vmdimportexcelbutton.js?ver=vmd2.0.5.200306"></script>
-    <script src="../report/buttons/vmdexportexcelbutton.js?ver=vmd2.0.5.200306"></script>
-    <script src="../report/buttons/vmdprintbutton.js?ver=vmd2.0.5.200306"></script>
-    <script src="../report/buttons/vmdheadercustombutton.js?ver=vmd2.0.5.200306"></script>
-    <script src="../js/vmdreport.js?ver=vmd2.0.5.200306"></script>
-    <script src="../chart/js/hwstock.src.js?ver=vmd2.0.5.200306"></script>
-    <script src="../chart/js/hwcharts-more.src.js?ver=vmd2.0.5.200306"></script>
-    <script src="../chart/js/modules/data.src.js?ver=vmd2.0.5.200306"></script>
-    <script src="../chart/js/plugins/design-select.src.js?ver=vmd2.0.5.200306"></script>
-    <script src="..//chart/data/defaultData.js?ver=vmd2.0.5.200306"></script>
-    <script src="../js/vmdchart.js?ver=vmd2.0.5.200306"></script>
-    <script src="../lib/ace/ace.js?ver=vmd2.0.5.200306"></script>
-    <script src="../lib/ace/mode-base.js?ver=vmd2.0.5.200306"></script>
-    <script src="../lib/ace/theme-xcode.js?ver=vmd2.0.5.200306"></script>
-    <script src="../lib/ace/ext-language_tools.js?ver=vmd2.0.5.200306"></script>
-    <script src="../lib/ace/ext-language_tools.js?ver=vmd2.0.5.200306"></script>
-    <script src="../lib/handsontable/handsontable.min.js?ver=vmd2.0.5.200306"></script>
-    <script src="../lib/express/complete.js?ver=vmd2.0.5.200306"></script>
-    <script src="../lib/express/handsontable_checkExp.js?ver=vmd2.0.5.200306"></script>
-    <script src="js/report.js?ver=vmd2.0.5.200306"></script>
-    <script src="../lib/express/complete.js?ver=vmd2.0.5.200306"></script>
-    <script src="../report/js/hwreport_core.js?ver=vmd2.0.5.200306"></script>
+    <link href="../css/shortcut.css?ver=vmd2.0.7.200328" rel="stylesheet" />
+    <link href="css/report.css?ver=vmd2.0.7.200328" rel="stylesheet" />
+    <script src="../lib/labjs/LAB.min.js?ver=vmd2.0.7.200328"></script>
+    <script src="../config.js?ver=vmd2.0.7.200328"></script>
+    <script src="../lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=vmd2.0.7.200328"></script>
+    <script src="../lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=vmd2.0.7.200328"></script>
+    <script src="../lib/ext-3.4/adapter/ext/ext-base-class.js?ver=vmd2.0.7.200328"></script>
+    <script src="../lib/ext-3.4/ext-all-debug.js?ver=vmd2.0.7.200328"></script>
+    <script src="../lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=vmd2.0.7.200328"></script>
+    <script src="../js/util.js?ver=vmd2.0.7.200328"></script>
+    <script src="js/ide.js?ver=vmd2.0.7.200328"></script>
+    <script src="../js/vmdcomps.js?ver=vmd2.0.7.200328"></script>
+    <script src="js/ide-ext.js?ver=vmd2.0.7.200328"></script>
+    <script src="js/ide-automatch.js?ver=vmd2.0.7.200328"></script>
+    <script src="js/ide-automatch-zh-config.js?ver=vmd2.0.7.200328"></script>
+    <script src="../lib/dhtmlx/codebase/dhtmlx.js?ver=vmd2.0.7.200328"></script>
+    <link href="../lib/handsontable/handsontable.min.css?ver=vmd2.0.7.200328" rel="stylesheet" />
+    <script src="../report/js/gridcellinfo.js?ver=vmd2.0.7.200328"></script>
+    <script src="../report/js/reportInfo.js?ver=vmd2.0.7.200328"></script>
+    <script src="../report/js/gridcellinfo_ext.js?ver=vmd2.0.7.200328"></script>
+    <script src="../report/js/Base64.js?ver=vmd2.0.7.200328"></script>
+    <script src="../js/hwdas.js?ver=vmd2.0.7.200328"></script>
+    <script src="../js/hwMSC.js?ver=vmd2.0.7.200328"></script>
+    <script src="../js/vmdcore.js?ver=vmd2.0.7.200328"></script>
+    <script src="../js/publicMethods.js?ver=vmd2.0.7.200328"></script>
+    <script src="../report/buttons/vmdimportexcelbutton.js?ver=vmd2.0.7.200328"></script>
+    <script src="../report/buttons/vmdexportexcelbutton.js?ver=vmd2.0.7.200328"></script>
+    <script src="../report/buttons/vmdprintbutton.js?ver=vmd2.0.7.200328"></script>
+    <script src="../report/buttons/vmdheadercustombutton.js?ver=vmd2.0.7.200328"></script>
+    <script src="../js/vmdreport.js?ver=vmd2.0.7.200328"></script>
+    <script src="../chart/js/hwstock.src.js?ver=vmd2.0.7.200328"></script>
+    <script src="../chart/js/hwcharts-more.src.js?ver=vmd2.0.7.200328"></script>
+    <script src="../chart/js/modules/data.src.js?ver=vmd2.0.7.200328"></script>
+    <script src="../chart/js/plugins/design-select.src.js?ver=vmd2.0.7.200328"></script>
+    <script src="..//chart/data/defaultData.js?ver=vmd2.0.7.200328"></script>
+    <script src="../js/vmdchart.js?ver=vmd2.0.7.200328"></script>
+    <script src="../lib/ace/ace.js?ver=vmd2.0.7.200328"></script>
+    <script src="../lib/ace/mode-base.js?ver=vmd2.0.7.200328"></script>
+    <script src="../lib/ace/theme-xcode.js?ver=vmd2.0.7.200328"></script>
+    <script src="../lib/ace/ext-language_tools.js?ver=vmd2.0.7.200328"></script>
+    <script src="../lib/ace/ext-language_tools.js?ver=vmd2.0.7.200328"></script>
+    <script src="../lib/handsontable/handsontable.min.js?ver=vmd2.0.7.200328"></script>
+    <script src="../lib/express/complete.js?ver=vmd2.0.7.200328"></script>
+    <script src="../lib/express/handsontable_checkExp.js?ver=vmd2.0.7.200328"></script>
+    <script src="js/report.js?ver=vmd2.0.7.200328"></script>
+    <script src="../lib/express/complete.js?ver=vmd2.0.7.200328"></script>
+    <script src="../report/js/hwreport_core.js?ver=vmd2.0.7.200328"></script>
     <script type="text/javascript"> </script>
-    <script type="text/javascript" src="/design/js/html2canvas.min.js?ver=vmd2.0.5.200306"></script>
+    <script type="text/javascript" src="/design/js/html2canvas.min.js?ver=vmd2.0.7.200328"></script>
 </head>
 
 <body> </body>

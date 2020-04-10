@@ -291,7 +291,7 @@
                                     var treeDataJson = [];
                                     for (var i = 0; i < datajson.length; i++) {
                                         if (datajson[i].name == "save") {
-                                            debugger
+                                            
                                             var id = datajson[i].id;
                                             if (workspacedataServiceIp) {
                                                 urlparam = {
@@ -303,7 +303,7 @@
                                             hwDas.get(urlparam, {}, {
                                                 methodid: id
                                             }, function(result) {
-                                                debugger
+                                                
                                                 page.dataList = [];
                                                 for (var i = 0; i < result.data[0].datas.length; i++) {
                                                     page.dataList.push({
@@ -405,7 +405,7 @@
                 }
 
                 function button_click(sender) {
-                    debugger
+                    
                     if (MyTabs.getActiveTab().title == '服务选择') {
                         if (submit_ruleName.getValue() == "") {
                             vmd.alert('警告', '规则名称不许为空')

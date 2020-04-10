@@ -43,7 +43,7 @@ Ext.define('vmd.ux.gridType.settings', {
             this.displayMode = jsonConfig.displayMode;
             this.fc = jsonConfig.fc;
             this.fields = jsonConfig.fields;
-            debugger
+            
             this.scope.grid_display.setValue(this.displayMode)
             this.scope.fixedCol.setValue(this.fc)
         }
@@ -324,7 +324,7 @@ Ext.define("vmd.ux.GridType1", {
         }
 
         function MyGrid_celldblclick(sender, rowIndex, columnIndex, e) {
-            debugger
+            
             var backpack = JSON.stringify(page.controller.serialize());
             // 创建一个新窗口（有url指向） 
             window.settingWin = new vmd.window({
@@ -388,7 +388,7 @@ Ext.define("vmd.ux.GridType1", {
                 list[i - 1] = JSON.parse(temp)
                 page.fireEvent('settingChangeEvents')
             } catch (ex) {
-                debugger
+                
             }
         }
 
@@ -418,7 +418,7 @@ Ext.define("vmd.ux.GridType1", {
                 list[i + 1] = JSON.parse(temp)
                 page.fireEvent('settingChangeEvents')
             } catch (ex) {
-                debugger
+                
             }
         }
 
@@ -459,7 +459,7 @@ Ext.define("vmd.ux.GridType1", {
         }
 
         function button3_click(sender, e) {
-            debugger
+            
             var temp = JSON.parse(JSON.stringify(page.controller.scope.rootScope.controller.comp.grid.settings.fields))
             page.rootScope.controller.comp.form.settings.fields = temp;
             page.fireEvent('settingChangeEvents')

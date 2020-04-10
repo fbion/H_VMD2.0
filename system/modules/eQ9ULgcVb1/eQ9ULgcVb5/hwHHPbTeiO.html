@@ -6,32 +6,26 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>导入模块选择</title>
     <!--基本样式-->
-    <link href="/css/common.css?ver=vmd2.0.6.200119" rel="stylesheet" />
+    <link href="/css/common.css?ver=vmd2.0.5.200306" rel="stylesheet" />
     <!--加载dhx组件-->
-    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=vmd2.0.6.200119" rel="stylesheet" />
-    <link href="/design/css/icons.css?ver=vmd2.0.6.200119" rel="stylesheet" />
-    <link href="/lib/dhtmlx/skins/material/dhtmlx.css?ver=vmd2.0.6.200119" rel="stylesheet" />
+    <link href="/lib/ext-3.4/resources/css/ext-all.css?ver=vmd2.0.5.200306" rel="stylesheet" />
+    <link href="/lib/dhtmlx/skins/material/dhtmlx.css?ver=vmd2.0.5.200306" rel="stylesheet" />
     <!--样式快捷索引表-->
-    <link href="/css/shortcut.css?ver=vmd2.0.6.200119" rel="stylesheet" />
-    <script src="/lib/labjs/LAB.min.js?ver=vmd2.0.6.200119"></script>
-    <script src="/config.js?ver=vmd2.0.6.200119"></script>
-    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=vmd2.0.6.200119"></script>
-    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=vmd2.0.6.200119"></script>
-    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=vmd2.0.6.200119"></script>
-    <script src="/lib/ext-3.4/ext-all-debug.js?ver=vmd2.0.6.200119"></script>
-    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=vmd2.0.6.200119"></script>
-    <script src="/js/util.js?ver=vmd2.0.6.200119"></script>
-    <script src="/lib/dhtmlx/codebase/dhtmlx.js?ver=vmd2.0.6.200119"></script>
-    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcommon.js?ver=vmd2.0.6.200119"></script>
-    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcore.js?ver=vmd2.0.6.200119"></script>
-    <script src="/report/dhtmlx/dhtmlxCommon/codebase/dhtmlxcontainer.js?ver=vmd2.0.6.200119"></script>
-    <script src="/report/FillReport2.0/js/dhtmlx/dhtmlXFileUploader.js?ver=vmd2.0.6.200119"></script>
-    <script src="/js/hwdas.js?ver=vmd2.0.6.200119"></script>
-    <script src="/js/vmdcore.js?ver=vmd2.0.6.200119"></script>
-    <script src="/js/vmdcomps.js?ver=vmd2.0.6.200119"></script>
-    <script src="/js/publicMethods.js?ver=vmd2.0.6.200119"></script>
-    <script src="/js/vmdreport.js?ver=vmd2.0.6.200119"></script>
-    <script src="/system/modules/eQ9ULgcVb1/project.config.js"></script>
+    <link href="/css/shortcut.css?ver=vmd2.0.5.200306" rel="stylesheet" />
+    <script src="/lib/labjs/LAB.min.js?ver=vmd2.0.5.200306"></script>
+    <script src="/config.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ext-3.4/ext-all-debug.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=vmd2.0.5.200306"></script>
+    <script src="/js/util.js?ver=vmd2.0.5.200306"></script>
+    <script src="/lib/dhtmlx/codebase/dhtmlx.js?ver=vmd2.0.5.200306"></script>
+    <script src="/js/hwdas.js?ver=vmd2.0.5.200306"></script>
+    <script src="/js/vmdcore.js?ver=vmd2.0.5.200306"></script>
+    <script src="/js/vmdcomps.js?ver=vmd2.0.5.200306"></script>
+    <script src="/js/publicMethods.js?ver=vmd2.0.5.200306"></script>
+    <script src="/system/modules/eQ9ULgcVb1/eQ9ULgcVb5/hwHHPbTeiO.vmdproject.config.js"></script>
     <style> </style>
     <style type="text/css" id="vmdcss">
         .x-form-cb-label {
@@ -67,14 +61,15 @@
         vmd.previewMode = true;
         vmd.virtualPath = '';
         vmd.workspace = {
-            "workspaceid": "1174c7d2-f008-4f84-bb61-1845b5d28814",
+            "workspaceid": "edc85d3f-846b-481d-b546-5b52f73398b0",
             "workflowIp": "",
             "dataServiceIp": "",
             "msgIp": "",
             "projectid": "eQ9ULgcVb1"
         }
         vmd.resourceSettings = {
-            "资源中心&&资源中心服务器": "http://www.hanweikeji.com:10050/resource"
+            "test&&资源中心服务器": "http://192.168.1.181:9050/resource",
+            "test&&测试文件服务": "http://192.168.1.82:31884/resource"
         }
         vmd.projectInfo = {
             "projectId": "eQ9ULgcVb1",
@@ -215,6 +210,12 @@
                                             if (parent && parent.modulesCheckWin)
                                                 parent.modulesCheckWin.close();
                                         });
+                                        var s = new vmd.proxy.Log();
+                                        s.save("导入项目", modulesCheckInfos.project_id, Ext.util.Cookies.get('userName') + "在" + Ext.Date.dateFormat(new Date(), 'Y-m-d H:i:s') + "导入了项目" + modulesCheckInfos.project_id + "中的模块,模块Id：" + impInfos.ModulesId.join('、') + "", "项目", function() {
+                                            // alert("保存成功了！")
+                                        }, function() {
+                                            console.log("日志报存失败了！");
+                                        })
                                     } else
                                         Ext.Msg.alert("提示", result.msg);
                                 },

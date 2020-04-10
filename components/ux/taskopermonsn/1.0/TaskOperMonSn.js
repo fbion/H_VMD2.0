@@ -131,7 +131,7 @@ Ext.define("vmd.ux.TaskOperMonSn", {
         }
 
         function MyGrid_cellclick(sender, rowIndex, columnIndex, e) {
-            debugger
+            
             var flightNONum = MyGrid.getStore().getAt(rowIndex);
             var dwdm = MyGrid.getStore().getAt(rowIndex).data.dwdm,
                 rwlx = MyGrid.getStore().getAt(rowIndex).data.rwtypecode,

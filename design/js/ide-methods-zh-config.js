@@ -1431,6 +1431,68 @@ addFunc(globalArgsRoot_Fun,[{
         "runner.start(task);"),
     value: {},
     type: publicMethodsType.fun
+},{
+    text: "保存模板",
+    name: "saveTemplate",
+    Class: "saveTemplate",
+    insert: "\n //保存模版，只在设计模式下使用，用于存储模块的公共配置\n" +
+        "vmd.core.saveTemplate(); ",
+    comment: getFormatComment("saveTemplate",
+        "保存模版",
+        ["{string} fileName-文件名称,或者包含路径的文件名称，路径格式为 项目id/目录id/目录id/***.json",
+        "{string} context-文件内容",
+        "{fun} successback- 成功回调",
+        "{fun} errorback- 失败回调"],
+        "<span class='heightlight'>vmd.core.saveTemplate()</span>"),
+    value: {},
+    type: publicMethodsType.fun
+}, {
+    text: "保存用户模版",
+    name: "saveUserTemplate  ",
+    Class: "saveUserTemplate  ",
+    insert: "\n //保存用户模版，只在设计模式的运行和运行模式下使用，用于存储模块的公共配置\n" +
+        "vmd.core.saveUserTemplate (); ",
+    comment: getFormatComment("saveUserTemplate",
+        "保存用户模版",
+        ["{string} fileName-文件名称,或者包含路径的文件名称，路径格式为 项目id/目录id/目录id/***.json",
+        "{string} context-文件内容",
+        "{string} userid- 用户id",
+        "{object}config- 用户配置 可默认 默认为vmd   格式｛host:***,mark:***｝",
+        "{fun} successback- 成功回调",
+        "{fun} errorback- 失败回调"],
+        "<span class='heightlight'>vmd.core.saveUserTemplate()</span>"),
+    value: {},
+    type: publicMethodsType.fun
+}, {
+    text: "读取模版",
+    name: "readTemplate",
+    Class: "readTemplate",
+    insert: "\n //读取模版,在设计模式的运行和运行模式下使用，用于存储模块的公共配置\n" +
+        "vmd.core.readTemplate(); ",
+    comment: getFormatComment("readTemplate",
+        "读取模版",
+        ["{string} fileName-文件名称,或者包含路径的文件名称，路径格式为 项目id/目录id/目录id/***.json",
+        "{fun} successback- 成功回调",
+        "{fun} errorback- 失败回调"],
+        "<span class='heightlight'>vmd.core.readTemplate()</span>"),
+    value: {},
+    type: publicMethodsType.fun
+}, {
+    text: "读取用户模版",
+    name: "readUserTemplate",
+    Class: "readUserTemplate",
+    insert: "\n //读取用户模版，在设计模式的运行和运行模式下使用，用于读取用户的配置\n" +
+        "vmd.core.readUserTemplate(); ",
+    comment: getFormatComment("readUserTemplate  ",
+        "读取用户模版",
+        ["{string} fileName-文件名称,或者包含路径的文件名称，路径格式为 项目id/目录id/目录id/***.json",
+        "{string} userid-用户id",
+        "{object} config-服务配置  可默认 默认为vmd   格式｛host:***,mark:***｝",
+        "{fun} successback- 成功回调",
+        "{fun} errorback- 失败回调"],
+        "<span class='heightlight'>vmd.core.readUserTemplate()</span>"),
+    value: {},
+    type: publicMethodsType.fun
 }]);
 
 //commonRoot/----------------------------------------------------------------------------------------------------------------------
@@ -4071,6 +4133,8 @@ addFunc(commonRoot_Chart,[
         comment: getFormatComment("chart",
             "设置Y轴标签样式 ",
             ["option{\n" +
+            "    align:align, left\\center\\right 选填\n" +
+            "    rotation:rotation, number 旋转度 选填\n" +
             "    color:color, 标题颜色 选填\n" +
             "    fontSize:fontSize,  标题文字大小  选填\n" +
             "    fontFamily:'SimSun', string 文本字形 选填,\n" +
@@ -4078,6 +4142,8 @@ addFunc(commonRoot_Chart,[
             " }",
             "@param name  String  轴名称  不传则默认所有Y轴共用此设置  选填"],
             "chart.cSetyAxisLablesStyle({\n" +
+            "    rotation: 120,\n" +
+            "    align: 'left',\n" +
             "    color: 'red',\n" +
             "    fontSize: '12px',\n" +
             "    fontWeight: 400\n" +

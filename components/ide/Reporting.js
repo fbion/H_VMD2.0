@@ -22,6 +22,8 @@ xds["vmd.ux.Reporting"] = Ext.extend(xds.Component, {
 
         return true;
     },
+	//属性面板
+    
     //标准属性设置
     configs: [
          {

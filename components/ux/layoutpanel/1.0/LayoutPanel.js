@@ -348,7 +348,7 @@ Ext.define("vmd.ux.LayoutPanel", {
                     })
                     item.on("select", function(a, b, c) {
                         if (window.event) {
-                            debugger
+                            
                             if (typeof b == 'object') {
                                 changeAttribute(a, b.json.name);
                             } else {
@@ -360,7 +360,7 @@ Ext.define("vmd.ux.LayoutPanel", {
             })
 
             function changeAttribute(a, b) {
-                debugger
+                
                 if (!page.stopBack) {
                     var inst = page.controller;
                     var id = a.initialConfig.id;
@@ -470,7 +470,7 @@ Ext.define("vmd.ux.LayoutPanel", {
 
             function dataSet_selectChanged(sender, combo, record, index) {
                 // if (dataSet.getValue() != '') {
-                debugger
+                
                 page.fireEvent('settingChangedEvent')
                 page.rootScope.controller.comp.grid.settings.fields = [];
                 page.rootScope.controller.comp.form.settings.fields = [];
@@ -757,7 +757,7 @@ Ext.define("vmd.ux.LayoutPanel", {
         resetCmpScope();
         this.setValue = function(configs) {
             //直接填写方法内容
-            debugger
+            
             setValue(configs);
         }
         this.serialize = function() {

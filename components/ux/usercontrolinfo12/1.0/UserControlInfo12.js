@@ -231,7 +231,7 @@ Ext.define("vmd.ux.UserControlInfo12", {
                             html.innerText = result.data[i].name;
                             pdiv.appendChild(html);
                             vmd(pdiv).on('mouseenter', function() {
-                                debugger
+                                
                                 selectedfImage = this.lastChild;
                                 selectedfDiv = this;
                                 // vmd(this).find('.frap')[0].style.width = selectedfImage.offsetWidth + "px";
@@ -672,7 +672,7 @@ Ext.define("vmd.ux.UserControlInfo12", {
                             html.innerText = fileList[i].title;
                             pdiv.appendChild(html);
                             vmd(pdiv).on('mouseenter', function() {
-                                debugger
+                                
                                 selectedfImage = this.lastChild;
                                 selectedfDiv = this;
                                 //vmd(this).find('.frap')[0].style.width = selectedfImage.offsetWidth + "px";

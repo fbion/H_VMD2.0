@@ -367,7 +367,7 @@ Ext.define("vmd.ux.CellTypeProperty", {
                         hwButtonProperty.setInfo(page.info.cellAttributeInfo);
                         break;
                     case '下拉网格':
-                        debugger
+                        
                         if (page.o && page.o.nestedNo != null) {
                             page.o.nestedTableHandle();
                         }
@@ -403,7 +403,7 @@ Ext.define("vmd.ux.CellTypeProperty", {
         }
 
         function TextTypeProperty_lengthChange(sender, value) {
-            debugger
+            
             setCellStyle(value, null, sender)
         }
 

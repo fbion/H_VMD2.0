@@ -1825,7 +1825,10 @@ copyright：Copyright @1999-2016, hwkj, All Rights Reserved
             if (!(ignores && ignores.indexOf("numbering") != -1) && this.numbering != "0") {
                 numberjson[getAttrName("order", enattr)] = this.numbering;
             };
-
+            if (!(ignores && ignores.indexOf("zerovisible") != -1) && this.zerovisible != "0") {
+                numberjson[getAttrName("zerovisible", enattr)] = this.zerovisible;
+            };
+            
             return numberjson;
         }
     }
@@ -3600,7 +3603,7 @@ copyright：Copyright @1999-2016, hwkj, All Rights Reserved
             if(defined(index)){
                 // 2020.3.14 表头 横向扩展
                 if(header&&header=="header"){
-                debugger
+                
                    var datas= this.dhtmlxDatastore.data.pull;
                    for (var i = 0; i < Object.keys(datas).length; i++) {
                     if (i > 0 && this.isFieldDataExsit(datas[Object.keys(datas)[i]][field.toLowerCase()], datas, i,field)) {
@@ -5208,7 +5211,7 @@ copyright：Copyright @1999-2016, hwkj, All Rights Reserved
                                 that.grid.forEachCellsA(deleteRowId, function (cellObj, ind) {
                                     var oCell1 = that.getOriginCellById(cellObj.cell._attrs.sid);
                                     //需要清空数据的单元格类型
-                                    var types = ["vmdeditor", "vmdupload", "vmdcheckbox", "vmdtree", "vmdgrid", "vmdcombo", "vmdlaydate", "vmdnum", "vmded", "vmdpassw"];
+                                    var types = ["vmdeditor", "vmdupload", "vmdcheckbox", "vmdtree", "vmdgrid", "vmdcombo", "vmdlaydate", "vmdnum", "vmded", "vmdpassw","vmdlink"];
                                     if (types.indexOf(oCell1.getType()) != -1) {
                                         cellObj.setValue("");
                                         that.grid.callEvent("onCellChanged", [
@@ -5379,6 +5382,10 @@ copyright：Copyright @1999-2016, hwkj, All Rights Reserved
                     cellObj = rId;
                     rId = null;
                     cInd = cellObj.cell.parentNode._cellIndex;
+					if(cellObj.cellType&&cellObj.cellType.type=="vmdch"&&this.hwReport&&this.hwReport.vmdreport&&this.hwReport.vmdreport.xtype=="vmd.datainput")
+					{
+						return
+					}
                 }
                 else {
                     cellObj = that.grid.cells(rId, cInd);
@@ -5858,59 +5865,61 @@ copyright：Copyright @1999-2016, hwkj, All Rights Reserved
                     var pasteWindow = new PasteWindow({
                         confirm: function (type, param, data) {
                             if (!data) return;
+							var parseGrid=this.parseGrid;
                             var copyRowsNum = data.length;
                             //替换
                             if (type == "replace") {
                                 if (param == "patch") { //界面行数不足时插入行
-                                    var startRow = that.grid._selectionArea.LeftTopRow;
-                                    var gridRowsNums = that.grid.getRowsNum();
+                                    var startRow = parseGrid.grid._selectionArea.LeftTopRow;
+                                    var gridRowsNums = parseGrid.grid.getRowsNum();
 
                                     //多出来的行
                                     var modRows = (startRow + copyRowsNum) - gridRowsNums;
                                     if (modRows > 0) {
-                                        var _selectionArea = that.grid._selectionArea;
+                                        var _selectionArea = parseGrid.grid._selectionArea;
                                         _selectionArea.RightBottomRow = _selectionArea.RightBottomRow + modRows;
-                                        that.addRows(_selectionArea.RightBottomRow, modRows, _selectionArea.RightBottomRow + 1, true);
-                                        that.grid._selectionArea = _selectionArea;
+                                        parseGrid.addRows(_selectionArea.RightBottomRow, modRows, _selectionArea.RightBottomRow + 1, true);
+                                        parseGrid.grid._selectionArea = _selectionArea;
                                     }
                                     else {
-                                        that.grid._selectionArea.RightBottomRow = that.grid._selectionArea.LeftTopRow + copyRowsNum - 1;
+                                        parseGrid.grid._selectionArea.RightBottomRow = parseGrid.grid._selectionArea.LeftTopRow + copyRowsNum - 1;
                                     }
                                 }
                                 else {
-                                    var gridRowsNums = that.grid.getRowsNum();
-                                    if ((that.grid._selectionArea.LeftTopRow + copyRowsNum) > gridRowsNums) {
-                                        that.grid._selectionArea.RightBottomRow = gridRowsNums - 1;
+                                    var gridRowsNums = parseGrid.grid.getRowsNum();
+                                    if ((parseGrid.grid._selectionArea.LeftTopRow + copyRowsNum) > gridRowsNums) {
+                                        parseGrid.grid._selectionArea.RightBottomRow = gridRowsNums - 1;
                                     }
                                     else {
-                                        that.grid._selectionArea.RightBottomRow = that.grid._selectionArea.LeftTopRow + copyRowsNum - 1;
+                                        parseGrid.grid._selectionArea.RightBottomRow = parseGrid.grid._selectionArea.LeftTopRow + copyRowsNum - 1;
                                     }
                                 }
-                                that.grid._clip_area.value = data.map(function (v) { return v.join("\t") }).join("\n");
-                                that.grid.setCSVDelimiter("\t");
-                                that.grid.pasteBlockFromClipboard();
-                                that.grid.selectBlock(that.grid._selectionArea.LeftTopCol, that.grid.getRowId(that.grid._selectionArea.LeftTopRow), that.grid._selectionArea.RightBottomCol, that.grid.getRowId(that.grid._selectionArea.RightBottomRow));
+                                parseGrid.grid._clip_area.value = data.map(function (v) { return v.join("\t") }).join("\n");
+                                parseGrid.grid.setCSVDelimiter("\t");
+                                parseGrid.grid.pasteBlockFromClipboard();
+                                parseGrid.grid.selectBlock(parseGrid.grid._selectionArea.LeftTopCol, parseGrid.grid.getRowId(parseGrid.grid._selectionArea.LeftTopRow), parseGrid.grid._selectionArea.RightBottomCol, parseGrid.grid.getRowId(parseGrid.grid._selectionArea.RightBottomRow));
                             }
                                 //插入
                             else if (type == "insert") {
-                                var _selectionArea = that.grid._selectionArea;
+                                var _selectionArea = parseGrid.grid._selectionArea;
                                 if (param == "bellow") {
-                                    that.addRows(_selectionArea.RightBottomRow, copyRowsNum, _selectionArea.RightBottomRow + 1, true);
+                                    parseGrid.addRows(_selectionArea.RightBottomRow, copyRowsNum, _selectionArea.RightBottomRow + 1, true);
                                     _selectionArea.LeftTopRow = _selectionArea.RightBottomRow + 1;
                                     _selectionArea.RightBottomRow = _selectionArea.RightBottomRow + copyRowsNum;
                                 }
                                 else if (param == "above") {
-                                    that.addRows(_selectionArea.LeftTopRow, copyRowsNum, _selectionArea.LeftTopRow, true);
+                                    parseGrid.addRows(_selectionArea.LeftTopRow, copyRowsNum, _selectionArea.LeftTopRow, true);
                                     _selectionArea.RightBottomRow = _selectionArea.LeftTopRow + copyRowsNum - 1;
                                 }
-                                that.grid._selectionArea = _selectionArea;
-                                that.grid._clip_area.value = data.map(function (v) { return v.join("\t") }).join("\n");
-                                that.grid.setCSVDelimiter("\t");
-                                that.grid.pasteBlockFromClipboard();
-                                that.grid.selectBlock(that.grid._selectionArea.LeftTopCol, that.grid.getRowId(that.grid._selectionArea.LeftTopRow), that.grid._selectionArea.RightBottomCol, that.grid.getRowId(that.grid._selectionArea.RightBottomRow));
+                                parseGrid.grid._selectionArea = _selectionArea;
+                                parseGrid.grid._clip_area.value = data.map(function (v) { return v.join("\t") }).join("\n");
+                                parseGrid.grid.setCSVDelimiter("\t");
+                                parseGrid.grid.pasteBlockFromClipboard();
+                                parseGrid.grid.selectBlock(parseGrid.grid._selectionArea.LeftTopCol, parseGrid.grid.getRowId(parseGrid.grid._selectionArea.LeftTopRow), parseGrid.grid._selectionArea.RightBottomCol, parseGrid.grid.getRowId(parseGrid.grid._selectionArea.RightBottomRow));
                             }
                         }
                     });
+					pasteWindow.parseGrid=that;
                     pasteWindow.show();
                 }
                 return true;
@@ -9127,7 +9136,15 @@ copyright：Copyright @1999-2016, hwkj, All Rights Reserved
             if (this.grid) {
                 this.grid.setDisabled(bool);
                 this.grid.forEachCellsB(function (cellObj, rInd, cInd) {
-                    cellObj.setDisabled(that.disabled);
+					if(bool)			
+						cellObj.setDisabled(bool);
+					else 
+					{
+						if(cellObj.cellType&&cellObj.cellType.isenableedit)
+							cellObj.setDisabled(false);
+						else
+							cellObj.setDisabled(true);							
+					}
                 });
             }
         },

@@ -3,20 +3,27 @@ Ext.define('vmd.ux.clickText.Controller', {
     constructor: function(options) {}
 })
 Ext.define("vmd.ux.ClickText", {
-    extend: "Ext.Panel",
+    extend: "vmd.base.Ux",
     requires: vmd.getCmpDeps([]),
     version: "1.0",
     xtype: "vmd.ux.ClickText",
     title: "Panel",
     header: false,
     border: false,
+    panelWidth: 240,
     width: 200,
     height: 27,
     layout: "border",
     beforerender: "ClickText_beforerender",
     listeners: {
         beforerender: function() {
-            this.ClickText_beforerender(this)
+            try {
+                this.ClickText_beforerender(this)
+            } catch (ex) {
+                vmd.Error.log('003-1', {
+                    p1: 'vmd.ux.ClickText'
+                }, ex, 50);
+            }
         }
     },
     initComponent: function() {
@@ -30,19 +37,26 @@ Ext.define("vmd.ux.ClickText", {
                 })
             })
         }
-        var page = this;
+        try {
+            var page = this;
 
-        function setConfig(value) {}
+            function setConfig(value) {}
 
-        function plus_click(sender, e) {
-            page.fireEvent('plus')
+            function plus_click(sender, e) {
+                page.fireEvent('plus')
+            }
+
+            function minus_click(sender, e) {
+                page.fireEvent('minus')
+            }
+
+            function ClickText_beforerender(sender) {}
+        } catch (ex) {
+            vmd.Error.log('003-3', {
+                p1: 'vmd.ux.ClickText',
+                p2: ex.message
+            }, ex, 100);
         }
-
-        function minus_click(sender, e) {
-            page.fireEvent('minus')
-        }
-
-        function ClickText_beforerender(sender) {}
         this.ClickText_beforerender = ClickText_beforerender;
         this.items = [{
                 xtype: "textfield",

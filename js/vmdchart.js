@@ -528,6 +528,7 @@ Ext.define("vmd.comp.Chart", {
 			exportOption.title = exportOption.title || {};
 			this.chart.setSize(width, undefined);
 			exportOption.chart.width = width;
+			this.tplJSON.chart.width = width;
 		} else if (this.tplJSON) {
 			this.tplJSON.chart.width = width;
 		}
@@ -539,6 +540,7 @@ Ext.define("vmd.comp.Chart", {
 			exportOption.title = exportOption.title || {};
 			this.chart.setSize(undefined,height);
 			exportOption.chart.height = height;
+			this.tplJSON.chart.height = width;
 		} else if (this.tplJSON) {
 			this.tplJSON.chart.height = height;
 		}
@@ -613,7 +615,8 @@ Ext.define("vmd.comp.Chart", {
 						deleSeries: me.deepCopy(seleserise.userOptions),
 						delAxis: me.deepCopy(seleserise.yAxis.userOptions)
 					}
-					exportOption.series.splice(i, 1)
+					exportOption.series.splice(i, 1);
+					chart.deleOption.push(dOption);
 				}
 			}
 			// 被删除的序列单独占用一条Y轴时处理
@@ -643,7 +646,10 @@ Ext.define("vmd.comp.Chart", {
 							offset: offsetArr[i],
 						});
 						axisArr[i].offset = offsetArr[i];
-						findAxisById(exportOption.yAxis,axisArr[i].userOptions.id).offset = offsetArr[i];
+						if(findAxisById(exportOption.yAxis,axisArr[i].userOptions.id)){
+							findAxisById(exportOption.yAxis,axisArr[i].userOptions.id).offset = offsetArr[i];
+						}
+						
 					}
 				} else { //纵向变化
 					var n = 0;
@@ -676,9 +682,11 @@ Ext.define("vmd.comp.Chart", {
 							});
 							arr[j].userOptions.height = h + "%";
 							arr[j].userOptions.top = (h * i + spacing * i + ch) + "%";
-							console.log(findAxisById(exportOption.yAxis,arr[j].userOptions.id))
-							findAxisById(exportOption.yAxis,arr[j].userOptions.id).height = h + "%";
-							findAxisById(exportOption.yAxis,arr[j].userOptions.id).top = (h * i + spacing * i + ch) + "%";
+							console.log()
+							if(findAxisById(exportOption.yAxis,arr[j].userOptions.id)){
+								findAxisById(exportOption.yAxis,arr[j].userOptions.id).height = h + "%";
+								findAxisById(exportOption.yAxis,arr[j].userOptions.id).top = (h * i + spacing * i + ch) + "%";
+							}
 						}
 					}
 				}
@@ -686,9 +694,6 @@ Ext.define("vmd.comp.Chart", {
 			} else {
 				seleserise.remove();
 			}
-			
-			chart.deleOption.push(dOption);
-			
 			function findAxisById (arr,id) {
 				for (var i = 0; i < arr.length; i++) {
 					if (arr[i].id == id) {
@@ -697,8 +702,6 @@ Ext.define("vmd.comp.Chart", {
 				}
 				return null;
 			}
-
-
 			return chart.deleOption;
 		}
 	},
@@ -966,8 +969,9 @@ Ext.define("vmd.comp.Chart", {
 	// 设置饼图颜色
 	setPieColor: function(ColorArr) {
 		var type = this.tplJSON.chart.type;
-		if (type != "pie") {
-			//Ext.Msg.alert("提示", "请确认setPieColor方法设置的曲线为饼状图或环形图");
+		var seriesType = this.tplJSON.series[0].type;
+		if (type != "pie" && seriesType!='pie') {
+			Ext.Msg.alert("提示", "请确认setPieColor方法设置的曲线为饼状图或环形图");
 			return;
 		}
 		if (ColorArr instanceof Array) {

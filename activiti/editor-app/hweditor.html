@@ -1,0 +1,31 @@
+<div ng-controller="HWStencilController">
+   <div class="full">
+      <div class="row row-no-gutter">
+	      <div id="paletteHelpWrapper" class="col-xs-3" style="display:none">
+	      
+	      </div>
+	      <div id="canvasHelpWrapper" class="col-xs-12">
+	      	<div class="canvas-wrapper" id="canvasSection" 
+	      		ng-model="droppedElement" > 
+            	<div class="canvas-message" id="model-modified-date"></div>
+            	<div class="Oryx_button" 
+            	     id="delete-button" 
+            	     title="{{'BUTTON.ACTION.DELETE.TOOLTIP' | translate}}"
+            	    
+            	     style="display:none">
+            	   
+            	</div>
+            	<div class="Oryx_button" 
+            	     id="morph-button"
+            	     title="{{'BUTTON.ACTION.MORPH.TOOLTIP' | translate}}"
+            	    
+            	     style="display:none">
+            	  
+            	</div>
+            	
+	         </div>
+           </div>
+        
+         </div>
+    </div>
+</div>

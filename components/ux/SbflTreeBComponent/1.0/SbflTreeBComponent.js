@@ -312,7 +312,7 @@ Ext.define('hw.comps.busi.SbflTreeBComponent', {
                                 url: that.context.opts.servicePath
                             }, {}, {}, [data],
                             function(result) {
-                                debugger;
+                                
                                 layer.closeAll();
                                 layer.alert('分类添加成功!');
                                 //重新加载数据
@@ -324,7 +324,7 @@ Ext.define('hw.comps.busi.SbflTreeBComponent', {
                                 });
                             },
                             function(msg) {
-                                debugger;
+                                
                                 layer.alert('分类添加失败！');
                             });
                     };
@@ -596,7 +596,7 @@ Ext.define('hw.comps.busi.SbflTreeBComponent', {
         $("#lefl").val("");
         that.context.tree.operation = "edit";
         if (selid) {
-            debugger;
+            
             hwDas.get({
                     host: vmd.workspace.dataServiceIp,
                     url: that.context.opts.servicePath

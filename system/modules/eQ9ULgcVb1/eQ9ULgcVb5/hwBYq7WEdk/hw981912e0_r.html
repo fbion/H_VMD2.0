@@ -1,0 +1,1288 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>微服务管理</title>
+	<!--基本样式-->
+    <link href="{vmdvirtualPath}/css/common.css?ver=2.0.5.191228" rel="stylesheet" />
+    <!--加载dhx组件-->
+    <link href="{vmdvirtualPath}/lib/ext-3.4/resources/css/ext-all.css?ver=2.0.5.191228" rel="stylesheet" />
+   
+
+	<link href="{vmdvirtualPath}/lib/dhtmlx/skins/material/dhtmlx.css?ver=2.0.5.191228" rel="stylesheet" />
+	  <!--样式快捷索引表-->
+    <link href="{vmdvirtualPath}/css/shortcut.css?ver=2.0.5.191228" rel="stylesheet" />
+    
+	{vmdprojectcssfiles}
+    
+    <script src="{vmdvirtualPath}/lib/labjs/LAB.min.js?ver=2.0.5.191228"></script>
+    <script src="{vmdvirtualPath}/config.js?ver=2.0.5.191228"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-debug.js?ver=2.0.5.191228"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-lang.js?ver=2.0.5.191228"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/adapter/ext/ext-base-class.js?ver=2.0.5.191228"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/ext-all-debug.js?ver=2.0.5.191228"></script>
+    <script src="{vmdvirtualPath}/lib/ext-3.4/src/locale/ext-lang-zh_CN.js?ver=2.0.5.191228"></script>
+    <script src="{vmdvirtualPath}/js/util.js?ver=2.0.5.191228"></script>
+    <script src="{vmdvirtualPath}/lib/dhtmlx/codebase/dhtmlx.js?ver=2.0.5.191228"></script>
+	
+    <script src="{vmdvirtualPath}/js/hwdas.js?ver=2.0.5.191228"></script>
+    <script src="{vmdvirtualPath}/js/vmdcore.js?ver=2.0.5.191228"></script>
+    <script src="{vmdvirtualPath}/js/vmdcomps.js?ver=2.0.5.191228"></script>
+    <script src="{vmdvirtualPath}/js/publicMethods.js?ver=2.0.5.191228"></script>
+   
+    
+    {vmdworkspacePath}
+	{vmdprojectconfigjs}
+	
+	{vmdprojectjsfiles}
+    
+    <style>
+
+    </style>
+    <style type="text/css" id="vmdcss">
+        .aaaa .x-tree-node-icon.x-tree-node-inline-icon{
+    width: 18px;
+    height: 18px;
+}
+.aaaa .x-tree-node-cb{
+    margin: 0 5px
+}
+
+.aaaa .x-tree-node-ct input{
+    display: none
+}
+.aaaa .x-tree-node .x-tree-node-anchor span{
+    font-size: 14px;
+    color: #646464;
+}
+.aaaa .x-tree-node{
+ margin: 3px 0
+ 
+}
+    </style>
+    <script>
+	    
+        vmd.virtualPath = '{vmdvirtualPath}';
+        
+        Ext.define("vmd.module.MainViewport" ,{
+	extend:"vmd.comp.viewport",
+	requires:vmd.getCmpDeps([]),
+	xtype:"vmd.module.MainViewport",
+	layout:"fit",
+	afterrender:"MainViewport_afterrender",
+	beforerender:"MainViewport_beforerender",
+	style:"font-size: 14px;    color: #646464;",
+	cls:"aaaa",
+	initComponent: function(){
+		var url = location.href;
+// 提取url中的解析字符串
+function UrlParamHash(url) {
+    var params = [],
+        h;
+    var hash = url.slice(url.indexOf("?") + 1).split('&');
+    for (var i = 0; i < hash.length; i++) {
+        h = hash[i].split("=");
+        params[h[0]] = h[1];
+    }
+    return params;
+}
+var params = UrlParamHash(url);
+
+function MainViewport_beforerender(sender) {
+
+
+    if (params.type == 1) {
+        micrservinfo_name.readOnly = false;
+        micrservinfo_identify.readOnly = false;
+        micrservinfo_mark.readOnly = false;
+        micrserchild_name.readOnly = false;
+        micrserchild_url.readOnly = false;
+        micrserchild_mark.readOnly = false;
+        button2.show();
+        button3.show();
+        // hwDiv6.hide();
+        div2.show();
+        hwDiv.show();
+        div1.setWidth(246);
+        tree.checkBox = false;
+    } else if (params.type == 2) {
+        micrservinfo_name.readOnly = true;
+        micrservinfo_identify.readOnly = true;
+        micrservinfo_mark.readOnly = true;
+        micrserchild_name.readOnly = true;
+        micrserchild_url.readOnly = true;
+        micrserchild_mark.readOnly = true;
+        button2.hide();
+        button3.hide();
+        // hwDiv6.show();
+        hwDiv.hide();
+        div2.hide();
+        div1.setWidth(340);
+        tree.checkBox = true;
+    }
+}
+
+function MainViewport_afterrender(sender) {
+
+}
+// function MainViewport_afterrender(sender) {
+//     if (params.type == 1) {
+
+//         micrservinfo_name.readOnly = false;
+//         micrservinfo_identify.readOnly = false;
+//         micrservinfo_mark.readOnly = false;
+//         micrserchild_name.readOnly = false;
+//         micrserchild_url.readOnly = false;
+//         micrserchild_mark.readOnly = false;
+//         button2.show();
+//         button3.show();
+//         tree.checkBox = false;
+//     } else if (params.type == 2) {
+//         micrservinfo_name.readOnly = true;
+//         micrservinfo_identify.readOnly = true;
+//         micrservinfo_mark.readOnly = true;
+//         micrserchild_name.readOnly = true;
+//         micrserchild_url.readOnly = true;
+//         micrserchild_mark.readOnly = true;
+//         button2.hide();
+//         button3.hide();
+//         tree.checkBox = true;
+//     }
+// }
+// 设置操作类型
+var optiontype;
+
+function tree_checkChanged(sender, node, checked) {
+    // 控制子选项只能单选
+    if (node.parentNode.attributes.id != 'root') {
+        var parent = node.parentNode.childNodes;
+        if (!checked)
+            return
+        for (var i = 0; i < parent.length; i++) {
+            if (parent[i].attributes.checked && node != parent[i]) {
+                parent[i].getUI().toggleCheck(false)
+
+                // parent[i].getUI().checkbox.checked=false;
+            }
+        }
+    }
+    // 右侧展示信息
+    // adddispaly();
+
+}
+// 隐藏右侧所有面板
+function hideAllpanel() {
+    micrervlist.hide();
+    micrserchild.hide();
+    micrservinfo.hide();
+    explain.hide();
+}
+// 添加右侧展示信息
+function adddispaly() {
+    headline.setText("微服务：数据展示")
+    hideAllpanel();
+    micrervlist.show();
+    micrervlist.removeAll();
+    var data = tree.getChecked();
+    for (var i = 0; i < data.length; i++) {
+        var Micrservicesinfo = new vmd.ux.Micrservicesinfo({
+            id: 'Micrservicesinfo_' + i
+        });
+        micrervlist.add(Micrservicesinfo);
+        micrervlist.doLayout();
+        if (data[i].nodeDataJson.p_id == 'root') {
+            Micrservicesinfo.setLabel('微服务名称：', '微服务标识：', '说明：');
+        } else {
+            Micrservicesinfo.setLabel('服务名称：', '服务地址（IP/域名）：', '说明：');
+        }
+
+        Micrservicesinfo.setInput(data[i].nodeDataJson.name, data[i].nodeDataJson.identify, data[i].nodeDataJson.mark)
+    }
+
+}
+
+// 点击展示树节点信息
+function tree_nodeclick(sender, node, e) {
+
+    button2.disabled;
+    var data = node.nodeDataJson
+    headline.setText("微服务：" + data.name);
+    hideAllpanel();
+    optiontype = 'edit';
+    if (data.p_id == 'root') {
+        // identify
+        micrservinfo.show();
+        if (data.type == 1) {
+            micrservinfo_name.disable();
+            micrservinfo_identify.disable();
+            micrservinfo_mark.disable();
+        } else {
+            micrservinfo_name.enable();
+            micrservinfo_identify.enable();
+            micrservinfo_mark.enable();
+        }
+        micrservinfo_name.setValue(data.name);
+        micrservinfo_identify.setValue(data.identify);
+        micrservinfo_mark.setValue(data.mark);
+    } else {
+        micrserchild.show();
+        // micrservinfo_name.enable();
+        // micrservinfo_identify.enable();
+        // micrservinfo_mark.enable();
+        micrserchild_name.setValue(data.name);
+        micrserchild_url.setValue(data.identify);
+        micrserchild_mark.setValue(data.mark);
+    }
+
+
+}
+// 添加微服务分组
+function addmicrserlist() {
+    if (micrservinfo_name.activeError || micrservinfo_identify.activeError) {
+        alert("微服务书写不规范，请核实后再保存!")
+        return;
+    }
+    var submit = {
+        id: vmd.getGuid(36),
+        code: micrservinfo_identify.getValue(),
+        name: micrservinfo_name.getValue(),
+        mark: micrservinfo_mark.getValue(),
+        type: 2,
+    }
+
+    // 添加数据
+    hwDas.add({
+            host: vmd.workspace.dataServiceIp,
+            url: 'CDEServcie/micservice/micservicelist'
+        }, {}, {}, submit,
+        function(result) {
+            if (result.isSucceed) {
+                vmd.tip('微服务添加成功！', 'success');
+                // tree.addNode('root', submit.id, submit.name);
+                store_tree.toRefresh();
+            }
+        },
+        function(msg) {
+            Ext.Msg.alert("提示", "数据异常，请与管理员联系");
+        }
+    );
+}
+
+// 修改微服务分组
+function editmicrserlist() {
+    if (micrservinfo_name.activeError || micrservinfo_identify.activeError) {
+        alert("微服务书写不规范，请核实后再保存!")
+        return;
+    }
+
+    var data = tree.getSelNode().nodeDataJson;
+    if (data.type == 1) {
+        alert("此分组信息不允许修改!")
+        return;
+    }
+    var submit = {
+        id: data.id,
+        code: micrservinfo_identify.getValue(),
+        name: micrservinfo_name.getValue(),
+        mark: micrservinfo_mark.getValue(),
+        type: data.type
+    }
+    // 修改数据
+    hwDas.edit({
+            host: vmd.workspace.dataServiceIp,
+            url: 'CDEServcie/micservice/micservicelist'
+        }, {}, {}, submit,
+        function(result) {
+            if (result.isSucceed) {
+                vmd.tip('微服务修改成功！', 'success');
+                tree.getSelNode().setText(submit.name);
+                headline.setText("微服务：" + submit.name);
+                tree.getSelNode().nodeDataJson.name = submit.name;
+                tree.getSelNode().nodeDataJson.identify = submit.code;
+                tree.getSelNode().nodeDataJson.mark = submit.mark;
+                // store_tree.toRefresh();
+            } else {
+                Ext.Msg.alert("提示", "微服务修改失败");
+            }
+            //成功回调
+        },
+        function(msg) {
+            //失败提示
+            Ext.Msg.alert("提示", "数据异常，请与管理员联系");
+        }
+    );
+}
+// 删除服务分组
+function delmicrserlist() {
+    var data = tree.getSelNode().nodeDataJson;
+    if (data.type == 1) {
+        vmd.tip('该项不允许删除！', 'warning');
+        return;
+    }
+    if (params.select) {
+        var selectData = JSON.parse(decodeURIComponent(params.select));
+        for (i in selectData) {
+            if (data.id == selectData[i]) {
+                vmd.tip('该分组信息正在使用，请在微服务移除后操作', 'warning');
+                return
+            }
+        }
+    }
+    //删除数据
+    hwDas.del({
+            host: vmd.workspace.dataServiceIp,
+            url: 'CDEServcie/micservice/micservicelist'
+        }, {}, {
+            'id': data.id
+        },
+        function(result) {
+            if (result.isSucceed) {
+                vmd.tip('删除成功！', 'success');
+                tree.getSelNode().remove();
+                // store_tree.toRefresh();
+            } else {
+                Ext.Msg.alert("提示", "删除失败失败");
+            }
+        },
+        function(msg) {
+            Ext.Msg.alert("提示", "数据异常，请与管理员联系");
+        }
+    )
+}
+// 添加服务子项
+function addmicrserchild() {
+    if (micrserchild_url.activeError || micrserchild_name.activeError) {
+        alert("微服务书写不规范，请核实后再保存!")
+        return;
+    }
+    var data = tree.getSelNode().nodeDataJson;
+    var submit = {
+        id: vmd.getGuid(36),
+        code: data.identify,
+        name: micrserchild_name.getValue(),
+        url: micrserchild_url.getValue(),
+        mark: micrserchild_mark.getValue(),
+        micserviceid: data.id,
+    }
+
+    // 添加数据
+    hwDas.add({
+            host: vmd.workspace.dataServiceIp,
+            url: 'CDEServcie/micservice/micserviceaddress'
+        }, {}, {}, submit,
+        function(result) {
+            if (result.isSucceed) {
+                vmd.tip('服务地址添加成功！', 'success');
+                // tree.addNode('root', submit.id, submit.name);
+                tree.addNode(submit.micserviceid, submit.id, submit.name + "(" + submit.url + ")");
+                var newnode = tree.getNodeById(submit.id);
+                newnode.nodeDataJson.name = submit.name;
+                newnode.nodeDataJson.identify = submit.url;
+                newnode.nodeDataJson.mark = submit.mark;
+                newnode.setIcon("{资源中心&&资源中心服务器}/图片/公用图片/网址.png");
+                newnode.select();
+                tree_nodeclick(tree, newnode);
+                // store_tree.toRefresh();
+            }
+        },
+        function(msg) {
+            Ext.Msg.alert("提示", "数据异常，请与管理员联系");
+        }
+    );
+}
+
+// 修改微服务子项
+function editmicrserchild() {
+    if (micrserchild_url.activeError || micrserchild_name.activeError) {
+        alert("微服务书写不规范，请核实后再保存!")
+        return;
+    }
+    var data = tree.getSelNode().nodeDataJson;
+    var submit = {
+        id: data.id,
+        code: data.code,
+        name: micrserchild_name.getValue(),
+        url: micrserchild_url.getValue(),
+        mark: micrserchild_mark.getValue(),
+        micserviceid: data.p_id
+    }
+    // 修改数据
+    hwDas.edit({
+            host: vmd.workspace.dataServiceIp,
+            url: 'CDEServcie/micservice/micserviceaddress'
+        }, {}, {}, submit,
+        function(result) {
+            if (result.isSucceed) {
+                vmd.tip('微服务修改成功！', 'success');
+                tree.getSelNode().setText(submit.name + "(" + submit.url + ")");
+                headline.setText("微服务：" + submit.name);
+                tree.getSelNode().nodeDataJson.name = submit.name;
+                tree.getSelNode().nodeDataJson.identify = submit.url;
+                tree.getSelNode().nodeDataJson.mark = submit.mark;
+                // store_tree.toRefresh();
+            } else {
+                Ext.Msg.alert("提示", "微服务修改失败");
+            }
+            //成功回调
+        },
+        function(msg) {
+            //失败提示
+            Ext.Msg.alert("提示", "数据异常，请与管理员联系");
+        }
+    );
+}
+
+// 删除微服务子项
+function delmicrserchild() {
+    var data = tree.getSelNode().nodeDataJson;
+    if (params.select) {
+        var selectData = JSON.parse(decodeURIComponent(params.select));
+        for (i in selectData) {
+            if (data.id == selectData[i]) {
+                vmd.tip('该分组信息正在使用，请在微服务移除后操作', 'warning');
+                return
+            }
+        }
+    }
+    //删除数据
+    hwDas.del({
+            host: vmd.workspace.dataServiceIp,
+            url: 'CDEServcie/micservice/micserviceaddress'
+        }, {}, {
+            'id': data.id
+        },
+        function(result) {
+            if (result.isSucceed) {
+                vmd.tip('删除成功！', 'success');
+                var newnode = tree.getSelNode();
+                tree_nodeclick(tree, newnode.parentNode);
+                tree.getSelNode().remove();
+                // store_tree.toRefresh();
+            } else {
+                Ext.Msg.alert("提示", "删除失败失败");
+            }
+        },
+        function(msg) {
+            Ext.Msg.alert("提示", "数据异常，请与管理员联系");
+        }
+    )
+}
+
+
+
+function button2_click(sender, e) {
+    if (optiontype == 'edit') {
+        editmicrserlist();
+    } else if (optiontype == 'add') {
+        addmicrserlist();
+    }
+
+}
+
+function button3_click(sender, e) {
+    if (optiontype == 'edit') {
+        editmicrserchild();
+    } else if (optiontype == 'add') {
+        addmicrserchild();
+    }
+
+}
+// 打开添加服务分组
+function hwImg1_click(sender) {
+    optiontype = 'add';
+    headline.setText("微服务：添加微服务");
+    hideAllpanel();
+    micrservinfo.show();
+    micrservinfo_name.setValue('');
+    micrservinfo_identify.setValue('');
+    micrservinfo_mark.setValue('');
+}
+// 打开添加服务子项
+function hwImg_click(sender) {
+    if (!tree.getSelNode() || tree.getSelNode().nodeDataJson.p_id != "root") {
+        vmd.tip('请选择要添加地址的外部分组', 'warning');
+    } else {
+        optiontype = 'add';
+        headline.setText("微服务：添加服务地址");
+        hideAllpanel();
+        micrserchild.show();
+        micrserchild_name.setValue('');
+        micrserchild_url.setValue('');
+        micrserchild_mark.setValue('');
+    }
+
+}
+// 点击删除图标
+function hwImg2_click(sender) {
+    if (!tree.getSelNode()) {
+        vmd.tip('请选择删除项', 'warning');
+    } else {
+        Ext.Msg.confirm('提示', '确定要删除选中的组件信息？', function(type) {
+            if (type == 'yes') {
+                if (tree.getSelNode().nodeDataJson.p_id == 'root') {
+                    delmicrserlist();
+                } else {
+                    delmicrserchild();
+                }
+            }
+        })
+
+    }
+}
+
+function hwMenuItem_click(sender, e) {
+    hwImg1_click()
+}
+
+function hwMenuItem1_click(sender, e) {
+    hwImg_click(sender)
+}
+
+function hwMenuItem2_click(sender, e) {
+    hwImg2_click()
+}
+
+function button4_click(sender, e) {
+
+    parent.affirm_windows(tree.getChecked());
+}
+
+
+function tree_afterBindData(sender) {
+    if (params.select) {
+        var data = JSON.parse(decodeURIComponent(params.select));
+    }
+    var treenode = tree.nodeHash;
+    for (var i in treenode) {
+        if (treenode[i].id != 'root') {
+            if (params.select) {
+                var data = JSON.parse(decodeURIComponent(params.select));
+                for (var j = 0; j < data.length; j++) {
+                    if (treenode[i].id == data[j]) {
+                        treenode[i].getUI().toggleCheck(true);
+                        if (params.type == 2) {
+                            treenode[i].disable()
+                        }
+                    }
+
+                }
+            }
+            treenode[i].eachChild(function(item) {
+                item.setIcon("{资源中心&&资源中心服务器}/图片/公用图片/网址.png")
+                item.setText(item.nodeDataJson.name + "(" + item.nodeDataJson.identify + ")");
+            })
+            if (treenode[i].nodeDataJson.type == 0) {
+                treenode[i].getUI().toggleCheck(true);
+            }
+        }
+
+    }
+}
+
+function button5_click(sender, e) {
+    parent.colse_windows();
+    //记录日志信息 
+    //vmd.webBase.syslog(loginfo,logtype,operationtype,function(res){}) 
+}
+
+
+
+
+//定义校验规则表达式
+var strRegex = '^(([0-9a-z_!~*().&=+$%-]+: )?[0-9a-z_!~*().&=+$%-]+@)?' //ftp的user@
+    +
+    '(([0-9]{1,3}.){3}[0-9]{1,3}' // IP形式的URL- 199.194.52.184
+    +
+    '|' // 允许IP和DOMAIN（域名）
+    +
+    '([0-9a-z_!~*()-]+.)*' // 域名- www.
+    +
+    '([0-9a-z][0-9a-z-]{0,61})?[0-9a-z].' // 二级域名
+    +
+    '[a-z]{2,6})' // first level domain- .com or .museum
+    +
+    '(:[0-9]{1,6})?' // 端口- :80
+    +
+    '((/?)|' // a slash isn't required if there is no file name
+    +
+    "(/[0-9a-z_!~*().;?:@&=+$,%#-]+)+/?)$";
+
+function setRegEx(cmp) {
+    cmp.regex = new RegExp(strRegex)
+    cmp.regexText = "输入格式如:www.hanweikeji.com:8888或192.168.1.1:8888";
+}
+
+function micrserchild_url_afterrender(sender) {
+    setRegEx(this)
+}
+
+function hwImg1_afterrender(sender) {
+    // vmd.utils.tooltip("创建分组");
+    sender.el.dom.title = '创建分组';
+}
+
+function hwImg_afterrender(sender) {
+    sender.el.dom.title = '创建服务地址'
+}
+
+function hwImg2_afterrender(sender) {
+    sender.el.dom.title = '删除'
+}
+
+function tree_afterrender(sender) {
+
+}
+			this.MainViewport_afterrender=MainViewport_afterrender;
+		this.MainViewport_beforerender=MainViewport_beforerender;
+
+		store_tree=new vmd.store.jsonStore({"xtype":"vmd.jsonStore","id":"store_tree","xcls":"vmd.store.jsonStore","autoLoad":true,"cid":"vmdJsonStore","storeConfig":"{\"id\":\"m8GYRhBgrp\",\"callcode\":\"vmdCode\",\"url\":\"CDEServcie/micservice/micrserver\",\"host\":\"\",\"isHwRest\":true,\"name\":\"微服务树结构\",\"getMethods\":[],\"postMethods\":[],\"putMethods\":[],\"deleteMethods\":[],\"saveMethods\":[],\"fields\":[{\"name\":\"id\",\"cname\":\"\",\"dname\":\"\",\"dtype\":\"string\",\"type\":\"string\",\"primary\":false,\"nullable\":false,\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"dunit\":\"\",\"rule\":{}},{\"name\":\"name\",\"cname\":\"\",\"dname\":\"\",\"dtype\":\"string\",\"type\":\"string\",\"primary\":false,\"nullable\":false,\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"dunit\":\"\",\"rule\":{}},{\"name\":\"p_id\",\"cname\":\"\",\"dname\":\"\",\"dtype\":\"string\",\"type\":\"string\",\"primary\":false,\"nullable\":false,\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"dunit\":\"\",\"rule\":{}},{\"name\":\"identify\",\"cname\":\"\",\"dname\":\"\",\"dtype\":\"string\",\"type\":\"string\",\"primary\":false,\"nullable\":false,\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"dunit\":\"\",\"rule\":{}},{\"name\":\"mark\",\"cname\":\"\",\"dname\":\"\",\"dtype\":\"string\",\"type\":\"string\",\"primary\":false,\"nullable\":false,\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"dunit\":\"\",\"rule\":{}},{\"name\":\"type\",\"cname\":\"\",\"dname\":\"\",\"dtype\":\"string\",\"type\":\"string\",\"primary\":false,\"nullable\":false,\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"dunit\":\"\",\"rule\":{}},{\"name\":\"code\",\"cname\":\"\",\"dname\":\"\",\"dtype\":\"string\",\"type\":\"string\",\"primary\":false,\"nullable\":false,\"length\":\"\",\"precision\":\"\",\"unit\":\"\",\"dunit\":\"\",\"rule\":{}}]}"});
+
+
+	 var subView=new vmd.comp.SubView({view:{
+			xtype:"vmd.subview",
+			id:"subView",
+			width:337,
+			height:242,
+			layout:"border",
+			closable:true,
+			draggable:false,
+			maximizable:true,
+			modal:true,
+			resizable:true,
+			autoScroll:true,
+			closeAction:"close",
+			header:false,
+			cid:"vmdSubView",
+			items:[
+				{
+					xtype:"vmd.div",
+					id:"hwDiv4",
+					autoEl:"div",
+					border:true,
+					backgroundRepeat:"no-repeat",
+					backgroundPosition:"top left",
+					width:400,
+					height:189,
+					region:"north",
+					layout:"absolute",
+					items:[
+						{
+							xtype:"label",
+							id:"hwLabel",
+							text:"名称：",
+							height:20,
+							x:50,
+							y:20
+						},
+						{
+							xtype:"textfield",
+							id:"hwText",
+							allowBlank:true,
+							enableKeyEvents:true,
+							x:90,
+							y:20,
+							width:200
+						},
+						{
+							xtype:"label",
+							id:"hwLabel1",
+							text:"说明：",
+							x:50,
+							y:70
+						},
+						{
+							xtype:"textarea",
+							id:"hwTextArea",
+							allowBlank:true,
+							x:90,
+							y:70,
+							width:200,
+							height:100
+						}
+					]
+				},
+				{
+					xtype:"vmd.div",
+					id:"hwDiv5",
+					layoutConfig:{
+						align:"middle",
+						pack:"center"
+					},
+					autoEl:"div",
+					border:true,
+					backgroundRepeat:"no-repeat",
+					backgroundPosition:"top left",
+					width:400,
+					height:58,
+					region:"center",
+					layout:"hbox",
+					style:"background-color: #f8f8f8;    border-bottom-color: #fff;    border-left-color: #fff;    border-right-color: #fff;",
+					items:[
+						{
+							xtype:"vmd.button",
+							id:"button",
+							text:"确定",
+							type:"(none)",
+							size:"small",
+							width:68
+						},
+						{
+							xtype:"vmd.button",
+							id:"button1",
+							text:"取消",
+							type:"(none)",
+							size:"small",
+							margins:"0 20",
+							width:68
+						}
+					]
+				}
+			]
+		},rootScope:this,isModule:true})
+	 var subWin=new vmd.comp.SubWindow({view:{
+			xtype:"vmd.subwindow",
+			id:"subWin",
+			width:600,
+			height:400,
+			hide:true,
+			closable:true,
+			draggable:false,
+			maximizable:true,
+			modal:true,
+			resizable:true,
+			autoScroll:true,
+			closeAction:"close",
+			cid:"vmdSubWindow"
+		},rootScope:this,isModule:true})
+		this.items=[
+			{
+				xtype:"vmd.div",
+				id:"div",
+				autoEl:"div",
+				border:false,
+				backgroundRepeat:"no-repeat",
+				backgroundPosition:"top left",
+				width:400,
+				height:50,
+				layout:"border",
+				items:[
+					{
+						xtype:"vmd.div",
+						id:"div1",
+						autoEl:"div",
+						border:false,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						width:246,
+						height:50,
+						region:"west",
+						layout:"border",
+						style:"border-right: 1px solid #dddddd;",
+						items:[
+							{
+								xtype:"vmd.div",
+								id:"hwDiv",
+								layoutConfig:{
+									align:"middle"
+								},
+								autoEl:"div",
+								border:false,
+								backgroundRepeat:"no-repeat",
+								backgroundPosition:"top left",
+								width:245,
+								height:40,
+								region:"north",
+								layout:"hbox",
+								style:"border-bottom: 1px solid #dddddd;",
+								items:[
+									{
+										xtype:"vmd.img",
+										id:"hwImg1",
+										width:18,
+										height:18,
+										src:"/system/modules/eQ9ULgcVb1/img/一级图标.png",
+										margins:"0 10",
+										click:"hwImg1_click",
+										afterrender:"hwImg1_afterrender",
+										listeners:{
+											click:hwImg1_click,
+											vmdafterrender:hwImg1_afterrender
+										}
+									},
+									{
+										xtype:"vmd.img",
+										id:"hwImg",
+										width:18,
+										height:18,
+										src:"/system/modules/eQ9ULgcVb1/img/网址.png",
+										margins:"0 10 0 0",
+										click:"hwImg_click",
+										afterrender:"hwImg_afterrender",
+										listeners:{
+											click:hwImg_click,
+											vmdafterrender:hwImg_afterrender
+										}
+									},
+									{
+										xtype:"vmd.img",
+										id:"hwImg2",
+										width:18,
+										height:18,
+										src:"/system/modules/eQ9ULgcVb1/img/垃圾箱.png",
+										click:"hwImg2_click",
+										afterrender:"hwImg2_afterrender",
+										listeners:{
+											click:hwImg2_click,
+											vmdafterrender:hwImg2_afterrender
+										}
+									}
+								]
+							},
+							{
+								xtype:"vmd.div",
+								id:"hwDiv1",
+								autoEl:"div",
+								border:false,
+								backgroundRepeat:"no-repeat",
+								backgroundPosition:"top left",
+								width:400,
+								height:50,
+								region:"center",
+								layout:"fit",
+								items:[
+									{
+										xtype:"vmd.treeex",
+										id:"tree",
+										width:320,
+										height:270,
+										hideRoot:true,
+										loadType:"全部加载",
+										rootImg:"/system/modules/eQ9ULgcVb1/img/一级图标.png",
+										folderImg:"/system/modules/eQ9ULgcVb1/img/一级图标.png",
+										leafImg:"/system/modules/eQ9ULgcVb1/img/一级图标.png",
+										store:store_tree,
+										parentField:"p_id",
+										valueField:"id",
+										textField:"name",
+										rootValue:"root",
+										allowSameNode:false,
+										checkBox:true,
+										checkBoxFiled:"id",
+										cascading:false,
+										checkChanged:"tree_checkChanged",
+										nodeclick:"tree_nodeclick",
+										contentMenu:"hwMenu",
+										nodedraggable:false,
+										afterBindData:"tree_afterBindData",
+										style:"font-size: 14px;",
+										afterrender:"tree_afterrender",
+										listeners:{
+											checkChanged:tree_checkChanged,
+											nodeclick:tree_nodeclick,
+											afterBindData:tree_afterBindData,
+											vmdafterrender:tree_afterrender
+										}
+									},
+									{
+										xtype:"vmd.menu",
+										id:"hwMenu",
+										width:120,
+										hidden:true,
+										floating:true,
+										items:[
+											{
+												xtype:"menuitem",
+												id:"hwMenuItem",
+												width:120,
+												text:"添加分组",
+												hidden:false,
+												click:"hwMenuItem_click",
+												listeners:{
+													click:hwMenuItem_click
+												}
+											},
+											{
+												xtype:"menuitem",
+												id:"hwMenuItem1",
+												width:120,
+												text:"添加地址",
+												click:"hwMenuItem1_click",
+												listeners:{
+													click:hwMenuItem1_click
+												}
+											},
+											{
+												xtype:"menuitem",
+												id:"hwMenuItem2",
+												width:120,
+												text:"删除",
+												hidden:false,
+												click:"hwMenuItem2_click",
+												listeners:{
+													click:hwMenuItem2_click
+												}
+											}
+										]
+									}
+								]
+							}
+						]
+					},
+					{
+						xtype:"vmd.div",
+						id:"div2",
+						autoEl:"div",
+						border:false,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						width:400,
+						height:50,
+						region:"center",
+						layout:"border",
+						style:"font-size: 14px;",
+						items:[
+							{
+								xtype:"vmd.div",
+								id:"hwDiv2",
+								autoEl:"div",
+								border:false,
+								backgroundRepeat:"no-repeat",
+								backgroundPosition:"top left",
+								width:400,
+								height:40,
+								region:"north",
+								layout:"absolute",
+								style:"border-bottom: 1px solid #dddddd;",
+								items:[
+									{
+										xtype:"label",
+										id:"headline",
+										text:"说明",
+										x:20,
+										y:10,
+										style:"color: #5f5f5f;    font-size: 14px;    font-family: \"微软雅黑\";    font-weight: bold",
+										width:660
+									}
+								]
+							},
+							{
+								xtype:"vmd.div",
+								id:"hwDiv3",
+								autoEl:"div",
+								border:false,
+								backgroundRepeat:"no-repeat",
+								backgroundPosition:"top left",
+								width:400,
+								height:50,
+								region:"center",
+								layout:"border",
+								items:[
+									{
+										xtype:"vmd.div",
+										id:"micrservinfo",
+										autoEl:"div",
+										border:false,
+										backgroundRepeat:"no-repeat",
+										backgroundPosition:"top left",
+										width:548,
+										height:669,
+										region:"center",
+										layout:"absolute",
+										hidden:true,
+										hideMode:"display",
+										items:[
+											{
+												xtype:"label",
+												id:"hwLabel4",
+												text:"微服务名称：",
+												x:10,
+												y:40,
+												width:100,
+												style:"text-align: right;"
+											},
+											{
+												xtype:"textfield",
+												id:"micrservinfo_name",
+												allowBlank:false,
+												enableKeyEvents:true,
+												x:110,
+												y:35,
+												width:200
+											},
+											{
+												xtype:"label",
+												id:"hwLabel5",
+												text:"微服务标识：",
+												x:10,
+												y:80,
+												style:"text-align: right",
+												width:100
+											},
+											{
+												xtype:"textfield",
+												id:"micrservinfo_identify",
+												allowBlank:false,
+												enableKeyEvents:true,
+												x:110,
+												y:75,
+												width:200
+											},
+											{
+												xtype:"label",
+												id:"hwLabel6",
+												text:"说明：",
+												x:10,
+												y:120,
+												width:100,
+												style:"text-align: right"
+											},
+											{
+												xtype:"textarea",
+												id:"micrservinfo_mark",
+												allowBlank:true,
+												x:110,
+												y:115,
+												width:200,
+												height:80
+											},
+											{
+												xtype:"vmd.button",
+												id:"button2",
+												text:"保存",
+												type:"(none)",
+												size:"small",
+												x:150,
+												y:260,
+												width:70,
+												height:28,
+												style:"color: #fff;    background-color: #20A0FF;    font-size: 14px;    font-family: \"微软雅黑\";    border: none;",
+												click:"button2_click",
+												listeners:{
+													click:button2_click
+												}
+											}
+										]
+									},
+									{
+										xtype:"vmd.div",
+										id:"micrserchild",
+										autoEl:"div",
+										border:false,
+										backgroundRepeat:"no-repeat",
+										backgroundPosition:"top left",
+										width:400,
+										height:448,
+										region:"west",
+										hidden:true,
+										layout:"absolute",
+										hideMode:"display",
+										items:[
+											{
+												xtype:"label",
+												id:"hwLabel7",
+												text:"服务名称：",
+												x:20,
+												y:40,
+												width:80,
+												style:"text-align: right;"
+											},
+											{
+												xtype:"textfield",
+												id:"micrserchild_name",
+												allowBlank:false,
+												enableKeyEvents:true,
+												x:110,
+												y:35,
+												width:200
+											},
+											{
+												xtype:"label",
+												id:"hwLabel8",
+												text:"服务地址：",
+												x:20,
+												y:80,
+												style:"text-align: right",
+												width:80
+											},
+											{
+												xtype:"textfield",
+												id:"micrserchild_url",
+												allowBlank:true,
+												enableKeyEvents:true,
+												x:110,
+												y:75,
+												width:200,
+												afterrender:"micrserchild_url_afterrender",
+												listeners:{
+													vmdafterrender:micrserchild_url_afterrender
+												}
+											},
+											{
+												xtype:"label",
+												id:"hwLabel9",
+												text:"说明：",
+												x:20,
+												y:120,
+												width:80,
+												style:"text-align: right"
+											},
+											{
+												xtype:"textarea",
+												id:"micrserchild_mark",
+												allowBlank:true,
+												x:110,
+												y:115,
+												width:200,
+												height:80
+											},
+											{
+												xtype:"vmd.button",
+												id:"button3",
+												text:"保存",
+												type:"(none)",
+												size:"small",
+												x:150,
+												y:260,
+												width:70,
+												height:28,
+												style:"color: #fff;    background-color: #20A0FF;    font-size: 14px;    font-family: \"微软雅黑\";    border: none;",
+												click:"button3_click",
+												listeners:{
+													click:button3_click
+												}
+											}
+										]
+									},
+									{
+										xtype:"vmd.div",
+										id:"explain",
+										autoEl:"div",
+										border:false,
+										backgroundRepeat:"no-repeat",
+										backgroundPosition:"top left",
+										width:466,
+										height:0,
+										region:"north",
+										layout:"absolute",
+										hidden:false,
+										hideMode:"display",
+										items:[
+											{
+												xtype:"label",
+												id:"hwLabel10",
+												text:"操作提示：",
+												x:20,
+												y:20,
+												width:140,
+												height:20,
+												style:"font-size: 14px;"
+											},
+											{
+												xtype:"label",
+												id:"hwLabel11",
+												text:"1.请选择左侧节点进行编辑",
+												x:20,
+												y:50,
+												width:200,
+												height:20,
+												style:"font-size: 14px"
+											},
+											{
+												xtype:"label",
+												id:"hwLabel12",
+												text:"2.支持节点的鼠标右键功能",
+												x:20,
+												y:80,
+												width:200,
+												height:20,
+												style:"font-size: 14px"
+											}
+										]
+									},
+									{
+										xtype:"vmd.div",
+										id:"micrervlist",
+										autoEl:"div",
+										border:false,
+										backgroundRepeat:"no-repeat",
+										backgroundPosition:"top left",
+										width:728,
+										height:600,
+										region:"west",
+										style:"overflow-x: hidden;    overflow-y: scroll",
+										hidden:true,
+										hideMode:"display",
+										layout:"anchor"
+									}
+								]
+							}
+						]
+					},
+					{
+						xtype:"vmd.div",
+						id:"hwDiv6",
+						layoutConfig:{
+							align:"middle",
+							pack:"center"
+						},
+						autoEl:"div",
+						border:true,
+						backgroundRepeat:"no-repeat",
+						backgroundPosition:"top left",
+						width:400,
+						height:35,
+						region:"south",
+						layout:"hbox",
+						style:"background-color: #f2f2f2;    border-bottom-color: #fff;    border-left-color: #fff;    border-right-color: #fff;",
+						items:[
+							{
+								xtype:"vmd.button",
+								id:"button4",
+								text:"确定",
+								type:"(none)",
+								size:"small",
+								style:"color: #fff;    background-color: #20A0FF;    font-size: 14px;    font-family: \"微软雅黑\";    border: none;",
+								margins:"0 20",
+								click:"button4_click",
+								listeners:{
+									click:button4_click
+								}
+							},
+							{
+								xtype:"vmd.button",
+								id:"button5",
+								text:"取消",
+								type:"(none)",
+								size:"small",
+								margins:"0 20",
+								click:"button5_click",
+								listeners:{
+									click:button5_click
+								}
+							}
+						]
+					}
+				]
+			}
+		]
+		this.callParent();
+		var me = this;vmd.core.moduleInit(this.items, this);
+			me.on('beforerender',function(){ MainViewport_beforerender.call(me,me)})
+		me.on('afterrender',function(){ MainViewport_afterrender.call(me,me)})
+}
+})
+        Ext.onReady(function () {
+            Ext.create('vmd.module.MainViewport', {
+                renderTo: document.body
+            })
+
+
+        })
+
+      </script>
+</head>
+<body>
+</body>
+</html>

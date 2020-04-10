@@ -273,7 +273,7 @@ Vmd.define('hwchart.component.helper.MapDraw', {
 
                 // ------------------20191130-----------------
                 itemStyle.stroke = "#333";
-                itemStyle.lineWidth = 1;
+                itemStyle.lineWidth = 0;
                 // -------------------------------
                 compoundPath.setStyle(itemStyle);
                 compoundPath.style.strokeNoScale = true;

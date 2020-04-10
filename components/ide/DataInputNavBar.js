@@ -17,11 +17,13 @@ xds["vmd.ux.DataInputNavBar"] = Ext.extend(xds.Component, {
     requireJs: [],
 	requireCmpType:'',
     //默认属性设置
-    defaultConfig: {"startText":"首行","forwardText":"上一条","nextText":"下一条","endText":"尾行","layout":"hbox"},
+    defaultConfig: {"startText":"首行","forwardText":"上一条","nextText":"下一条","endText":"尾行","layout":"fit"},
     isResizable: function (a, b) {
 
         return true;
     },
+	//属性面板
+    
     //标准属性设置
     configs: [
          {
@@ -61,13 +63,12 @@ xds["vmd.ux.DataInputNavBar"] = Ext.extend(xds.Component, {
     ],
     initConfig: function (b, a) {
         //初始化默认属性设置
-        this.layoutConfig={"align":"middle","pack":"start"}
-
+        
     }
     
 });
     xds.Registry.register(xds["vmd.ux.DataInputNavBar"]);
     xds.Registry.addUserType(xds["vmd.ux.DataInputNavBar"]);
 
-    var Data_vmd_ux_DataInputNavBar={"BaseType":"Control","Type":"vmd_ux_DataInputNavBar","Property":{"startText":{"Description":"首行按钮文本","Prototype":"","Args":{"_Return_":""},"Example":"","Name":"首行按钮文本"},"forwardText":{"Description":"上一条按钮文本","Prototype":"","Args":{"_Return_":""},"Example":"","Name":"上一条按钮文本"},"nextText":{"Description":"下一条按钮文本","Prototype":"","Args":{"_Return_":""},"Example":"","Name":"下一条按钮文本"},"endText":{"Description":"尾行按钮文本","Prototype":"","Args":{"_Return_":""},"Example":"","Name":"尾行按钮文本"},"startIcons":{"Description":"首行按钮图标类","Prototype":"","Args":{"_Return_":""},"Example":"","Name":"首行按钮图标类"},"forwardIcons":{"Description":"上一条按钮图标类","Prototype":"","Args":{"_Return_":""},"Example":"","Name":"上一条按钮图标类"},"nextIcons":{"Description":"下一条按钮图标类","Prototype":"","Args":{"_Return_":""},"Example":"","Name":"下一条按钮图标类"},"endIcons":{"Description":"尾行按钮图标类","Prototype":"","Args":{"_Return_":""},"Example":"","Name":"尾行按钮图标类"},"startCls":{"Description":"首行按钮类名","Prototype":"","Args":{"_Return_":""},"Example":"","Name":"首行按钮类名"},"forwardCls":{"Description":"上一条按钮类名","Prototype":"","Args":{"_Return_":""},"Example":"","Name":"上一条按钮类名"},"nextCls":{"Description":"下一条按钮类名","Prototype":"","Args":{"_Return_":""},"Example":"","Name":"下一条按钮类名"},"endCls":{"Description":"尾行按钮类名","Prototype":"","Args":{"_Return_":""},"Example":"","Name":"尾行按钮类名"},"startDisplay":{"Description":"首行按钮隐藏","Prototype":"","Args":{"_Return_":""},"Example":"","Name":"首行按钮隐藏"},"forwardDisplay":{"Description":"上一条隐藏","Prototype":"","Args":{"_Return_":""},"Example":"","Name":"上一条隐藏"},"nextDisplay":{"Description":"下一条隐藏","Prototype":"","Args":{"_Return_":""},"Example":"","Name":"下一条隐藏"},"endDisplay":{"Description":"尾行按钮隐藏","Prototype":"","Args":{"_Return_":""},"Example":"","Name":"尾行按钮隐藏"},"countDisplay":{"Description":"页码隐藏","Prototype":"","Args":{"_Return_":""},"Example":"","Name":"页码隐藏"}},"Method":{"setPageCount":{"Description":"传递数据集设置页数计数","Prototype":"setPageCount(all,now)","Args":{"_Return_":"void","Args":"all,now"},"Example":"传递数据集设置页数计数"},"changeName":{"Description":"changeName","Prototype":"changeName(type,value)","Args":{"_Return_":"void","Args":"type,value"},"Example":""}},"Event":{"nav_click":{"Description":"","Prototype":"","Args":{"_Return_":""},"Example":""},"pageJump":{"Prototype":"","Args":{"_Return_":""},"Example":""}}}
+    var Data_vmd_ux_DataInputNavBar={"BaseType":"Control","Type":"vmd_ux_DataInputNavBar","Property":{"startText":{"Description":"首行按钮文本","Prototype":"","Args":{"_Return_":""},"Example":"","Name":"首行按钮文本"},"forwardText":{"Description":"上一条按钮文本","Prototype":"","Args":{"_Return_":""},"Example":"","Name":"上一条按钮文本"},"nextText":{"Description":"下一条按钮文本","Prototype":"","Args":{"_Return_":""},"Example":"","Name":"下一条按钮文本"},"endText":{"Description":"尾行按钮文本","Prototype":"","Args":{"_Return_":""},"Example":"","Name":"尾行按钮文本"},"startIcons":{"Description":"首行按钮图标类","Prototype":"","Args":{"_Return_":""},"Example":"","Name":"首行按钮图标类"},"forwardIcons":{"Description":"上一条按钮图标类","Prototype":"","Args":{"_Return_":""},"Example":"","Name":"上一条按钮图标类"},"nextIcons":{"Description":"下一条按钮图标类","Prototype":"","Args":{"_Return_":""},"Example":"","Name":"下一条按钮图标类"},"endIcons":{"Description":"尾行按钮图标类","Prototype":"","Args":{"_Return_":""},"Example":"","Name":"尾行按钮图标类"},"startCls":{"Description":"首行按钮类名","Prototype":"","Args":{"_Return_":""},"Example":"","Name":"首行按钮类名"},"forwardCls":{"Description":"上一条按钮类名","Prototype":"","Args":{"_Return_":""},"Example":"","Name":"上一条按钮类名"},"nextCls":{"Description":"下一条按钮类名","Prototype":"","Args":{"_Return_":""},"Example":"","Name":"下一条按钮类名"},"endCls":{"Description":"尾行按钮类名","Prototype":"","Args":{"_Return_":""},"Example":"","Name":"尾行按钮类名"},"startDisplay":{"Description":"首行按钮隐藏","Prototype":"","Args":{"_Return_":""},"Example":"","Name":"首行按钮隐藏"},"forwardDisplay":{"Description":"上一条隐藏","Prototype":"","Args":{"_Return_":""},"Example":"","Name":"上一条隐藏"},"nextDisplay":{"Description":"下一条隐藏","Prototype":"","Args":{"_Return_":""},"Example":"","Name":"下一条隐藏"},"endDisplay":{"Description":"尾行按钮隐藏","Prototype":"","Args":{"_Return_":""},"Example":"","Name":"尾行按钮隐藏"},"countDisplay":{"Description":"页码隐藏","Prototype":"","Args":{"_Return_":""},"Example":"","Name":"页码隐藏"}},"Method":{"setPageCount":{"Description":"传递数据集设置页数计数","Prototype":"setPageCount(all,now)","Args":{"_Return_":"void","Args":"all,now"},"Example":"传递数据集设置页数计数"},"changeName":{"Description":"changeName","Prototype":"changeName(type,value)","Args":{"_Return_":"void","Args":"type,value"},"Example":""},"showNavigationBar":{"Description":"showNavigationBar","Prototype":"showNavigationBar(btnNames)","Args":{"_Return_":"void","Args":"btnNames"},"Example":""}},"Event":{"nav_click":{"Description":"","Prototype":"","Args":{"_Return_":""},"Example":""},"pageJump":{"Prototype":"","Args":{"_Return_":""},"Example":""}}}
 	ControlsDataManage._add(Data_vmd_ux_DataInputNavBar)

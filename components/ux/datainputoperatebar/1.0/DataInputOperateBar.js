@@ -11,7 +11,7 @@ Ext.define("vmd.ux.DataInputOperateBar", {
     header: false,
     border: false,
     panelWidth: 240,
-    width: 309,
+    width: 307,
     height: 40,
     layout: "fit",
     afterrender: "DataInputOperateBar_afterrender",
@@ -180,31 +180,30 @@ Ext.define("vmd.ux.DataInputOperateBar", {
         this.DataInputOperateBar_afterrender = DataInputOperateBar_afterrender;
         this.items = [{
                 xtype: "vmd.menu",
-                id: "importMenu",
+                id: "hwMenu",
                 width: 120,
                 hidden: true,
                 floating: true,
                 items: [{
                         xtype: "menuitem",
-                        id: "im_exToExcel",
+                        id: "hwMenuItem",
                         width: 120,
-                        text: "导出当前数据到Excel文件",
-                        hidden: false,
-                        click: "im_exToExcel_click",
-                        listeners: {
-                            click: im_exToExcel_click
-                        }
+                        text: "Menu Item",
+                        hidden: false
                     },
                     {
                         xtype: "menuitem",
-                        id: "im_imExcel",
+                        id: "hwMenuItem1",
                         width: 120,
-                        text: "导入Excel文件数据到当前界面",
-                        hidden: false,
-                        click: "im_imExcel_click",
-                        listeners: {
-                            click: im_imExcel_click
-                        }
+                        text: "Menu Item",
+                        hidden: false
+                    },
+                    {
+                        xtype: "menuitem",
+                        id: "hwMenuItem2",
+                        width: 120,
+                        text: "Menu Item",
+                        hidden: false
                     }
                 ]
             },
@@ -280,6 +279,36 @@ Ext.define("vmd.ux.DataInputOperateBar", {
                 ]
             },
             {
+                xtype: "vmd.menu",
+                id: "importMenu",
+                width: 120,
+                hidden: true,
+                floating: true,
+                items: [{
+                        xtype: "menuitem",
+                        id: "im_exToExcel",
+                        width: 120,
+                        text: "导出当前数据数据到Excel文件",
+                        hidden: false,
+                        click: "im_exToExcel_click",
+                        listeners: {
+                            click: im_exToExcel_click
+                        }
+                    },
+                    {
+                        xtype: "menuitem",
+                        id: "im_imExcel",
+                        width: 120,
+                        text: "导入Excel文件到当前界面",
+                        hidden: false,
+                        click: "im_imExcel_click",
+                        listeners: {
+                            click: im_imExcel_click
+                        }
+                    }
+                ]
+            },
+            {
                 xtype: "vmd.div",
                 id: "hwDiv",
                 layoutConfig: {
@@ -290,7 +319,7 @@ Ext.define("vmd.ux.DataInputOperateBar", {
                 border: false,
                 backgroundRepeat: "no-repeat",
                 backgroundPosition: "top left",
-                width: 300,
+                width: 280,
                 height: 40,
                 layout: "hbox",
                 items: [{

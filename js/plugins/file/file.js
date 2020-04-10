@@ -220,7 +220,7 @@
             var _testUrl = '';
             utils.virtualPath = typeof vmd.virtualPath != 'undefined' ? (vmd.virtualPath.indexOf('http://localhost') != -1 ? _testUrl : vmd.virtualPath) : _testUrl;
             if (typeof hwDas != 'undefined') {
-                utils.options.serverUrl = hwDas.getuploadurl({host:utils.hwDataServHost,mark:utils.hwcode}, utils.dirPath)
+                utils.options.serverUrl = hwDas.getuploadurl({host:(utils.host||utils.hwDataServHost),mark:utils.hwcode}, utils.dirPath)
             } else {
                 $('#filePickerReady').after($('<div>').html(lang.errorLoadConfig)).hide();
                 return;
@@ -334,12 +334,13 @@
         !uploadFile.upload & (uploadFile.upload = function (host,savedir,win, callback,hwcode) {
             if (typeof vmdSettings != 'undefined') {
                 utils.hwcode = hwcode||vmdSettings.resourceCode || utils.hwcode;
-                /*if (host) {
-                    utils.hwcode = {
+                if (host) {
+					utils.host=host;
+                    /*utils.hwcode = {
                         host: host,
                         mark: utils.hwcode || vmdSettings.resourceCode 
-                    }
-                }*/
+                    }*/
+                }
 				if(host.indexOf('http')!=-1){
 					utils.url=host;//isDefine
 				}  
@@ -810,12 +811,13 @@
 							_path=_path.substring(0,_path.lastIndexOf('/'));
 						} 
 						
-						file.source.relativePath=hwDas.getuploadurl({host:utils.hwDataServHost,mark:utils.hwcode},_path);
+						file.source.relativePath=hwDas.getuploadurl({host:(utils.host||utils.hwDataServHost),mark:utils.hwcode},_path);
 					}else{
 						file.source.relativePath='';
 					}
 					
-					var serviceAddress=hwDas.getuploadurl(utils.hwcode, utils.dirPath);;
+					//var serviceAddress=hwDas.getuploadurl(utils.hwcode, utils.dirPath);;
+					var serviceAddress=hwDas.getuploadurl({host:(utils.host||utils.hwDataServHost),mark:utils.hwcode}, utils.dirPath);;
 					if(utils.url){
 					  
 						serviceAddress=utils.url;
@@ -895,7 +897,7 @@
                         _data=json.data[0],
                         _json={
                             state:json.isSucceed?'SUCCESS':'',
-                            url:_data&&_data.path.replace('\\','/'),
+                            url:_data&&_data.path&&_data.path.replace('\\','/'),
                             title: _data && _data.name,
                             size: _data.size,
                             error: json.errMsg,
@@ -1053,7 +1055,7 @@
                 var url = utils.getActionUrl(utils.getOpt('fileManagerActionName')),
                     isJsonp = utils.isCrossDomainUrl(url);
                 //数据服务改造版   
-                hwDas.getdirs({host:utils.hwDataServHost,mark:utils.hwcode}, utils.dirPath, utils.getOpt('fileAllowFiles'), function (r) {
+                hwDas.getdirs({host:(utils.host||utils.hwDataServHost),mark:utils.hwcode}, utils.dirPath, utils.getOpt('fileAllowFiles'), function (r) {
                     try {
 
                         var list = [];

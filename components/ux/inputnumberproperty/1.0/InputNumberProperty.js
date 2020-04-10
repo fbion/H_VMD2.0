@@ -146,7 +146,7 @@ Ext.define("vmd.ux.InputNumberProperty", {
             }
 
             function number_click_afterrender(sender) {
-                debugger
+                
                 sender.el.on('dblclick', function() {
                     var publicmethod = activePropPanel.controller;
                     publicmethod.openCodeEditor(sender, 'number_click', sender.getValue(), 'grid,cell,rId,cInd');

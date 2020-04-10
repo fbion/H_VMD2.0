@@ -1,0 +1,38 @@
+﻿<div ng-controller="StencilController">
+  <div class="full">
+      <div class="row row-no-gutter">
+	      <div id="canvasHelpWrapper" class="col-xs-9-monitor">
+	      	<div class="canvas-wrapper-monitor" id="canvasSection" 
+	      		ng-model="droppedElement"
+                  ng-model="droppedElement"
+                  data-drop="true"
+                  data-jqyoui-options
+                  jqyoui-droppable="{onDrop:'dropCallback',onOver: 'overCallback', onOut: 'outCallback'}"> 
+            	<div class="canvas-message" id="model-modified-date"></div>
+	         </div>
+           </div>          
+         </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    window.onresize = function () {
+        // 2017.12.14:窗口变化时重新调整流程图绘图区域的大小
+        changeCanvasRegion();
+    };
+
+    function changeCanvasRegion() {
+
+        // 2017.12.14：绘图区域显示滚动条
+        var arrSvgCanvas = document.getElementsByClassName("ORYX_Editor");
+        if (arrSvgCanvas) {
+            for (var i = 0; i < arrSvgCanvas.length; i++) {
+                arrSvgCanvas[i].style.width = document.body.clientWidth + "px";
+                arrSvgCanvas[i].style.height = document.body.clientHeight + "px";
+                arrSvgCanvas[i].style.overflow = "auto"; // 2017.12.14:设置绘图区域可以显示滚动条
+            }
+        }
+    };
+</script>
+

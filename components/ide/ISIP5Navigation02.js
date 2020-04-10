@@ -12,13 +12,18 @@ xds["vmd.ux.ISIP5Navigation02"] = Ext.extend(xds.Component, {
     defaultName: "hwISIP5Navigation02",
     iconCls: "icon-cmp",
     isContainer: false,
-   
+     //扩展组件依赖资源加载
+    requireCss: [],
+    requireJs: [],
+	requireCmpType:'',
     //默认属性设置
     defaultConfig: {"layout":"absolute"},
     isResizable: function (a, b) {
 
         return true;
     },
+	//属性面板
+    
     //标准属性设置
     configs: [
          {

@@ -12,13 +12,18 @@ xds["vmd.ux.FontColor"] = Ext.extend(xds.Component, {
     defaultName: "hwFontColor",
     iconCls: "icon-cmp",
     isContainer: false,
-   
+     //扩展组件依赖资源加载
+    requireCss: [],
+    requireJs: [],
+	requireCmpType:'',
     //默认属性设置
     defaultConfig: {"layout":"fit"},
     isResizable: function (a, b) {
 
         return true;
     },
+	//属性面板
+    
     //标准属性设置
     configs: [
          {

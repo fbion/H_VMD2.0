@@ -83,7 +83,7 @@
 var standby = [];
 //为所有字段添加中文(英文)名称
 var data = parent.newWin.inputdbconfig.fields;
-debugger
+
 for (var i = 0; i < data.length; i++) {
     data[i].mixName = (data[i].dname||data[i].cname) + "(" + data[i].name + ")"
     data[i].cname = (data[i].dname||data[i].cname) 
@@ -129,7 +129,7 @@ function MyColumn5_beforerender(sender) {
 }
 
 function button4_click(sender, e) {
-    debugger
+    
     var temp = [];
     var group = MyGrid1.getSelectionModel().selections.items;
     for (var i = 0; i < group.length; i++) {

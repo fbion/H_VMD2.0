@@ -22,10 +22,8 @@ Vmd.define('hwchart.util.DataParse',{
         var dataHost = me.option.host;
         var callCode = me.option.callCode;
         var timeout = me.option.timeout || 60*1000 ;
-        me.hwDao = new HwDao(dataHost, callCode, true, timeout);//地址:端口,授权码(服务管理员分配),是否异步,超时时间(单位ms)
+        me.hwDao = new HwDao(dataHost);//地址:端口,授权码(服务管理员分配),是否异步,超时时间(单位ms)
         me.parseDs(params,callback)
-        
-		
     },
     /**
     *@private 解析数据集
@@ -113,7 +111,7 @@ Vmd.define('hwchart.util.DataParse',{
         var me = this;
 
         // 数据访问服务的数据
-        var param = me.getDsParams(dsopts.params, me.option.params, mapping.params); //查询参数
+        var param = me.paseseParams(dsopts.params); //查询参数
         var daraFields = mapping.fields;
         var geoScope = null;
         var tplData = null;
@@ -374,15 +372,31 @@ Vmd.define('hwchart.util.DataParse',{
         var me = this;
         //得到当前数据集的配置
         var dsopts = me.tpl.dataset[mapping.source];
-        if(!dsopts){
+        if(!dsopts&&mapping.type !="wellLabel"){
             alert(mapping.nameText +'数据未配置')
             return;
         }
         var dataType = dsopts.type;
         //解析参数
         var url = dsopts.url;//服务相对路径
-        // var dataType = mapping.dataType;
-        // var url = mapping.url
+        if(!url){
+            var params = {};
+            if(Ext.StoreMgr.lookup(mapping.source,true)){
+                var storeConfig = Ext.StoreMgr.lookup(mapping.source,true).storeConfig;
+                var paramsMethods = storeConfig.getMethods
+                // console.log(paramsMethods)
+                if(paramsMethods&&paramsMethods.length>0){
+                    for(var i = 0;i<paramsMethods.length;i++){
+                        var valueExp = paramsMethods[i].value1.trim()||paramsMethods[i].value2.trim();
+                        if(valueExp!=""){	
+                            params[paramsMethods[i].id] = valueExp;
+                        }
+                    }
+                }
+                url = storeConfig.url;
+                dsopts.params = params;
+            }
+        }
         if(dataType === 0){
             // 数据访问服务的数据
             me._parseDasData(url, mapping, dsopts, callbak);
@@ -920,7 +934,7 @@ Vmd.define('hwchart.util.DataParse',{
                     obj.min.push(v.min||undefined)
                     obj.maxHr.push(v.maxHr ||70)
                     obj.minHr.push(v.minHr||2)
-                    obj.isShow.push(v.show)
+                    obj.isShow.push(v.isShow)
                     obj.labelIsShow.push(v.labelIsShow)
                     obj.nameIsShow.push(v.nameIsShow)
                     obj.companyIsShow.push(v.companyIsShow)
@@ -985,5 +999,12 @@ Vmd.define('hwchart.util.DataParse',{
         })
         return allParamd;
     },
+    paseseParams:function(params){
+        var me = this;
+        me.each(params,function(v,k){
+            params[k] = new Function("value", v + ';\nreturn value')("") // eval("(function(){" + valueExp + "\r\n})()");	
+        })
+        return params
+    }
 
 })

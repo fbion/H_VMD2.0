@@ -232,6 +232,33 @@ Vmd.define('hwchart.chart.helper.WellManager', {
                     newPoint[0] = newPoint[0] - (symbolBoundRect.width * symbolScale[0] / 2 + (elBoundRect.width - symbolBoundRect.width * symbolScale[0]) / 2 - offset[0]) * zoomScale;
                     newPoint[1] = newPoint[1] + (symbolBoundRect.height * symbolScale[1] / 2 + distance + offset[1]) * zoomScale;
                     break;
+                case 'top':
+                    newPoint[0] = newPoint[0] + (symbolBoundRect.width * symbolScale[0] / 2 + distance + offset[0]) * zoomScale;
+                    newPoint[1] = newPoint[1] - (symbolBoundRect.height * symbolScale[1] *2 + elBoundRect.height + distance - offset[1]) * zoomScale;
+                    break;
+                case 'center':
+                    newPoint[0] = newPoint[0] + (symbolBoundRect.width * symbolScale[0] / 2 + distance + offset[0]) * zoomScale;
+                    newPoint[1] = newPoint[1] - (elBoundRect.height / 2 - offset[1]) * zoomScale;
+                    break;
+                case 'right+':
+                    newPoint[0] = newPoint[0] + (symbolBoundRect.width * symbolScale[0] *4 + distance + offset[0]) * zoomScale;
+                    newPoint[1] = newPoint[1] - (elBoundRect.height / 2 - offset[1]) * zoomScale;
+                    break;
+                case 'bottom+':
+                    newPoint[0] = newPoint[0] - (symbolBoundRect.width * symbolScale[0] / 2 + (elBoundRect.width - symbolBoundRect.width * symbolScale[0]) / 2 - offset[0]) * zoomScale;
+                    newPoint[1] = newPoint[1] + (symbolBoundRect.height * symbolScale[1] / 2 + distance + offset[1]) * zoomScale;
+                    break;
+                case 'leftTop':
+				//newPoint[0] = newPoint[0] - 100 * zoomScale;
+                    newPoint[0] = newPoint[0] - (elBoundRect.width * zoomScale / 2);
+					newPoint[1] = newPoint[1] - elBoundRect.height * zoomScale / 2 - symbolBoundRect.height * symbolScale[1] * zoomScale / 2 - offset[0] * zoomScale;
+                    //newPoint[0] = newPoint[0] - (symbolBoundRect.width * symbolScale[0] + (elBoundRect.width - symbolBoundRect.width * symbolScale[0]) / 2 - offset[0]) * zoomScale;
+                    //newPoint[1] = newPoint[1] - (symbolBoundRect.height * symbolScale[1] *2 + elBoundRect.height + distance - offset[1]) * zoomScale;
+                    break;
+                case 'rightTop':
+                    newPoint[0] = newPoint[0] + (symbolBoundRect.width * symbolScale[0] *4 + distance + offset[0]) * zoomScale;
+                    newPoint[1] = newPoint[1] - (symbolBoundRect.height * symbolScale[1] *2 + elBoundRect.height + distance - offset[1]) * zoomScale;
+                    break;
                 default:
                     newPoint[0] = newPoint[0] - (symbolBoundRect.width * symbolScale[0] / 2 + (elBoundRect.width - symbolBoundRect.width * symbolScale[0]) / 2 - offset[0]) * zoomScale;
                     newPoint[1] = newPoint[1] - (symbolBoundRect.height * symbolScale[1] / 2 + elBoundRect.height + distance - offset[1]) * zoomScale;
@@ -375,54 +402,53 @@ Vmd.define('hwchart.chart.helper.WellManager', {
         },
 
         createWellSelect: function (ecModel, id) {
-            return;
-            // var props = inner(ecModel);
-            // var itemGroup = props._graphicEls[id];
-            // if(!itemGroup){
-            //     return;
-            // }
-            //
-            // var shape = itemGroup.getBoundingRect();
-            // var selectEl = new zrender.Rect({
-            //     shape: {
-            //         x: shape.x - selectedPadding / 2,
-            //         y: shape.y - selectedPadding / 2,
-            //         width: shape.width + selectedPadding,
-            //         height: shape.height + selectedPadding
-            //     },
-            //     style:{
-            //         fill:'none',
-            //         stroke: 'black',
-            //         lineWidth: selectedLineWidth,
-            //         lineDash: [selectedLineWidth * 4, selectedLineWidth * 4]
-            //     },
-            //     z: 10
-            // });
-            // selectEl.animateStyle(true)
-            //     .when(1000, {
-            //         lineDashOffset: selectedLineWidth * 8
-            //     })
-            //     .delay(100)
-            //     .start();
-            // selectEl._tag = 'select';
-            //
-            // props.group.add(selectEl);
-            // props.selectedWellIds.push(id);
-            // props.selectedGraphics[props.selectedWellIds.length - 1] = selectEl;
+            var props = inner(ecModel);
+            var itemGroup = props._graphicEls[id];
+            if(!itemGroup){
+                return;
+            }
+            
+            var shape = itemGroup.getBoundingRect();
+            var selectEl = new zrender.Rect({
+                shape: {
+                    x: shape.x - selectedPadding / 2,
+                    y: shape.y - selectedPadding / 2,
+                    width: shape.width + selectedPadding,
+                    height: shape.height + selectedPadding
+                },
+                style:{
+                    fill:'none',
+                    stroke: 'black',
+                    lineWidth: selectedLineWidth,
+                    lineDash: [selectedLineWidth * 4, selectedLineWidth * 4]
+                },
+                z: 10
+            });
+            selectEl.animateStyle(true)
+                .when(1000, {
+                    lineDashOffset: selectedLineWidth * 8
+                })
+                .delay(100)
+                .start();
+            selectEl._tag = 'select';
+            
+            props.group.add(selectEl);
+            props.selectedWellIds.push(id);
+            props.selectedGraphics[props.selectedWellIds.length - 1] = selectEl;
         },
 
         clearSelect: function(ecModel, clearIds){
             // if(clearIds){
             //     return;
             // }
-            // var props = inner(ecModel);
-            // var len = props.selectedWellIds.length;
-            // for(var i = 0; i < props.selectedWellIds.length; i++){
-            //     var sub = props.selectedGraphics[i];
-            //     props.group.remove(sub);
-            // }
-            // props.selectedWellIds = [];
-            // props.selectedGraphics = [];
+            var props = inner(ecModel);
+            var len = props.selectedWellIds.length;
+            for(var i = 0; i < props.selectedWellIds.length; i++){
+                var sub = props.selectedGraphics[i];
+                props.group.remove(sub);
+            }
+            props.selectedWellIds = [];
+            props.selectedGraphics = [];
         },
 
         /*

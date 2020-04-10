@@ -39,7 +39,7 @@ function loddradio() {
         if(res.isSucceed) {
             if(res.data && res.data[0].datas.length > 0) {
                 var data = res.data[0].datas;
-                debugger
+                
                 for(var i = 0; i < data.length; i++) {
                     var type = "<input type='radio' onclick='radioLink(this);' name='typeCode' id='" + data[i].code + "'><label   id='" + data[i].code + "code'   style='margin:0 20px 0 0;cursor:pointer;' for='" + data[i].code + "'>" + data[i].name + "</label>";
                     radioList.push(type);

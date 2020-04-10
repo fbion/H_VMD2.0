@@ -76,7 +76,7 @@ function MyGrid_beforerender(sender) {
 window.tzggLink = function(id) {
     var tr = $(id).closest('tr'),
         id = tr.find('td')[0].innerText;
-    debugger
+    
     $LAB.script(vmd.virtualPath + '/lib/messenger.js')
         .wait(function() {
             var messenger;

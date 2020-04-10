@@ -28,7 +28,7 @@ Ext.define("vmd.ux.UploadProperty", {
         var page = this;
 
         function MyTabs_tabchange(sender, tab) {
-            debugger
+            
             var info = page.info;
             var cell = page.cell;
             var curTab = tab;
@@ -48,7 +48,7 @@ Ext.define("vmd.ux.UploadProperty", {
         }
 
         function setInfo(info, cell) {
-            debugger
+            
             page.cell = cell;
             page.info = info;
             var curTab = MyTabs.activeTab;

@@ -46,7 +46,7 @@ Ext.define("vmd.ux.Moretodo", {
                     usermodel.name = model[0].username;
                     usermodel.userid = model[0].userid;
                     for (var i = 0; i < model.length; i++) {
-                        debugger
+                        
                         if (usermodel.roleids) {
                             usermodel.roleids = usermodel.roleids + "," + model[i].roleid;
                         } else {

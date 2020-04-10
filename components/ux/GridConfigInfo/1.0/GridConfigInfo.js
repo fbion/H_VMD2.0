@@ -42,13 +42,14 @@ Ext.define('vmd.ux.gridConfigInfo.Controller', {
     }
 })
 Ext.define("vmd.ux.GridConfigInfo", {
-    extend: "Ext.Panel",
+    extend: "vmd.base.Ux",
     requires: vmd.getCmpDeps([]),
     version: "1.0",
     xtype: "vmd.ux.GridConfigInfo",
     title: "Panel",
     header: false,
     border: false,
+    panelWidth: 240,
     width: 290,
     height: 510,
     layout: "anchor",
@@ -234,6 +235,7 @@ Ext.define("vmd.ux.GridConfigInfo", {
                         }
                         page.selectedField.loadData(page.selected)
                         gridFildSelWin.close()
+                        //xds.active.component.setConfig("gridConfig",xds.active.component.userConfig.gridConfig)
                     }
                 }
             }
@@ -317,6 +319,16 @@ Ext.define("vmd.ux.GridConfigInfo", {
             }
 
             function dataSet_selectChanged(sender, combo, record, index) {
+                if (page.gridConfigInfo.storeName != dataSet.getValue() && page.gridConfigInfo.storeName) {
+                    if (page.gridConfigInfo.fieldsInfo.length > 0) {
+                        Ext.Msg.confirm("提示!", "数据集发生变化，是否清空已选字段信息?", function(btn) {
+                            if (btn == "yes") {
+                                page.gridConfigInfo.fieldsInfo = [];
+                                page.selectedField.loadData([])
+                            } else {}
+                        })
+                    }
+                }
                 page.gridConfigInfo.storeName = dataSet.getValue();
             }
 
@@ -339,15 +351,18 @@ Ext.define("vmd.ux.GridConfigInfo", {
 
             function btn_up_click(sender, e) {
                 moveUp()
+                //xds.active.component.setConfig("gridConfig",xds.active.component.userConfig.gridConfig)
             }
 
             function btn_down_click(sender, e) {
                 moveDown()
+                //xds.active.component.setConfig("gridConfig",JSON.stringify(xds.active.component.userConfig.gridConfig))
             }
 
             function btn_del_click(sender, e) {
                 deleteCol()
                 //vmd.webBase.syslog(loginfo,logtype,operationtype,function(res){}) 
+                //xds.active.component.setConfig("gridConfig",xds.active.component.userConfig.gridConfig)
             }
 
             function MyGrid_beforerender(sender) {
@@ -560,6 +575,7 @@ Ext.define("vmd.ux.GridConfigInfo", {
 
             function button1_click(sender, e) {
                 virtualColSet(null, null, true)
+                //xds.active.component.setConfig("gridConfig",xds.active.component.userConfig.gridConfig)
             }
 
             function virtualColSet(fileInfo, index, add) {

@@ -9,6 +9,28 @@ Ext.define("vmd.ux.TestProMode", {
     width: 600,
     height: 350,
     layout: "absolute",
+    beforerender: "TestProMode_beforerender",
+    afterrender: "TestProMode_afterrender",
+    listeners: {
+        beforerender: function() {
+            try {
+                this.TestProMode_beforerender(this)
+            } catch (ex) {
+                vmd.Error.log('003-1', {
+                    p1: 'vmd.ux.TestProMode'
+                }, ex, 50);
+            }
+        },
+        vmdafterrender: function() {
+            try {
+                this.TestProMode_afterrender(this)
+            } catch (ex) {
+                vmd.Error.log('003-2', {
+                    p1: 'vmd.ux.TestProMode'
+                }, ex, 50);
+            }
+        }
+    },
     initComponent: function() {
         function resetCmpScope() {
             var cmpList = me._reloadCmpList;
@@ -20,12 +42,54 @@ Ext.define("vmd.ux.TestProMode", {
                 })
             })
         }
-        try {} catch (ex) {
+        try {
+            var page = this
+            var vm;
+            var testScope = {
+                test1: 'b',
+                test2: 'c',
+                checked1: true,
+                checked2: 2
+            }
+            page.onInit = function(dcmp) {
+                //从dcmp拿到属性进行赋值
+                //  dcmp=dcmp;
+                //   var txt=page.getConfig('settings')
+                //   if(!txt) return;
+                //   var d= Ext.decode(txt);
+                //   for(var key in d){
+                //       var cmp=page.getCmpByName(key)
+                //         cmp.setValue(d[key])
+                //   }
+                if (!vm) {
+                    vm = new vmd.base.ViewModel(page);
+                    vm.addObserver();
+                }
+                debugger
+                vm.bind(testScope);
+            }
+            var json = {}
+            page.onValueChange = function(sender, newValue, info) {
+                //info.props
+                // (sender,newValue,oldValue
+                // if(sender.Name){
+                //     json[sender.Name]=newValue;
+                // }
+                // page.setConfig('settings',Ext.encode( json));
+                // page.fireEvent('componentchanged');
+            }
+
+            function TestProMode_beforerender(sender) {}
+
+            function TestProMode_afterrender(sender) {}
+        } catch (ex) {
             vmd.Error.log('003-3', {
                 p1: 'vmd.ux.TestProMode',
                 p2: ex.message
             }, ex, 100);
         }
+        this.TestProMode_afterrender = TestProMode_afterrender;
+        this.TestProMode_beforerender = TestProMode_beforerender;
         this.items = [{
                 xtype: "vmd.button",
                 id: "button",
@@ -48,7 +112,8 @@ Ext.define("vmd.ux.TestProMode", {
                 fieldLabel: "Radio",
                 boxLabel: "boxLabel",
                 x: 70,
-                y: 210
+                y: 210,
+                BindValue: "checked1"
             },
             {
                 xtype: "radiostoregroup",
@@ -61,17 +126,40 @@ Ext.define("vmd.ux.TestProMode", {
                 boxFieldName: "myRadio",
                 x: 220,
                 y: 210,
+                BindValue: "checked2",
                 items: [{
                         xtype: "radio",
                         id: "hwRadio1",
-                        boxLabel: "boxLabel"
+                        boxLabel: "boxLabel",
+                        inputValue: "1"
                     },
                     {
                         xtype: "radio",
                         id: "hwRadio2",
-                        boxLabel: "boxLabel"
+                        boxLabel: "boxLabel",
+                        inputValue: "2"
                     }
                 ]
+            },
+            {
+                xtype: "textfield",
+                id: "hwText",
+                allowBlank: true,
+                enableKeyEvents: true,
+                x: 40,
+                y: 70,
+                Name: "test2",
+                BindValue: "test2"
+            },
+            {
+                xtype: "textfield",
+                id: "hwText1",
+                allowBlank: true,
+                enableKeyEvents: true,
+                x: 50,
+                y: 30,
+                Name: "test1",
+                BindValue: "test1"
             }
         ]
         this.callParent();

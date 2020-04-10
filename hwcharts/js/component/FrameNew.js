@@ -232,8 +232,28 @@
             //group.position[1] = xyPix[1];
 
             //frameSpaceTmp = 10;
+			
             var nOffOrg = 5;
-            // 整体背景矩形
+            // 内框矩形
+            var rectInner = new graphic.Rect({
+                shape: {
+                    x: xyPix[0] - nOffOrg,
+                    y: xyPix2[1] - nOffOrg,
+                    width: wid,
+                    height: hei
+                },
+                style: {
+                    stroke: '#000',
+                    fill: 'none',
+                    lineWidth: 1
+                },
+                silent: true
+            });
+            graphic.subPixelOptimizeRect(rectInner);
+
+            group.add(rectInner);
+			
+            // 外框矩形
             var rect = new graphic.Rect({
                 shape: {
                     x: xyPix[0] - nOffOrg - frameSpaceTmp,

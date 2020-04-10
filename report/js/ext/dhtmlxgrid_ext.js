@@ -28,6 +28,36 @@ dhtmlXGridObject.prototype._build_master_row = function(){
     this._master_row=t.firstChild.rows[0];
 },
 
+dhtmlXGridObject.prototype.setColStyles = function (valueStr) {
+    if (typeof valueStr === 'string') {
+        this.cellStyles = dhtmlxArray(valueStr.split(this.delim));
+    }
+    else {
+        this.cellStyles = valueStr;
+    }
+}
+
+dhtmlXGridObject.prototype.setColClassName = function (classNameStr) {
+    if (typeof classNameStr === 'string') {
+        this.cellClassNames = dhtmlxArray(classNameStr.split(this.delim));
+    }
+    else {
+        this.cellClassNames = classNameStr;
+    }
+}
+
+dhtmlXGridObject.prototype.setColExtypeStore = function (vmdstores) {
+    this.cellExtypeStores = vmdstores;
+}
+
+dhtmlXGridObject.prototype.setDataRowHeight = function (rowHeight) {
+    this.dataRowHeight = rowHeight;
+    if (rowHeight || rowHeight == 0) {
+        //this._srnd = rowHeight;
+        this._srdh = parseInt(rowHeight);
+    }
+}
+
 /**
 * 重写创建表头的方法，添加表头单元格的类
 */
@@ -551,7 +581,7 @@ dhtmlXGridObject.prototype.getColsWidth = function () {
     if (this._fake) {
         return this._fake.cellWidthPX.concat(this.cellWidthPX.slice(this._fake.cellWidthPX.length)).map(function (value) { return parseInt(value) });
     }
-    return this.cellWidthPX.map(function (value) { return parseInt(value) });
+    return this.cellWidthPX.map(function (value) {return parseInt(value) });
 },
 
 
@@ -597,9 +627,83 @@ dhtmlXGridObject.prototype.enabledSelecteStates = function (bool) {
     this.rowSelecteStates = dhx4.s2b(bool);
 };
 
+/**
+* 分页组件工具栏下拉框添加高度
+*/
+dhtmlXGridObject.prototype._pgn_createToolBar = function () {
+    this.aToolBar = new dhtmlXToolbarObject({
+        parent: this._pgn_parentObj,
+        skin: (this._pgn_skin_tlb || this.skin_name),
+        icons_path: this.imgURL
+    });
+    if (!this._WTDef) this.setPagingWTMode(true, true, true, true);
+    var self = this;
+    this.aToolBar.attachEvent("onClick", function (val) {
+        val = val.split("_");
+        switch (val[0]) {
+            case "leftabs":
+                self.changePage(1);
+                break;
+            case "left":
+                self.changePage(self.currentPage - 1);
+                break;
+            case "rightabs":
+                self.changePage(99999);
+                break;
+            case "right":
+                self.changePage(self.currentPage + 1);
+                break;
+            case "perpagenum":
+                if (val[1] === this.undefined) return;
+                self.rowsBufferOutSize = parseInt(val[1]);
+                self.changePage();
+                self.aToolBar.setItemText("perpagenum", val[1] + " " + self.i18n.paging.perpage);
+                break;
+            case "pages":
+                if (val[1] === this.undefined) return;
+                self.changePage(val[1]);
+                self.aToolBar.setItemText("pages", self.i18n.paging.page + val[1]);
+                break;
+        }
+    });
+    // add buttons
+    if (this._WTDef[0]) {
+        this.aToolBar.addButton("leftabs", NaN, null, "ar_left_abs.gif", "ar_left_abs_dis.gif");
+        this.aToolBar.addButton("left", NaN, null, "ar_left.gif", "ar_left_dis.gif");
+    }
+    if (this._WTDef[1]) {
+        this.aToolBar.addText("results", NaN, this.i18n.paging.results);
+        this.aToolBar.setWidth("results", "150");
+        this.aToolBar.disableItem("results");
+    }
+    if (this._WTDef[0]) {
+        this.aToolBar.addButton("right", NaN, null, "ar_right.gif", "ar_right_dis.gif");
+        this.aToolBar.addButton("rightabs", NaN, null, "ar_right_abs.gif", "ar_right_abs_dis.gif");
+    }
+    if (this._WTDef[2]) {
+        if (this.aToolBar.conf.skin == "dhx_terrace") this.aToolBar.addSeparator();
+        this.aToolBar.addButtonSelect("pages", NaN, "select page", [], "paging_pages.gif", null, false, true, 10);
+    }
+    var arr;
+    if (arr = this._WTDef[3]) {
+        if (this.aToolBar.conf.skin == "dhx_terrace") this.aToolBar.addSeparator();
+        this.aToolBar.addButtonSelect("perpagenum", NaN, "select size", [], "paging_rows.gif", null, false, true, 10);
+        if (typeof arr != "object") arr = [5, 10, 15, 20, 25, 30];
+        var w = { dhx_skyblue: 4, dhx_web: 0, dhx_terrace: 18 }[this.aToolBar.conf.skin];
+        for (var k = 0; k < arr.length; k++) {
+            this.aToolBar.addListOption("perpagenum", "perpagenum_" + arr[k], NaN, "button", "<span style='padding: 0px " + w + "px 0px 0px;'>" + arr[k] + " " + this.i18n.paging.perpage + "</span>", "paging_page.gif");
+        }
+    }
+
+    //var td = document.createElement("TD"); td.width = "5"; this.aToolBar.tr.appendChild(td);
+    //var td = document.createElement("TD"); td.width = "100%"; this.aToolBar.tr.appendChild(td);
+
+    return this.aToolBar;
+}
+
 dhtmlXGridCellObject.prototype.doLayout = function () {
 
-};
+}
 
 /**
 * 创建带确认取消按钮的窗口
@@ -754,6 +858,22 @@ dhtmlXWindows.prototype.createConfirmWindow = function (id, x, y, width, height,
     return this.w[r.id].cell;
 }
 
+if (window.dhtmlXCalendarObject) {
+    dhtmlXCalendarObject.prototype.lang = "ch";
+    dhtmlXCalendarObject.prototype.langData["ch"] =
+        {
+            dateformat: "%Y-%m-%d",
+            hdrformat: "%F %Y",
+            monthesFNames: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+            monthesSNames: ["一", "二", "三", "四", "五", "六", "七", "八", "九", "十", "十一", "十二"],
+            daysFNames: ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"],
+            daysSNames: ["日", "一", "二", "三", "四", "五", "六"],
+            weekstart: 1,
+            weekname: "周",
+            today: "今天",
+            clear: "清除"
+        }
+}
 
 /***********************************************************
 ******************一下是表头定制方法***********************
@@ -1312,26 +1432,39 @@ dhtmlXGridObject.prototype.configRefresh = function (configGrid) {
         success: function(res) {
             var host =vmdSettings.vmdReportIp ;
             var hwRao = new HwRao(host, "report");
-               // hwRao.getJson(configGrid.configFile.rptHeaderPath, "",
-               hwDas.ajax({
-				type: "get",
-				url:vmd.virtualPath + "/" +configGrid.configFile.rptHeaderPath,
-				dataType: "json",
-				success: function(resultInfo) { 
-                       // var resultInfo=	eval("(" + result.data + ")")
-                    if(resultInfo.hiddenFields.length>0)
-                    {
-                        res.main.body.columns.oldwidth=dhx4._copyObj(res.main.body.columns.width);
-                        res.main.body.columns.hiddenFields=resultInfo.hiddenFields;
-                        for(var i=0;i<resultInfo.hiddenFields.length;i++){
-                            res.main.body.columns.width[resultInfo.hiddenFields[i]]=0;
-                        }
-                    }
-                    configGrid.loadJSON(Ext.encode(res), function() {
-                        configGrid.headerdefine = res;
-                        configGrid.vmdreport.myMask.hide();
-                       })
-	 } })}})
+			vmd.isCheckFileExist("/" +configGrid.configFile.rptHeaderPath,function(resultInfo){
+				if(resultInfo&&resultInfo.hiddenFields&&resultInfo.hiddenFields.length>0)
+				{
+					res.main.body.columns.oldwidth=dhx4._copyObj(res.main.body.columns.width);
+					res.main.body.columns.hiddenFields=resultInfo.hiddenFields;
+					for(var i=0;i<resultInfo.hiddenFields.length;i++){
+						res.main.body.columns.width[resultInfo.hiddenFields[i]]=0;
+					}
+				}
+				configGrid.loadJSON(Ext.encode(res), function() {
+					configGrid.headerdefine = res;
+					configGrid.vmdreport.myMask.hide();
+				})
+				configGrid.vmdreport.myMask.hide();
+			},true,vmd.virtualPath,function(){
+				// 表头定制文件不存在
+				configGrid.loadJSON(Ext.encode(res), function() {
+					configGrid.headerdefine = res;
+					configGrid.vmdreport.myMask.hide();
+				})
+				configGrid.vmdreport.myMask.hide();
+				return true
+			});
+},
+ error:function(){
+    configGrid.vmdreport.myMask.hide();
+    configGrid.vmdreport.loading = false;
+    var msg="找不到模板文件，路径为："+configGrid.xmlModelXml;
+    Ext.Msg.alert("错误信息", msg,
+        function() {})
+    return true
+}
+})
 }
 // 字段选择
 dhtmlXGridObject.prototype.setCheckBox = function (z, st1, i, check) {
@@ -1427,7 +1560,14 @@ dhtmlXGridObject.prototype.setDisperseRelateColsChecked = function (colId, t, ro
     //求单元格范围
     var clickFakeRowObj = t.parentNode.parentNode;
     var fakeRowsObj = t.parentNode.parentNode.parentNode.childNodes;
-    var realRowsObj = this._aHead;
+    var realRowsObj =this.hwReport.headers;
+	for(var i=0;i<realRowsObj.length;i++){
+		var h=realRowsObj[i];
+		if(typeof h[0]=="string"){
+			var s=h[0].split(',');
+			h[0]=s;
+		}
+	}
     var colsNum = 1, star = 0, end = 0;
     rowId = parseInt(rowId);
     colId = parseInt(colId);
@@ -1459,8 +1599,8 @@ dhtmlXGridObject.prototype.setDisperseRelateColsChecked = function (colId, t, ro
         if (checked) {
             for (var d = 0; d <= rowEnd; d++) {
                 //realRowsObj[rowId - 4][0][d].match(/[^#cspan|#rspan]*/gi)[0]
-                if (realRowsObj[rowId -3][0][d].match(/^(?!#cspan|#rspan).*/i) &&
-                    realRowsObj[rowId - 3][0][d].match(/^(?!#cspan|#rspan).*/i)[0]) {
+                if (realRowsObj[rowId -2][0][d].match(/^(?!#cspan|#rspan).*/i) &&
+                    realRowsObj[rowId - 2][0][d].match(/^(?!#cspan|#rspan).*/i)[0]) {
 
                     if (d >= rowStar && d <= rowEnd) {
                         if(checkId<fakeRowsObj[rowId - 2].childNodes.length) {
@@ -1474,8 +1614,8 @@ dhtmlXGridObject.prototype.setDisperseRelateColsChecked = function (colId, t, ro
             }
         } else {
             for (var d = 0; d <= rowEnd; d++) {
-                if (realRowsObj[rowId -3][0][d].match(/[^#cspan|#rspan]*/gi) &&
-                    realRowsObj[rowId - 3][0][d].match(/[^#cspan|#rspan]*/gi)[0]) {
+                if (realRowsObj[rowId -2][0][d].match(/[^#cspan|#rspan]*/gi) &&
+                    realRowsObj[rowId - 2][0][d].match(/[^#cspan|#rspan]*/gi)[0]) {
 
                     if (d >= rowStar && d <= rowEnd) {
                         if (checkId < fakeRowsObj[rowId - 2].childNodes.length) {
@@ -1576,7 +1716,14 @@ dhtmlXGridObject.prototype.setDisperseRelateColsNoChecked = function (colId, t, 
     //求单元格范围
     var clickFakeRowObj = t.parentNode.parentNode;
     var fakeRowsObj = t.parentNode.parentNode.parentNode.childNodes;
-    var realRowsObj = this._aHead;
+    var realRowsObj =this.hwReport.headers;
+	for(var i=0;i<realRowsObj.length;i++){
+		var h=realRowsObj[i];
+		if(typeof h[0]=="string"){
+			var s=h[0].split(',');
+			h[0]=s;
+		}
+	}
     var colsNum = 1, star = 0, end = 0;
     rowId = parseInt(rowId);
     colId = parseInt(colId);
@@ -1592,17 +1739,17 @@ dhtmlXGridObject.prototype.setDisperseRelateColsNoChecked = function (colId, t, 
         for (var j = star; j >= 0; j--) {
 //            if (realRowsObj[rowId - 4][0][j].match(/#[^c]span|[^#cspan]*/) &&
 //                realRowsObj[rowId - 4][0][j].match(/#[^c]span|[^#cspan]*/)[0]) {
-            if (realRowsObj[rowId - 3][0][j].match(/#[^c]span|[^#cspan]*/) &&
-                realRowsObj[rowId - 3][0][j].match(/#[^c]span|[^#cspan]*/)[0]) {
+            if (realRowsObj[rowId - 2][0][j].match(/#[^c]span|[^#cspan]*/) &&
+                realRowsObj[rowId - 2][0][j].match(/#[^c]span|[^#cspan]*/)[0]) {
                 rowStar = j;
                 break;
             }
         }
-
+ 
         //向后找找到本单元格结束坐标
-        for (var b = end + 1; b < realRowsObj[rowId - 3][0].length; b++) {
-            if (realRowsObj[rowId - 3][0][b].match(/#[^c]span|[^#cspan]*/) &&
-                realRowsObj[rowId - 3][0][b].match(/#[^c]span|[^#cspan]*/)[0]) {
+        for (var b = end + 1; b < realRowsObj[rowId - 2][0].length; b++) {
+            if (realRowsObj[rowId - 2][0][b].match(/#[^c]span|[^#cspan]*/) &&
+                realRowsObj[rowId - 2][0][b].match(/#[^c]span|[^#cspan]*/)[0]) {
                 rowEnd = b - 1;
                 break;
             }
@@ -1617,8 +1764,8 @@ dhtmlXGridObject.prototype.setDisperseRelateColsNoChecked = function (colId, t, 
 
         if (checked) {
             for (var d = 0; d <= rowEnd; d++) {
-                if (realRowsObj[rowId - 3][0][d].match(/^(?!#cspan|#rspan).*/i) &&
-                    realRowsObj[rowId - 3][0][d].match(/^(?!#cspan|#rspan).*/i)[0]) {
+                if (realRowsObj[rowId - 2][0][d].match(/^(?!#cspan|#rspan).*/i) &&
+                    realRowsObj[rowId - 2][0][d].match(/^(?!#cspan|#rspan).*/i)[0]) {
 
                     if (d >= rowStar && d <= rowEnd) {
                         if (fakeRowsObj[rowId - 2].childNodes[checkId].getElementsByTagName("input")[0]) {
@@ -1631,8 +1778,8 @@ dhtmlXGridObject.prototype.setDisperseRelateColsNoChecked = function (colId, t, 
         } else {
             for (var d = 0; d <= rowEnd; d++) {
                 //realRowsObj[rowId - 4][0][d].match(/[^#cspan|#rspan]*/gi)
-                if (realRowsObj[rowId - 3][0][d].match(/^(?!#cspan|#rspan).*/i) &&
-                    realRowsObj[rowId -3][0][d].match(/^(?!#cspan|#rspan).*/i)[0]) {
+                if (realRowsObj[rowId - 2][0][d].match(/^(?!#cspan|#rspan).*/i) &&
+                    realRowsObj[rowId -2][0][d].match(/^(?!#cspan|#rspan).*/i)[0]) {
 
                     if (d >= rowStar && d <= rowEnd) {
                         if(checkId<fakeRowsObj[rowId - 2].childNodes.length) {
@@ -1656,7 +1803,7 @@ dhtmlXGridObject.prototype.setDisperseRelateColsNoChecked = function (colId, t, 
                 realRowsObj[i - 2][0][j].match(/[^#cspan|#rspan]*/gi)[0]) {
                 rowStar = j;
                 break;
-            }
+            } 
         }
         //向后找找到本单元格结束坐标
         for (var b = end + 1; b < realRowsObj[i - 2][0].length; b++) {
@@ -1744,7 +1891,14 @@ dhtmlXGridObject.prototype.setChecked = function (colId, t, rowId) {
     //求单元格范围
     var clickFakeRowObj = t.parentNode.parentNode;
     var fakeRowsObj = t.parentNode.parentNode.parentNode.childNodes;
-    var realRowsObj = this._aHead;
+    var realRowsObj =this.hwReport.headers;
+	for(var i=0;i<realRowsObj.length;i++){
+		var h=realRowsObj[i];
+		if(typeof h[0]=="string"){
+			var s=h[0].split(',');
+			h[0]=s;
+		}
+	}
     var colsNum = 1, star = 0, end = 0;
     rowId = parseInt(rowId);
     colId = parseInt(colId);
@@ -1827,7 +1981,14 @@ dhtmlXGridObject.prototype.setNoChecked = function (colId, t, rowId) {
     //求单元格范围
     var clickFakeRowObj = t.parentNode.parentNode;
     var fakeRowsObj = t.parentNode.parentNode.parentNode.childNodes;
-    var realRowsObj = this._aHead;
+    var realRowsObj =this.hwReport.headers;
+	for(var i=0;i<realRowsObj.length;i++){
+		var h=realRowsObj[i];
+		if(typeof h[0]=="string"){
+			var s=h[0].split(',');
+			h[0]=s;
+		}
+	}
     var colsNum = 1, star = 0, end = 0;
     rowId = parseInt(rowId);
     colId = parseInt(colId);
@@ -2352,7 +2513,14 @@ dhtmlXGridObject.prototype.setAllCheckBoxChecked = function () {
     var rowsNum = checkbox[checkbox.length - 1].parentNode.parentNode.parentNode.parentNode.childNodes.length;
 
     var fakeRowsObj = checkbox[checkbox.length - 1].parentNode.parentNode.parentNode.parentNode.childNodes;
-    var realRowsObj = this._aHead;
+    var realRowsObj =this.hwReport.headers;
+	for(var i=0;i<realRowsObj.length;i++){
+		var h=realRowsObj[i];
+		if(typeof h[0]=="string"){
+			var s=h[0].split(',');
+			h[0]=s;
+		}
+	}
 
     if (mode) {
         //for (var i = 0; i < $(":checkbox").length; i++) {

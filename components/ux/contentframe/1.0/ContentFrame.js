@@ -173,7 +173,7 @@ Ext.define('vmd.ux.contentFrame.Controller', {
     // },
     //字段选择，下拉窗使用
     openVisualSelector: function(data, data1, urlCode, inst, p) {
-        debugger
+        
         var myurl;
         if (typeof filter == 'undefined') {
             myurl = '/system/modules/eQ9ULgcVb1/hwYa3IA0Y1/hwHCHpNfHv/hw1c3f0610.html'
@@ -1028,7 +1028,7 @@ function reportInfos() {
         return false
     }
     this.cellTypeGrid = function(f, info) {
-        debugger
+        
         if (
             (f.bindsource && JSON.stringify(f.bindsource.multicolumns) == JSON.stringify(info.bindsource.multicolumns)) &&
             (f.bindsource && f.bindsource.showcolumn == info.bindsource.showcolumn) &&
@@ -1545,7 +1545,7 @@ Ext.define("vmd.ux.ContentFrame", {
                                 break; //单选按钮
                                 // case "comlist":
                             case "comboGrid":
-                                debugger
+                                
                                 var ddg = {};
                                 ddg.type = "vmdgrid"
                                 ddg.isenableedit = sets.settings.allowEdit
@@ -1863,7 +1863,7 @@ Ext.define("vmd.ux.ContentFrame", {
                                 break; //单选按钮
                                 // case "comlist":
                             case "comboGrid":
-                                debugger
+                                
                                 var ddg = {};
                                 ddg.type = "vmdgrid"
                                 ddg.isenableedit = sets.settings.allowEdit

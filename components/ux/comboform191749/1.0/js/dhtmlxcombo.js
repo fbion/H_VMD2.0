@@ -498,7 +498,7 @@ function dhtmlXCombo(parentId, formName, width, optionType, tabIndex,allowinput)
 	}
 
 	this._manualInput = function () {
-	    debugger
+	    
 	    var that = this;
 	    var k = dhx4.trim(String(this.base.firstChild.value)).replace(new RegExp(this.conf.f_ac_text + "$", "i"), "");
 	    var separator = that.grid.separator || ",";

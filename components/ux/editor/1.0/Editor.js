@@ -46,7 +46,7 @@ function Editor_afterrender(sender) {
 
 //获取编辑器数据
 function getEditor() {
-    debugger
+    
     var title = hwText.getValue();
     var content = hwEditor.getValue();
     param = {
