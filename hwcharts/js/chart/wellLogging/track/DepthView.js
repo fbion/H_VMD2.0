@@ -26,25 +26,39 @@ Vmd.define('hwchart.chart.wellLogging.track.DepthView', {
         'hwchart.util.graphic',
         'hwchart.util.number',
         'hwchart.util.layout',
+        "hwchart.util.shape.segments",
         'hwchart.chart.wellLogging.track.BaseView'
     ]
 }, function () {
+    var BaseView = hwchart.chart.wellLogging.track.BaseView;
 
     var zrUtil = zrender.util;
     var number = hwchart.util.number;
     var graphic = hwchart.util.graphic;
     var layout = hwchart.util.layout;
-    var BaseView = hwchart.chart.wellLogging.track.BaseView;
-    var BreakPolyline = hwchart.util.BreakPolyline;
+    var SegmentsShape = hwchart.util.shape.segments;
 
     var DepthView = BaseView.extend({
 
         type: 'wellLogging.depth',
+
+        init: function(seriesModel, node, api){
+
+            this.headerGroup = new graphic.Group();
+            this.contentGroup = new graphic.Group();
+
+            DepthView.superApply(this, 'init', arguments);
+        },
+
         updateData: function(node){
+
+            this.updateHeader(node);
+            this.updateContent(node);
+
             DepthView.superApply(this, 'updateData', arguments);
         },
 
-        renderHeader: function (node) {
+        updateHeader: function (node) {
             var nodeModel = node.getModel();
             var headerStyle = nodeModel.get('itemStyle.header') || {};
 
@@ -53,27 +67,26 @@ Vmd.define('hwchart.chart.wellLogging.track.DepthView', {
             var x = number.niceForLine(0, headerStyle.borderWidth);
             var y = number.niceForLine(0, headerStyle.borderWidth);
             var width = headerLayout.width;
-            var bg = new graphic.Rect({
-                // draggable: true,
-                shape: {
-                    x: x,
-                    y: y,
-                    width: width,
-                    height: headerLayout.height
-                },
-                style: {
-                    fill: headerStyle.backgroundColor,
-                    stroke: headerStyle.borderWidth == 0 ? 'none' : headerStyle.borderColor,
-                    lineWidth: headerStyle.borderWidth
-                }
-            })
 
-            var titleSub = new graphic.Text({
+            var headerRect = this.headerBgEl == null ? (this.headerBgEl = new graphic.Rect()) : this.headerBgEl;
+            headerRect.setShape({
+                x: x,
+                y: y,
+                width: width,
+                height: headerLayout.height
+            });
+            headerRect.useStyle({
+                fill: headerStyle.backgroundColor,
+                stroke: headerStyle.borderWidth == 0 ? 'none' : headerStyle.borderColor,
+                lineWidth: headerStyle.borderWidth
+            });
+
+            var titleSub = this.titleEl == null ? (this.titleEl = new graphic.Text({
                 style: zrUtil.defaults({
                     text: nodeModel.get('aliasName') || node.name,
                     textFill: headerStyle.textStyle.color || 'black'
                 }, headerStyle.textStyle)
-            })
+            })) : this.titleEl;
 
             layout.positionElement(titleSub, layout.getLayoutInfo(headerStyle.textStyle), {
                 x: x,
@@ -82,30 +95,21 @@ Vmd.define('hwchart.chart.wellLogging.track.DepthView', {
                 height: headerLayout.height
             }, headerStyle.textStyle.margin);
 
-            this.headerGroup.add(bg);
+            this.headerGroup.add(headerRect);
             this.headerGroup.add(titleSub);
 
             this.headerGroup.attr('position', [headerLayout.x, headerLayout.y]);
         },
 
-        renderContent: function (node) {
+        updateContent: function (node) {
             var nodeLayout = node.getLayout();
             var bodyLayout = nodeLayout.body;
 
             var width = bodyLayout.width;
             var height = bodyLayout.height;
-            var nums = Math.floor(height / 5);
 
             var nodeModel = node.getModel();
-            var data = nodeModel.getData().tickdata1;
-            var coordinateSystem = nodeModel.coordinateSystem;
-            var yAxis = coordinateSystem.getAxis('y');
-            if(data.length>0){
-                nodeModel.mergeOption({requestCompleted: true});
-            }
-            var scaleExtent = yAxis.scale.getExtent();
-            var min = Math.floor(scaleExtent[0]);
-            var max = Math.ceil(scaleExtent[1]);
+            var data = nodeModel.getData();
 
             this.contentGroup.setClipPath(new graphic.Rect({
                 shape: {
@@ -116,90 +120,40 @@ Vmd.define('hwchart.chart.wellLogging.track.DepthView', {
                 }
             }));
 
-            var tick1;
-            var tick2;
-            for(var i = min; i < max; i++){
-                var y = number.niceForLine(yAxis.dataToCoord(i), 1);
+            var tickEl = this.tickEl == null ? (this.tickEl = new SegmentsShape({})) : this.tickEl;
+            tickEl.setShape({
+                segs: data.mainTickData
+            });
+            tickEl.useStyle(nodeModel.getModel("tick.lineStyle").getLineStyle());
+            this.contentGroup.add(tickEl);
 
+            var textGroup = this.textGroup == null ? (this.textGroup = new graphic.Group()) : this.textGroup;
+            this.contentGroup.add(textGroup);
+            textGroup.removeAll();
 
-                if(i % 10 == 0){
-                    if(i !== 0){
-                        var text =  new graphic.Line({
-                            shape: {
-                                x1: 0,
-                                y1: y,
-                                x2: width,
-                                y2: y
-                            },
-                            style:{
-                                text: i,
-                                // textRotation: -Math.PI / 2,
-                                fontWeight: 'bold',
-                                lineWidth: 0
-                            }
-                        })
-                        this.contentGroup.add(text);
+            var textData = data.textData;
+            for(var i = 0; i < textData.length;) {
+                var text = textData[i++];
+                var x1 = 0;
+                var y1 = textData[i++];
+                var x2 = textData[i++];
+                var y2 = y1;
+                var textEl = new graphic.Line({
+                    shape: {
+                        x1: x1,
+                        y1: y1,
+                        x2: x2,
+                        y2: y2
+                    },
+                    style:{
+                        text: text,
+                        // textRotation: -Math.PI / 2,
+                        fontWeight: 'bold',
+                        lineWidth: 0
                     }
-                }
-                // else if(i % 5 == 0){
-                //     tick1 =  new graphic.Line({
-                //         shape: {
-                //             x1: 0,
-                //             y1: y,
-                //             x2: 7,
-                //             y2: y
-                //         },
-                //         style:{
-                //             lineWidth: 1
-                //         }
-                //     })
-                //     tick2 =  new graphic.Line({
-                //         shape: {
-                //             x1: width - 7,
-                //             y1: y,
-                //             x2: width,
-                //             y2: y
-                //         },
-                //         style:{
-                //             lineWidth: 1
-                //         }
-                //     })
-                // }
-                // else{
-                //     tick1 =  new graphic.Line({
-                //         shape: {
-                //             x1: 0,
-                //             y1: y,
-                //             x2: 5,
-                //             y2: y
-                //         },
-                //         style:{
-                //             lineWidth: 1
-                //         }
-                //     })
-                //     tick2 =  new graphic.Line({
-                //         shape: {
-                //             x1: width - 5,
-                //             y1: y,
-                //             x2: width,
-                //             y2: y
-                //         },
-                //         style:{
-                //             lineWidth: 1
-                //         }
-                //     })
-                // }
+                });
+                textGroup.add(textEl);
             }
-            tick1 =  new BreakPolyline({
-                shape: {
-                    points: data
-                },
-                style:{
-                    stroke: '#999',
-                    lineWidth: 0.8
-                }
-            })
-            this.contentGroup.add(tick1);
         }
     });
 

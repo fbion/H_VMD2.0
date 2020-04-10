@@ -11,23 +11,48 @@ Vmd.define('hwchart.chart.wellLogging.track.DepthLayout', {
         reset: function (treeNode) {
 
             var nodeModel = treeNode.getModel();
+            var nodeLayout = treeNode.getLayout();
+            var bodyLayout = nodeLayout.body;
 
-            var xAxis = nodeModel.coordinateSystem.getAxis('x');
-            var yAxis = nodeModel.coordinateSystem.getAxis('y');
-            var right = xAxis._extent[1];
-            var top = Math.floor(yAxis.scale._extent[0]);
-            var bottom = Math.ceil(yAxis.scale._extent[1]);
-            var tickdata1 = [];
-            for(var i = top; i < bottom; i++){
+            var length = nodeModel.get("tick.length");
+            var tickShow = nodeModel.get("tick.show");
+
+            var coordinateSystem = nodeModel.coordinateSystem;
+            var yAxis = coordinateSystem.getAxis('y');
+
+            var scaleExtent = yAxis.scale.getExtent();
+            var start = Math.floor(scaleExtent[0]);
+            var end = Math.ceil(scaleExtent[1]);
+
+            var mainTickData = [];
+            var textData = [];
+
+            var mainTickOffset = 0;
+            var textOffset = 0;
+            for(var i = start; i < end; i++){
                 var y = numberUtil.niceForLine(yAxis.dataToCoord(i), 1);
                 if(i % 10 == 0){
-                    tickdata1.push([0,y,0]);
-                    tickdata1.push([6,y]);
-                    tickdata1.push([right - 6,y,0]);
-                    tickdata1.push([right,y]);
+                    mainTickData[mainTickOffset++] = 2;
+                    mainTickData[mainTickOffset++] = 0;
+                    mainTickData[mainTickOffset++] = y;
+                    mainTickData[mainTickOffset++] = length;
+                    mainTickData[mainTickOffset++] = y;
+
+                    mainTickData[mainTickOffset++] = 2;
+                    mainTickData[mainTickOffset++] = bodyLayout.width - length;
+                    mainTickData[mainTickOffset++] = y;
+                    mainTickData[mainTickOffset++] = bodyLayout.width;
+                    mainTickData[mainTickOffset++] = y;
+
+                    textData[textOffset++] = i;
+                    textData[textOffset++] = y;
+                    textData[textOffset++] = bodyLayout.width;
                 }
             }
-            return {tickdata1:tickdata1}
+            return {
+                mainTickData: tickShow ? mainTickData : [],
+                textData: textData
+            }
         }
     };
 })

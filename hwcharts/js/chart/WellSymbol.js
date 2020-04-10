@@ -39,7 +39,7 @@ Vmd.define('hwchart.chart.WellSymbol', {
     hwcharts.registerVisual(visualSymbol('wellSymbol', '', 'composeSymbol'));
     hwcharts.registerLayout(layoutPoints('wellSymbol')); // Down sample after filter
 
-    hwcharts.registerProcessor(hwcharts.PRIORITY.PROCESSOR.STATISTIC, geoDataFilter('wellSymbol'));
+    //hwcharts.registerProcessor(hwcharts.PRIORITY.PROCESSOR.STATISTIC, geoDataFilter('wellSymbol'));
 
     hwcharts.registerAction({
         type: 'incrementalRenderFinished',

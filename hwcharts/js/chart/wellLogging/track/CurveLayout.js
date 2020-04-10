@@ -3,38 +3,86 @@ Vmd.define('hwchart.chart.wellLogging.track.CurveLayout', {
 }, function () {
     var zrUtil = zrender.util;
 
+    function filterDataByAxis(data, min, max){
+        if(data.length == 0 || (min <= data[0][1] && max >= data[data.length - 1][1])){
+            return data;
+        }
+
+        var result = [];
+        var leftIndex = 0;
+        var rightIndex = data.length - 1;
+
+        var startIndex = 0;
+        while (leftIndex < rightIndex) {
+            var mid = leftIndex + ((rightIndex - leftIndex) >> 1);
+            if(min == data[mid][1]) {
+                startIndex = mid;
+                break;
+            }
+            if(min < data[mid][1] && min >= data[mid - 1][1]){
+                startIndex = mid - 1;
+                break;
+            }
+            if(min < data[mid][1]){
+                rightIndex = mid;
+            }
+            if(min > data[mid][1] && min < data[mid + 1][1]){
+                startIndex = mid;
+                break;
+            }
+            if(min > data[mid][1]){
+                leftIndex = mid;
+            }
+        }
+
+        for(var i = startIndex; i < data.length; i++){
+            result.push(data[i]);
+            if(data[i][1] > max) break;
+        }
+
+        return result;
+    }
+
     hwchart.chart.wellLogging.track.CurveLayout = {
         type: 'curve',
         reset: function (treeNode) {
             var nodeModel = treeNode.getModel();
-            var data = nodeModel.get('data');
-            if(data.length==0){
-                return {lineData:[]};
-            }
-            var lineData =[];
+
             var xAxis = nodeModel.coordinateSystem.getAxis('x');
             var yAxis = nodeModel.coordinateSystem.getAxis('y');
-            var left = xAxis._extent[0];
-            var right = xAxis._extent[1];
+
+            var yAxisScaleExtent = yAxis.scale.getExtent();
+            var data = filterDataByAxis(nodeModel.get('data'), yAxisScaleExtent[0], yAxisScaleExtent[1]);
+
+            var xAxisExtent = xAxis.getExtent();
+            var left = xAxisExtent[0];
+            var right = xAxisExtent[1];
+
             var mirror = nodeModel.get('mirror');
             var leftScale = nodeModel.get('leftScale');
             var rightScale = nodeModel.get('rightScale');
             var secondScale = nodeModel.get('secondScale');
+
+            var lineData =[];
             var mirrorData = [];
-            var x,y,xmin,xmax;
+
+            var dataCount = data.length;
+            var lineData1 = new Float32Array(mirror ? ((dataCount << 2) + 2) : ((dataCount << 1) + 1));
+            var offset = 0;
+            var x;
+            var y;
+
             if(leftScale>rightScale)
             {
-                xmin = right;
-                xmax = left;
                 if(secondScale>0&&secondScale<11){
                     var step = right -left;
                     var tempX,tempY,tempX2,a,b,c;
                     for(var i =0;i<data.length;i++){
                         x = right- xAxis.dataToCoord(data[i][0]);
                         y = yAxis.dataToCoord(data[i][1]);
-                        if(x<left){
+                        if(x<left) {
                             tempX = right- xAxis.dataToCoord(data[i+1][0]);
-                            if(i!=0){
+                            if(i!=0 && i != data.length - 1){
                                 tempX2 = right- xAxis.dataToCoord(data[i-1][0]);
                                 if(tempX2>left){
                                     tempY = (y+yAxis.dataToCoord(data[i-1][1]))/2;
@@ -89,26 +137,27 @@ Vmd.define('hwchart.chart.wellLogging.track.CurveLayout', {
                         }
 
                     }
-                }else{
-                    for(var i =0;i<data.length;i++){
-                        x = right- xAxis.dataToCoord(data[i][0]);
+                } else {
+                    lineData1[offset++] = dataCount;
+                    mirror && (lineData1[(dataCount << 1) + 1] = dataCount);
+                    for(var i =0; i < data.length; i++) {
+                        x = xAxis.dataToCoord(data[i][0]);
                         y = yAxis.dataToCoord(data[i][1]);
-                        lineData.push([x, y]);
-                        mirrorData.push([right-x, y]);
-                        xmin = Math.min(xmin,x);
-                        xmax = Math.max(xmax,x);
+
+                        lineData1[offset++] = left + right- x;
+                        mirror && (lineData1[offset + (dataCount << 1)] = left + x);
+                        lineData1[offset++] = y;
+                        mirror && (lineData1[offset + (dataCount << 1)] = y);
+
+                        lineData.push([left + right- x, y]);
+                        mirrorData.push([left + x, y]);
                     }
                 }
             }else{
-                xmin = left;
-                xmax = right;
                 if(secondScale>0&&secondScale<11){
                     var step = right -left;
                     var tempX,tempY,tempX2,a,b,c;
                     for(var i =0;i<data.length;i++){
-                        // if(data[i][1]<100||data[i][1]>215){
-                        //     continue;
-                        // }
                         x = xAxis.dataToCoord(data[i][0]);
                         y = yAxis.dataToCoord(data[i][1]);
                         if(x<left){
@@ -169,20 +218,31 @@ Vmd.define('hwchart.chart.wellLogging.track.CurveLayout', {
 
                     }
                 }else{
+                    lineData1[offset++] = dataCount;
+                    mirror && (lineData1[dataCount * 2 + 1] = dataCount);
+                    for(var i =0; i < data.length; i++) {
+                        x = xAxis.dataToCoord(data[i][0]);
+                        y = yAxis.dataToCoord(data[i][1]);
+
+                        lineData1[offset++] = left + x;
+                        mirror && (lineData1[offset + dataCount * 2] = left + right- x);
+                        lineData1[offset++] = y;
+                        lineData1[offset + dataCount * 2] = y;
+
+                        lineData.push([left + right- x, y]);
+                        mirrorData.push([left + x, y]);
+                    }
+
                     for(var i =0;i<data.length;i++){
                         x = xAxis.dataToCoord(data[i][0]);
                         y = yAxis.dataToCoord(data[i][1]);
-                        xmin = Math.min(xmin,x);
-                        xmax = Math.max(xmax,x);
+
                         lineData.push([x, y]);
                         mirrorData.push([right-x,y]);
                     }
                 }
             }
-            if(mirror){
-                xmin = Math.min(xmin,right-xmin);
-                xmax = Math.max(xmax,right-xmax);
-            }
+
             //曲线填充数据
             var regionCurveFilledData = [];
             var regionCurveFilleds = nodeModel.get('regionCurveFilled');
@@ -236,7 +296,8 @@ Vmd.define('hwchart.chart.wellLogging.track.CurveLayout', {
                 }
                 regionCurveFilledData.push(curveFilled);
             });
-            return {lineData:lineData,mirrorData:mirrorData,xmin:xmin,xmax:xmax,regionCurveFilledData:regionCurveFilledData};
+
+            return {lineData:lineData, lineData1: lineData1, mirrorData:mirrorData, regionCurveFilledData:regionCurveFilledData};
         }
     };
 })

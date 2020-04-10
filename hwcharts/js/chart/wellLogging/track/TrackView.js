@@ -26,16 +26,18 @@ Vmd.define('hwchart.chart.wellLogging.track.TrackView', {
         'hwchart.util.graphic',
         'hwchart.util.number',
         'hwchart.util.layout',
-        'hwchart.chart.wellLogging.track.BaseView'
+        "hwchart.util.shape.segments",
+        "hwchart.chart.wellLogging.track.BaseView"
     ]
 }, function () {
+    var BaseView = hwchart.chart.wellLogging.track.BaseView;
 
     var zrUtil = zrender.util;
     var graphic = hwchart.util.graphic;
     var number = hwchart.util.number;
     var layout = hwchart.util.layout;
-    var BaseView = hwchart.chart.wellLogging.track.BaseView;
-    var BreakPolyline = hwchart.util.BreakPolyline;
+
+    var SegmentsShape = hwchart.util.shape.segments;
 
     function getParentNodeBorderWidth(node){
         var parentNode = node.parentNode;
@@ -55,6 +57,8 @@ Vmd.define('hwchart.chart.wellLogging.track.TrackView', {
 
         init: function(seriesModel, node, api){
             this.titleGroup = new graphic.Group();
+            this.headerGroup = new graphic.Group();
+            this.contentGroup = new graphic.Group();
 
             TrackView.superApply(this, 'init', arguments);
         },
@@ -66,15 +70,13 @@ Vmd.define('hwchart.chart.wellLogging.track.TrackView', {
          * @param  {number} idx
          */
         updateData: function (node) {
-            this.titleGroup.removeAll();
-
-            this.renderTitle(node);
-
-            TrackView.superApply(this, 'updateData', arguments);
+            this.updateTitle(node);
+            this.updateHeader(node);
+            this.renderContent(node);
         },
 
 
-        renderTitle: function (node) {
+        updateTitle: function (node) {
             var nodeModel = node.getModel();
             var titleStyle = nodeModel.get('itemStyle.title');
 
@@ -82,32 +84,32 @@ Vmd.define('hwchart.chart.wellLogging.track.TrackView', {
             var titleLayout = nodeLayout.title;
 
             if(titleStyle.show === false){
+                this.headerGroup.removeAll();
                 return null;
             }
 
             var borderWidth = titleStyle.borderWidth;
             var borderColor = titleStyle.borderColor;
-            var bg = new graphic.Rect({
-                z: 0,
-                shape: {
-                    x: number.niceForLine(0, borderWidth),
-                    y: number.niceForLine(0, borderWidth),
-                    width: titleLayout.width,
-                    height: titleLayout.height
-                },
-                style: {
-                    fill: titleStyle.backgroundColor,
-                    stroke: borderWidth == 0 ? 'none' : borderColor,
-                    lineWidth: borderWidth
-                }
-            })
 
-            var titleSub = new graphic.Text({
+            var bg = this.titleBgEl == null ? (this.titleBgEl = new graphic.Rect()) : this.titleBgEl;
+            bg.setShape({
+                x: number.niceForLine(0, borderWidth),
+                y: number.niceForLine(0, borderWidth),
+                width: titleLayout.width,
+                height: titleLayout.height
+            });
+            bg.useStyle({
+                fill: titleStyle.backgroundColor,
+                stroke: borderWidth == 0 ? 'none' : borderColor,
+                lineWidth: borderWidth
+            });
+
+            var titleSub = this.titleEl == null ? (this.titleEl = new graphic.Text({
                 style: zrUtil.defaults({
                     text: nodeModel.get('aliasName') || node.name,
                     textFill: titleStyle.textStyle.color || 'black'
                 }, titleStyle.textStyle)
-            })
+            })) : this.titleEl;
 
             layout.positionElement(titleSub, layout.getLayoutInfo(titleStyle.textStyle), {
                 x: 0,
@@ -122,7 +124,7 @@ Vmd.define('hwchart.chart.wellLogging.track.TrackView', {
             this.titleGroup.attr('position', [titleLayout.x, titleLayout.y]);
         },
 
-        renderHeader: function (node) {
+        updateHeader: function (node) {
             var nodeModel = node.getModel();
             var headerStyle = nodeModel.get('itemStyle.header') || {};
 
@@ -134,19 +136,19 @@ Vmd.define('hwchart.chart.wellLogging.track.TrackView', {
 
             var parentBorderWidth = getParentNodeBorderWidth(node);
 
-            var headerRect = new graphic.Rect({
-                shape: {
-                    x:  number.niceForLine(0, borderWidth),
-                    y:  number.niceForLine(0, borderWidth),
-                    width: headerLayout.width - parentBorderWidth,
-                    height: headerLayout.height - parentBorderWidth
-                },
-                style:{
-                    fill: headerStyle.backgroundColor || 'none',
-                    stroke: borderWidth == 0 ? 'none' : borderColor,
-                    lineWidth: borderWidth
-                }
+            var headerRect = this.headerBgEl == null ? (this.headerBgEl = new graphic.Rect()) : this.headerBgEl;
+            headerRect.setShape({
+                x:  number.niceForLine(0, borderWidth),
+                y:  number.niceForLine(0, borderWidth),
+                width: headerLayout.width - parentBorderWidth,
+                height: headerLayout.height - parentBorderWidth
             });
+            headerRect.useStyle({
+                fill: headerStyle.backgroundColor || 'none',
+                stroke: borderWidth == 0 ? 'none' : borderColor,
+                lineWidth: borderWidth
+            });
+
             this.headerGroup.add(headerRect);
             this.headerGroup.attr('position', [headerLayout.x, headerLayout.y]);
         },
@@ -161,83 +163,95 @@ Vmd.define('hwchart.chart.wellLogging.track.TrackView', {
             var borderWidth = bodyStyle.borderWidth;
             var borderColor = bodyStyle.borderColor;
 
-            var bodyRect = new graphic.Rect({
-                z: 0,
-                shape: {
-                    x: number.niceForLine(0, borderWidth),
-                    y: number.niceForLine(0, borderWidth),
-                    width: bodyLayout.width,
-                    height: bodyLayout.height
-                },
-                style:{
-                    fill: bodyStyle.backgroundColor || 'none',
-                    stroke: borderWidth == 0 ? 'none' : borderColor,
-                    lineWidth: borderWidth
-                }
+            var bodyRect = this.bodyBgEl == null ? (this.bodyBgEl = new graphic.Rect()) : this.bodyBgEl;
+            bodyRect.setShape({
+                x: number.niceForLine(0, borderWidth),
+                y: number.niceForLine(0, borderWidth),
+                width: bodyLayout.width,
+                height: bodyLayout.height
             });
+            bodyRect.useStyle({
+                fill: bodyStyle.backgroundColor || 'none',
+                stroke: borderWidth == 0 ? 'none' : borderColor,
+                lineWidth: borderWidth
+            });
+
             this.contentGroup.add(bodyRect);
             this.contentGroup.attr('position', [bodyLayout.x, bodyLayout.y]);
 
             var isGridShow = nodeModel.get('itemStyle.grid.show');
             if(isGridShow !== false){
-                this.renderVGrid(node);
-                this.renderHGrid(node);
+                this.updateVGrid(node);
+                this.updateHGrid(node);
+            }
+            else{
+                this.vGridGroup && this.contentGroup.remove(this.vGridGroup);
+                this.hGridGroup && this.contentGroup.remove(this.hGridGroup);
             }
         },
 
-        renderVGrid: function (node) {
+        updateVGrid: function (node) {
             var nodeModel = node.getModel();
 
             var vgridStyle = nodeModel.get('itemStyle.grid.vertical');
             if(!vgridStyle || vgridStyle.show === false || node.hasTrack){
+                this.vGridGroup && this.contentGroup.remove(this.vGridGroup);
                 return;
             }
+
+            this.vGridGroup = this.vGridGroup || new graphic.Group();
 
             var borderWidth = vgridStyle.borderWidth;
             var borderColor = vgridStyle.borderColor;
 
             var thickWidth = zrUtil.retrieve2(vgridStyle.thick && vgridStyle.thick.borderWidth, borderWidth);
             var thickColor = zrUtil.retrieve2(vgridStyle.thick && vgridStyle.thick.borderColor, borderColor);
+
             var thinWidth = zrUtil.retrieve2(vgridStyle.thin && vgridStyle.thin.borderWidth, borderWidth);
             var thinColor = zrUtil.retrieve2(vgridStyle.thin && vgridStyle.thin.borderColor, borderColor);
-            var thickData = nodeModel.getData().VthickData;
-            var thickline = new BreakPolyline({
-                z: 1,
-                shape: {
-                    points: thickData
-                }
-            });
 
-            thickline.useStyle({
+            var thickData = nodeModel.getData().vThickData;
+
+            var lineEl;
+            lineEl = this.vThickLine == null ? (this.vThickLine = new SegmentsShape({})) : this.vThickLine;
+            lineEl.setShape({
+                segs: thickData
+            });
+            lineEl.useStyle({
                     stroke: thickColor,
                     lineWidth: thickWidth
                 }
             );
-            this.contentGroup.add(thickline);
-            var thinData = nodeModel.getData().VthinData;
-            var thinline = new BreakPolyline({
-                z: 1,
-                shape: {
-                    points: thinData
-                }
-            });
+            this.vGridGroup.add(lineEl);
 
-            thinline.useStyle({
-                    stroke: thinColor,
-                    lineWidth: thinWidth
+            var thinData = nodeModel.getData().vThinData;
+
+            lineEl = this.vThinLine == null ? (this.vThinLine = new SegmentsShape({})) : this.vThinLine;
+            lineEl.setShape({
+                segs: thinData
+            });
+            lineEl.useStyle({
+                stroke: thinColor,
+                lineWidth: thinWidth
                 }
             );
-            this.contentGroup.add(thinline);
+            this.vGridGroup.add(lineEl);
+
+            this.contentGroup.add(this.vGridGroup);
         },
 
-        renderHGrid: function (node) {
+        updateHGrid: function (node) {
             var nodeModel = node.getModel();
 
             //var axisType = nodeModel.get('scaleType');
             var hgridStyle = nodeModel.get('itemStyle.grid.horizontal');
             if(!hgridStyle || hgridStyle.show === false || node.hasTrack){
+                this.hGridGroup && this.contentGroup.remove(this.hGridGroup);
                 return;
             }
+
+            this.hGridGroup = this.hGridGroup || new graphic.Group();
+
             var borderWidth = hgridStyle.borderWidth;
             var borderColor = hgridStyle.borderColor;
             var thickWidth = zrUtil.retrieve2(hgridStyle.thick && hgridStyle.thick.borderWidth, borderWidth);
@@ -246,54 +260,53 @@ Vmd.define('hwchart.chart.wellLogging.track.TrackView', {
             var thinColor = zrUtil.retrieve2(hgridStyle.thin && hgridStyle.thin.borderColor, borderColor);
             var midWidth = zrUtil.retrieve2(hgridStyle.middle && hgridStyle.middle.borderWidth, borderWidth);
             var midColor = zrUtil.retrieve2(hgridStyle.middle && hgridStyle.middle.borderColor, borderColor);
-            var thickData = nodeModel.getData().HthickData;
-            var thickline = new BreakPolyline({
-                z: 1,
-                shape: {
-                    points: thickData
-                }
-            });
+            var thickData = nodeModel.getData().hThickData;
 
-            thickline.useStyle({
+            var lineEl;
+            lineEl = this.hThickLine == null ? (this.hThickLine = new SegmentsShape({})) : this.hThickLine;
+            lineEl.setShape({
+                segs: thickData
+            });
+            lineEl.useStyle({
                     stroke: thickColor,
                     lineWidth: thickWidth
                 }
             );
-            this.contentGroup.add(thickline);
-            var thinData = nodeModel.getData().HthinData;
-            var thinline = new BreakPolyline({
-                z: 1,
-                shape: {
-                    points: thinData
-                }
-            });
+            this.hGridGroup.add(lineEl);
 
-            thinline.useStyle({
+            var thinData = nodeModel.getData().hThinData;
+            lineEl = this.hThinLine == null ? (this.hThinLine = new SegmentsShape({})) : this.hThinLine;
+            lineEl.setShape({
+                segs: thinData
+            });
+            lineEl.useStyle({
                     stroke: thinColor,
                     lineWidth: thinWidth
                 }
             );
-            this.contentGroup.add(thinline);
-            var midData = nodeModel.getData().HmidData;
-            var midline = new BreakPolyline({
-                z: 1,
-                shape: {
-                    points: midData
-                }
-            });
+            this.hGridGroup.add(lineEl);
 
-            midline.useStyle({
+            var midData = nodeModel.getData().hMidData;
+            lineEl = this.hMidLine == null ? (this.hMidLine = new SegmentsShape({})) : this.hMidLine;
+            lineEl.setShape({
+                segs: midData
+            });
+            lineEl.useStyle({
                     stroke: midColor,
                     lineWidth: midWidth
                 }
             );
-            this.contentGroup.add(midline);
+            this.hGridGroup.add(lineEl);
+
+            this.contentGroup.add(this.hGridGroup);
         },
+
         addTrack: function (track) {
             this.headerGroup.add(track.titleGroup);
             this.headerGroup.add(track.headerGroup);
             this.contentGroup.add(track.contentGroup);
         },
+
         addElement: function (track) {
             this.headerGroup.add(track.headerGroup);
             this.contentGroup.add(track.contentGroup);

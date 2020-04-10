@@ -21,6 +21,15 @@
          * @protected
          */
         defaultOption: {
+            tick: {
+                show: true,
+                length: 6,
+                lineStyle: {
+                    color: "#999",
+                    width: 0.8,
+                    type: "solid"
+                }
+            }
         },
         getHeaderHeight: function(){
 

@@ -42,10 +42,6 @@
                 return 0.5;
             }
 
-            if(val < extent[0] || val > extent[1]){
-                return NaN;
-            }
-
             return (val - extent[0]) / (extent[1] - extent[0]);
         },
 

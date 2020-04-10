@@ -9,7 +9,8 @@
 
     <script src="../js/core/base-ext.js"></script>
     <!--zrender-->
-    <script src="../lib/zrender/dist/zrender.js"></script>
+    <script src="../../lib/zrender/zrender.js"></script>
+    <script src="../../lib/jquery/jquery.min.js"></script>
     <!--hwchart-->
     <script src="../js/hwcharts.js"></script>
     <style>
@@ -92,9 +93,6 @@
                     text: '我是折线图',
                     padding: 20,
                     left: 'center'
-                },
-                legend: {
-                    data: ['line', 'line2', 'line3']
                 },
                 visualMap: null, // 用于测试 option 中含有null的情况。
                 tooltip: {

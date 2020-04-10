@@ -133,10 +133,9 @@ Vmd.define('hwchart.chart.wellLogging.wellLoggingLayout', {
             viewRoot.eachNode(function(treeNode){
                 var nodeModel = treeNode.getModel();
                 var type = nodeModel.get('type');
-                var data = layoutFunc[type].reset(treeNode);
+                var data = layoutFunc[type] && layoutFunc[type].reset(treeNode);
                 nodeModel.setData(data);
             })
-            layoutFunc
         }
     };
 

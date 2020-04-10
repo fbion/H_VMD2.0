@@ -116,7 +116,7 @@ Vmd.define('hwchart.chart.wellLogging.WellLoggingView', {
 
             // if(payloadType != 'dataZoom'){
 
-                var containerGroup = this._giveContainerGroup(layoutInfo);
+                var containerGroup = this._giveContainerGroup(layoutInfo, payload);
 
                 var renderResult = this._doRender(containerGroup, seriesModel, reRoot, api, payload);
             // }
@@ -139,7 +139,7 @@ Vmd.define('hwchart.chart.wellLogging.WellLoggingView', {
         /**
          * @private
          */
-        _giveContainerGroup: function (layoutInfo) {
+        _giveContainerGroup: function (layoutInfo, payload) {
             var containerGroup = this._containerGroup;
             if (!containerGroup) {
                 // FIXME
@@ -149,7 +149,10 @@ Vmd.define('hwchart.chart.wellLogging.WellLoggingView', {
                 this.group.add(containerGroup);
             }
 
-            containerGroup.attr('position', [layoutInfo.x, layoutInfo.y]);
+            var payloadType = payload && payload.type;
+            if(payloadType != 'dataZoom'){
+                containerGroup.attr('position', [layoutInfo.x, layoutInfo.y]);
+            }
 
             // containerGroup.setClipPath(new graphic.Rect({
             //     shape: {

@@ -27,6 +27,7 @@ Vmd.define('hwchart.chart.wellLogging.track.CurveView', {
         'hwchart.util.number',
         'hwchart.util.layout',
         'hwchart.util.BreakPolyline',
+        "hwchart.util.shape.segments",
         'hwchart.chart.wellLogging.track.BaseView'
     ]
 }, function () {
@@ -37,6 +38,7 @@ Vmd.define('hwchart.chart.wellLogging.track.CurveView', {
     var layout = hwchart.util.layout;
     var BaseView = hwchart.chart.wellLogging.track.BaseView;
     var BreakPolyline = hwchart.util.BreakPolyline;
+    var SegmentsShape = hwchart.util.shape.segments;
 
     var CurveView = BaseView.extend({
 
@@ -57,11 +59,18 @@ Vmd.define('hwchart.chart.wellLogging.track.CurveView', {
                 });
                 this.__hasFetchData = true;
             }
+
+            this.headerGroup = new graphic.Group();
+            this.contentGroup = new graphic.Group();
+
             CurveView.superApply(this, 'init', arguments);
         },
 
         updateData: function(node){
-            CurveView.superApply(this, 'updateData', arguments);
+
+            this.updateHeader(node);
+            this.updateContent(node);
+
             var nodeModel = node.getModel();
             var data = nodeModel.getData();
             var regionCurveFilledData = data.regionCurveFilledData;
@@ -71,16 +80,17 @@ Vmd.define('hwchart.chart.wellLogging.track.CurveView', {
                 }
             });
 
+            CurveView.superApply(this, 'updateData', arguments);
         },
 
-        renderHeader: function (node) {
+        updateHeader: function (node) {
             var nodeModel = node.getModel();
 
             var padding = nodeModel.get('itemStyle.header.padding');
             padding = zrUtil.isArray(padding) ? padding : [padding, padding, padding, padding];
             var labelDistance = nodeModel.get('itemStyle.header.labelDistance');
 
-            var lineStyleModel = nodeModel.getModel('itemStyle.lineStyle');
+            var lineStyleModel = nodeModel.getModel('lineStyle');
             var lineStyle = lineStyleModel.getLineStyle();
             var headerStyle = nodeModel.get('itemStyle.header') || {};
 
@@ -96,67 +106,76 @@ Vmd.define('hwchart.chart.wellLogging.track.CurveView', {
             var y = number.niceForLine(0, ParentborderWidth);
             var width = headerLayout.width - ParentborderWidth+ headerStyle.borderWidth;
             var height = headerLayout.height;
-            var bg = new graphic.Rect({
-                draggable: true,
-                shape: {
+
+            //道头背景
+            var headerRect = this.headerBgEl;
+            if(!headerRect){
+                headerRect = this.headerBgEl = new graphic.Rect();
+                headerRect.setShape({
                     x: x,
                     y: y,
                     width: 0,
                     height: height
-                },
-                style:{
-                    fill: requestCompleted ? headerStyle.backgroundColor : '#eee',
+                });
+
+                headerRect.useStyle({
+                    fill: '#eee',
                     stroke: headerStyle.borderWidth == 0 ? 'none' : headerStyle.borderColor,
                     lineWidth: headerStyle.borderWidth
-                }
-            })
+                });
 
-            bg.animate('shape', true)
-                .when(1000, {
-                    width: width
-                })
-                .done(function(){})
-                .start()
+                headerRect.animate('shape', true)
+                    .when(1000, {
+                        width: width
+                    })
+                    .done(function(){})
+                    .start()
+            }
+            if(requestCompleted) {
+                headerRect.useStyle({
+                    fill: headerStyle.backgroundColor
+                });
+            }
 
-            var titleLabel = new graphic.Text({
-                style: zrUtil.defaults({
-                    text: nodeModel.get('aliasName') || node.name,
-                    textFill: color || 'black'
-                }, headerStyle.textStyle)
-            })
+            this.headerGroup.add(headerRect);
 
+            //道头线
             var yPos = number.niceForLine(headerLayout.height - padding[2], lineStyle.lineWidth);
-            var line = new graphic.Line({
-                z: 1,
-                shape: {
-                    x1: padding[3],
-                    y1: yPos,
-                    x2: headerLayout.width - padding[1],
-                    y2: yPos
-                }
-            })
-            line.useStyle(zrUtil.defaults(
+            var lineEl = this.headerLineEl == null ? (this.headerLineEl = new graphic.Line()) : this.headerLineEl;
+            lineEl.setShape({
+                x1: padding[3],
+                y1: yPos,
+                x2: headerLayout.width - padding[1],
+                y2: yPos
+            });
+            lineEl.useStyle(zrUtil.defaults(
                 {
                     strokeNoScale: true,
                     fill: 'none'
                 },
                 lineStyle
             ));
+            this.headerGroup.add(lineEl);
 
-            var minLabel = new graphic.Text({
-                    style: zrUtil.defaults({
-                        text: nodeModel.get('leftScale'),
-                        textFill: color,
-                        textAlign: 'left'
-                    }, headerStyle.textStyle)
-                });
-            var maxLabel = new graphic.Text({
-                    style: zrUtil.defaults({
-                        text: nodeModel.get('rightScale'),
-                        textFill: color,
-                        textAlign: 'left'
-                    }, headerStyle.textStyle)
-                });
+            //最小值标签
+            var minLabel = this.minLabelEl == null ? (this.minLabelEl = new graphic.Text()) : this.minLabelEl;
+            minLabel.useStyle(
+                zrUtil.defaults({
+                    text: nodeModel.get('leftScale'),
+                    textFill: color,
+                    textAlign: 'left'
+                }, headerStyle.textStyle));
+            this.headerGroup.add(minLabel);
+
+            //最大值标签
+            var maxLabel = this.maxLabelEl == null ? (this.maxLabelEl = new graphic.Text()) : this.maxLabelEl;
+            maxLabel.useStyle(
+                zrUtil.defaults({
+                    text: nodeModel.get('rightScale'),
+                    textFill: color,
+                    textAlign: 'left'
+                }, headerStyle.textStyle));
+            this.headerGroup.add(maxLabel);
 
             var minLabelBoundRect = minLabel.getBoundingRect();
             var maxLabelBoundRect = maxLabel.getBoundingRect();
@@ -165,7 +184,15 @@ Vmd.define('hwchart.chart.wellLogging.track.CurveView', {
             minLabel.attr('position', [padding[3], labelYpos]);
             maxLabel.attr('position', [headerLayout.width - maxLabelBoundRect.width - padding[1], labelYpos]);
 
-            layout.positionElement(titleLabel, layout.getLayoutInfo(
+            //道头标题
+            var titleEl = this.titleEl == null ? (this.titleEl = new graphic.Text()) : this.titleEl;
+            titleEl.useStyle(zrUtil.defaults({
+                text: nodeModel.get('aliasName') || node.name,
+                textFill: color || 'black'
+            }, headerStyle.textStyle));
+
+            this.headerGroup.add(titleEl);
+            layout.positionElement(titleEl, layout.getLayoutInfo(
                 zrUtil.defaults({
                     textVerticalAlign: 'bottom'
                 },headerStyle.textStyle)), {
@@ -174,14 +201,9 @@ Vmd.define('hwchart.chart.wellLogging.track.CurveView', {
                 width: headerLayout.width,
                 height: headerLayout.height - padding[2] - maxLabelHeight
             }, headerStyle.textStyle.margin);
-            // titleLabel.attr('position', [(headerLayout.width - titleBoundRect.width) / 2, headerLayout.height - 30]);
+            this.headerGroup.add(titleEl);
 
-            this.headerGroup.add(bg);
-            this.headerGroup.add(line);
-            this.headerGroup.add(minLabel);
-            this.headerGroup.add(maxLabel);
-            this.headerGroup.add(titleLabel);
-            if(requestCompleted){
+            if(requestCompleted) {
                 var regionCurveFilled = nodeModel.get('regionCurveFilled');
                 var filledSize = regionCurveFilled.length;
                 var fillHeadSize = 0;
@@ -286,22 +308,21 @@ Vmd.define('hwchart.chart.wellLogging.track.CurveView', {
             this.headerGroup.attr('position', [headerLayout.x, headerLayout.y]);
         },
 
-        renderContent: function (node) {
+        updateContent: function (node) {
 
             var nodeModel = node.getModel();
 
             var data = nodeModel.getData();
-            var lineData = zrUtil.filter(data.lineData, function(item){
-                return !isNaN(item[0]) && !isNaN(item[1]);
-            });
-            if(lineData.length>0){
+            var lineData = data.lineData
+
+            if(lineData && lineData.length>0){
                 var nodeLayout = node.getLayout();
                 var bodyLayout = nodeLayout.body;
                 var width = bodyLayout.width;
                 var height = bodyLayout.height;
                 var secondScale = nodeModel.get('secondScale');
-                var reg = /^\d+(?=\.{0,1}\d+$|$)/
-                //console.log(secondScale+" "+reg.test(secondScale))
+                var reg = /^\d+(?=\.{0,1}\d+$|$)/;
+
                 if(reg.test(secondScale)){
                     this.contentGroup.setClipPath(new graphic.Rect({
                         shape: {
@@ -311,43 +332,57 @@ Vmd.define('hwchart.chart.wellLogging.track.CurveView', {
                             height: height
                         }
                     }));
-                }else{
-                    var xmin = data.xmin;
-                    var xmax = data.xmax;
-                    var xwidth = xmax -xmin;
-                    this.contentGroup.setClipPath(new graphic.Rect({
-                        shape: {
-                            x: xmin,
-                            y: 0,
-                            width: xwidth,
-                            height: height
-                        }
-                    }));
                 }
-                var mirror = nodeModel.get('mirror');
-                if(mirror){
-                    var mirrorData = data.mirrorData;
-                    mirrorData[mirrorData.length-1][2] = 0;
-                    lineData = lineData.concat(mirrorData.reverse());
-                }
-                var lineStyleModel = nodeModel.getModel('itemStyle.lineStyle');
-                var lineStyle = lineStyleModel.getLineStyle();
-                var line = new BreakPolyline({
-                    z: 2,
-                    shape: {
-                        points: lineData
-                    }
-                });
 
-                line.useStyle(zrUtil.defaults(
-                    {
-                        strokeNoScale: true,
-                        fill: 'none'
-                    },
-                    lineStyle
-                ));
-                this.contentGroup.add(line);
+                var lineData1 = data.lineData1;
+                if(lineData1){
+
+                    var lineStyleModel = nodeModel.getModel('lineStyle');
+                    var lineStyle = lineStyleModel.getLineStyle();
+
+                    var lineEl = this.lineEl == null ? (this.lineEl = new SegmentsShape({})) : this.lineEl;
+                    lineEl.setShape({
+                        segs: lineData1
+                    });
+                    lineEl.useStyle(zrUtil.defaults(
+                        {
+                            strokeNoScale: true,
+                            fill: 'none'
+                        },
+                        lineStyle
+                    ));
+                    this.contentGroup.add(lineEl);
+                }
+                else {
+                    var mirror = nodeModel.get('mirror');
+                    if(mirror){
+                        var mirrorData = data.mirrorData;
+                        mirrorData[mirrorData.length-1][2] = 0;
+                        lineData = lineData.concat(mirrorData.reverse());
+                    }
+                    var lineStyleModel = nodeModel.getModel('lineStyle');
+                    var lineStyle = lineStyleModel.getLineStyle();
+
+                    var lineEl = this.lineEl == null ? (this.lineEl = new BreakPolyline({z: 2})) : this.lineEl;
+                    lineEl.setShape({
+                        points: lineData
+                    })
+
+                    lineEl.useStyle(zrUtil.defaults(
+                        {
+                            strokeNoScale: true,
+                            fill: 'none'
+                        },
+                        lineStyle
+                    ));
+                    this.contentGroup.add(lineEl);
+                }
+
                 //曲线填充
+                var fillGroup = this.fillGroup == null ? (this.fillGroup = new graphic.Group()) : this.fillGroup;
+                this.contentGroup.add(fillGroup);
+                fillGroup.removeAll();
+
                 var regionCurveFilledData = data.regionCurveFilledData;
                 zrUtil.each(regionCurveFilledData,function(regionCurveFilled){
                     var fillData = regionCurveFilled.data||[];
@@ -363,20 +398,20 @@ Vmd.define('hwchart.chart.wellLogging.track.CurveView', {
                             }
                         }
                         if(!regionCurveFilled._invalid){
-                            var line = new BreakPolyline({
+                            var lineEl = new BreakPolyline({
                                 z: 1,
                                 shape: {
                                     points: fillData
                                 }
                             });
                             var fillStyle = regionCurveFilled.fillStyle;
-                            line.useStyle(zrUtil.defaults(
+                            lineEl.useStyle(zrUtil.defaults(
                                 {
                                     stroke:"none"
                                 },
                                 fillStyle
                             ));
-                            this.contentGroup.add(line);
+                            this.fillGroup.add(lineEl);
                         }
                     }
                 },this);

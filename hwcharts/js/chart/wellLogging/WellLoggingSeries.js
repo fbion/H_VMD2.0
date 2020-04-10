@@ -39,15 +39,6 @@ Vmd.define('hwchart.chart.wellLogging.WellLoggingSeries', {
     var createHashMap = _util.createHashMap;
     var createScaleByModel = axisHelper.createScaleByModel;
 
-    function setDirty(data, dirty){
-        each(data, function(dataOpt){
-            if(dataOpt.children){
-                setDirty(dataOpt.children, dirty);
-            }
-            dataOpt._dirty = dirty;
-        });
-    }
-
     function findDataOptionByName(data, name, result){
         each(data, function(dataOpt){
             if(dataOpt.children){
@@ -142,7 +133,6 @@ Vmd.define('hwchart.chart.wellLogging.WellLoggingSeries', {
             //合并数据
             var oldOption = clone(this.option);
             var oldDataOption = oldOption.data;
-            //setDirty(oldDataOption, false);
 
             var newDataOption = option.data;
             var tree = this._tree;

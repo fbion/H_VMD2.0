@@ -34,6 +34,9 @@
                     textStyle:{
                         textPadding: 3
                     }
+                },
+                lineStyle:{
+
                 }
             }
         },
@@ -49,7 +52,7 @@
             var textStyleModel = headerStyleModel.getModel('textStyle');
             var textRect = textStyleModel.getTextRect(this.get('name'));
             var textHeight = textRect.height || textRect.lineHeight;
-            var lineWidth = this.option.itemStyle.lineStyle.width||0;
+            var lineWidth = this.get("lineStyle.width") || 0;
             return textHeight * 2 + labelDistance * 2 + padding[0] + padding[2] + textStyleModel.get('textPadding') * 2 + lineWidth;
         }
     });

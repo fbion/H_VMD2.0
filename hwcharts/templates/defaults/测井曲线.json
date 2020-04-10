@@ -52,11 +52,11 @@
                                         "leftScale": 50,
                                         "rightScale": 10,
                                         "itemStyle": {
-                                            "lineStyle":{
-                                                "color": "black",
-                                                "width": 2,
-                                                "lineDash": [10,2,1,2]
-                                            }
+                                        },
+                                        "lineStyle":{
+                                            "color": "black",
+                                            "width": 2,
+                                            "lineDash": [10,2,1,2]
                                         },
                                         "data": []
                                     },
@@ -69,11 +69,11 @@
                                         "rightScale": 10,
                                         "mirror": true,
                                         "itemStyle": {
-                                            "lineStyle":{
-                                                "color":"red",
-                                                "width":2,
-                                                "type":"solid"
-                                            }
+                                        },
+                                        "lineStyle":{
+                                            "color":"red",
+                                            "width":2,
+                                            "type":"solid"
                                         },
                                         "data": []
                                     },
@@ -87,11 +87,11 @@
                                         "rightScale": 50,
 
                                         "itemStyle": {
-                                            "lineStyle":{
-                                                "color": "blue",
-                                                "width": 2,
-                                                "type": "dashed"
-                                            }
+                                        },
+                                        "lineStyle":{
+                                            "color": "blue",
+                                            "width": 2,
+                                            "type": "dashed"
                                         },
                                         "data": []
                                     }
@@ -113,11 +113,11 @@
                                         "rightScale": 30,
 
                                         "itemStyle": {
-                                            "lineStyle":{
-                                                "color": "red",
-                                                "width": 2,
-                                                "type":"solid"
-                                            }
+                                        },
+                                        "lineStyle":{
+                                            "color": "red",
+                                            "width": 2,
+                                            "type":"solid"
                                         },
                                         "data": []
                                     },
@@ -131,11 +131,11 @@
                                         "rightScale": 30,
 
                                         "itemStyle": {
-                                            "lineStyle":{
-                                                "color":"green",
-                                                "width":2,
-                                                "type": "dashed"
-                                            }
+                                        },
+                                        "lineStyle":{
+                                            "color":"green",
+                                            "width":2,
+                                            "type": "dashed"
                                         },
                                         "data": []
                                     }
@@ -156,11 +156,11 @@
                                         "rightScale": 200,
 
                                         "itemStyle": {
-                                            "lineStyle":{
-                                                "color": "red",
-                                                "width": 2,
-                                                "type": "dashed"
-                                            }
+                                        },
+                                        "lineStyle":{
+                                            "color": "red",
+                                            "width": 2,
+                                            "type": "dashed"
                                         },
                                         "data": []
                                     },
@@ -174,11 +174,11 @@
                                         "rightScale": 10,
 
                                         "itemStyle": {
-                                            "lineStyle":{
-                                                "color":"green",
-                                                "width":2,
-                                                "type": "dashed"
-                                            }
+                                        },
+                                        "lineStyle":{
+                                            "color":"green",
+                                            "width":2,
+                                            "type": "dashed"
                                         },
                                         "data": []
                                     },
@@ -192,11 +192,11 @@
                                         "rightScale": 220,
 
                                         "itemStyle": {
-                                            "lineStyle":{
-                                                "color": "blue",
-                                                "width": 2,
-                                                "type": "solid"
-                                            }
+                                        },
+                                        "lineStyle":{
+                                            "color": "blue",
+                                            "width": 2,
+                                            "type": "solid"
                                         },
                                         "data": []
                                     }
@@ -220,11 +220,11 @@
                                         "rightScale": 1000,
 
                                         "itemStyle": {
-                                            "lineStyle":{
-                                                "color": "red",
-                                                "width": 2,
-                                                "type": "solid"
-                                            }
+                                        },
+                                        "lineStyle":{
+                                            "color": "red",
+                                            "width": 2,
+                                            "type": "solid"
                                         },
                                         "data": []
                                     },
@@ -237,11 +237,11 @@
                                         "rightScale": 1000,
 
                                         "itemStyle": {
-                                            "lineStyle":{
-                                                "color": "green",
-                                                "width": 2,
-                                                "type": "dashed"
-                                            }
+                                        },
+                                        "lineStyle":{
+                                            "color": "green",
+                                            "width": 2,
+                                            "type": "dashed"
                                         },
                                         "data": []
                                     },
@@ -254,11 +254,11 @@
                                         "rightScale": 1000,
 
                                         "itemStyle": {
-                                            "lineStyle":{
-                                                "color": "blue",
-                                                "width": 2,
-                                                "type": "solid"
-                                            }
+                                        },
+                                        "lineStyle":{
+                                            "color": "blue",
+                                            "width": 2,
+                                            "type": "solid"
                                         },
                                         "data": []
                                     }
@@ -278,11 +278,11 @@
                                         "leftScale": 180,
                                         "rightScale": 430,
                                         "itemStyle": {
-                                            "lineStyle":{
-                                                "color": "red",
-                                                "width": 2,
-                                                "type": "solid"
-                                            }
+                                        },
+                                        "lineStyle":{
+                                            "color": "red",
+                                            "width": 2,
+                                            "type": "solid"
                                         },
                                         "data": []
                                     },
@@ -294,11 +294,11 @@
                                         "leftScale": 0.8,
                                         "rightScale": 2.8,
                                         "itemStyle": {
-                                            "lineStyle":{
-                                                "color": "green",
-                                                "width": 2,
-                                                "type": "dashed"
-                                            }
+                                        },
+                                        "lineStyle":{
+                                            "color": "green",
+                                            "width": 2,
+                                            "type": "dashed"
                                         },
                                         "data": []
                                     },
@@ -310,11 +310,11 @@
                                         "leftScale": 0,
                                         "rightScale": 50,
                                         "itemStyle": {
-                                            "lineStyle":{
-                                                "color": "blue",
-                                                "width": 2,
-                                                "type": "dashed"
-                                            }
+                                        },
+                                        "lineStyle":{
+                                            "color": "blue",
+                                            "width": 2,
+                                            "type": "dashed"
                                         },
                                         "data": []
                                     }

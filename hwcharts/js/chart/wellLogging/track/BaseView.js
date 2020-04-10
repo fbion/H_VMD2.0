@@ -38,9 +38,6 @@ Vmd.define('hwchart.chart.wellLogging.track.BaseView', {
             this.seriesModel = seriesModel;
             this.name = node.name;
 
-            this.headerGroup = new graphic.Group();
-            this.contentGroup = new graphic.Group();
-
             // this.titleGroup.on('click', function(){
             //     this.titleGroup.attr('position', [50,50])
             //     this.headerGroup.attr('position', [50,100])
@@ -55,13 +52,6 @@ Vmd.define('hwchart.chart.wellLogging.track.BaseView', {
          * @param  {number} idx
          */
         updateData: function (node) {
-            this.headerGroup.removeAll();
-            this.contentGroup.removeAll();
-
-            this.renderHeader(node);
-            this.renderContent(node);
-            node._dirty = false;
-
             // this.on('mouseover', onEmphasis, this)
             //     .on('mouseout', onNormal, this)
             //     .on('emphasis', onEmphasis, this)
