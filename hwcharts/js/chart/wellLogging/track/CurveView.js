@@ -324,14 +324,15 @@ Vmd.define('hwchart.chart.wellLogging.track.CurveView', {
                 var reg = /^\d+(?=\.{0,1}\d+$|$)/;
 
                 if(reg.test(secondScale)){
-                    this.contentGroup.setClipPath(new graphic.Rect({
-                        shape: {
-                            x: 0,
-                            y: 0,
-                            width: width,
-                            height: height
-                        }
-                    }));
+                    // this.contentGroup.setClipPath(new graphic.Rect({
+                    //     shape: {
+                    //         x: 0,
+                    //         y: 0,
+                    //         width: width,
+                    //         height: height
+                    //     }
+                    // }));
+                    data.lineData1 = data.tempData.length > 0 ? data.tempData : null;
                 }
 
                 var lineData1 = data.lineData1;

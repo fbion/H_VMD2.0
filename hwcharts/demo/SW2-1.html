@@ -61,6 +61,18 @@ under the License.
             //'hwchart.component.MarkPoint'
         ], function () {
 
+            var arr = [1,2,3,4,5,6,7,8,9];
+
+            var pre = null;
+            var next = null;
+            var cur = null;
+            for(var i = 0; i < arr.length; i++) {
+                cur = next ? next : arr[i] + "-";
+                next = arr[i + 1] && (arr[i + 1] + "-");
+
+                pre = cur;
+            }
+
             chart = hwcharts.init(document.getElementById('main'), null, {});
 			 var path = hwchartsPATH + '/templates/defaults/测井曲线.json';
              chart.loadTemplate(path, {

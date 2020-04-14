@@ -11,14 +11,13 @@ Vmd.define('hwchart.chart.wellLogging.track.CurveLayout', {
      * @returns {[]|*}
      */
     function filterDataByAxis(data, min, max){
-        if(data.length == 0 || (min <= data[0][1] && max >= data[data.length - 1][1])){
+        if(data.length == 0 || (min <= data[0][1] && max >= data[data.length - 1][1])) {
             return data;
         }
 
         var result = [];
         var leftIndex = 0;
         var rightIndex = data.length - 1;
-
         var startIndex = 0;
         while (leftIndex < rightIndex) {
             var mid = leftIndex + ((rightIndex - leftIndex) >> 1);
@@ -26,27 +25,50 @@ Vmd.define('hwchart.chart.wellLogging.track.CurveLayout', {
                 startIndex = mid;
                 break;
             }
-            if(min < data[mid][1] && min >= data[mid - 1][1]){
+            if(min < data[mid][1] && min >= data[mid - 1][1]) {
                 startIndex = mid - 1;
                 break;
             }
-            if(min < data[mid][1]){
+            if(min < data[mid][1]) {
                 rightIndex = mid;
             }
-            if(min > data[mid][1] && min < data[mid + 1][1]){
+            if(min > data[mid][1] && min < data[mid + 1][1]) {
                 startIndex = mid;
                 break;
             }
-            if(min > data[mid][1]){
+            if(min > data[mid][1]) {
                 leftIndex = mid;
             }
         }
 
-        for(var i = startIndex; i < data.length; i++){
+        for(var i = startIndex; i < data.length; i++) {
             result.push(data[i]);
             if(data[i][1] > max) break;
         }
 
+        result = [
+            [2.313,800.38],
+            [2.595,800.505],
+            [2.692,800.63],
+            [2.791,800.755],
+            [2.834,800.88],
+            [2.916,801.005],
+            [2.82,801.13],
+            [2.726,801.255],
+            [2.66,801.38],
+            [2.526,801.505],
+            [2.465,801.63],
+            [2.338,801.755],
+            [2.312,801.88],
+            [2.255,802.005],
+            [2.233,802.13],
+            [2.181,802.255],
+            [2.141,802.38],
+            [2.119,802.505],
+            [2.021,802.63],
+            [2.018,802.755],
+            [2.008,802.88],
+            [2.031,803.005]];
         return result;
     }
 
@@ -54,6 +76,11 @@ Vmd.define('hwchart.chart.wellLogging.track.CurveLayout', {
         type: 'curve',
         reset: function (treeNode) {
             var nodeModel = treeNode.getModel();
+
+            var nodeLayout = treeNode.getLayout();
+            var bodyLayout = nodeLayout.body;
+            var width = bodyLayout.width;
+            var height = bodyLayout.height;
 
             var xAxis = nodeModel.coordinateSystem.getAxis('x');
             var yAxis = nodeModel.coordinateSystem.getAxis('y');
@@ -70,7 +97,7 @@ Vmd.define('hwchart.chart.wellLogging.track.CurveLayout', {
             var rightScale = nodeModel.get('rightScale');
             var secondScale = nodeModel.get('secondScale');
 
-            var lineData =[];
+            var lineData = [];
             var mirrorData = [];
 
             var dataCount = data.length;
@@ -79,12 +106,124 @@ Vmd.define('hwchart.chart.wellLogging.track.CurveLayout', {
             var x;
             var y;
 
+            var tempData = [];
+            var offset = 1;
+            var lenPos = 0;
+
             if(leftScale>rightScale)
             {
                 if(secondScale>0&&secondScale<11){
-                    var step = right -left;
+                    var prePoint = null; //前一个点，逻辑点
+                    var nextPoint = null; //下一个点
                     var tempX,tempY,tempX2,a,b,c;
-                    for(var i =0;i<data.length;i++){
+                    for(var i =0;i<data.length - 1;i++){
+                        x = nextPoint ? nextPoint[0] : xAxis.dataToCoord(data[i][0]);
+                        y = nextPoint ? nextPoint[1] : yAxis.dataToCoord(data[i][1]);
+
+                        nextPoint = data[i + 1] && [xAxis.dataToCoord(data[i + 1][0]), yAxis.dataToCoord(data[i + 1][1])];
+
+                        var baseLeftN = parseInt((x - left) / width); //x距离左侧边距与宽度的倍数
+                        var baseRightN = parseInt((x - right) / width); //x距离右侧边距与宽度的倍数
+
+                        //两个点横坐标差值大于width，肯定在两个不同区域
+                        if(nextPoint){
+                            if(nextPoint[0] - x > width || nextPoint[0] - x < -width){
+
+                            }
+                            //差值小于等于width，可能在两个不同区域
+                            else{
+
+                                if(x > (right + baseRightN * width) && nextPoint[0] < (right + baseRightN * width)) {
+                                    var x0 = right;
+                                    var y0 = y + (right + baseRightN * width - x) * (nextPoint[1] - y) / (nextPoint[0] - x);
+
+                                    tempData[lenPos] = tempData[lenPos] || 0;
+                                    tempData[lenPos]++;
+                                    tempData[offset++] = left + right - (x - (baseRightN + 1) * width);
+                                    tempData[offset++] = y;
+
+                                    tempData[lenPos]++;
+                                    tempData[offset++] = left + right - (x0 - width);
+                                    tempData[offset++] = y0;
+
+                                    lenPos = offset++;
+                                    tempData[lenPos] = 1;
+                                    tempData[offset++] = left + right - x0;
+                                    tempData[offset++] = y0;
+                                }
+                                else if(x > (right + baseRightN * width)){
+                                    tempData[lenPos]++;
+                                    tempData[offset++] = left + right - (x - (baseRightN + 1) * width);
+                                    tempData[offset++] = y;
+                                }
+                                //在左侧边界线两边
+                                else if(x > (left + baseLeftN * width) && nextPoint[0] < (left + baseLeftN * width)){
+                                    var x0 = left;
+                                    var y0 = y + (left + baseLeftN * width - x) * (nextPoint[1] - y) / (nextPoint[0] - x);
+
+                                    tempData[lenPos] = tempData[lenPos] || 0;
+                                    tempData[lenPos]++;
+                                    tempData[offset++] = left + right - (x + baseLeftN * width);
+                                    tempData[offset++] = y;
+
+                                    tempData[lenPos]++;
+                                    tempData[offset++] = left + right - x0;
+                                    tempData[offset++] = y0;
+
+                                    lenPos = offset++;
+                                    tempData[lenPos] = 1;
+                                    tempData[offset++] = left + right - (x0 + width);
+                                    tempData[offset++] = y0;
+                                }
+                                else if(x < (left + baseLeftN * width) && nextPoint[0] > (left + baseLeftN * width)){
+                                    var x0 = left;
+                                    var y0 = y + (left + baseLeftN * width - x) * (nextPoint[1] - y) / (nextPoint[0] - x);
+                                    tempData[lenPos] = tempData[lenPos] || 0;
+                                    tempData[lenPos]++;
+                                    tempData[offset++] = left + right - (x + (baseLeftN + 1) * width);
+                                    tempData[offset++] = y;
+
+                                    tempData[lenPos]++;
+                                    tempData[offset++] = left + right - (x0 + width);
+                                    tempData[offset++] = y0;
+
+                                    lenPos = offset++;
+                                    tempData[lenPos] = 1;
+                                    tempData[offset++] = left + right - x0;
+                                    tempData[offset++] = y0;
+                                }
+                                else if(x < (left + baseLeftN * width)){
+                                    tempData[lenPos]++;
+                                    tempData[offset++] = left + right - (x + (baseLeftN + 1) * width);
+                                    tempData[offset++] = y;
+                                }
+                                //在右侧边界线两边
+                                else if(x < (right + baseRightN * width) && nextPoint[0] > (right + baseRightN * width)) {
+                                    var x0 = right;
+                                    var y0 = y + (right + baseRightN * width - x) * (nextPoint[1] - y) / (nextPoint[0] - x);
+
+                                    tempData[lenPos] = tempData[lenPos] || 0;
+                                    tempData[lenPos]++;
+                                    tempData[offset++] = left + right - (x - baseRightN * width);
+                                    tempData[offset++] = y;
+
+                                    tempData[lenPos]++;
+                                    tempData[offset++] = left + right - x0;
+                                    tempData[offset++] = y0;
+
+                                    lenPos = offset++;
+                                    tempData[lenPos] = 1;
+                                    tempData[offset++] = left + right - (x0 - width);
+                                    tempData[offset++] = y0;
+                                }
+                                else{
+                                    tempData[lenPos]++;
+                                    tempData[offset++] = left + right - x;
+                                    tempData[offset++] = y;
+                                }
+                            }
+                        }
+
                         x = right- xAxis.dataToCoord(data[i][0]);
                         y = yAxis.dataToCoord(data[i][1]);
                         if(x<left) {
@@ -99,10 +238,10 @@ Vmd.define('hwchart.chart.wellLogging.track.CurveLayout', {
                                     mirrorData.push([left,tempY]);
                                 }
                             }
-                            a = (left - x)/(step*secondScale);
-                            c = (left - tempX)/(step*secondScale);
+                            a = (left - x)/(width*secondScale);
+                            c = (left - tempX)/(width*secondScale);
                             b = a - parseInt(a);
-                            tempX2 = step*(1-b)+left;
+                            tempX2 = width*(1-b)+left;
                             lineData.push([tempX2, y]);
                             mirrorData.push([right - tempX2,y]);
                             if(tempX>left){
@@ -124,10 +263,10 @@ Vmd.define('hwchart.chart.wellLogging.track.CurveLayout', {
                                     mirrorData.push([right,tempY]);
                                 }
                             }
-                            a = (x-right)/(step*secondScale);
-                            c = (tempX-right)/(step*secondScale);
+                            a = (x-right)/(width*secondScale);
+                            c = (tempX-right)/(width*secondScale);
                             b = a - parseInt(a);
-                            tempX2 = step*b+left;
+                            tempX2 = width*b+left;
                             lineData.push([tempX2, y]);
                             mirrorData.push([right - tempX2,y]);
                             if(tempX<right){
@@ -162,12 +301,68 @@ Vmd.define('hwchart.chart.wellLogging.track.CurveLayout', {
                 }
             }else{
                 if(secondScale>0&&secondScale<11){
-                    var step = right -left;
+                    var prePoint = null; //前一个点，逻辑点
+                    var nextPoint = null; //下一个点
+
                     var tempX,tempY,tempX2,a,b,c;
-                    for(var i =0;i<data.length;i++){
-                        x = xAxis.dataToCoord(data[i][0]);
-                        y = yAxis.dataToCoord(data[i][1]);
-                        if(x<left){
+                    for(var i = 0;i < data.length - 1; i++) {
+                        x = nextPoint ? nextPoint[0] : xAxis.dataToCoord(data[i][0]);
+                        y = nextPoint ? nextPoint[1] : yAxis.dataToCoord(data[i][1]);
+
+                        nextPoint = data[i + 1] && [xAxis.dataToCoord(data[i + 1][0]), yAxis.dataToCoord(data[i + 1][1])];
+
+                        //两个点横坐标差值大于width，肯定在两个不同区域
+                        if(nextPoint){
+                            var xDomain = Math.floor((x - left) / width); //当前点所在的区域
+                            var nextDomain = Math.floor((nextPoint[0] - left) / width);
+
+                            //同一区域
+                            if(nextDomain - xDomain == 0) {
+                                tempData[lenPos] = tempData[lenPos] || 0;
+                                tempData[offset++] = x - xDomain * width;
+                                tempData[offset++] = y;
+                            }
+                            else if(nextDomain - xDomain == 1) {
+                                var x0 = left + (xDomain + 1) * width;
+                                var y0 = y + (x0 - x) * (nextPoint[1] - y) / (nextPoint[0] - x);
+
+                                tempData[lenPos] = tempData[lenPos] || 0;
+                                tempData[lenPos]++;
+                                tempData[offset++] = x - xDomain * width;
+                                tempData[offset++] = y;
+
+                                tempData[lenPos]++;
+                                tempData[offset++] = left + width;
+                                tempData[offset++] = y0;
+
+                                lenPos = offset++;
+                                tempData[lenPos] = 1;
+                                tempData[offset++] = left;
+                                tempData[offset++] = y0;
+
+                            }
+                            else if(nextDomain - xDomain == -1){
+                                var x0 = left + xDomain * width;
+                                var y0 = y + (x0 - x) * (nextPoint[1] - y) / (nextPoint[0] - x);
+
+                                tempData[lenPos] = tempData[lenPos] || 0;
+                                tempData[lenPos]++;
+                                tempData[offset++] = x - xDomain * width;
+                                tempData[offset++] = y;
+
+                                tempData[lenPos]++;
+                                tempData[offset++] = left;
+                                tempData[offset++] = y0;
+
+                                lenPos = offset++;
+                                tempData[lenPos] = 1;
+                                tempData[offset++] = left + width;
+                                tempData[offset++] = y0;
+                            }
+                        }
+
+
+                        if(x < left) {
                             tempX = xAxis.dataToCoord(data[i+1][0]);
                             if(i!=0){
                                 tempX2 = xAxis.dataToCoord(data[i-1][0]);
@@ -179,10 +374,10 @@ Vmd.define('hwchart.chart.wellLogging.track.CurveLayout', {
                                     mirrorData.push([left,tempY]);
                                 }
                             }
-                            a = (left - x)/(step*secondScale);
-                            c = (left - tempX)/(step*secondScale);
+                            a = (left - x)/(width*secondScale);
+                            c = (left - tempX)/(width*secondScale);
                             b = a - parseInt(a);
-                            tempX2 = step*(1-b)+left;
+                            tempX2 = width*(1-b)+left;
                             lineData.push([tempX2, y]);
                             mirrorData.push([right - tempX2,y]);
                             if(tempX>left){
@@ -192,60 +387,54 @@ Vmd.define('hwchart.chart.wellLogging.track.CurveLayout', {
                                 mirrorData.push([left,tempY,0]);
                                 mirrorData.push([right,tempY]);
                             }
-                        }else if(x>right){
+                        }
+                        else if(x > right) {
                             tempX = xAxis.dataToCoord(data[i+1][0]);
                             if(i!=0){
                                 tempX2 = xAxis.dataToCoord(data[i-1][0]);
                                 if(tempX2<right){
                                     tempY = (y+yAxis.dataToCoord(data[i-1][1]))/2;
+
                                     lineData.push([right,tempY]);
                                     lineData.push([left,tempY,0]);
                                     mirrorData.push([left,tempY,0]);
                                     mirrorData.push([right,tempY]);
                                 }
                             }
-                            a = (x-right)/(step*secondScale);
-                            c = (tempX-right)/(step*secondScale);
+                            a = (x-right)/(width*secondScale);
+                            c = (tempX-right)/(width*secondScale);
                             b = a - parseInt(a);
-                            tempX2 = step*b+left;
+                            tempX2 = width*b+left;
                             lineData.push([tempX2, y]);
                             mirrorData.push([right - tempX2,y]);
                             if(tempX<right){
                                 tempY = (y+yAxis.dataToCoord(data[i+1][1]))/2;
                                 lineData.push([left,tempY]);
                                 lineData.push([right,tempY,0]);
-                                mirrorData.push([right,tempY,0]);
-                                mirrorData.push([left,tempY]);
+                                // mirrorData.push([right,tempY,0]);
+                                // mirrorData.push([left,tempY]);
                             }
                         }
                         else{
                             lineData.push([x, y]);
-                            mirrorData.push([right-x,y]);
+                            // mirrorData.push([right-x,y]);
                         }
-
+                        prePoint = [x, y];
                     }
                 }else{
                     lineData1[offset++] = dataCount;
-                    mirror && (lineData1[dataCount * 2 + 1] = dataCount);
+                    mirror && (lineData1[(dataCount << 1) + 1] = dataCount);
                     for(var i =0; i < data.length; i++) {
                         x = xAxis.dataToCoord(data[i][0]);
                         y = yAxis.dataToCoord(data[i][1]);
 
                         lineData1[offset++] = left + x;
-                        mirror && (lineData1[offset + dataCount * 2] = left + right- x);
+                        mirror && (lineData1[offset + (dataCount << 1)] = left + right- x);
                         lineData1[offset++] = y;
-                        lineData1[offset + dataCount * 2] = y;
+                        mirror && (lineData1[offset + (dataCount << 1)] = y);
 
                         lineData.push([left + right- x, y]);
                         mirrorData.push([left + x, y]);
-                    }
-
-                    for(var i =0;i<data.length;i++){
-                        x = xAxis.dataToCoord(data[i][0]);
-                        y = yAxis.dataToCoord(data[i][1]);
-
-                        lineData.push([x, y]);
-                        mirrorData.push([right-x,y]);
                     }
                 }
             }
@@ -253,10 +442,6 @@ Vmd.define('hwchart.chart.wellLogging.track.CurveLayout', {
             //曲线填充数据
             var regionCurveFilledData = [];
             var regionCurveFilleds = nodeModel.get('regionCurveFilled');
-            var nodeLayout = treeNode.getLayout();
-            var bodyLayout = nodeLayout.body;
-            var width = bodyLayout.width;
-            var height = bodyLayout.height;
             zrUtil.each(regionCurveFilleds,function(regionCurveFilled){
                 var curveFilled = {};
                 curveFilled.name = regionCurveFilled.name||"";
@@ -304,7 +489,7 @@ Vmd.define('hwchart.chart.wellLogging.track.CurveLayout', {
                 regionCurveFilledData.push(curveFilled);
             });
 
-            return {lineData:lineData, lineData1: lineData1, mirrorData:mirrorData, regionCurveFilledData:regionCurveFilledData};
+            return {lineData:lineData, lineData1: lineData1,tempData: tempData, mirrorData:mirrorData, regionCurveFilledData:regionCurveFilledData};
         }
     };
 })

@@ -551,7 +551,45 @@ copyright：Copyright @1999-2016, hwkj, All Rights Reserved
         */
         this.getExpVariables = function (exp) {
             var presult = this.parse(exp);
-        },
+            var varList = [];
+            if(!presult || !presult.flag){
+                return varList;
+            }
+
+            var paramType = this.hwReport.checkParamType(exp);
+
+            switch (paramType) {
+                case "constant":
+                case "string":
+                case "undefined":
+                    return varList;
+                case "reportvar":
+                case "vmdvar":
+                case "ds":
+                case "cell_approve":
+                case "cell_uploader":
+                case "cell_combo":
+                case "cell":
+                    varList.push({
+                        type: paramType,
+                        name: exp
+                    });
+                    return varList;
+                default:
+                    var rlist = this.resultMap.get(exp);
+                    var parseList = (rlist && rlist[1]) || [];
+                    for(var i = 0; i < parseList.length; i++){
+                        paramType = this.hwReport.checkParamType(parseList[i]);
+                        if(["reportvar", "vmdvar", "ds", "cell_approve", "cell_uploader", "cell_combo", "cell"].indexOf(paramType) != -1){
+                            varList.push({
+                                type: paramType,
+                                name: parseList[i]
+                            });
+                        }
+                    }
+                    return varList;
+            }
+        }
         /**
          * 数据集表达式处理
          * exp：表达式
@@ -560,7 +598,7 @@ copyright：Copyright @1999-2016, hwkj, All Rights Reserved
         this.translateDs = function (exp, type, contextCell,header) {
             var that = this;
             var dsname = exp.split(".")[0];
-            var dstore = this.hwReport.getQueryStoreByName(dsname);
+            var dstore = this.hwReport.getQueryStoreByName(dsname) || this.hwReport.getStorageStoreByName(dsname);
             if (dstore) {//数据集真实存在
                 var rlist = this.resultMap.get(exp);
                 if (rlist[2] == "06") {//匹配ds1.jh
@@ -3525,7 +3563,7 @@ copyright：Copyright @1999-2016, hwkj, All Rights Reserved
         this.factName = "";      //可视化中定义的名称
         this.callCode = "";       //服务serverid
         this.serverName = "";  //数据服务中的名称
-
+        this.saveRule = ""; // 入库规则
         this.relativeCells = [];  //与数据集关联的原始单元格
         this.dataRequestCompleted = this.isRefresh ? false : true; //数据请求完成，不论成功失败
         this.dataRequestSuccess = this.isRefresh ? false : true; //数据请求成功
@@ -3536,6 +3574,7 @@ copyright：Copyright @1999-2016, hwkj, All Rights Reserved
         this.dbname = "";
         this.definedname = "";
         this.tablename = "";
+
         this.nochangenoupdate = true; //值不改变不更新
         this.saveserver = {};
         this.bindRules = [];
@@ -3562,6 +3601,22 @@ copyright：Copyright @1999-2016, hwkj, All Rights Reserved
             this.set("dbname", storejson.dbname);
             this.set("definedname", storejson.definedname);
             this.set("tablename", storejson.tablename);
+
+            this.set("saveRule", storejson.saverule);
+            if(this.saveRule){
+                var operator = this.saveRule.match(/!=|==|>=|<=|<|>/g);
+                operator = operator && operator[0];
+
+                var expresses = operator && this.saveRule.split(operator);
+                if(expresses && expresses.length == 2){
+                    this.saveRuleParse = {
+                        operator: operator,
+                        leftExpress: expresses[0],
+                        rightExpress: expresses[1]
+                    };
+                }
+            }
+
             this.set("nochangenoupdate", dhx.s2b(storejson.updatemode));
             this.set("bindRules", storejson.values && storejson.values.filter(function (v) { return v.cellid !== ""}));
             //将字段转换成小写
@@ -3577,6 +3632,25 @@ copyright：Copyright @1999-2016, hwkj, All Rights Reserved
                 this.saveserver.params = storejson.saveserver.params;
                 this.saveserver.path = storejson.saveserver.path;
             }
+        };
+
+        this.getFields = function(){
+            var fields = [];
+            if(this.type == "query"){
+                var vmdStore = window[this.factName];
+                if (!vmdStore) {
+                    showAlert("错误！", "数据集'" + this.factName + "'不存在！", "error");
+                    return;
+                }
+                fields = vmdStore.getFields().map(function (v) {
+                    return v.name;
+                });
+                return fields;
+            }
+            fields = this.bindRules.map(function (v) {
+                return v.fieldname;
+            });
+            return fields;
         };
         
         /*
@@ -4082,21 +4156,21 @@ copyright：Copyright @1999-2016, hwkj, All Rights Reserved
         }
 
         //页面加载完成后填充入库数据集
-        this.fillDataByFirst = function () {
+        this.fillDataByFirst = function (state) {
             var bindRules = this.bindRules;
             if (defined(this.baseIndex)) {
                 var baseRule = bindRules[this.baseIndex];
                 var baseCells = this.hwReport.getCells(baseRule.cellid);
                 for (var i = 0; i < baseCells.length; i++) {
                     var baseCell = baseCells[i];
-                    this.addBindDataToStore(baseCell, "nochange");
+                    this.addBindDataToStore(baseCell, state);
                 }
             }
             else {
                 var id = "0";
                 var newData = {
                     id: id,
-                    _rowState: "nochange"
+                    _rowState: state
                 };
                 var oldData = {};
                 for (var j = 0; j < bindRules.length; j++) {
@@ -4262,10 +4336,66 @@ copyright：Copyright @1999-2016, hwkj, All Rights Reserved
             var ids = dhtmlxStoredata.order;
             var changedIds = [];
             var saveDatas = [];
+
+            function replaceExpVariables(exp, data){
+                var variables = that.hwReport.rptExpress.getExpVariables(exp);
+                for(var i = 0; i < variables.length; i++){
+                    var varType = variables[i].type;
+                    var varName = variables[i].name;
+                    var vaule = "";
+                    if(varType == "reportvar" || varType == "vmdvar"){
+                        vaule = that.hwReport.getValue(varName);
+                        exp = exp.replace(RegExp("(?<!\\.)\\b" + varName + "\\b", "g"), vaule);
+                    }
+                    else if(varType == "cell_approve" || varType == "cell_uploader"|| varType == "cell_combo"|| varType == "cell"){
+                        var filterByVarName = that.bindRules.filter(function(v){
+                            return v.cellid == varName || v.cellid.split(".")[0] == varName;
+                        });
+                        if(filterByVarName && filterByVarName.length > 0){
+                            vaule = data[filterByVarName[0].fieldname];
+                        }
+                        else{
+                            vaule = that.hwReport.getValue(varName);
+                        }
+                        exp = exp.replace(RegExp("(?<!\\.)\\b" + varName + "\\b", "g"), vaule);
+                    }
+                    else if(varType == "ds"){
+                        if(varName.split(".")[0] == that.name){
+                            vaule = data[varName.split(".")[1]];
+                        }
+                        else {
+                            vaule = that.hwReport.getValue(varName);
+                        }
+                        exp = exp.replace(RegExp(varName, "g"), vaule);
+                    }
+                }
+                exp = exp == "" ? "\"\"" : exp;
+                return exp;
+            }
+
+            function validateSaveRule(itemData){
+                if(!that.saveRuleParse){
+                    return true;
+                }
+
+                var operator = that.saveRuleParse.operator;
+                var leftExpress = that.saveRuleParse.leftExpress;
+                var rightExpress = that.saveRuleParse.rightExpress;
+
+                var leftReplaceResult = replaceExpVariables(leftExpress, itemData);
+                var rightReplaceResult = replaceExpVariables(rightExpress, itemData);
+
+                if(eval(leftReplaceResult + operator + rightReplaceResult)){
+                    return true;
+                }
+
+                return false;
+            }
+
             for (var i = 0; i < ids.length; i++) {
                 var el = dhtmlxStoredata.pull[ids[i]];
                 var oel = (dhtmlxStoredata.opull || dhtmlxStoredata.pull)[ids[i]];
-                if (el._rowState == "ignore") {
+                if (!validateSaveRule(el) || el._rowState == "ignore") {
                     continue;
                 }
                 if (el._splitFields && el._splitFields.length > 0 && el[el._splitFields[0]]) {
@@ -5170,7 +5300,7 @@ copyright：Copyright @1999-2016, hwkj, All Rights Reserved
             this.attachEvent("onRendered", function () {
                 that.setSize();
                 that.setPosition();
-                that.fillStorageOnRendered();
+                that.fillStorageOnRendered("nochange");
                 that.updateRelativeCells();//刷新定义显示值的单元格
                 that.mergeSameValueCells(); //同值合并单元格
                 that.resetCounter();
@@ -5207,6 +5337,11 @@ copyright：Copyright @1999-2016, hwkj, All Rights Reserved
                                 if (that.emptyRows.indexOf(deleteRowId) != -1) {
                                     continue;
                                 }
+
+                                //删除行后入库数据集中对应数据删除
+                                that.storageDataStores.each(function (key, _store, index) {
+                                    _store.deleteDataByDelete(deleteRowId);
+                                });
                                 //最后一行只清空数据
                                 that.grid.forEachCellsA(deleteRowId, function (cellObj, ind) {
                                     var oCell1 = that.getOriginCellById(cellObj.cell._attrs.sid);
@@ -5226,10 +5361,6 @@ copyright：Copyright @1999-2016, hwkj, All Rights Reserved
                                             ""
                                         ]);
                                     }
-                                });
-                                //删除行后入库数据集中对应数据删除
-                                that.storageDataStores.each(function (key, _store, index) {
-                                    _store.deleteDataByDelete(deleteRowId);
                                 });
                                 that.emptyRows.push(deleteRowId);
                             }
@@ -5964,7 +6095,7 @@ copyright：Copyright @1999-2016, hwkj, All Rights Reserved
                 }
                 return "vmdvar";
             }
-            if (/[\u4e00-\u9fa5A-Za-z0-9_]+\.[\w\W]+/.test(param) && this.getQueryStoreByName(param.split(".")[0])) {
+            if (/[\u4e00-\u9fa5A-Za-z0-9_]+\.[\w\W]+/.test(param) && (this.getQueryStoreByName(param.split(".")[0]) || this.getStorageStoreByName(param.split(".")[0]))) {
                 return "ds";
             }
             //单元格变量
@@ -6525,10 +6656,10 @@ copyright：Copyright @1999-2016, hwkj, All Rights Reserved
         },
 
         //页面加载完成后填充入库数据集
-        fillStorageOnRendered: function () {
+        fillStorageOnRendered: function (state) {
             var that = this;
             this.storageDataStores.each(function (key, _store, index) {
-                _store.fillDataByFirst();
+                _store.fillDataByFirst(state);
             });
         },
 
@@ -6907,6 +7038,19 @@ copyright：Copyright @1999-2016, hwkj, All Rights Reserved
                 return store;
             }
             this.queryDatastores.each(function (key, _store, index) {
+                if (_store.factName == name || _store.name == name) {
+                    store = _store;
+                }
+            });
+            return store;
+        },
+
+        getStorageStoreByName: function (name) {
+            var store = this.storageDataStores.get(name);
+            if (store) {
+                return store;
+            }
+            this.storageDataStores.each(function (key, _store, index) {
                 if (_store.factName == name || _store.name == name) {
                     store = _store;
                 }
@@ -8126,7 +8270,7 @@ copyright：Copyright @1999-2016, hwkj, All Rights Reserved
 
             this.setSize();
             this.setPosition();
-            this.fillStorageOnRendered();
+            this.fillStorageOnRendered("add");
             this.updateRelativeCells();//刷新定义显示值的单元格
             if (callback) {
                 callback.apply(this, [])

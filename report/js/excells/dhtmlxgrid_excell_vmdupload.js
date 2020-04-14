@@ -372,7 +372,7 @@ dhtmlXGridObject.prototype._uploader_render = function (cell) {
         file.absPath = result.absolutePath;
         file.relativePath = result.relativePath;
         file.path = result.path;
-        file.id = result.docid;
+        file.id = result.docid || (new Date().valueOf());
 
         var maxAccessUploadFile = parseInt(cellType.upmaxnum);
         var fileCount = uploader._getAddFileCount();
