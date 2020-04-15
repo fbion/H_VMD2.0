@@ -315,69 +315,39 @@ Vmd.define('hwchart.chart.wellLogging.track.CurveView', {
             var data = nodeModel.getData();
             var lineData = data.lineData
 
-            if(lineData && lineData.length>0){
+            if(lineData && lineData.length>0) {
                 var nodeLayout = node.getLayout();
                 var bodyLayout = nodeLayout.body;
                 var width = bodyLayout.width;
                 var height = bodyLayout.height;
                 var secondScale = nodeModel.get('secondScale');
-                var reg = /^\d+(?=\.{0,1}\d+$|$)/;
 
-                if(reg.test(secondScale)){
-                    // this.contentGroup.setClipPath(new graphic.Rect({
-                    //     shape: {
-                    //         x: 0,
-                    //         y: 0,
-                    //         width: width,
-                    //         height: height
-                    //     }
-                    // }));
-                    data.lineData1 = data.tempData.length > 0 ? data.tempData : null;
+                if(secondScale >= 0) {
+                    this.contentGroup.setClipPath(new graphic.Rect({
+                        shape: {
+                            x: 0,
+                            y: 0,
+                            width: width,
+                            height: height
+                        }
+                    }));
                 }
 
-                var lineData1 = data.lineData1;
-                if(lineData1){
+                var lineStyleModel = nodeModel.getModel('lineStyle');
+                var lineStyle = lineStyleModel.getLineStyle();
 
-                    var lineStyleModel = nodeModel.getModel('lineStyle');
-                    var lineStyle = lineStyleModel.getLineStyle();
-
-                    var lineEl = this.lineEl == null ? (this.lineEl = new SegmentsShape({})) : this.lineEl;
-                    lineEl.setShape({
-                        segs: lineData1
-                    });
-                    lineEl.useStyle(zrUtil.defaults(
-                        {
-                            strokeNoScale: true,
-                            fill: 'none'
-                        },
-                        lineStyle
-                    ));
-                    this.contentGroup.add(lineEl);
-                }
-                else {
-                    var mirror = nodeModel.get('mirror');
-                    if(mirror){
-                        var mirrorData = data.mirrorData;
-                        mirrorData[mirrorData.length-1][2] = 0;
-                        lineData = lineData.concat(mirrorData.reverse());
-                    }
-                    var lineStyleModel = nodeModel.getModel('lineStyle');
-                    var lineStyle = lineStyleModel.getLineStyle();
-
-                    var lineEl = this.lineEl == null ? (this.lineEl = new BreakPolyline({z: 2})) : this.lineEl;
-                    lineEl.setShape({
-                        points: lineData
-                    })
-
-                    lineEl.useStyle(zrUtil.defaults(
-                        {
-                            strokeNoScale: true,
-                            fill: 'none'
-                        },
-                        lineStyle
-                    ));
-                    this.contentGroup.add(lineEl);
-                }
+                var lineEl = this.lineEl == null ? (this.lineEl = new SegmentsShape({})) : this.lineEl;
+                lineEl.setShape({
+                    segs: lineData
+                });
+                lineEl.useStyle(zrUtil.defaults(
+                    {
+                        strokeNoScale: true,
+                        fill: 'none'
+                    },
+                    lineStyle
+                ));
+                this.contentGroup.add(lineEl);
 
                 //曲线填充
                 var fillGroup = this.fillGroup == null ? (this.fillGroup = new graphic.Group()) : this.fillGroup;
@@ -398,7 +368,7 @@ Vmd.define('hwchart.chart.wellLogging.track.CurveView', {
 
                             }
                         }
-                        if(!regionCurveFilled._invalid){
+                        if(!regionCurveFilled._invalid) {
                             var lineEl = new BreakPolyline({
                                 z: 1,
                                 shape: {

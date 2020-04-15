@@ -1,157 +1,128 @@
 {
-	"vers": "1.0",
-	"coorSys": "",
-	"dataset":{
-        "ds1": {
-            "type":2,
-            "priority":1,
-            "url":"WellLogDataParser/CurveData",
-            "params":{
-                "file": "",
-                "curveName":""
-            }
+  "vers": "1.0",
+  "coorSys": "",
+  "dataset":{
+    "ds1": {
+      "type":2,
+      "priority":1,
+      "url":"WellLogDataParser/CurveData",
+      "params":{
+        "file": "",
+        "curveName":""
+      }
+    }
+  },
+  "seriesMapping":[
+    {
+      "source":"ds1",
+      "seriesName": "SW2-1井-测井解释图"
+    }
+  ],
+  "series": [
+    {
+      "name":"SW2-1井-测井解释图",
+      "type":"wellLogging",
+      "top": 20,
+      "scale": 500,
+      "depth": [800, 2250],
+
+      "itemStyle": {
+        "header":{
+          "borderWidth": 1
+        },
+        "title":{
+          "show": true,
+          "borderWidth": 0,
+          "textStyle":{
+            "fontSize": 25
+          }
         }
-	},
-	"seriesMapping":[
+      },
+      "data":[
         {
-            "source":"ds1",
-            "seriesName": "SW2-1井-测井解释图"
+          "type": "track",
+          "name": "孔隙度",
+          "width": 150,
+          "children": [
+            {
+              "type": "curve",
+              "name": "AC",
+              "aliasName": "声波时差",
+              "scaleType": "lin",
+              "leftScale": 180,
+              "rightScale": 350,
+              "secondScale": 1,
+              "itemStyle": {
+              },
+              "lineStyle":{
+                "color": "red",
+                "width": 2,
+                "type": "solid"
+              },
+              "data": []
+            }
+          ]
+        },
+        {
+          "type": "track",
+          "name": "孔隙度",
+          "width": 150,
+          "children": [
+            {
+              "type": "curve",
+              "name": "AC",
+              "aliasName": "声波时差",
+              "mirror": true,
+              "scaleType": "lin",
+              "leftScale": 100,
+              "rightScale": 450,
+              "secondScale": -1,
+              "itemStyle": {
+              },
+              "lineStyle":{
+                "color": "blue",
+                "width": 2,
+                "type": "solid"
+              },
+              "data": []
+            }
+
+          ]
         }
-    ],
-	"series": [
-		{
-                        "name":"SW2-1井-测井解释图",
-                        "type":"wellLogging",
-                        "top": 20,
-                        "scale": 50,
-                        "depth": [800, 2250],
-
-                        "itemStyle": {
-                            "header":{
-                                "borderWidth": 1
-                            },
-                            "title":{
-                                "show": true,
-                                "borderWidth": 0,
-                                "textStyle":{
-                                    "fontSize": 25
-                                }
-                            }
-                        },
-                        "data":[
-							{
-                                "type": "track",
-                                "name": "微电极曲线",
-                                "width": 150,
-                                "children": [
-                                    {
-                                        "type": "curve",
-                                        "name": "MLU",
-                                        "aliasName": "微电位",
-
-                                        "scaleType": "lin",
-                                        "leftScale": 1.5,
-                                        "rightScale": 2.5,
-                                        "secondScale": 1,
-
-                                        "itemStyle": {
-                                        },
-                                        "lineStyle":{
-                                            "color": "RED",
-                                            "width": 2,
-                                            "type":"solid"
-                                        },
-                                        "data": []
-                                    }
-                                ]
-                            },
-							{
-                                "type": "track",
-                                "name": "电阻率曲线",
-                                "width": 150,
-								"scaleType": "log",
-                                "leftScale": 0.1,
-                                "rightScale": 1000,
-                                "children": [
-                                    {
-                                        "type": "curve",
-                                        "name": "LLD",
-                                        "aliasName": "深侧向电阻率",
-                                        "scaleType": "log",
-                                        "leftScale": 1,
-                                        "rightScale": 1000,
-
-                                        "itemStyle": {
-                                        },
-                                        "lineStyle":{
-                                            "color": "green",
-                                            "width": 2,
-                                            "type": "solid"
-                                        },
-                                        "data": []
-                                    }
-                                ]
-                            },
-                          {
-                            "type": "track",
-                            "name": "微电极曲线",
-                            "width": 150,
-                            "children": [
-                              {
-                                "type": "curve",
-                                "name": "MLU",
-                                "aliasName": "微电位",
-
-                                "scaleType": "lin",
-                                "leftScale": 1.5,
-                                "rightScale": 2.5,
-                                "secondScale": -1,
-
-                                "itemStyle": {
-                                },
-                                "lineStyle":{
-                                  "color": "blue",
-                                  "width": 2,
-                                  "type":"solid"
-                                },
-                                "data": []
-                              }
-                            ]
-                          }
-                        ]
-                    }
-	],
-	"fonts":{
-		"1": {
-			"fontFamily": "Arial",
-			"fontStyle": "normal",
-			"fontSize": "40px",
-			"fontColor": "#000000",
-			"fontWeight": "bold",
-			"textAlign": "left",
-			"textVerticalAlign": "middle",
-			"textRotation": "0"
-		},
-		"2": {
-			"fontFamily": "Georgia",
-			"fontStyle": "normal",
-			"fontSize": "12px",
-			"fontColor": "#000000",
-			"fontWeight": "normal",
-			"textAlign": "left",
-			"textVerticalAlign": "middle",
-			"textRotation": "0"
-		},
-		"3": {
-			"fontFamily": "serif",
-			"fontStyle": "normal",
-			"fontSize": "9px",
-			"fontColor": "#000000",
-			"fontWeight": "normal",
-			"textAlign": "left",
-			"textVerticalAlign": "middle",
-			"textRotation": "0"
-		}
-	}
+      ]
+    }
+  ],
+  "fonts":{
+    "1": {
+      "fontFamily": "Arial",
+      "fontStyle": "normal",
+      "fontSize": "40px",
+      "fontColor": "#000000",
+      "fontWeight": "bold",
+      "textAlign": "left",
+      "textVerticalAlign": "middle",
+      "textRotation": "0"
+    },
+    "2": {
+      "fontFamily": "Georgia",
+      "fontStyle": "normal",
+      "fontSize": "12px",
+      "fontColor": "#000000",
+      "fontWeight": "normal",
+      "textAlign": "left",
+      "textVerticalAlign": "middle",
+      "textRotation": "0"
+    },
+    "3": {
+      "fontFamily": "serif",
+      "fontStyle": "normal",
+      "fontSize": "9px",
+      "fontColor": "#000000",
+      "fontWeight": "normal",
+      "textAlign": "left",
+      "textVerticalAlign": "middle",
+      "textRotation": "0"
+    }
+  }
 
 }
