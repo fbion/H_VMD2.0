@@ -10,16 +10,19 @@ Vmd.define('hwchart.chart.WellLogging', {
         'hwchart.chart.wellLogging.track.CurveModel',
         'hwchart.chart.wellLogging.track.DepthModel',
         'hwchart.chart.wellLogging.track.FillModel',
+        'hwchart.chart.wellLogging.track.CharModel',
 
         'hwchart.chart.wellLogging.track.TrackView',
         'hwchart.chart.wellLogging.track.CurveView',
         'hwchart.chart.wellLogging.track.DepthView',
         'hwchart.chart.wellLogging.track.FillView',
+        'hwchart.chart.wellLogging.track.CharView',
 
         'hwchart.chart.wellLogging.track.CurveLayout',
         'hwchart.chart.wellLogging.track.DepthLayout',
         'hwchart.chart.wellLogging.track.TrackLayout',
         'hwchart.chart.wellLogging.track.FillLayout',
+        'hwchart.chart.wellLogging.track.CharLayout',
 
         'hwchart.chart.wellLogging.dataZoom.DataZoomModel',
         'hwchart.chart.wellLogging.dataZoom.DataZoomView',
@@ -37,5 +40,7 @@ Vmd.define('hwchart.chart.WellLogging', {
     hwcharts.registerWellLogLayout(hwchart.chart.wellLogging.track.TrackLayout);
     hwcharts.registerWellLogLayout(hwchart.chart.wellLogging.track.DepthLayout);
     hwcharts.registerWellLogLayout(hwchart.chart.wellLogging.track.CurveLayout);
+    hwcharts.registerWellLogLayout(hwchart.chart.wellLogging.track.CharLayout);
+    hwcharts.registerWellLogLayout(hwchart.chart.wellLogging.track.FillLayout);
 
 })

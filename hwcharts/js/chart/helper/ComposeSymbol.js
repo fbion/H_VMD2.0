@@ -85,7 +85,7 @@ Vmd.define('hwchart.chart.helper.ComposeSymbol', {
     composeSymbolProto.updateData = function () {
         var symbolData = symbolDataStorage.retrieveComposeSymbol(this._symbolId, this._useCache);
 
-        if(this._useCache){
+        if(this._useCache && symbolData){
             var image = new zrender.Image({
                 style: {
                     x: 0,
