@@ -25,6 +25,8 @@ under the License.
     <script src="../js/core/base.min.js"></script>
 
     <script src="../js/core/base-ext.js"></script>
+    <script src="../../lib/dhtmlx/dhtmlx.js"></script>
+
     <!--zrender-->
     <script src="../../lib/zrender/zrender.js"></script>
     <script src="../../lib/jquery/jquery.min.js"></script>
@@ -61,20 +63,8 @@ under the License.
             //'hwchart.component.MarkPoint'
         ], function () {
 
-            var arr = [1,2,3,4,5,6,7,8,9];
-
-            var pre = null;
-            var next = null;
-            var cur = null;
-            for(var i = 0; i < arr.length; i++) {
-                cur = next ? next : arr[i] + "-";
-                next = arr[i + 1] && (arr[i + 1] + "-");
-
-                pre = cur;
-            }
-
             chart = hwcharts.init(document.getElementById('main'), null, {});
-			 var path = hwchartsPATH + '/templates/defaults/测井曲线.json';
+			 var path = hwchartsPATH + '/templates/defaults/SW2-1.json';
              chart.loadTemplate(path, {
                     host: 'www.hanweikeji.com:8050',
                     GeologyAlgorithmHost: '192.168.1.186:5015/GeologyAlgorithm',

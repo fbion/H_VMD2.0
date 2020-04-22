@@ -21,7 +21,7 @@
             segs: []
         },
         buildPath: function (path, shape) {
-            var segs = shape.segs;
+            var segs = shape.segs || [];
 
             for (var i = 0; i < segs.length;) {
                 var count = segs[i++];

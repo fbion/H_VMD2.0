@@ -92,7 +92,9 @@ Vmd.define('hwchart.chart.wellLogging.WellLoggingView', {
             var models = ecModel.findComponents({
                 mainType: 'series', subType: 'wellLogging', query: payload
             });
-            if (zrUtil.indexOf(models, seriesModel) < 0) {
+
+            var payloadType = payload && payload.type;
+            if (zrUtil.indexOf(models, seriesModel) < 0 || (payloadType == 'dataZoom' && payload.seriesModel.uid != seriesModel.uid)) {
                 return;
             }
 
@@ -101,7 +103,6 @@ Vmd.define('hwchart.chart.wellLogging.WellLoggingView', {
             this.ecModel = ecModel;
 
             var targetInfo = helper.retrieveTargetInfo(payload, seriesModel);
-            var payloadType = payload && payload.type;
             var layoutInfo = seriesModel.layoutInfo;
             var isInit = !this._oldTree;
             var thisStorage = this._storage;
@@ -131,7 +132,7 @@ Vmd.define('hwchart.chart.wellLogging.WellLoggingView', {
             //     ? this._doAnimation(containerGroup, renderResult, seriesModel, reRoot)
             //     : renderResult.renderFinally();
 
-            this._resetController(api);
+            // this._resetController(api);
 
             !payloadType && this._renderScroller(seriesModel, ecModel, api, layoutInfo);
         },
@@ -549,12 +550,16 @@ Vmd.define('hwchart.chart.wellLogging.WellLoggingView', {
             var dataZoomModels = seriesModel.dataZoom;
             var containerGroup = this._containerGroup;
             var dataZoomViews = this._dataZoomViews;
+
+            if(!seriesModel.get("dataZoomEnabled")) {
+                return;
+            }
+
             zrUtil.each(dataZoomModels, function(dataZoomModel, index){
                 var DataZoom = ComponentView.getClass('wellLogging', 'dataZoom');
-
                 var dataZoomView = dataZoomViews[index] || (dataZoomViews[index] = new DataZoom());
                 dataZoomView.init(ecModel, api);
-                dataZoomView.render(dataZoomModel, ecModel, api);
+                dataZoomView.render(dataZoomModel, ecModel, seriesModel, api);
 
                 containerGroup.add(dataZoomView.group);
             });

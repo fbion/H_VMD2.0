@@ -1,4 +1,4 @@
-Vmd.define('hwchart.chart.wellLogging.track.CurveLayout', {
+Vmd.define('hwchart.chart.wellLogging.track.FillLayout', {
     requires: []
 }, function () {
     var zrUtil = zrender.util;
@@ -105,8 +105,8 @@ Vmd.define('hwchart.chart.wellLogging.track.CurveLayout', {
         return result.concat(append);
     };
 
-    hwchart.chart.wellLogging.track.CurveLayout = {
-        type: 'curve',
+    hwchart.chart.wellLogging.track.FillLayout = {
+        type: 'fill',
         reset: function (treeNode) {
             var nodeModel = treeNode.getModel();
 
@@ -151,7 +151,7 @@ Vmd.define('hwchart.chart.wellLogging.track.CurveLayout', {
                     x = nextPoint ? nextPoint[0] : xAxis.dataToCoord(data[i][0]);
                     y = nextPoint ? nextPoint[1] : yAxis.dataToCoord(data[i][1]);
 
-                    originData[(i << 1) + 1] = invert ? (left + right - x) : x;
+                    originData[(i << 1) + 1] = x;
                     originData[(i << 1) + 2] = y;
 
                     //超出显示区域根据第二比例进行压缩
@@ -222,7 +222,7 @@ Vmd.define('hwchart.chart.wellLogging.track.CurveLayout', {
                     x = xAxis.dataToCoord(data[i][0]);
                     y = yAxis.dataToCoord(data[i][1]);
 
-                    originData[offset] = invert ? (left + right - x) : x;
+                    originData[offset] = x;
                     originData[offset + 1] = y;
 
                     if(mirror) {

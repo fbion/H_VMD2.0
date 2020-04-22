@@ -2003,6 +2003,7 @@ copyright：Copyright @1999-2016, hwkj, All Rights Reserved
             this.set("ismulti", window.dhx4.s2b(celltypejson[getAttrName("ismulti", enattr)]));
             this.set("seperator", { semicolon: ";", comma: ",", number: "、" }[celltypejson[getAttrName("separator", enattr)]]||celltypejson[getAttrName("separator", enattr)]);
             this.set("noValueClear", celltypejson[getAttrName("noValueClear", enattr)]);
+            this.set("showFirstTerm", celltypejson[getAttrName("showFirstTerm", enattr)]);
             this.set("percentWidth", (parseInt(celltypejson[getAttrName("width", enattr)]) || 100) / 100);
             this.set("height", celltypejson[getAttrName("height", enattr)] && parseInt(celltypejson[getAttrName("height", enattr)]));
             
@@ -3729,6 +3730,10 @@ copyright：Copyright @1999-2016, hwkj, All Rights Reserved
                 default:
                     return "";
             }
+        };
+
+        this.first = function(){
+            return this.dhtmlxDatastore.item(this.dhtmlxDatastore.first());
         };
 
         this.find = function (functor) {

@@ -18,7 +18,8 @@
 */
 Vmd.define('hwchart.util.lineSymbolStorage', {
     requires: [
-        'hwchart.config.LineSymbolDesc']
+        'hwchart.config.LineSymbolDesc'
+    ]
 }, function () {
 
     var LineSymbolDesc = hwchart.config.LineSymbolDesc;

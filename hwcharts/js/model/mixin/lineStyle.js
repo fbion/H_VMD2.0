@@ -8,7 +8,7 @@
     var makeStyleMapper = hwchart.model.mixin.makeStyleMapper;
 
    
-    var getLineStyle = makeStyleMapper([['lineWidth', 'width'], ['stroke', 'color'], ['opacity'], ['shadowBlur'], ['shadowOffsetX'], ['shadowOffsetY'], ['shadowColor']]);
+    var getLineStyle = makeStyleMapper([['lineWidth', 'width'],["lineDash", "lineDash"], ['stroke', 'color'], ['opacity'], ['shadowBlur'], ['shadowOffsetX'], ['shadowOffsetY'], ['shadowColor']]);
     var _default = {
         getLineStyle: function (excludes) {
             var style = getLineStyle(this, excludes); // Always set lineDash whether dashed, otherwise we can not
@@ -18,6 +18,12 @@
             return style;
         },
         getLineDash: function (lineWidth) {
+
+            var lineDash = this.get('lineDash');
+            if(lineDash instanceof Array) {
+                return lineDash;
+            }
+
             if (lineWidth == null) {
                 lineWidth = 1;
             }

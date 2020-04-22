@@ -241,13 +241,6 @@
 	}],
 	"series": [
 		{
-			"type": "isoArea",
-			"name": "等温区",
-			"dependentSeries": ["油井井位","油压"],
-			"data": [],
-			"dense": 5
-		},
-		{
 			"type": "area",
 			"name": "砂体范围",
 			"data": [],

@@ -97,10 +97,10 @@ Vmd.define('hwchart.chart.wellLogging.WellLoggingSeries', {
             animationDurationUpdate: 900,
             animationEasing: 'quinticInOut',
 
+            dataZoomEnabled: true,
             dataZoom: [{
                 type: 'slider',
                 filterMode: "empty",
-                disabled: false,
                 yAxisIndex: 0,
                 width: 10,
                 start: 0,
@@ -261,7 +261,7 @@ Vmd.define('hwchart.chart.wellLogging.WellLoggingSeries', {
             return index;
         },
 
-        getBodyHeight: function(api){
+        getBodyHeight: function(api) {
             var layoutInfo = layout.getLayoutRect(
                 this.getBoxLayoutParams(),
                 {
@@ -269,6 +269,10 @@ Vmd.define('hwchart.chart.wellLogging.WellLoggingSeries', {
                     height: api.getHeight()
                 }
             );
+
+            if(!this.get("dataZoomEnabled")) {
+                return this.getVAxis().scale.getPixHeight();
+            }
 
             var viewRoot = this.getViewRoot();
             return layoutInfo.height - (this.get("top") || 0) - (viewRoot.titleHeight + viewRoot.headerHeight)
@@ -429,6 +433,56 @@ Vmd.define('hwchart.chart.wellLogging.WellLoggingSeries', {
         return treeNode.width = groupWidth;
     }
 
+    function setTrackHeight(treeNode, height) {
+        each(treeNode.children, function (child) {
+            var childModel = child.getModel();
+            var childType = childModel.get('type');
+
+            var titleHeight = child.titleHeight || 0;
+            if((titleHeight + child.headerHeight) >= height) {
+                return;
+            }
+
+            child.headerHeight = height - titleHeight;
+
+            //所有的元素都是track时，重新设置下面所有的子元素高度
+            var isAllTrack = true;
+            each(child.children, function (child1) {
+                var child1Model = child1.getModel();
+                var child1Type = child1Model.get('type');
+                child1Type != 'track' && (isAllTrack = false);
+            });
+            if(isAllTrack) {
+                setTrackHeight(child, child.headerHeight);
+                return;
+            }
+
+            var groupHeight = 0;
+            var elementNums = 0;
+
+            //统计所有道的高度和非道元素数
+            each(child.children, function (child1) {
+                var child1Model = child1.getModel();
+                var child1Type = child1Model.get('type');
+                if(child1Type != 'track'){
+                    elementNums++;
+                }
+                else{
+                    groupHeight = Math.max(groupHeight, child1.titleHeight + child1.headerHeight);
+                }
+            });
+
+            //将多余的高度给非track元素
+            each(child.children, function (child1) {
+                var child1Model = child1.getModel();
+                var child1Type = child1Model.get('type');
+                if(child1Type != 'track'){
+                    child1.headerHeight = (height - groupHeight) / elementNums;
+                }
+            });
+        });
+    };
+
     /**
      * @param {Object} treeNode
      */
@@ -464,9 +518,22 @@ Vmd.define('hwchart.chart.wellLogging.WellLoggingSeries', {
             if(!child.children || child.children == 0){
                 return;
             }
+
+            //所有的元素都是track时，重新设置下面所有的子元素高度
+            var isAllTrack = true;
+            each(child.children, function (child1) {
+                var child1Model = child1.getModel();
+                var child1Type = child1Model.get('type');
+                child1Type != 'track' && (isAllTrack = false);
+            });
+            if(isAllTrack) {
+                setTrackHeight(child, sumGroupHeaderHeight)
+            }
+
             var groupHeight = 0;
             var elementNums = 0;
 
+            //统计所有道的高度和非道元素数
             each(child.children, function (child1) {
                 var child1Model = child1.getModel();
                 var child1Type = child1Model.get('type');
@@ -477,6 +544,8 @@ Vmd.define('hwchart.chart.wellLogging.WellLoggingSeries', {
                     groupHeight = Math.max(groupHeight, child1.titleHeight + child1.headerHeight);
                 }
             });
+
+            //将多余的高度给非track元素
             each(child.children, function (child1) {
                 var child1Model = child1.getModel();
                 var child1Type = child1Model.get('type');

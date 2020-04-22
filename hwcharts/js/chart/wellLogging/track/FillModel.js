@@ -1,4 +1,4 @@
-﻿Vmd.define('hwchart.chart.wellLogging.track.CurveModel', {
+﻿Vmd.define('hwchart.chart.wellLogging.track.FillModel', {
     requires: [
         'hwchart.util.format',
         'hwchart.chart.wellLogging.track.BaseModel'
@@ -8,9 +8,9 @@
     var formatUtil = hwchart.util.format;
     var BaseModel = hwchart.chart.wellLogging.track.BaseModel;
 
-    var CurveModel = BaseModel.extend({
+    var FillModel = BaseModel.extend({
 
-        type: 'wellLogging.curve',
+        type: 'wellLogging.fill',
 
         /**
          * @protected
@@ -101,5 +101,5 @@
         }
     });
 
-    hwchart.chart.wellLogging.track.CurveModel = CurveModel;
+    hwchart.chart.wellLogging.track.FillModel = FillModel;
 })

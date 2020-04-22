@@ -108,9 +108,10 @@
         /**
          * @override
          */
-        render: function (dataZoomModel, ecModel, api, payload) {
+        render: function (dataZoomModel, ecModel, seriesModel, api, payload) {
             this.dataZoomModel = dataZoomModel;
             this.ecModel = ecModel;
+            this.seriesModel = seriesModel;
             this.api = api;
 
             throttle.createOrUpdate(
@@ -793,6 +794,7 @@
                 type: 'dataZoom',
                 from: this.uid,
                 dataZoomId: this.dataZoomModel.id,
+                seriesModel: this.seriesModel,
                 start: range[0],
                 end: range[1]
             });

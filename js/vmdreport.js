@@ -230,7 +230,7 @@ Ext.define("vmd.comp.Report", {
 									callBack.apply(hwReport, [hwReport.grid, hwReport]);
 								}
 							});
-							vmdreport.myMask.hide();
+							//vmdreport.myMask.hide();
 						},true,vmd.virtualPath,function(){
 							// 表头定制文件不存在
 							vmdreport.hwReport.loadJSON(Ext.encode(res), function() {
@@ -244,7 +244,7 @@ Ext.define("vmd.comp.Report", {
 									callBack.apply(hwReport, [hwReport.grid, hwReport]);
 								}
 							});
-							vmdreport.myMask.hide();
+							//vmdreport.myMask.hide();
 							return true
 						});
 					},

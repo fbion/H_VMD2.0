@@ -11,13 +11,32 @@
    
 }, function () {
     var graphic = hwchart.util.graphic;
-    var zrUtil = zrender.util;
+    var _util = zrender.util;
+    var isObject = _util.isObject;
+    var isArray = _util.isArray;
+    var filter = _util.filter;
+    var indexOf = _util.indexOf;
+    var each = _util.each;
+    var defaults = _util.defaults;
+    var isFunction = _util.isFunction;
+    var clone = _util.clone;
+    var retrieve3 = _util.retrieve3;
+    var inherits = _util.inherits;
+    var map = _util.map;
+
     var lineSymbolStorage = hwchart.util.lineSymbolStorage;
     var symbolDataStorage = hwchart.util.symbolDataStorage;
     var lineSymbolMap = hwchart.config.lineSymbolMap;
     var SymbolCtor = hwchart.chart.helper.Symbol;
     var ComposeSymbol = hwchart.chart.helper.ComposeSymbol;
     var lineSymbolUtil = hwchart.util.lineSymbol;
+
+    function normalizeSymbolScale(symbolSize, rect) {
+        if (!isArray(symbolSize)) {
+            symbolSize = [symbolSize, symbolSize];
+        }
+        return [symbolSize[0] / rect.width, symbolSize[1] / rect.height];
+    }
 
     /**
      * @constructor
@@ -60,12 +79,12 @@
         var zoom = geo.coordinateSystem._zoom;
         var zoomScale = Math.min(scale * zoom, 1);
         if (!isNaN(scale)) {
-            lineSymbol = zrUtil.clone(lineSymbol);
+            lineSymbol = clone(lineSymbol);
             if(lineSymbol.lineStyle && lineSymbol.lineStyle.lineWidth){
                 lineSymbol.lineStyle.lineWidth = lineSymbol.lineStyle.lineWidth * zoomScale;
             }
             if(lineSymbol.symbolStyle && lineSymbol.symbolStyle.size){
-                lineSymbol.symbolStyle.size = zrUtil.map(lineSymbol.symbolStyle.size, function(item){return item * zoomScale})
+                lineSymbol.symbolStyle.size = map(lineSymbol.symbolStyle.size, function(item){return item * zoomScale})
             }
         }
 
@@ -82,6 +101,8 @@
             var symbolEl = null;
             if(symbolDataStorage.retrieveComposeSymbol(rawDataItem.symbol)){
                 symbolEl = new ComposeSymbol(rawDataItem.symbol);
+                var scale = normalizeSymbolScale(rawDataItem.size, symbolEl.getBoundingRect());
+                symbolEl.attr('scale', scale);
             }
             else{
                 symbolEl = new SymbolCtor(symbolData, idx);
@@ -103,7 +124,7 @@
         var lineStyle = lineData.hostModel.getModel('lineStyle').getLineStyle();
         var symbolLineStyle = lineSymbolMap[lineData.hostModel.get('lineStyle.type')] || {};
         var lineSymbol = lineSymbolStorage.retrieveLineSymbol(symbolLineStyle.type) || {};
-        var lineWidth = zrUtil.retrieve3(lineSymbol.lineStyle && lineSymbol.lineStyle.lineWidth, symbolLineStyle.lineWidth, lineStyle.lineWidth);
+        var lineWidth = retrieve3(lineSymbol.lineStyle && lineSymbol.lineStyle.lineWidth, symbolLineStyle.lineWidth, lineStyle.lineWidth);
         line.setStyle({
             lineDash: [lineWidth * 4, lineWidth * 4]
         });
@@ -154,7 +175,7 @@
         }
 
         if (!seriesScope || lineData.hasItemOption) {
-            lineStyle = zrUtil.defaults(
+            lineStyle = defaults(
                 itemModel.getModel('lineStyle').getLineStyle(),
                 symbolLineStyle,
                 true
@@ -168,12 +189,12 @@
         var geo = ecModel.getComponent('geo');
         var zoom = geo.coordinateSystem._zoom;
         if(!isNaN(scale) && lineStyle.lineWidth){
-            lineStyle = zrUtil.clone(lineStyle);
+            lineStyle = clone(lineStyle);
             var zoomScale = Math.min(scale * zoom, 1);
             lineStyle.lineWidth *= zoomScale;
         }
 
-        line.useStyle(zrUtil.defaults(
+        line.useStyle(defaults(
             {
                 strokeNoScale: true,
                 fill: 'none',
@@ -205,7 +226,7 @@
         var zoom = geo.coordinateSystem._zoom;
         var zoomScale = Math.min(scale * zoom, 1);
         if(!isNaN(scale)){
-            var lineWidth = zrUtil.retrieve3(lineSymbol.lineStyle && lineSymbol.lineStyle.lineWidth, symbolLineStyle.lineWidth, lineStyle.lineWidth);
+            var lineWidth = retrieve3(lineSymbol.lineStyle && lineSymbol.lineStyle.lineWidth, symbolLineStyle.lineWidth, lineStyle.lineWidth);
             if(!isNaN(lineWidth)){
                 polyline.setStyle({
                     lineWidth: lineWidth * zoomScale
@@ -218,7 +239,7 @@
         }
     };
 
-    zrUtil.inherits(SymbolPolyline, graphic.Group);
+    inherits(SymbolPolyline, graphic.Group);
 
     hwchart.chart.helper.SymbolPolyline = SymbolPolyline;
 });

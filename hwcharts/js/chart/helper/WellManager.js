@@ -371,8 +371,10 @@ Vmd.define('hwchart.chart.helper.WellManager', {
 
             var props = inner(ecModel);
             var itemGroup = props._graphicEls[id];
-            if(itemGroup){
-                itemGroup.removeAll();
+
+            var el = data.getItemGraphicEl(idx);
+            if(itemGroup && el){
+                itemGroup.remove(el);
             }
         },
 

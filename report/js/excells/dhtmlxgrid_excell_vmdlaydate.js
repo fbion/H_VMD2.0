@@ -218,10 +218,11 @@ eXcell_vmdlaydate.prototype.toDhtmlxFormat = function (format) {
         .replace(/dd/g, "%D")
         .replace(/d/g, "%j")
         .replace(/%D/g, "%d")
-        .replace(/HH/g, "%H")
-		.replace(/(?<!%)(H)/g, "%G")
+        .replace(/HH/g, "%Z")
+        .replace(/H/g, "%G")
         .replace(/mm/g, "%i")
-        .replace(/ss/g, "%s");
+        .replace(/ss/g, "%s")
+        .replace(/Z/g, "H");
 }
 
 eXcell_vmdlaydate.prototype.toLaydateFormat = function (format) {

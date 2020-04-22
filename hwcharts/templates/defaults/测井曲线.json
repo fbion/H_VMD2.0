@@ -38,7 +38,36 @@
           }
         }
       },
-      "data":[
+      "data":[{
+        "type": "track",
+        "name": "孔隙度",
+        "width": 150,
+        "children": [
+          {
+            "type": "curve",
+            "name": "AC",
+            "aliasName": "声波时差",
+            "scaleType": "lin",
+            "leftScale": 100,
+            "rightScale": 350,
+            "secondScale": -1,
+
+            "curveFills":[{
+              "name": "",
+              "fillTo":"left",
+              "fillStyle": "green"
+            }],
+            "itemStyle": {
+            },
+            "lineStyle":{
+              "color": "red",
+              "width": 2,
+              "type": "solid"
+            },
+            "data": []
+          }
+        ]
+      },
         {
           "type": "track",
           "name": "孔隙度",
@@ -49,9 +78,31 @@
               "name": "AC",
               "aliasName": "声波时差",
               "scaleType": "lin",
-              "leftScale": 180,
+              "leftScale": 100,
               "rightScale": 350,
-              "secondScale": 1,
+              "secondScale": 0,
+              "headerFill":{
+                "textStyle":{
+                  "color": "red"
+                }
+              },
+              "curveFills":[{
+                "name": "",
+                "fillTo":"left",
+                "fillStyle": {
+                  "type": "linear",
+                  "x": 0,
+                  "y": 0,
+                  "x2": 1,
+                  "y2": 0,
+                  "colorStops": [{
+                  "offset": 0, "color": "red"
+                  }, {
+                    "offset": 1, "color": "blue"
+                  }],
+                  "global": false
+                }
+              }],
               "itemStyle": {
               },
               "lineStyle":{
@@ -72,11 +123,20 @@
               "type": "curve",
               "name": "AC",
               "aliasName": "声波时差",
-              "mirror": true,
+              "unit": "cm",
               "scaleType": "lin",
               "leftScale": 100,
-              "rightScale": 450,
-              "secondScale": -1,
+              "rightScale": 350,
+              "secondScale": 0,
+              "curveFills":[{
+                "name": "11",
+                "fillTo":"left",
+                "fillStyle": "WCJW-CCB0022H"
+              },{
+                "name": "22",
+                "fillTo":"right",
+                "fillStyle": "WCJW-CCB0022M"
+              }],
               "itemStyle": {
               },
               "lineStyle":{

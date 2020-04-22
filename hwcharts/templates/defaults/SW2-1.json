@@ -1,0 +1,438 @@
+{
+	"vers": "1.0",
+	"coorSys": "",
+	"dataset":{
+        "ds1": {
+            "type":2,
+            "priority":1,
+            "url":"WellLogDataParser/CurveData",
+            "params":{
+                "file": "",
+                "curveName":""
+            }
+        }
+	},
+	"seriesMapping":[
+        {
+            "source":"ds1",
+            "seriesName": "SW2-1井-测井解释图"
+        }
+    ],
+	"series": [
+		{
+                        "name":"SW2-1井-测井解释图",
+                        "type":"wellLogging",
+                        "top": 20,
+                        "scale": 500,
+                        "depth": [800, 2250],
+
+                        "itemStyle": {
+                            "header":{
+                                "borderWidth": 1
+                            },
+                            "title":{
+                                "show": true,
+                                "borderWidth": 0,
+                                "textStyle":{
+                                    "fontSize": 25
+                                }
+                            }
+                        },
+                        "data":[
+                            {
+                                "type": "track",
+                                "name": "工程测井曲线",
+                                "width": 150,
+                                "children": [
+                                    {
+                                        "type": "curve",
+                                        "name": "BS",
+                                        "aliasName": "钻头直径",
+                                        "unit": "(cm)",
+                                        "scaleType": "lin",
+                                        "leftScale": 10,
+                                        "rightScale": 50,
+                                        "itemStyle": {
+                                        },
+                                        "lineStyle":{
+                                            "color": "black",
+                                            "width": 2,
+                                            "lineDash": [10,2,2,2]
+                                        },
+                                        "data": []
+                                    },
+									{
+                                        "type": "curve",
+                                        "name": "CAL1",
+                                        "aliasName": "井径1",
+                                        "unit": "(cm)",
+                                        "scaleType": "lin",
+                                        "leftScale": 10,
+                                        "rightScale": 50,
+                                        "mirror": false,
+                                        "itemStyle": {
+                                        },
+                                        "lineStyle":{
+                                            "color":"red",
+                                            "width":1,
+                                            "type":"solid"
+                                        },
+                                        "data": []
+                                    },
+									{
+                                        "type": "curve",
+                                        "name": "CAL2",
+                                        "aliasName": "井径2",
+                                        "unit": "(cm)",
+                                        "scaleType": "lin",
+                                        "leftScale": 10,
+                                        "rightScale": 50,
+
+                                        "itemStyle": {
+                                        },
+                                        "lineStyle":{
+                                            "color": "blue",
+                                            "width": 2,
+                                            "type": "dashed"
+                                        },
+                                        "data": []
+                                    }
+                                    
+                                ]
+                            },
+							{
+                                "type": "track",
+                                "name": "微电极曲线",
+                                "width": 150,
+                                "children": [
+                                    {
+                                        "type": "curve",
+                                        "name": "MLU",
+                                        "aliasName": "微电位",
+                                        "unit": "Ωm",
+                                        "scaleType": "lin",
+                                        "leftScale": 0,
+                                        "rightScale": 30,
+
+                                        "itemStyle": {
+                                        },
+                                        "lineStyle":{
+                                            "color": "red",
+                                            "width": 2,
+                                            "type":"solid"
+                                        },
+                                        "data": []
+                                    },
+									{
+                                        "type": "curve",
+                                        "name": "MLD",
+                                        "aliasName": "微梯度",
+                                        "unit": "Ωm",
+                                        "scaleType": "lin",
+                                        "leftScale": 0,
+                                        "rightScale": 30,
+
+                                        "itemStyle": {
+                                        },
+                                        "lineStyle":{
+                                            "color":"green",
+                                            "width":2,
+                                            "type": "dashed"
+                                        },
+                                        "data": []
+                                    }
+                                ]
+                            },
+							{
+                                "type": "track",
+                                "name": "泥质指示曲线",
+                                "width": 150,
+                                "children": [
+                                    {
+                                        "type": "curve",
+                                        "name": "R25",
+                                        "aliasName": "2.5米底部梯度电阻率",
+                                        "unit": "Ωm",
+                                        "scaleType": "lin",
+                                        "leftScale": 0,
+                                        "rightScale": 200,
+
+                                        "itemStyle": {
+                                        },
+                                        "lineStyle":{
+                                            "color": "red",
+                                            "width": 2,
+                                            "type": "dashed"
+                                        },
+                                        "data": []
+                                    },
+									{
+                                        "type": "curve",
+                                        "name": "SP",
+                                        "aliasName": "自然电位(校)",
+                                        "unit": "mv",
+                                        "scaleType": "lin",
+                                        "leftScale": -40,
+                                        "rightScale": 10,
+
+                                        "itemStyle": {
+                                        },
+                                        "lineStyle":{
+                                            "color":"green",
+                                            "width":2,
+                                            "type": "dashed"
+                                        },
+                                        "data": []
+                                    },
+									{
+                                        "type": "curve",
+                                        "name": "GR",
+                                        "aliasName": "自然伽马",
+                                        "unit": "API",
+                                        "scaleType": "lin",
+                                        "leftScale": 20,
+                                        "rightScale": 220,
+
+                                        "itemStyle": {
+                                        },
+                                        "lineStyle":{
+                                            "color": "blue",
+                                            "width": 2,
+                                            "type": "solid"
+                                        },
+                                        "data": []
+                                    }
+
+                                ]
+                            },
+							{
+                                "type": "track",
+                                "name": "电阻率曲线",
+                                "width": 150,
+								"scaleType": "log",
+                                "leftScale": 0.1,
+                                "rightScale": 1000,
+                                "children": [
+                                    {
+                                        "type": "curve",
+                                        "name": "LLD",
+                                        "aliasName": "深侧向电阻率",
+                                        "unit": "Ωm",
+                                        "scaleType": "log",
+                                        "leftScale": 1,
+                                        "rightScale": 1000,
+
+                                        "itemStyle": {
+                                        },
+                                        "lineStyle":{
+                                            "color": "red",
+                                            "width": 2,
+                                            "type": "solid"
+                                        },
+                                        "data": []
+                                    },
+									{
+                                        "type": "curve",
+                                        "name": "LLS",
+                                        "aliasName": "浅侧向电阻率",
+                                        "unit": "Ωm",
+                                        "scaleType": "log",
+                                        "leftScale": 1,
+                                        "rightScale": 1000,
+
+                                        "itemStyle": {
+                                        },
+                                        "lineStyle":{
+                                            "color": "green",
+                                            "width": 2,
+                                            "type": "dashed"
+                                        },
+                                        "data": []
+                                    },
+									{
+                                        "type": "curve",
+                                        "name": "MSFL",
+                                        "aliasName": "微球聚焦电阻率",
+                                        "unit": "Ωm",
+                                        "scaleType": "log",
+                                        "leftScale": 1,
+                                        "rightScale": 1000,
+
+                                        "itemStyle": {
+                                        },
+                                        "lineStyle":{
+                                            "color": "blue",
+                                            "width": 2,
+                                            "type": "solid"
+                                        },
+                                        "data": []
+                                    }
+
+                                ]
+                            },
+							{
+                                "type": "track",
+                                "name": "孔隙度",
+                                "width": 150,
+                                "children": [
+                                    {
+                                        "type": "curve",
+                                        "name": "AC",
+                                        "aliasName": "声波时差",
+                                        "unit": "(us/m)",
+                                        "scaleType": "lin",
+                                        "leftScale": 180,
+                                        "rightScale": 430,
+                                        "itemStyle": {
+                                        },
+                                        "lineStyle":{
+                                            "color": "red",
+                                            "width": 2,
+                                            "type": "solid"
+                                        },
+                                        "data": []
+                                    },
+									{
+                                        "type": "curve",
+                                        "name": "DEN",
+                                        "aliasName": "补偿密度",
+                                        "unit": "(g/cm³)",
+                                        "scaleType": "lin",
+                                        "leftScale": 0.8,
+                                        "rightScale": 2.8,
+                                        "itemStyle": {
+                                        },
+                                        "lineStyle":{
+                                            "color": "green",
+                                            "width": 2,
+                                            "type": "dashed"
+                                        },
+                                        "data": []
+                                    },
+									{
+                                        "type": "curve",
+                                        "name": "CNL",
+                                        "aliasName": "补偿中子",
+                                        "unit": "(%)",
+                                        "scaleType": "lin",
+                                        "leftScale": 0,
+                                        "rightScale": 50,
+                                        "itemStyle": {
+                                        },
+                                        "lineStyle":{
+                                            "color": "blue",
+                                            "width": 2,
+                                            "type": "dashed"
+                                        },
+                                        "data": []
+                                    }
+
+                                ]
+                            },
+                            {
+                                "type": "track",
+                                "name": "解释结论",
+                                "width": 60,
+                                "itemStyle": {
+                                    "grid": {
+                                        "show": false
+                                    }
+                                },
+                                "children": [
+                                    {
+                                        "type": "track",
+                                        "name": "",
+                                        "width": 40,
+                                        "itemStyle": {
+                                            "grid": {
+                                                "show": false
+                                            },
+                                            "title": {
+                                                "show": false
+                                            }
+                                        },
+                                        "children": [
+                                            {
+
+                                                "itemStyle": {
+                                                    "header":{
+                                                        "textStyle":{
+                                                            "fontSize": 16,
+                                                            "textLineHeight": 30
+                                                        }
+                                                    }
+                                                },
+                                                "type": "depth",
+                                                "name": "深\n度"
+                                            }]
+                                    }, {
+                                    "type": "track",
+                                    "name": "解释结论",
+                                    "width": 60,
+                                    "itemStyle": {
+                                      "grid": {
+                                        "show": false
+                                      },
+                                      "title": {
+                                        "show": false
+                                      }
+                                    },
+                                    "children": [
+                                      {
+                                        "type": "fill",
+                                        "name": "DEN",
+                                        "aliasName": "补偿密度",
+                                        "unit": "(g/cm³)",
+                                        "scaleType": "lin",
+                                        "leftScale": 0.8,
+                                        "rightScale": 2.8,
+                                        "itemStyle": {
+                                        },
+                                        "lineStyle":{
+                                          "color": "green",
+                                          "width": 2,
+                                          "type": "dashed"
+                                        },
+                                        "data": []
+                                      }
+                                    ]
+                                  }
+                                ]
+                            }
+                        ]
+                    }
+	],
+	"fonts":{
+		"1": {
+			"fontFamily": "Arial",
+			"fontStyle": "normal",
+			"fontSize": "40px",
+			"fontColor": "#000000",
+			"fontWeight": "bold",
+			"textAlign": "left",
+			"textVerticalAlign": "middle",
+			"textRotation": "0"
+		},
+		"2": {
+			"fontFamily": "Georgia",
+			"fontStyle": "normal",
+			"fontSize": "12px",
+			"fontColor": "#000000",
+			"fontWeight": "normal",
+			"textAlign": "left",
+			"textVerticalAlign": "middle",
+			"textRotation": "0"
+		},
+		"3": {
+			"fontFamily": "serif",
+			"fontStyle": "normal",
+			"fontSize": "9px",
+			"fontColor": "#000000",
+			"fontWeight": "normal",
+			"textAlign": "left",
+			"textVerticalAlign": "middle",
+			"textRotation": "0"
+		}
+	}
+
+}

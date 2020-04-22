@@ -27,10 +27,9 @@ under the License.
     <script src="../js/core/base-ext.js"></script>
     <!--zrender-->
     <script src="../../lib/zrender/zrender.js"></script>
-    <script src="../../lib/jquery.min.js"></script>
     <!--hwchart-->
     <script src="../js/hwcharts.js"></script>
-    <script src="trackData.js"></script>
+
 </head>
 <body>
 <style>
@@ -43,7 +42,6 @@ under the License.
 </style>
 <div id="main"></div>
 <script>
-
 
     var chart;
     Vmd.onReady(function () {
@@ -63,18 +61,14 @@ under the License.
 
             chart = hwcharts.init(document.getElementById('main'), null, {});
 
-            chart.on('fetchData',function(params){
-                params
-            })
-
             chart.setOption({
                 series: [
                     {
-                        name:'测井曲线图',
-                        type:'wellLogging',
+                        name:"SW2-1井-测井解释图",
+                        type:"wellLogging",
                         top: 20,
-                        scale: 1000,
-                        depth: [720, 1635],
+                        scale: 500,
+                        depth: [800, 2250],
 
                         itemStyle: {
                             header:{
@@ -88,68 +82,298 @@ under the License.
                                 }
                             }
                         },
-
                         data:[
                             {
-                                type: 'track',
-                                name: 'GR BACKUP',
-                                width: 200,
+                                type: "track",
+                                name: "工程测井曲线",
+                                width: 150,
                                 children: [
                                     {
-                                        type: 'curve',
-                                        name: 'GR',
-                                        aliasName: 'GR 自然伽马',
-
-                                        scaleType: 'lin',
-                                        leftScale: 0,
-                                        rightScale: 150,
-
+                                        type: "curve",
+                                        name: "BS",
+                                        aliasName: "钻头直径",
+                                        unit: "(cm)",
+                                        scaleType: "lin",
+                                        leftScale: 10,
+                                        rightScale: 50,
                                         itemStyle: {
-                                            lineStyle:{
-                                                color: 'green',
-                                                width: 1,
-                                                lineDash: [10,2,1,2]
-                                            }
+                                        },
+                                        lineStyle:{
+                                            color: "black",
+                                            width: 2,
+                                            lineDash: [10,2,1,2]
                                         },
                                         data: []
                                     },
                                     {
-                                        type: 'curve',
-                                        name: 'SP',
-                                        aliasName: 'SP 自然电位',
-                                        leftScale: 0,
-                                        rightScale: 150,
-
+                                        type: "curve",
+                                        name: "CAL1",
+                                        aliasName: "井径1",
+                                        unit: "(cm)",
+                                        scaleType: "lin",
+                                        leftScale: 10,
+                                        rightScale: 50,
                                         itemStyle: {
-                                            lineStyle:{
-                                                color: 'blue',
-                                                width: 1,
-                                                type: 'dashed'
-                                            }
+                                        },
+                                        lineStyle:{
+                                            color:"red",
+                                            width:2,
+                                            type:"solid"
                                         },
                                         data: []
                                     },
                                     {
-                                        type: 'curve',
-                                        name: 'CAL',
-                                        aliasName: 'CAL 井径',
-                                        leftScale: 6,
-                                        rightScale: 16,
+                                        type: "curve",
+                                        name: "CAL2",
+                                        aliasName: "井径2",
+                                        unit: "(cm)",
+                                        scaleType: "lin",
+                                        leftScale: 10,
+                                        rightScale: 50,
+
                                         itemStyle: {
-                                            lineStyle:{
-                                                color: 'rgb(255,128,64)',
-                                                width: 1,
-                                                type: 'solid'
-                                            }
+                                        },
+                                        lineStyle:{
+                                            color: "blue",
+                                            width: 2,
+                                            type: "dashed"
+                                        },
+                                        data: []
+                                    }
+
+                                ]
+                            },
+                            {
+                                type: "track",
+                                name: "微电极曲线",
+                                width: 150,
+                                children: [
+                                    {
+                                        type: "curve",
+                                        name: "MLU",
+                                        aliasName: "微电位",
+                                        unit: "Ωm",
+                                        scaleType: "lin",
+                                        leftScale: 0,
+                                        rightScale: 30,
+                                        itemStyle: {
+                                        },
+                                        lineStyle:{
+                                            color: "red",
+                                            width: 2,
+                                            type:"solid"
+                                        },
+                                        data: []
+                                    },
+                                    {
+                                        type: "curve",
+                                        name: "MLD",
+                                        aliasName: "微梯度",
+                                        unit: "Ωm",
+                                        scaleType: "lin",
+                                        leftScale: 0,
+                                        rightScale: 30,
+
+                                        itemStyle: {
+                                        },
+                                        lineStyle:{
+                                            color:"green",
+                                            width:2,
+                                            type: "dashed"
                                         },
                                         data: []
                                     }
                                 ]
-                            }
-                            ,
+                            },
                             {
-                                type: 'track',
-                                name: '',
+                                type: "track",
+                                name: "泥质指示曲线",
+                                width: 150,
+                                children: [
+                                    {
+                                        type: "curve",
+                                        name: "R25",
+                                        aliasName: "2.5米底部梯度电阻率",
+                                        unit: "Ωm",
+                                        scaleType: "lin",
+                                        leftScale: 0,
+                                        rightScale: 200,
+
+                                        itemStyle: {
+                                        },
+                                        lineStyle:{
+                                            color: "red",
+                                            width: 2,
+                                            type: "dashed"
+                                        },
+                                        data: []
+                                    },
+                                    {
+                                        type: "curve",
+                                        name: "SP",
+                                        aliasName: "自然电位(校)",
+                                        unit: "mv",
+                                        scaleType: "lin",
+                                        leftScale: -40,
+                                        rightScale: 10,
+
+                                        itemStyle: {
+                                        },
+                                        lineStyle:{
+                                            color:"green",
+                                            width:2,
+                                            type: "dashed"
+                                        },
+                                        data: []
+                                    },
+                                    {
+                                        type: "curve",
+                                        name: "GR",
+                                        aliasName: "自然伽马",
+                                        unit: "API",
+                                        scaleType: "lin",
+                                        leftScale: 20,
+                                        rightScale: 220,
+
+                                        itemStyle: {
+                                        },
+                                        lineStyle:{
+                                            color: "blue",
+                                            width: 2,
+                                            type: "solid"
+                                        },
+                                        data: []
+                                    }
+
+                                ]
+                            },
+                            {
+                                type: "track",
+                                name: "电阻率曲线",
+                                width: 150,
+                                scaleType: "log",
+                                leftScale: 0.1,
+                                rightScale: 1000,
+                                children: [
+                                    {
+                                        type: "curve",
+                                        name: "LLD",
+                                        aliasName: "深侧向电阻率",
+                                        unit: "Ωm",
+                                        scaleType: "log",
+                                        leftScale: 1,
+                                        rightScale: 1000,
+
+                                        itemStyle: {
+                                        },
+                                        lineStyle:{
+                                            color: "red",
+                                            width: 2,
+                                            type: "solid"
+                                        },
+                                        data: []
+                                    },
+                                    {
+                                        type: "curve",
+                                        name: "LLS",
+                                        aliasName: "浅侧向电阻率",
+                                        unit: "Ωm",
+                                        scaleType: "log",
+                                        leftScale: 1,
+                                        rightScale: 1000,
+
+                                        itemStyle: {
+                                        },
+                                        lineStyle:{
+                                            color: "green",
+                                            width: 2,
+                                            type: "dashed"
+                                        },
+                                        data: []
+                                    },
+                                    {
+                                        type: "curve",
+                                        name: "MSFL",
+                                        aliasName: "微球聚焦电阻率",
+                                        unit: "Ωm",
+                                        scaleType: "log",
+                                        leftScale: 1,
+                                        rightScale: 1000,
+
+                                        itemStyle: {
+                                        },
+                                        lineStyle:{
+                                            color: "blue",
+                                            width: 2,
+                                            type: "solid"
+                                        },
+                                        data: []
+                                    }
+
+                                ]
+                            },
+                            {
+                                type: "track",
+                                name: "孔隙度曲线",
+                                width: 150,
+                                children: [
+                                    {
+                                        type: "curve",
+                                        name: "AC",
+                                        aliasName: "声波时差",
+                                        unit: "(us/m)",
+                                        scaleType: "lin",
+                                        leftScale: 180,
+                                        rightScale: 430,
+                                        itemStyle: {
+                                        },
+                                        lineStyle:{
+                                            color: "red",
+                                            width: 2,
+                                            type: "solid"
+                                        },
+                                        data: []
+                                    },
+                                    {
+                                        type: "curve",
+                                        name: "DEN",
+                                        aliasName: "补偿密度",
+                                        unit: "(g/cm³)",
+                                        scaleType: "lin",
+                                        leftScale: 0.8,
+                                        rightScale: 2.8,
+                                        itemStyle: {
+                                        },
+                                        lineStyle:{
+                                            color: "green",
+                                            width: 2,
+                                            type: "dashed"
+                                        },
+                                        data: []
+                                    },
+                                    {
+                                        type: "curve",
+                                        name: "CNL",
+                                        aliasName: "补偿中子",
+                                        unit: "(%)",
+                                        scaleType: "lin",
+                                        leftScale: 0,
+                                        rightScale: 50,
+                                        itemStyle: {
+                                        },
+                                        lineStyle:{
+                                            color: "blue",
+                                            width: 2,
+                                            type: "dashed"
+                                        },
+                                        data: []
+                                    }
+
+                                ]
+                            },
+                            {
+                                type: "track",
+                                name: "",
                                 width: 60,
                                 itemStyle: {
                                     grid: {
@@ -169,145 +393,81 @@ under the License.
                                                 }
                                             }
                                         },
-                                        type: 'depth',
-                                        name: '深\n度\n(米)'
+                                        type: "depth",
+                                        requestCompleted: true,
+                                        name: "深\n度\n(米)"
                                     }
                                 ]
-                            }
-                            ,
-                            {
-                                type: 'track',
-                                name: '电阻率',
-                                width: 250,
-                                scaleType: 'log',
-                                leftScale: 0.1,
-                                rightScale: 100,
+                            },{
+                                type: "track",
+                                name: "砂泥岩剖面",
+                                width: 150,
                                 children: [
                                     {
-                                        type: 'curve',
-                                        name: 'HRIM 高分辨率中感应电阻率',
-                                        scaleType: 'log',
-                                        leftScale: 0.1,
-                                        rightScale: 100,
-                                        itemStyle: {
-                                            lineStyle:{
-                                                color: 'red',
-                                                width: 1,
-                                                type: 'solid'
-                                            }
-                                        },
-                                        data: HRIM
-                                    },
-                                    {
-                                        type: 'curve',
-                                        name: 'HRID 高分辨率深感应电阻率',
-
-                                        scaleType: 'log',
-                                        leftScale: 0.1,
-                                        rightScale: 100,
-                                        itemStyle: {
-                                            lineStyle:{
-                                                color: 'blue',
-                                                width: 1,
-                                                type: 'solid'
-                                            }
-                                        },
-                                        data: HRID
-                                    },
-                                    {
-                                        type: 'curve',
-                                        name: 'RDFL 数字聚焦电阻率',
-
-                                        scaleType: 'log',
-                                        leftScale: 0.1,
-                                        rightScale: 100,
-                                        itemStyle: {
-                                            lineStyle:{
-                                                color: 'black',
-                                                width: 1,
-                                                type: 'solid'
-                                            }
-                                        },
-                                        data: RDFL
-                                    }
-                                ]
-                            },
-                            {
-                                type: 'track',
-                                name: '跨线道',
-                                children: [
-                                    {
-                                        type: 'curve',
-                                        name: 'GR',
-
+                                        type: "curve",
+                                        name: "NY",
+                                        aliasName: "泥岩",
+                                        scaleType: "lin",
                                         leftScale: 0,
-                                        rightScale: 200,
+                                        headerFill:{
+                                            type:'cover'
+                                        },
+                                        curveFills:[{
+                                            fillTo:"left",
+                                            fillStyle: "NY"
+                                        }],
+                                        rightScale: 100,
                                         itemStyle: {
-
-                                            lineStyle:{
-                                                color: 'rgb(64,0,128)',
-                                                width: 1,
-                                                type: 'solid'
-                                            }
+                                        },
+                                        lineStyle:{
+                                            color: "rgb(140,140,0)",
+                                            width: 1
                                         },
                                         data: []
                                     },
                                     {
-                                        type: 'track',
-                                        name: '钻时曲线',
-                                        width: 120,
-                                        children: [
-                                            {
-                                                type: 'curve',
-                                                name: 'CAL',
-
-                                                leftScale: 0,
-                                                rightScale: 106.7,
-                                                itemStyle: {
-                                                    lineStyle:{
-                                                        color: 'black',
-                                                        width: 1,
-                                                        type: 'solid'
-                                                    }
-                                                },
-                                                data: []
-                                            }
-                                        ]
+                                        type: "curve",
+                                        name: "SH",
+                                        aliasName: "砂岩",
+                                        scaleType: "lin",
+                                        leftScale: 0,
+                                        rightScale: 100,
+                                        headerFill:{
+                                            type:'cover'
+                                        },
+                                        curveFills:[{
+                                            fillTo:"right",
+                                            fillStyle: "SY"
+                                        }],
+                                        itemStyle: {
+                                        },
+                                        lineStyle:{
+                                            color:"blue",
+                                            width: 1
+                                        },
+                                        data: []
                                     },
                                     {
-                                        type: 'track',
-                                        name: '自然电位',
-                                        width: 120,
-                                        children: [
-                                            {
-                                                type: 'curve',
-                                                name: 'SP',
-                                                leftScale: 0,
-                                                rightScale: 156.68,
-                                                itemStyle: {
-                                                    lineStyle:{
-                                                        color: 'blue',
-                                                        width: 1,
-                                                        type: 'solid'
-                                                    }
-                                                },
-                                                data: []
-                                            },
-                                            {
-                                                type: 'curve',
-                                                name: 'AC',
-                                                leftScale: 0,
-                                                rightScale: 755.93,
-                                                itemStyle: {
-                                                    lineStyle:{
-                                                        color: 'rgb(128,0,0)',
-                                                        width: 1,
-                                                        type: 'solid'
-                                                    }
-                                                },
-                                                data: AC
-                                            }
-                                        ]
+                                        type: "curve",
+                                        name: "POR",
+                                        aliasName: "孔隙",
+                                        scaleType: "lin",
+                                        leftScale: 100,
+                                        rightScale: 0,
+                                        headerFill:{
+                                            type:'cover'
+                                        },
+                                        curveFills:[{
+                                            fillTo:"right",
+                                            fillStyle: "white"
+                                        }],
+                                        itemStyle: {
+                                        },
+                                        lineStyle:{
+                                            color: "red",
+                                            width: 2
+                                        },
+                                        data: []
                                     }
                                 ]
                             }
@@ -315,40 +475,210 @@ under the License.
                     }
                 ]
             });
-
+            loadJs("../data/welllog_BS.js",function(){
+                chart.setOption({series:[{
+                        name: "SW2-1井-测井解释图",
+                        data: [{
+                            name: "BS",
+                            data: BS,
+                            requestCompleted:true,
+                            fetchData:false
+                        }]
+                    }]})
+            });
+            loadJs("../data/welllog_CAL1.js",function(){
+                chart.setOption({series:[{
+                        name: "SW2-1井-测井解释图",
+                        data: [{
+                            name: "CAL1",
+                            data: CAL1,
+                            requestCompleted:true,
+                            fetchData:false
+                        }]
+                    }]})
+            });
+            loadJs("../data/welllog_CAL2.js",function(){
+                chart.setOption({series:[{
+                        name: "SW2-1井-测井解释图",
+                        data: [{
+                            name: "CAL2",
+                            data: CAL2,
+                            requestCompleted:true,
+                            fetchData:false
+                        }]
+                    }]})
+            });
+            loadJs("../data/welllog_MLU.js",function(){
+                chart.setOption({series:[{
+                        name: "SW2-1井-测井解释图",
+                        data: [{
+                            name: "MLU",
+                            data: MLU,
+                            requestCompleted:true,
+                            fetchData:false
+                        }]
+                    }]})
+            });
+            loadJs("../data/welllog_MLD.js",function(){
+                chart.setOption({series:[{
+                        name: "SW2-1井-测井解释图",
+                        data: [{
+                            name: "MLD",
+                            data: MLD,
+                            requestCompleted:true,
+                            fetchData:false
+                        }]
+                    }]})
+            });
+            loadJs("../data/welllog_R25.js",function(){
+                chart.setOption({series:[{
+                        name: "SW2-1井-测井解释图",
+                        data: [{
+                            name: "R25",
+                            data: R25,
+                            requestCompleted:true,
+                            fetchData:false
+                        }]
+                    }]})
+            });
+            loadJs("../data/welllog_SP.js",function(){
+                chart.setOption({series:[{
+                        name: "SW2-1井-测井解释图",
+                        data: [{
+                            name: "SP",
+                            data: SP,
+                            requestCompleted:true,
+                            fetchData:false
+                        }]
+                    }]})
+            });
+            loadJs("../data/welllog_GR.js",function(){
+                chart.setOption({series:[{
+                        name: "SW2-1井-测井解释图",
+                        data: [{
+                            name: "GR",
+                            data: GR,
+                            requestCompleted:true,
+                            fetchData:false
+                        }]
+                    }]})
+            });
+            loadJs("../data/welllog_LLD.js",function(){
+                chart.setOption({series:[{
+                        name: "SW2-1井-测井解释图",
+                        data: [{
+                            name: "LLD",
+                            data: LLD,
+                            requestCompleted:true,
+                            fetchData:false
+                        }]
+                    }]})
+            });
+            loadJs("../data/welllog_LLS.js",function(){
+                chart.setOption({series:[{
+                        name: "SW2-1井-测井解释图",
+                        data: [{
+                            name: "LLS",
+                            data: LLS,
+                            requestCompleted:true,
+                            fetchData:false
+                        }]
+                    }]})
+            });
+            loadJs("../data/welllog_MSFL.js",function(){
+                chart.setOption({series:[{
+                        name: "SW2-1井-测井解释图",
+                        data: [{
+                            name: "MSFL",
+                            data: MSFL,
+                            requestCompleted:true,
+                            fetchData:false
+                        }]
+                    }]})
+            });
+            loadJs("../data/welllog_AC.js",function(){
+                chart.setOption({series:[{
+                        name: "SW2-1井-测井解释图",
+                        data: [{
+                            name: "AC",
+                            data: AC,
+                            requestCompleted:true,
+                            fetchData:false
+                        }]
+                    }]})
+            });
+            loadJs("../data/welllog_DEN.js",function(){
+                chart.setOption({series:[{
+                        name: "SW2-1井-测井解释图",
+                        data: [{
+                            name: "DEN",
+                            data: DEN,
+                            requestCompleted:true,
+                            fetchData:false
+                        }]
+                    }]})
+            });
+            loadJs("../data/welllog_CNL.js",function(){
+                chart.setOption({series:[{
+                        name: "SW2-1井-测井解释图",
+                        data: [{
+                            name: "CNL",
+                            data: CNL,
+                            requestCompleted:true,
+                            fetchData:false
+                        }]
+                    }]})
+            });
+            loadJs("../data/welllog_POR.js",function(){
+                chart.setOption({series:[{
+                        name: "SW2-1井-测井解释图",
+                        data: [{
+                            name: "POR",
+                            data: POR,
+                            requestCompleted:true,
+                            fetchData:false
+                        }]
+                    }]})
+            });
+            loadJs("../data/welllog_NY.js",function(){
+                chart.setOption({series:[{
+                        name: "SW2-1井-测井解释图",
+                        data: [{
+                            name: "NY",
+                            data: NY,
+                            requestCompleted:true,
+                            fetchData:false
+                        },{
+                            name: "SH",
+                            data: NY,
+                            requestCompleted:true,
+                            fetchData:false
+                        }]
+                    }]})
+            });
         });
     })
 
-    window.setTimeout(function(){
-        chart.setOption({series:[{
-                name: '测井曲线图',
-                data: [{
-                    name: 'SP',
-                    data: SP
-                }]
-            }]})
-    }, 1000);
-
-    window.setTimeout(function(){
-        chart.setOption({series:[{
-                name: '测井曲线图',
-                data: [{
-                    name: 'GR',
-                    data: GR
-                }]
-            }]})
-    }, 2000);
-
-    window.setTimeout(function(){
-        chart.setOption({series:[{
-                name: '测井曲线图',
-                data: [{
-                    name: 'CAL',
-                    data: GAL
-                }]
-            }]})
-    }, 3000);
-
+    function loadJs(url,callback){
+        var script=document.createElement('script');
+        script.type="text/javascript";
+        if(typeof(callback)!="undefined"){
+            if(script.readyState){
+                script.onreadystatechange=function(){
+                    if(script.readyState == "loaded" || script.readyState == "complete"){
+                        script.onreadystatechange=null;
+                        callback();
+                    }
+                }
+            }else{
+                script.onload=function(){
+                    callback();
+                }
+            }
+        }
+        script.src=url;
+        document.body.appendChild(script);
+    }
 
 </script>
 </body>
