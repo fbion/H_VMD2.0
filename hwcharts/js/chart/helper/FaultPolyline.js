@@ -54,10 +54,13 @@
         this.symbolGroup.removeAll();
 
         //缩放
-        var ecModel = lineData.hostModel.ecModel;
+        var seriesModel = lineData.hostModel;
+        var ecModel = seriesModel.ecModel;
         var scale = lineData.hostModel.get('scale');
-        var geo = ecModel.getComponent('geo');
-        var zoom = geo.coordinateSystem._zoom;
+
+        var coordinateSystem = seriesModel.coordinateSystem;
+        var zoom = coordinateSystem.getZoom();
+
         var zoomScale = Math.min(scale * zoom, 1);
         if (!isNaN(scale)) {
             lineSymbol = zrUtil.clone(lineSymbol);
@@ -204,10 +207,13 @@
         }
 
         //缩放
-        var ecModel = lineData.hostModel.ecModel;
+        var seriesModel = lineData.hostModel;
+        var ecModel = seriesModel.ecModel;
         var scale = lineData.hostModel.get('scale');
-        var geo = ecModel.getComponent('geo');
-        var zoom = geo.coordinateSystem._zoom;
+
+        var coordinateSystem = seriesModel.coordinateSystem;
+        var zoom = coordinateSystem.getZoom();
+
         if(!isNaN(scale) && lineStyle.lineWidth){
             lineStyle = zrUtil.clone(lineStyle);
             var zoomScale = Math.min(scale * zoom, 1);
@@ -243,10 +249,13 @@
         var lineSymbol = lineSymbolStorage.retrieveLineSymbol(faultLineStyle.type);
 
         //缩放
+        var seriesModel = lineData.hostModel;
         var ecModel = lineData.hostModel.ecModel;
         var scale = lineData.hostModel.get('scale');
-        var geo = ecModel.getComponent('geo');
-        var zoom = geo.coordinateSystem._zoom;
+
+        var coordinateSystem = seriesModel.coordinateSystem;
+        var zoom = coordinateSystem.getZoom();
+
         var zoomScale = Math.min(scale * zoom, 1);
         if(!isNaN(scale)){
             var lineWidth = faultLineStyle.lineWidth || (lineSymbol && lineSymbol.lineStyle && lineSymbol.lineStyle.lineWidth);

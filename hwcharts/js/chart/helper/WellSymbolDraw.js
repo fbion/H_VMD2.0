@@ -170,8 +170,8 @@
         var oldData = this._data;
 
         var ecModel = seriesModel.ecModel;
-        var geo = ecModel.getComponent('geo');
-        var zoom = geo.coordinateSystem._zoom;
+        var coordinateSystem = seriesModel.coordinateSystem;
+        var zoom = coordinateSystem.getZoom();
         var zoomScale = makeScaleZoom(data);
 
         var lastZoom = this._lastZoom || zoom;
@@ -408,8 +408,9 @@
         var seriesModel = data.hostModel;
         var ecModel = seriesModel.ecModel;
         var scale = seriesModel.get('scale');
-        var geo = ecModel.getComponent('geo');
-        var zoom = geo.coordinateSystem._zoom;
+        var coordinateSystem = seriesModel.coordinateSystem;
+        var zoom = coordinateSystem.getZoom();
+
         return !isNaN(scale) ? Math.min(scale * zoom, 1) : 1;
     };
 

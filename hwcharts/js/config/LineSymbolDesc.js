@@ -9,7 +9,7 @@ Vmd.define('hwchart.config.LineSymbolDesc', {
         symbolStyle: {
             type: ['rect'],
             size: [6],
-            fill: [],
+            color: [],
             position: ['out'],
             interval: [150]
         }
@@ -22,7 +22,7 @@ Vmd.define('hwchart.config.LineSymbolDesc', {
         symbolStyle: {
             type: ['emptyTriangle'],
             size: [8],
-            fill: [],
+            color: [],
             position: ['out'],
             interval: [150]
         }
@@ -35,7 +35,7 @@ Vmd.define('hwchart.config.LineSymbolDesc', {
         symbolStyle: {
             type: ['triangle'],
             size: [12],
-            fill: [],
+            color: [],
             position: ['out'],
             interval: [150]
         }

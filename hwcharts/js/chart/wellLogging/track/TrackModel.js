@@ -35,6 +35,7 @@
                         fontSize: 16,
                         color: 'black',
                         textAlign: 'center',
+                        textVerticalAlign: "middle",
                         textPadding: 5
                     }
                 },
@@ -49,6 +50,9 @@
                         // textAlign: 'center',
                         textPadding: 5
                     }
+                },
+                body:{
+                    backgroundColor:'white'
                 },
                 grid:{
                     vertical:{

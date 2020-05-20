@@ -361,8 +361,9 @@
         var seriesModel = lineData.hostModel;
         var ecModel = seriesModel.ecModel;
         var scale = seriesModel.get('scale') || 1;
-        var geo = ecModel.getComponent('geo');
-        var zoom = geo.coordinateSystem._zoom;
+        var coordinateSystem = seriesModel.coordinateSystem;
+        var zoom = coordinateSystem.getZoom();
+
         this._zoomScale = Math.min(scale * zoom, 1);
     }
 

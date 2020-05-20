@@ -39,13 +39,13 @@
             }
 
             var types = zrUtil.isArray(symbolStyle.type) ? symbolStyle.type : [symbolStyle.type];
-            var fills = zrUtil.isArray(symbolStyle.fill) ? symbolStyle.fill : [symbolStyle.fill];
+            var colors = zrUtil.isArray(symbolStyle.color) ? symbolStyle.color : [symbolStyle.color];
             var sizes = zrUtil.isArray(symbolStyle.size) ? symbolStyle.size : [symbolStyle.size];
             var intervals = zrUtil.isArray(symbolStyle.interval) ? symbolStyle.interval : [symbolStyle.interval];
             var positions = zrUtil.isArray(symbolStyle.position) ? symbolStyle.position : [symbolStyle.position];
             for(var i = 0; i < types.length; i++) {
-                if (fills.length > 0 && !fills[i]) {
-                    fills[i] = fills[0];
+                if (colors.length > 0 && !colors[i]) {
+                    colors[i] = colors[0];
                 }
                 if (sizes.length > 0 && !sizes[i]) {
                     sizes[i] = sizes[0];
@@ -89,7 +89,7 @@
                         symbols.push({
                             symbol: types[symbolIndex % types.length] || 'rect',
                             size: symbolSize,
-                            color: fills[symbolIndex % types.length] || lineStyle.stroke || lineData.getVisual('color'),
+                            color: colors[symbolIndex % types.length] || lineStyle.stroke || lineData.getVisual('color'),
                             value: outValue,
                             rotation: rotation
                         });

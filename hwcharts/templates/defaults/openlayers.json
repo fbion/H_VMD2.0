@@ -251,84 +251,23 @@
       "seriesName": "等温区"
     }
   ],
-  "title": {
-    "text": "新场js21开发现状图",
-    "textAlign": "center",
-    "textStyle": {
-      "fontSize": 28,
-      "fontWeight": "bold"
-    }
+  "openlayers": {
+    "center": [
+      104.114129,
+      37.550339
+    ],
+    "correction": [
+      -6850000,
+      1050000
+    ],
+    "zoom": 12,
+    "roam": true,
+    "projection": "EPSG:3857"
   },
-  "visualMap": [
-    {
-      "min": 0,
-      "max": 10,
-      "left": "20",
-      "top": "bottom",
-      "text": [
-        "高",
-        "低"
-      ],
-      "seriesName": "等压区",
-      "show": true,
-      "inRange": {
-        "color": [
-          "RGB(0,0,255)",
-          "RGB(0,255,0)",
-          "RGB(255,0,0)"
-        ]
-      },
-      "hoverLink": true,
-      "calculable": true
-    },
-    {
-      "min": 0,
-      "max": 100,
-      "left": "20",
-      "top": "bottom",
-      "text": [
-        "高",
-        "低"
-      ],
-      "seriesName": "等温区",
-      "show": true,
-      "inRange": {
-        "color": [
-          "RGB(0,0,255)",
-          "RGB(0,255,0)",
-          "RGB(255,0,0)"
-        ]
-      },
-      "hoverLink": true,
-      "calculable": true
-    }
-  ],
-  "geo": [
-    {
-      "map": "testMap",
-      "roam": true,
-      "zoom": 1,
-      "width": 480,
-      "itemStyle": {
-        "normal": {
-          "borderColor": "rgba(26,82,231, 1)",
-          "borderWidth": 1,
-          "areaColor": "transparent",
-          "shadowColor": "rgba(255, 255, 255, 0)",
-          "shadowOffsetX": -2,
-          "shadowOffsetY": 2,
-          "shadowBlur": 10
-        },
-        "emphasis": {
-          "areaColor": "transparent"
-        }
-      }
-    }
-  ],
   "series": [
     {
       "type": "area",
-      "coordinateSystem": "geo",
+      "coordinateSystem": "openlayers",
       "name": "砂体范围",
       "data": [],
       "isArea": true,
@@ -341,6 +280,7 @@
     },
     {
       "type": "area",
+      "coordinateSystem": "openlayers",
       "name": "评价滚动储量区",
       "dependentSeries": [
         "滚动储量区边界"
@@ -356,6 +296,7 @@
     },
     {
       "type": "area",
+      "coordinateSystem": "openlayers",
       "name": "探明开发储量区",
       "dependentSeries": [
         "探明开发储量区边界"
@@ -371,6 +312,7 @@
     },
     {
       "type": "faultLine",
+      "coordinateSystem": "openlayers",
       "name": "断层",
       "lineStyle": {
         "type": "faultLine",
@@ -380,6 +322,7 @@
     },
     {
       "type": "isoLine",
+      "coordinateSystem": "openlayers",
       "name": "等高线",
       "data": [],
       "polyline": true,
@@ -391,6 +334,7 @@
     },
     {
       "type": "symbolLine",
+      "coordinateSystem": "openlayers",
       "name": "尖灭线",
       "data": [],
       "lineStyle": {
@@ -401,6 +345,7 @@
     },
     {
       "type": "symbolLine",
+      "coordinateSystem": "openlayers",
       "name": "探明开发储量区边界",
       "applyDataTo": [
         "探明开发储量区"
@@ -413,6 +358,7 @@
     },
     {
       "type": "symbolLine",
+      "coordinateSystem": "openlayers",
       "name": "滚动储量区边界",
       "applyDataTo": [
         "评价滚动储量区"
@@ -425,6 +371,7 @@
     },
     {
       "type": "wellSymbol",
+      "coordinateSystem": "openlayers",
       "name": "油井井位",
       "scale": 0.2,
       "label": {
@@ -437,16 +384,6 @@
       "progressive": 1,
       "data": [],
       "symbolSize": 15
-    },
-    {
-      "type": "wellLabel",
-      "name": "油压",
-      "label": {
-        "color": "black",
-        "show": true,
-        "formatter": "{b}",
-        "position": "right"
-      }
     }
   ]
 }

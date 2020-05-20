@@ -13,6 +13,8 @@
     <script src="../js/hwcharts.js"></script>
     <!--hwdas-->
     <script src="../js/hwDas.js"></script>
+    <script src="../../lib/openlayers/include.js" type="text/javascript"></script>
+
     <style>
         html, body, #main, #main1
         {
@@ -42,10 +44,11 @@
                 'hwchart.component.Title',
                 'hwchart.chart.MiningIndex',
                 'hwchart.chart.IsoArea',
-                'hwchart.component.VisualMap'
+                'hwchart.component.VisualMap',
+               'hwchart.extension.openlayers.openlayers'
            ], function () {
                 var chart=hwcharts.init(document.getElementById('main'));
-                var path = hwchartsPATH + 'templates/defaults/xn_bak.json';
+                var path = hwchartsPATH + 'templates/defaults/openlayers.json';
                  /*
                     path: string 模板路径，
                     option ：boject

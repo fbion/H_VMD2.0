@@ -146,12 +146,17 @@ Vmd.define('hwchart.chart.wellLogging.WellLoggingView', {
                 // FIXME
                 // 加一层containerGroup是为了clip，但是现在clip功能并没有实现。
                 containerGroup = this._containerGroup = new Group();
+
+                // containerGroup.on("click", function(){
+                //     alert(1)
+                // })
+
                 this._initEvents(containerGroup);
                 this.group.add(containerGroup);
             }
 
             var payloadType = payload && payload.type;
-            if(payloadType != 'dataZoom'){
+            if(payloadType != 'dataZoom') {
                 containerGroup.attr('position', [layoutInfo.x, layoutInfo.y]);
             }
 

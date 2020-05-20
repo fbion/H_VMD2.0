@@ -73,10 +73,13 @@
         this.symbolGroup.removeAll();
 
         //缩放
-        var ecModel = lineData.hostModel.ecModel;
+        var seriesModel = lineData.hostModel;
+        var ecModel = seriesModel.ecModel;
         var scale = lineData.hostModel.get('scale');
-        var geo = ecModel.getComponent('geo');
-        var zoom = geo.coordinateSystem._zoom;
+
+        var coordinateSystem = seriesModel.coordinateSystem;
+        var zoom = coordinateSystem.getZoom();
+
         var zoomScale = Math.min(scale * zoom, 1);
         if (!isNaN(scale)) {
             lineSymbol = clone(lineSymbol);
@@ -93,10 +96,10 @@
             var rawDataItem = symbolData.getRawDataItem(idx);
             symbolData.setItemLayout(idx, rawDataItem.value);
             symbolData.setItemVisual(idx, 'symbol', rawDataItem.symbol);
-            symbolData.setItemVisual(idx,'symbolSize', rawDataItem.size);
-            symbolData.setItemVisual(idx,'color', rawDataItem.color);
-            symbolData.setItemVisual(idx,'animation', false);
-            symbolData.setItemVisual(idx,'hover', false);
+            symbolData.setItemVisual(idx, 'symbolSize', rawDataItem.size);
+            symbolData.setItemVisual(idx, 'color', rawDataItem.color);
+            symbolData.setItemVisual(idx, 'animation', false);
+            symbolData.setItemVisual(idx, 'hover', false);
 
             var symbolEl = null;
             if(symbolDataStorage.retrieveComposeSymbol(rawDataItem.symbol)){
@@ -184,10 +187,13 @@
         }
 
         //缩放
-        var ecModel = lineData.hostModel.ecModel;
+        var seriesModel = lineData.hostModel;
+        var ecModel = seriesModel.ecModel;
         var scale = lineData.hostModel.get('scale');
-        var geo = ecModel.getComponent('geo');
-        var zoom = geo.coordinateSystem._zoom;
+
+        var coordinateSystem = seriesModel.coordinateSystem;
+        var zoom = coordinateSystem.getZoom();
+
         if(!isNaN(scale) && lineStyle.lineWidth){
             lineStyle = clone(lineStyle);
             var zoomScale = Math.min(scale * zoom, 1);
@@ -220,10 +226,13 @@
         var lineSymbol = lineSymbolStorage.retrieveLineSymbol(symbolLineStyle.type) || {};
 
         //缩放
-        var ecModel = lineData.hostModel.ecModel;
+        var seriesModel = lineData.hostModel;
+        var ecModel = seriesModel.ecModel;
         var scale = lineData.hostModel.get('scale');
-        var geo = ecModel.getComponent('geo');
-        var zoom = geo.coordinateSystem._zoom;
+
+        var coordinateSystem = seriesModel.coordinateSystem;
+        var zoom = coordinateSystem.getZoom();
+
         var zoomScale = Math.min(scale * zoom, 1);
         if(!isNaN(scale)){
             var lineWidth = retrieve3(lineSymbol.lineStyle && lineSymbol.lineStyle.lineWidth, symbolLineStyle.lineWidth, lineStyle.lineWidth);

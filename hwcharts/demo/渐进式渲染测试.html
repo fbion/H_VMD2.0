@@ -38,7 +38,7 @@
 </head>
 <body oncontextmenu="return false">
     <div id="main"></div>
-    <img id="snapshot" />
+<!--    <img id="snapshot" />-->
     <script>
         function genSymData (data, flag){
             var genSymbolData = [];
@@ -147,9 +147,9 @@
                            "show":true,
                            "inRange":{
                                "color":[
-                                   "RGB(255,245,255)",
-                                   "RGB(245,255,255)",
-                                   "RGB(255,255,245)"
+                                   "RGB(0,0,255)",
+                                   "RGB(204,255,255)",
+                                   "RGB(0,204,255)"
                                ]
                            },
                            "hoverLink":true,
@@ -319,6 +319,7 @@
                                "prefix":"",
                                "preChars":""
                            },
+                           "isProgressive": true,
                            "progressiveThreshold":100,
                            "progressive":20,
                            "symbolSize":15,
@@ -411,6 +412,7 @@
                                    "labelIsShow":false
                                }
                            ],
+                           "isProgressive": true,
                            "progressiveThreshold":100,
                            "progressive":10,
                            "name":"43fd0294-c1c0-4023-b976-fc3b1d5a108d",
@@ -453,7 +455,7 @@
                chart.on('finished', function () {
                    var url = chart.getDataURL();
                    var snapshotEl = document.getElementById('snapshot');
-                   snapshotEl.src = url;
+                   //snapshotEl.src = url;
                });
           })
         });

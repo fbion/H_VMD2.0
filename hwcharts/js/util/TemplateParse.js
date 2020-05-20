@@ -241,8 +241,8 @@ Vmd.define('hwchart.util.TemplateParse',{
                 return;
             }		
 			var geo = ecModel.getComponent('geo');
-			var _boudingRect = geo.coordinateSystem.getBoundingRect();
-			if (_boudingRect.height > 0 && geo.coordinateSystem._zoom == 1) {
+			var _boudingRect = geo && geo.coordinateSystem.getBoundingRect();
+			if (_boudingRect && _boudingRect.height > 0 && geo.coordinateSystem._zoom == 1) {
 				var ptLeftTop = geo.coordinateSystem.dataToPoint([_boudingRect.x, _boudingRect.y + _boudingRect.height]);
 				var ptRightBtm = geo.coordinateSystem.dataToPoint([_boudingRect.x + _boudingRect.width, _boudingRect.y]);
 
@@ -500,7 +500,7 @@ Vmd.define('hwchart.util.TemplateParse',{
         //从模板中组织好曲线需要的信息title、lengend、serires
         var options = {};
         //option-property 可配置的属性
-        var props = ['title','visualMap','graphic','legend','scale','compass', 'mapInfo','series','geo','frame','frameNew','toolbox','brush','tooltip','layers'];
+        var props = ['title','visualMap','graphic','legend','scale','compass', 'mapInfo','series','geo','frame','frameNew','toolbox','brush','tooltip','layers','openlayers'];
         zrender.util.each(props, function (prop) {
             if (tpl[prop]) {
                 options[prop] = me.clone(tpl[prop]);

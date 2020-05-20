@@ -2063,11 +2063,11 @@ copyright：Copyright @1999-2016, hwkj, All Rights Reserved
 
         this.getType = function () {
             var map = {
-                "HyperLink": "vmdlink",
-                "Text": "vmded",
-                "vmdch": "vmdch",
-                "ra": "ra",
-                "Number": "vmdnum",
+                "HyperLink": "vmdlink", //超链接
+                "Text": "vmded", //文本
+                "vmdch": "vmdch", //复选框
+                "ra": "ra", //单选框
+                "Number": "vmdnum", //数字
                 "order": "vmdorder",
                 "PassWord": "vmdpassw",
                 "cntr": "cntr",
@@ -2081,7 +2081,7 @@ copyright：Copyright @1999-2016, hwkj, All Rights Reserved
                 "SubRpt": "vmdsubreport",
                 "Button": "vmdbutton",
                 "Approval": "vmdapprove",
-                "UpLoad": "vmdupload",
+                "UpLoad": "vmdupload", //上传组件
                 "RichEdit": "vmdeditor"
             }
             return map[this.type] || "ro";
@@ -4433,8 +4433,10 @@ copyright：Copyright @1999-2016, hwkj, All Rights Reserved
                                 r.OldValue[key == "__id" ? "id" : key] = oel[key];
                             }
                         }
-                        r.rowState = that.nochangenoupdate ? el["_upload_state"].split(",")[j] :
-                            (el["_upload_state"].split(",")[j] == "nochange" ? "save" : el["_upload_state"].split(",")[j]);
+
+                        var _upload_state = el["_upload_state"] || Array.apply(null, Array(n)).map(function () { return "nochange" }).join(",");
+                        r.rowState = that.nochangenoupdate ? _upload_state.split(",")[j] :
+                            (_upload_state.split(",")[j] == "nochange" ? "save" : _upload_state.split(",")[j]);
                         //过滤掉数据没发生变化的项
                         if (r.rowState == "nochange" || r.rowState == undefined) {
                             continue;

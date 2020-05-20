@@ -184,7 +184,7 @@ Vmd.define('hwchart.chart.wellLogging.track.CurveView', {
             var labelYpos = headerLayout.height - padding[2] - maxLabelHeight - labelDistance - lineStyle.lineWidth / 2 + textPadding[2];
             minLabel.attr('position', [padding[3], labelYpos]);
             maxLabel.attr('position', [headerLayout.width - maxLabelBoundRect.width - padding[1], labelYpos]);
-            unitLabel.attr('position', [(headerLayout.width - maxLabelBoundRect.width - padding[1] - unitLabelBoundRect.width / 2) / 2, labelYpos]);
+            unitLabel.attr('position', [(headerLayout.width - unitLabelBoundRect.width) / 2, labelYpos]);
 
             //道头标题
             var titleEl = this.titleEl == null ? (this.titleEl = new graphic.Text()) : this.titleEl;
